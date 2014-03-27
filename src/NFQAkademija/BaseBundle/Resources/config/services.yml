@@ -1,0 +1,7 @@
+parameters:
+#    nfq_akademija_base.example.class: NFQAkademija\BaseBundle\Example
+
+services:
+#    nfq_akademija_base.example:
+#        class: %nfq_akademija_base.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]

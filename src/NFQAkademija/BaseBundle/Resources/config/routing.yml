@@ -1,0 +1,3 @@
+nfq_akademija_base_homepage:
+    pattern:  /hello/{name}
+    defaults: { _controller: NFQAkademijaBaseBundle:Default:index }

@@ -1,0 +1,7 @@
+parameters:
+#    nfq_akademija_recipes.example.class: NFQAkademija\RecipesBundle\Example
+
+services:
+#    nfq_akademija_recipes.example:
+#        class: %nfq_akademija_recipes.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]

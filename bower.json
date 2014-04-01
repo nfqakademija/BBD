@@ -6,6 +6,7 @@
     "jquery": "2.0.3",
         "bootstrap": "3.*",
         "font-awesome": "4.*",
+        "jquery": "2.*",
         "jquery.ui": "1.10.3"
 },
     "exportsOverride": {

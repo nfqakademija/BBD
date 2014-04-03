@@ -1,0 +1,14 @@
+{% extends "::base.html.twig" %}
+
+{% block title %}Shopping list | BBD{% endblock %}
+
+{% block nav_zone %}
+    <div class="nav_zone_element untouchable " id="home" onclick="content_navigation('home')"></div>
+    <div class="nav_zone_element untouchable" id="profile" onclick="content_navigation('profile')"></div>
+    <div class="nav_zone_element nav_element_active untouchable" id="shoppinglist" onclick="content_navigation('shoppinglist')"></div>
+    <div class="nav_zone_element untouchable" id="random" onclick="content_navigation('random')"></div>
+{% endblock %}
+
+{% block content %}
+    <div id="map_canvas"></div>
+{% endblock %}

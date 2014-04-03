@@ -1,1 +1,14 @@
 {% extends "::base.html.twig" %}
+
+{% block title %}Bigger Better Dinner{% endblock %}
+
+{% block nav_zone %}
+    <div class="nav_zone_element untouchable nav_element_active" id="home" onclick="content_navigation('home')"></div>
+    <div class="nav_zone_element untouchable" id="profile" onclick="content_navigation('profile')"></div>
+    <div class="nav_zone_element  untouchable" id="shoppinglist" onclick="content_navigation('shoppinglist')"></div>
+    <div class="nav_zone_element untouchable" id="random" onclick="content_navigation('random')"></div>
+{% endblock %}
+
+{% block content %}
+   home
+{% endblock %}

@@ -13,14 +13,29 @@
         <link href='http://fonts.googleapis.com/css?family=Ubuntu&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
 
         <script src="{{ asset('js/jquery-1.10.2.min.js') }}" type="text/javascript"></script>
-        <script src="{{ asset('js/some_script.js') }}" type="text/javascript"></script>
         <script src="{{ asset('js/script.js') }}" type="text/javascript"></script>
+        <script src="{{ asset('js/my_script.js') }}" type="text/javascript"></script>
+
+        <script src="https://maps.googleapis.com/maps/api/js?sensor=false" type="text/javascript"></script>
+        <script>
+            function maps_initialize() {
+                var map_canvas = document.getElementById('map_canvas');
+                var map_options = {
+                    center: new google.maps.LatLng(54.903431, 23.88197),
+                    zoom: 15,
+                    mapTypeId: google.maps.MapTypeId.ROADMAP
+                }
+                var map = new google.maps.Map(map_canvas, map_options)
+            }
+            google.maps.event.addDomListener(window, 'load', maps_initialize);
+        </script>
 
         <!--[if lt IE 9]>
-        <script src="http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js"></script>
+        <script src="http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js" type="text/javascript"></script>
         <![endif]-->
         <!--bootstrap
         <link href="{{ asset('css/3rd.css') }}" rel="stylesheet">
+
         -->
 
 
@@ -31,12 +46,14 @@
         <div id="toast_loading" class="untouchable"></div>
 
         <div id="sidebar">
-            <div id="logo_zone" onclick="refresh()">BBD</div>
+            <div id="logo_zone" onclick="content_navigation('home')">BBD</div>
             <div id="nav_zone">
-               <div class="nav_zone_element nav_element_active untouchable nav_element_active" id="home" onclick="content_navigation('home')"></div>
-               <div class="nav_zone_element untouchable" id="profile" onclick="content_navigation('profile')"></div>
-               <div class="nav_zone_element untouchable" id="shoppinglist" onclick="content_navigation('shoppinglist')"></div>
-               <div class="nav_zone_element untouchable" id="random" onclick="content_navigation('random')"></div>
+               {% block nav_zone %}
+                   <div class="nav_zone_element untouchable nav_element_active" id="home" onclick="content_navigation('home')"></div>
+                   <div class="nav_zone_element untouchable" id="profile" onclick="content_navigation('profile')"></div>
+                   <div class="nav_zone_element untouchable" id="shoppinglist" onclick="content_navigation('shoppinglist')"></div>
+                   <div class="nav_zone_element untouchable" id="random" onclick="content_navigation('random')"></div>
+               {% endblock %}
             </div>
             <div id="search_zone">
                 <div id='search_index' onclick="focus_input('search_input')" ></div>
@@ -66,9 +83,7 @@
 
         <div id="content_wrapper">
             <div id="content">
-
-
-
+                {% block content %}{% endblock %}
             </div>
         </div>
     </body>

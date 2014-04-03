@@ -1,5 +1,5 @@
 @base-url: "/NFQ/web";
-@black: "@{black}";
+@black: #201F1D;
 
 
 
@@ -15,7 +15,7 @@ body{
   font-size:16px;
   cursor:default;
   font-family:Ubuntu;
-  //background-color:@{black};
+  //background-color:@black;
   overflow-y:scroll;
   overflow-x:hidden;
   background-size:cover;
@@ -102,7 +102,7 @@ textarea{
   top:0px;
   width:230px;
   height:100%;
-  background-color:@{black};
+  background-color:@black;
   overflow:hidden;
 }
 
@@ -156,7 +156,7 @@ textarea{
 
 .nav_element_active{
   background-color:white;
-  color:@{black} !important;
+  color:@black !important;
 }
 
 #home{
@@ -241,7 +241,7 @@ textarea{
   height: 20px;
   float: left;
   font-size: 15px;
-  color: @{black};
+  color: @black;
   line-height: 27px;
   text-align: left;
   text-overflow: ellipsis;
@@ -306,17 +306,17 @@ textarea{
 
 .filter_element:hover{
   background-color:white;
-  color:@{black};
+  color:@black;
 }
 
 .filter_element:active{
   background-color:rgb(240, 240, 240);
-  color:@{black};
+  color:@black;
 }
 
 .selected{
   background-color:rgb(226, 226, 226);
-  color:@{black};
+  color:@black;
 }
 
 .filter_element > .filter_element_delete{
@@ -373,16 +373,20 @@ textarea{
   bottom:0px;
   left:0px;
   display:block;
-  background-color:@{black};
+  background-color:@black;
 }
 
 #content_wrapper{
   height:100%;
-  width:695px;
-  float:left;
   position:fixed;
   left:230px;
+  right:0px;
   overflow:hidden;
+}
+
+#content{
+
+
 }
 
 
@@ -392,7 +396,7 @@ textarea{
   margin-top:0px;
   margin-left:0px;
   height:225px;
-  background:@{black};
+  background:@black;
   float:left;
 }
 
@@ -409,7 +413,7 @@ textarea{
   width:430px;
   height:205px;
   float:left;
-  background:@{black};
+  background:@black;
   padding:10px;
   color:white;
 }
@@ -511,7 +515,7 @@ textarea{
   background-size: 100% 100%;
   background-repeat: no-repeat;
   background-image: url('@{base-url}/images/rating_star.png');
-  color: @{black};
+  color: @black;
   text-align: center;
   line-height: 52px;
   font-weight: bold;
@@ -598,12 +602,12 @@ textarea{
 }
 
 .go_back:hover{
-  color:@{black};
+  color:@black;
   background-color:white;
 }
 
 .go_back:active{
-  color:@{black};
+  color:@black;
   background-color:rgb(240, 240, 240);
 }
 
@@ -819,7 +823,7 @@ div ::-webkit-scrollbar {
   left: 50%;
   margin-left: -300px;
   bottom: 50%;
-  box-shadow: 0px 0px 2px @{black};
+  box-shadow: 0px 0px 2px @black;
   border-radius: 3px;
 }
 
@@ -920,8 +924,8 @@ div ::-webkit-scrollbar {
   background-size:100%;
   background-position:50% 50%;
   opacity:0.2;
-  box-shadow:0px 0px 2px @{black};
-  background-color:@{black};
+  box-shadow:0px 0px 2px @black;
+  background-color:@black;
 }
 
 #toast_top:hover{
@@ -976,12 +980,12 @@ p{
   display:none;
   position:absolute;
   z-index:300;
-  background-color:@{black};
+  background-color:@black;
   padding:10px;
   color:white;
   font-size:12px;
   opacity:0.8;
-  box-shadow:0px 0px 2px @{black};
+  box-shadow:0px 0px 2px @black;
   text-transform:uppercase;
 }
 
@@ -1014,8 +1018,8 @@ p{
   background-size:100%;
   background-position:50% 50%;
   opacity:0.2;
-  box-shadow:0px 0px 2px @{black};
-  background-color:@{black};
+  box-shadow:0px 0px 2px @black;
+  background-color:@black;
 }
 
 #toast_top:hover{
@@ -1064,4 +1068,11 @@ p{
   width:960px;
   height:50px;
   margin:0 auto;
+}
+
+#map_canvas {
+  position: absolute;
+  left: 0px;
+  height: 100%;
+  right: 0px;
 }

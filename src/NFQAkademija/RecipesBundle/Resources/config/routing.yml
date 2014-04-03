@@ -1,3 +1,11 @@
 nfq_akademija_recipes_homepage:
     pattern:  /
     defaults: { _controller: NFQAkademijaRecipesBundle:Home:index }
+
+nfq_akademija_recipes_new:
+    pattern:  /naujas
+    defaults: { _controller: NFQAkademijaRecipesBundle:Home:new }
+
+nfq_akademija_recipes_show:
+    pattern:  /{id}/rodyti
+    defaults: { _controller: NFQAkademijaRecipesBundle:Home:show }

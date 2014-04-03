@@ -1,1 +1,30 @@
-Hello, how are you?
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>{% block title %}Ai bbd{% endblock %}</title>
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+    </head>
+    <body>
+        {% block content %}
+            <a href="{{ path('nfq_akademija_recipes_new') }}">Naujas receptas</a>
+            <br><br>
+            <table border="3">
+                <tr>
+                    <th>ID</th>
+                    <th>Pavadinimas</th>
+                    <th>Tipas</th>
+                    <th>Ingredientai</th>
+                </tr>
+                {% for entity in entities %}
+                    <tr>
+                        <td><a href="{{ path('nfq_akademija_recipes_show', { 'id': entity.id }) }}">{{ entity.id }}</td>
+                        <td>{{ entity.RecipeName }}</td>
+                        <td>{{ entity.RecipeType }}</td>
+                        <td>{{ entity.RecipeIngredients }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% endblock %}
+    </body>
+</html>

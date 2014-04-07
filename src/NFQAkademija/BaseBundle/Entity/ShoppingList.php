@@ -12,38 +12,40 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ShoppingList
 {
+    /** @ORM\Id() @ORM\Column(type="integer") */
+    protected $id;
+
     /**
-     * @ORM\ManyToMany(targetEntity="Product", mappedBy="shoppingLists")
+     * @ORM\OneToMany(targetEntity="\NFQAkademija\BaseBundle\Entity\ProductQuantity", mappedBy="product")
      */
     private $products;
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    private $id;
 
     /**
-     * @var integer
-     *
-     * @ORM\Column(name="ShoppingListId", type="integer")
+     * @ORM\Id()
+     * @ORM\ManyToOne(targetEntity="\NFQAkademija\BaseBundle\Entity\User", inversedBy="shoppingList")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
      */
-    private $shoppingListId;
+    private $user;
 
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="UserId", type="integer")
-     */
-    private $userId;
     /**
      * Creates a Doctrine Collection for members.
      */
     public function __construct()
     {
         $this->products = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Set id
+     *
+     * @param integer $id
+     * @return ShoppingList
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
     }
 
     /**
@@ -57,48 +59,58 @@ class ShoppingList
     }
 
     /**
-     * Set shoppingListId
+     * Add products
      *
-     * @param integer $shoppingListId
+     * @param \NFQAkademija\BaseBundle\Entity\ProductQuantity $products
      * @return ShoppingList
      */
-    public function setShoppingListId($shoppingListId)
+    public function addProduct(\NFQAkademija\BaseBundle\Entity\ProductQuantity $products)
     {
-        $this->shoppingListId = $shoppingListId;
+        $this->products[] = $products;
 
         return $this;
     }
 
     /**
-     * Get shoppingListId
+     * Remove products
      *
-     * @return integer 
+     * @param \NFQAkademija\BaseBundle\Entity\ProductQuantity $products
      */
-    public function getShoppingListId()
+    public function removeProduct(\NFQAkademija\BaseBundle\Entity\ProductQuantity $products)
     {
-        return $this->shoppingListId;
+        $this->products->removeElement($products);
     }
 
     /**
-     * Set userId
+     * Get products
      *
-     * @param integer $userId
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getProducts()
+    {
+        return $this->products;
+    }
+
+    /**
+     * Set user
+     *
+     * @param \NFQAkademija\BaseBundle\Entity\User $user
      * @return ShoppingList
      */
-    public function setUserId($userId)
+    public function setUser(\NFQAkademija\BaseBundle\Entity\User $user)
     {
-        $this->userId = $userId;
+        $this->user = $user;
 
         return $this;
     }
 
     /**
-     * Get userId
+     * Get user
      *
-     * @return integer 
+     * @return \NFQAkademija\BaseBundle\Entity\User 
      */
-    public function getUserId()
+    public function getUser()
     {
-        return $this->userId;
+        return $this->user;
     }
 }

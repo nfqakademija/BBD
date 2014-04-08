@@ -1,8 +1,34 @@
+# app/config/routing.yml
+
+#HWIOAuthBundle routes
+#hwi_oauth_redirect:
+#    resource: "@HWIOAuthBundle/Resources/config/routing/redirect.xml"
+#    prefix:   /connect
+
+hwi_oauth_security:
+    resource: "@HWIOAuthBundle/Resources/config/routing/login.xml"
+    prefix: /login
+
+hwi_oauth_connect:
+    resource: "@HWIOAuthBundle/Resources/config/routing/connect.xml"
+    prefix: /login
+
+hwi_oauth_redirect:
+    resource: "@HWIOAuthBundle/Resources/config/routing/redirect.xml"
+    prefix:   /login
+
+facebook_login:
+    pattern: /login/check-facebook
+
+google_login:
+    pattern: /login/check-google
+
+#NFQAkademijaRecipesBundle routes
 nfq_akademija_recipes:
     resource: "@NFQAkademijaRecipesBundle/Resources/config/routing.yml"
     prefix:   /
 
-# app/config/routing.yml
+#FosUserBundle Routes
 fos_user_security:
     resource: "@FOSUserBundle/Resources/config/routing/security.xml"
 

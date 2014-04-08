@@ -1,0 +1,61 @@
+{% extends "::base.html.twig" %}
+
+
+{% block title %}{{ recipe_ID }} | BBD{% endblock %}
+
+{% block nav_zone %}
+    <div class="nav_zone_element untouchable" id="home" onclick="content_navigation('home')"></div>
+    <div class="nav_zone_element untouchable" id="profile" onclick="content_navigation('profile')"></div>
+    <div class="nav_zone_element untouchable" id="shoppinglist" onclick="content_navigation('shoppinglist')"></div>
+    <div class="nav_zone_element untouchable" id="random" onclick="content_navigation('random')"></div>
+{% endblock %}
+
+{% block content %}
+    <div id="content_wrapper" style="background-image:url('http://1.bp.blogspot.com/_FfkgwPNm3uA/Swk2TGwRoyI/AAAAAAAAEoQ/huQ9v3t7i6c/s400/Boob_Kitten.jpg')">
+        <div class="content_recipe">
+            <div class="inside_close" onclick="content_navigation('home')">X</div>
+            <div class="inside_box">
+                <div class="inside_image" style="background-image:url('http://1.bp.blogspot.com/_FfkgwPNm3uA/Swk2TGwRoyI/AAAAAAAAEoQ/huQ9v3t7i6c/s400/Boob_Kitten.jpg')"></div>
+                <div class="inside_rating untouchable">5.6</div>
+                <div class="inside_info">
+                    <div class="inside_title">Šiškebabas</div>
+
+                    <div class="inside_categories">
+                        <div class="inside_category">Turkija</div>
+                        <div class="inside_category">Greita</div>
+                        <div class="inside_category">Pigu</div>
+                    </div>
+
+
+
+                    <div class="inside_about">Labai geras produktus valgykite y sveikata</div>
+
+                    <div class="inside_ingredients_box">
+                        <div class="inside_ingredient inside_ingredient_have">Bananai</div>
+                        <div class="inside_ingredient inside_ingredient_dont_have">Petražolės</div>
+                        <div class="inside_ingredient inside_ingredient_dont_have">Grikiai</div>
+                        <div class="inside_ingredient inside_ingredient_dont_have">Grybai</div>
+                        <div class="inside_ingredient inside_ingredient_dont_have">Varškė</div>
+                        <div class="inside_ingredient inside_ingredient_dont_have">Makaronai</div>
+                    </div>
+
+                    <div class="inside_buttons_box">
+                        <div class="inside_main_button_box">
+                            <div class="inside_main_button untouchable " onclick="show_recipe('1')">Gaminti</div>
+                        </div>
+                        <div class="inside_other_button_box">
+                            <div class="inside_button untouchable" onclick="remember_recipe('1')">Užsakyti</div>
+                            <div class="inside_button untouchable" onclick="remember_recipe('1')">Kooperuotis</div>
+                            <div class="inside_button untouchable" onclick="remember_recipe('1')">Pirkti</div>
+                            <div class="inside_button untouchable" onclick="remember_recipe('1')">Įsiminti</div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

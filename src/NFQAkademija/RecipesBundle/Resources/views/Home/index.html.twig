@@ -10,32 +10,251 @@
 {% endblock %}
 
 {% block content %}
-    <div class="recipe_box" id="recipe_box_1">
-        <div class="recipe_image" style="background-image:url('http://1.bp.blogspot.com/_FfkgwPNm3uA/Swk2TGwRoyI/AAAAAAAAEoQ/huQ9v3t7i6c/s400/Boob_Kitten.jpg')"></div>
-        <div class="recipe_info">
-            <div class="recipe_title_box">
-                <div class="recipe_title">Šiškebabas</div>
-                <div class="recipe_kitchen">(Turkija)</div>
+    <div id="content_wrapper" style="background-image:url('{{ asset('images/content_background.jpg') }}')">
+        <div class="content_list">
+        <div class="recipe_box" id="recipe_box_1">
+            <div class="recipe_image" style="background-image:url('http://1.bp.blogspot.com/_FfkgwPNm3uA/Swk2TGwRoyI/AAAAAAAAEoQ/huQ9v3t7i6c/s400/Boob_Kitten.jpg')" onclick="show_recipe('1')"></div>
+            <div class="recipe_info">
+                <div class="recipe_title_box">
+                    <div class="recipe_title" onclick="show_recipe('1')">Šiškebabas</div>
+                    <div class="recipe_kitchen">(Turkija)</div>
+                </div>
+                <div class="recipe_categories">Greita Pigu</div>
+                <div class="recipe_ingredients_box">
+                    <div class="recipe_ingredient">Bananai</div>
+                    <div class="recipe_ingredient">Petražolės</div>
+                    <div class="recipe_ingredient">Grikiai</div>
+                    <div class="recipe_ingredient">Grikiai</div>
+                    <div class="recipe_ingredient">Grikiai</div>
+                    <div class="recipe_ingredient">Grikiai</div>
+                </div>
+                <div class="recipe_buttons_box">
+                    <div class="recipe_button untouchable" onclick="show_recipe('1')">Noriu</div>
+                    <div class="recipe_button untouchable" onclick="remember_recipe('1')">Įsiminti</div>
+                </div>
+                <div class="recipe_rating_box">
+                    <div class="recipe_rating untouchable">5.6</div>
+                </div>
             </div>
-            <div class="recipe_categories">Greita Pigu</div>
-            <div class="recipe_ingredients_box">
-                <div class="recipe_ingredient">Bananai</div>
-                <div class="recipe_ingredient">Petražolės</div>
-                <div class="recipe_ingredient">Grikiai</div>
-                <div class="recipe_ingredient">Grikiai</div>
-                <div class="recipe_ingredient">Grikiai</div>
-                <div class="recipe_ingredient">Grikiai</div>
-            </div>
-            <div class="recipe_buttons_box">
-                <div class="recipe_button untouchable">Noriu</div>
-                <div class="recipe_button untouchable">Įsiminti</div>
-            </div>
-            <div class="recipe_rating_box">
-                <div class="recipe_rating">5.6</div>
-                <div class="recipe_rating_from">iš 96</div>
+
+        </div>
+
+        <div class="recipe_box" id="recipe_box_2">
+            <div class="recipe_image" style="background-image:url('http://1.bp.blogspot.com/_FfkgwPNm3uA/Swk2TGwRoyI/AAAAAAAAEoQ/huQ9v3t7i6c/s400/Boob_Kitten.jpg')"></div>
+            <div class="recipe_info">
+                <div class="recipe_title_box">
+                    <div class="recipe_title">Šiškebabas</div>
+                    <div class="recipe_kitchen">(Turkija)</div>
+                </div>
+                <div class="recipe_categories">Greita Pigu</div>
+                <div class="recipe_ingredients_box">
+                    <div class="recipe_ingredient">Bananai</div>
+                    <div class="recipe_ingredient">Petražolės</div>
+                    <div class="recipe_ingredient">Grikiai</div>
+                    <div class="recipe_ingredient">Grikiai</div>
+                    <div class="recipe_ingredient">Grikiai</div>
+                    <div class="recipe_ingredient">Grikiai</div>
+                </div>
+                <div class="recipe_buttons_box">
+                    <div class="recipe_button untouchable">Noriu</div>
+                    <div class="recipe_button untouchable">Įsiminti</div>
+                </div>
+                <div class="recipe_rating_box">
+                    <div class="recipe_rating">5.6</div>
+                </div>
             </div>
         </div>
 
+        <div class="recipe_box" id="recipe_box_2">
+            <div class="recipe_image" style="background-image:url('http://1.bp.blogspot.com/_FfkgwPNm3uA/Swk2TGwRoyI/AAAAAAAAEoQ/huQ9v3t7i6c/s400/Boob_Kitten.jpg')"></div>
+            <div class="recipe_info">
+                <div class="recipe_title_box">
+                    <div class="recipe_title">Šiškebabas</div>
+                    <div class="recipe_kitchen">(Turkija)</div>
+                </div>
+                <div class="recipe_categories">Greita Pigu</div>
+                <div class="recipe_ingredients_box">
+                    <div class="recipe_ingredient">Bananai</div>
+                    <div class="recipe_ingredient">Petražolės</div>
+                    <div class="recipe_ingredient">Grikiai</div>
+                    <div class="recipe_ingredient">Grikiai</div>
+                    <div class="recipe_ingredient">Grikiai</div>
+                    <div class="recipe_ingredient">Grikiai</div>
+                </div>
+                <div class="recipe_buttons_box">
+                    <div class="recipe_button untouchable">Noriu</div>
+                    <div class="recipe_button untouchable">Įsiminti</div>
+                </div>
+                <div class="recipe_rating_box">
+                    <div class="recipe_rating">5.6</div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="recipe_box" id="recipe_box_2">
+            <div class="recipe_image" style="background-image:url('http://1.bp.blogspot.com/_FfkgwPNm3uA/Swk2TGwRoyI/AAAAAAAAEoQ/huQ9v3t7i6c/s400/Boob_Kitten.jpg')"></div>
+            <div class="recipe_info">
+                <div class="recipe_title_box">
+                    <div class="recipe_title">Šiškebabas</div>
+                    <div class="recipe_kitchen">(Turkija)</div>
+                </div>
+                <div class="recipe_categories">Greita Pigu</div>
+                <div class="recipe_ingredients_box">
+                    <div class="recipe_ingredient">Bananai</div>
+                    <div class="recipe_ingredient">Petražolės</div>
+                    <div class="recipe_ingredient">Grikiai</div>
+                    <div class="recipe_ingredient">Grikiai</div>
+                    <div class="recipe_ingredient">Grikiai</div>
+                    <div class="recipe_ingredient">Grikiai</div>
+                </div>
+                <div class="recipe_buttons_box">
+                    <div class="recipe_button untouchable">Noriu</div>
+                    <div class="recipe_button untouchable">Įsiminti</div>
+                </div>
+                <div class="recipe_rating_box">
+                    <div class="recipe_rating">5.6</div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="recipe_box" id="recipe_box_2">
+            <div class="recipe_image" style="background-image:url('http://1.bp.blogspot.com/_FfkgwPNm3uA/Swk2TGwRoyI/AAAAAAAAEoQ/huQ9v3t7i6c/s400/Boob_Kitten.jpg')"></div>
+            <div class="recipe_info">
+                <div class="recipe_title_box">
+                    <div class="recipe_title">Šiškebabas</div>
+                    <div class="recipe_kitchen">(Turkija)</div>
+                </div>
+                <div class="recipe_categories">Greita Pigu</div>
+                <div class="recipe_ingredients_box">
+                    <div class="recipe_ingredient">Bananai</div>
+                    <div class="recipe_ingredient">Petražolės</div>
+                    <div class="recipe_ingredient">Grikiai</div>
+                    <div class="recipe_ingredient">Grikiai</div>
+                    <div class="recipe_ingredient">Grikiai</div>
+                    <div class="recipe_ingredient">Grikiai</div>
+                </div>
+                <div class="recipe_buttons_box">
+                    <div class="recipe_button untouchable">Noriu</div>
+                    <div class="recipe_button untouchable">Įsiminti</div>
+                </div>
+                <div class="recipe_rating_box">
+                    <div class="recipe_rating">5.6</div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="recipe_box" id="recipe_box_2">
+            <div class="recipe_image" style="background-image:url('http://1.bp.blogspot.com/_FfkgwPNm3uA/Swk2TGwRoyI/AAAAAAAAEoQ/huQ9v3t7i6c/s400/Boob_Kitten.jpg')"></div>
+            <div class="recipe_info">
+                <div class="recipe_title_box">
+                    <div class="recipe_title">Šiškebabas</div>
+                    <div class="recipe_kitchen">(Turkija)</div>
+                </div>
+                <div class="recipe_categories">Greita Pigu</div>
+                <div class="recipe_ingredients_box">
+                    <div class="recipe_ingredient">Bananai</div>
+                    <div class="recipe_ingredient">Petražolės</div>
+                    <div class="recipe_ingredient">Grikiai</div>
+                    <div class="recipe_ingredient">Grikiai</div>
+                    <div class="recipe_ingredient">Grikiai</div>
+                    <div class="recipe_ingredient">Grikiai</div>
+                </div>
+                <div class="recipe_buttons_box">
+                    <div class="recipe_button untouchable">Noriu</div>
+                    <div class="recipe_button untouchable">Įsiminti</div>
+                </div>
+                <div class="recipe_rating_box">
+                    <div class="recipe_rating">5.6</div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="recipe_box" id="recipe_box_2">
+            <div class="recipe_image" style="background-image:url('http://1.bp.blogspot.com/_FfkgwPNm3uA/Swk2TGwRoyI/AAAAAAAAEoQ/huQ9v3t7i6c/s400/Boob_Kitten.jpg')"></div>
+            <div class="recipe_info">
+                <div class="recipe_title_box">
+                    <div class="recipe_title">Šiškebabas</div>
+                    <div class="recipe_kitchen">(Turkija)</div>
+                </div>
+                <div class="recipe_categories">Greita Pigu</div>
+                <div class="recipe_ingredients_box">
+                    <div class="recipe_ingredient">Bananai</div>
+                    <div class="recipe_ingredient">Petražolės</div>
+                    <div class="recipe_ingredient">Grikiai</div>
+                    <div class="recipe_ingredient">Grikiai</div>
+                    <div class="recipe_ingredient">Grikiai</div>
+                    <div class="recipe_ingredient">Grikiai</div>
+                </div>
+                <div class="recipe_buttons_box">
+                    <div class="recipe_button untouchable">Noriu</div>
+                    <div class="recipe_button untouchable">Įsiminti</div>
+                </div>
+                <div class="recipe_rating_box">
+                    <div class="recipe_rating">5.6</div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="recipe_box" id="recipe_box_2">
+            <div class="recipe_image" style="background-image:url('http://1.bp.blogspot.com/_FfkgwPNm3uA/Swk2TGwRoyI/AAAAAAAAEoQ/huQ9v3t7i6c/s400/Boob_Kitten.jpg')"></div>
+            <div class="recipe_info">
+                <div class="recipe_title_box">
+                    <div class="recipe_title">Šiškebabas</div>
+                    <div class="recipe_kitchen">(Turkija)</div>
+                </div>
+                <div class="recipe_categories">Greita Pigu</div>
+                <div class="recipe_ingredients_box">
+                    <div class="recipe_ingredient">Bananai</div>
+                    <div class="recipe_ingredient">Petražolės</div>
+                    <div class="recipe_ingredient">Grikiai</div>
+                    <div class="recipe_ingredient">Grikiai</div>
+                    <div class="recipe_ingredient">Grikiai</div>
+                    <div class="recipe_ingredient">Grikiai</div>
+                </div>
+                <div class="recipe_buttons_box">
+                    <div class="recipe_button untouchable">Noriu</div>
+                    <div class="recipe_button untouchable">Įsiminti</div>
+                </div>
+                <div class="recipe_rating_box">
+                    <div class="recipe_rating">5.6</div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="recipe_box" id="recipe_box_2">
+            <div class="recipe_image" style="background-image:url('http://1.bp.blogspot.com/_FfkgwPNm3uA/Swk2TGwRoyI/AAAAAAAAEoQ/huQ9v3t7i6c/s400/Boob_Kitten.jpg')"></div>
+            <div class="recipe_info">
+                <div class="recipe_title_box">
+                    <div class="recipe_title">Šiškebabas</div>
+                    <div class="recipe_kitchen">(Turkija)</div>
+                </div>
+                <div class="recipe_categories">Greita Pigu</div>
+                <div class="recipe_ingredients_box">
+                    <div class="recipe_ingredient">Bananai</div>
+                    <div class="recipe_ingredient">Petražolės</div>
+                    <div class="recipe_ingredient">Grikiai</div>
+                    <div class="recipe_ingredient">Grikiai</div>
+                    <div class="recipe_ingredient">Grikiai</div>
+                    <div class="recipe_ingredient">Grikiai</div>
+                </div>
+                <div class="recipe_buttons_box">
+                    <div class="recipe_button untouchable">Noriu</div>
+                    <div class="recipe_button untouchable">Įsiminti</div>
+                </div>
+                <div class="recipe_rating_box">
+                    <div class="recipe_rating">5.6</div>
+                </div>
+            </div>
+        </div>
+
+        </div>
     </div>
+
 
 {% endblock %}

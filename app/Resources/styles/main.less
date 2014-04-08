@@ -445,39 +445,59 @@ textarea{
 
 .recipe_title_box{
   width:360px;
-  height:25px;
+  min-height:25px;
   float:left;
   font-size: 20px;
-  line-height:24px;
+  line-height:25px;
 }
 
 .recipe_title{
-  padding-right:5px;
   float:left;
-  width:auto;
+  width:360px;
   color: @black;
 }
 
-.recipe_kitchen{
-  color:grey;
-  width:auto;
-  float:left;
+.recipe_title:hover{
+  text-decoration:underline;
 }
 
 .recipe_categories{
   padding-top:5px;
   width:360px;
-  height:30px;
+  min-height:30px;
   float:left;
   font-size:15px;
   line-height:15px;
-  color:grey;
+  color:@grey;
+}
+
+.recipe_category{
+  float:left;
+  width:auto;
+  font-size:15px;
+  line-height:15px;
+  color:@grey;
+  height:15px;
+  margin-right:5px;
+}
+
+.recipe_category:after{
+  width:auto;
+  height:15px;
+  content: "#";
+  color:@grey;
+  float:left;
+  margin-right:1px;
+}
+
+.recipe_category:hover{
+  text-decoration:underline;
 }
 
 .recipe_ingredients_box{
   padding-top:5px;
   width:360px;
-  height:60px;
+  min-height:60px;
   float:left;
   line-height:15px;
   color:@black;
@@ -521,18 +541,19 @@ textarea{
 .recipe_button{
   height:30px;
   box-shadow:0px 0px 2px @black;
-  line-height:30px;
-  width:80px;
+  line-height:28px;
+  width:100px;
   float:left;
   background: -webkit-linear-gradient(top, #FFFFFF, #DDDDDD);
   background: -moz-linear-gradient(top, #FFFFFF, #DDDDDD);
   background: -ms-linear-gradient(top, #FFFFFF, #DDDDDD);
   background: -o-linear-gradient(top, #FFFFFF, #DDDDDD);
-  margin-right:10px;
+  margin-right:20px;
   text-align:center;
   color:@black;
   border-radius: @radius;
   box-shadow:0px 0px 2px @black;
+ // border:1px solid black;
 }
 
 .recipe_rating_box{
@@ -1172,8 +1193,16 @@ p{
   margin-right:1px;
 }
 
-.inside_ingredients_box{
+.inside_about{
   padding-top:10px;
+  width:350px;
+  min-height:15px;
+  float:left;
+  color:@white;
+}
+
+.inside_ingredients_box{
+  padding-top:30px;
   width:350px;
   min-height:15px;
   float:left;
@@ -1207,13 +1236,7 @@ p{
   margin-right:2px;
 }
 
-.inside_about{
-  padding-top:10px;
-  width:350px;
-  min-height:15px;
-  float:left;
-  color:@white;
-}
+
 
 .inside_buttons_box{
   width:350px;
@@ -1423,16 +1446,25 @@ p{
   margin-top:10px;
 }
 
+
 .cooperate_button:after{
   content:"";
-  width: 24px;
-  height: 24px;
+  width: 22px;
+  height: 22px;
   float:left;
   background-image: url('@{base-url}/images/facebook.png');
   background-size:100% 100%;
   background-position:50% 50%;
   background-repeat:no-repeat;
-  margin-right: 2px;
-  margin-left:2px;
-  margin-top:2px;
+  margin-right: 4px;
+  margin-left:4px;
+  margin-top:3px;
+}
+
+.remembered{
+  color:white;
+  background: -webkit-linear-gradient(top, #FFAE00, #726E12);
+  background: -moz-linear-gradient(top, #FFAE00, #726E12);
+  background: -ms-linear-gradient(top, #FFAE00, #726E12);
+  background: -o-linear-gradient(top, #FFAE00, #726E12);
 }

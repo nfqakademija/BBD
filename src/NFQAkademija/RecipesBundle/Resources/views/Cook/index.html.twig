@@ -1,0 +1,46 @@
+{% extends "::base.html.twig" %}
+
+
+{% block title %}{{ recipe_ID }} Step {{ step_ID }} | BBD{% endblock %}
+
+{% block content %}
+    <div id="content_wrapper" style="background-image:url('http://1.bp.blogspot.com/_FfkgwPNm3uA/Swk2TGwRoyI/AAAAAAAAEoQ/huQ9v3t7i6c/s400/Boob_Kitten.jpg')">
+        <div class="content_recipe">
+            <div class="cook_top_box">
+                <div class="cook_top_image" style="background-image:url('http://1.bp.blogspot.com/_FfkgwPNm3uA/Swk2TGwRoyI/AAAAAAAAEoQ/huQ9v3t7i6c/s400/Boob_Kitten.jpg')"></div>
+                <div class="cook_top_title">Šiškebabas</div>
+                <div class="cook_top_steps_box">
+                    <div class="cook_top_step active" onclick="cook_step('{{ recipe_ID }}', '1')">1</div>
+                    <div class="cook_top_step" onclick="cook_step('{{ recipe_ID }}', '2')">2</div>
+                    <div class="cook_top_step" onclick="cook_step('{{ recipe_ID }}', '3')">3</div>
+                    <div class="cook_top_step" onclick="cook_step('{{ recipe_ID }}', '4')">4</div>
+                    <div class="cook_top_step" onclick="cook_step('{{ recipe_ID }}', '5')">5</div>
+                    <div class="cook_top_step" onclick="cook_step('{{ recipe_ID }}', '6')">6</div>
+                    <div class="cook_top_step" onclick="cook_step('{{ recipe_ID }}', '7')">7</div>
+                    <div class="cook_top_step" onclick="cook_step('{{ recipe_ID }}', '8')">8</div>
+                </div>
+            </div>
+
+            <div class="cook_step_box">
+                <div class="cook_step_box_left">
+                    <div class="cook_step_box_text">
+                        Supjaustyti agurkus griežinėliais
+                    </div>
+                    <div class="cook_button untouchable " onclick="cook_step('{{ recipe_ID }}', '2')">Sekantis</div>
+
+                </div>
+                <div class="cook_step_box_right">
+                    <div class="cook_step_box_text">
+                        žingsnio foto, papildomi useriu komentarai, alternatyvos, patarimai, video, idomy info apie produktus,
+                        chronometras jeigu reikia virti
+                    </div>
+
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+{% endblock %}

@@ -1,14 +1,6 @@
 {% extends "::base.html.twig" %}
 
-
 {% block title %}{{ recipe_ID }} | BBD{% endblock %}
-
-{% block nav_zone %}
-    <div class="nav_zone_element untouchable" id="home" onclick="content_navigation('home')"></div>
-    <div class="nav_zone_element untouchable" id="profile" onclick="content_navigation('profile')"></div>
-    <div class="nav_zone_element untouchable" id="shoppinglist" onclick="content_navigation('shoppinglist')"></div>
-    <div class="nav_zone_element untouchable" id="random" onclick="content_navigation('random')"></div>
-{% endblock %}
 
 {% block content %}
     <div id="content_wrapper" style="background-image:url('http://1.bp.blogspot.com/_FfkgwPNm3uA/Swk2TGwRoyI/AAAAAAAAEoQ/huQ9v3t7i6c/s400/Boob_Kitten.jpg')">
@@ -41,15 +33,14 @@
 
                     <div class="inside_buttons_box">
                         <div class="inside_main_button_box">
-                            <div class="inside_main_button untouchable " onclick="show_recipe('1')">Gaminti</div>
+                            <div class="inside_main_button untouchable " onclick="cook('1')">Gaminti</div>
                         </div>
                         <div class="inside_other_button_box">
-                            <div class="inside_button untouchable" onclick="remember_recipe('1')">Užsakyti</div>
-                            <div class="inside_button untouchable" onclick="remember_recipe('1')">Kooperuotis</div>
-                            <div class="inside_button untouchable" onclick="remember_recipe('1')">Pirkti</div>
+                            <div class="inside_button untouchable" onclick="order('1')">Užsakyti</div>
+                            <div class="inside_button untouchable" onclick="coop('1')">Kooperuotis</div>
+                            <div class="inside_button untouchable" onclick="add_ingredients_to_shopping_list('1')">Pirkti</div>
                             <div class="inside_button untouchable" onclick="remember_recipe('1')">Įsiminti</div>
                         </div>
-
                     </div>
 
                 </div>

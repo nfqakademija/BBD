@@ -1,5 +1,5 @@
 parameters:
-    my_user_provider.class: NFQAkademija\BaseBundle\Security\Core\User\FOSUBUserProvider
+    my_user_provider.class: NFQAkademija\BaseBundle\Security\FOSUBUserProvider
 
 services:
     my_user_provider:

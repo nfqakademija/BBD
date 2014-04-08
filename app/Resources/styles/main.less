@@ -1,5 +1,6 @@
 @base-url: "/NFQ/web";
 @black: #201F1D;
+@grey: grey;
 
 
 
@@ -104,6 +105,7 @@ textarea{
   height:100%;
   background-color:@black;
   overflow:hidden;
+  box-shadow:0px 0px 2px @black;
 }
 
 #logo_zone{
@@ -382,197 +384,148 @@ textarea{
   left:230px;
   right:0px;
   overflow:hidden;
+  background-image:url('@{base-url}/images/content_background.jpg');
+  background-repeat:no-repeat;
+  background-size:cover;
+  background-position:50% 50%;
 }
 
 #content{
-
-
-}
-
-
-.content_item{
-  width:675px;
-  margin:10px;
-  margin-top:0px;
-  margin-left:0px;
-  height:225px;
-  background:@black;
-  float:left;
-}
-
-.content_item_left{
-  width:225px;
-  height:225px;
-  float:left;
-  background-size:cover;
-  background-repeat:no-repeat;
-  background-position:50% 50%;
-}
-
-.content_item_right{
-  width:430px;
-  height:205px;
-  float:left;
-  background:@black;
   padding:10px;
-  color:white;
-}
-
-.indicator{
-  border-radius: 100%;
-  width: 15px;
-  height: 15px;
-  float: left;
-  background: #6488E7;
-  margin-top: 10px;
-  margin-left: 10px;
-}
-
-.content_item_name{
-  width: 430px;
-  height: 20px;
-  float: left;
-  font-size: 20px;
-  line-height: 20px;
-  text-align: left;
-}
-
-.content_item_status_zone{
-  width:430px;
-  height:15px;
   float:left;
-  color:#727171;
-  font-size:15px;
 }
 
-.content_item_status_image{
-  background-position:50% 50%;
-  background-size:90% 90%;
+.recipe_box{
+  width:600px;
+  height:200px;
+  background:white;
+  float:left;
+  box-shadow:0px 0px 2px @black;
+}
+
+.recipe_image{
+  width:200px;
+  height:200px;
+  float:left;
   background-repeat:no-repeat;
-  width:15px;
-  height:15px;
-  margin-right:5px;
+  background-size:100% 100%;
+  background-position:50% 50%;
+  background-color:white;
+}
+
+.recipe_info{
+  padding:20px;
+  width:360px;
+  height:160px;
   float:left;
 }
 
-.content_item_status_type{
-  background-image:url('@{base-url}/images/type.png');
+.recipe_title_box{
+  width:360px;
+  height:25px;
+  float:left;
+  font-size: 20px;
+  line-height:24px;
 }
 
-.content_item_status_date{
-  background-image:url('@{base-url}/images/date.png');
-}
-
-.content_item_status_author{
-  background-image:url('@{base-url}/images/profile.png');
-  background-size:115% 110%;
-}
-
-.content_item_status_text{
+.recipe_title{
+  padding-right:5px;
+  float:left;
   width:auto;
+  color: @black;
+}
+
+.recipe_kitchen{
+  color:grey;
+  width:auto;
+  float:left;
+}
+
+.recipe_categories{
+  padding-top:5px;
+  width:360px;
+  height:30px;
+  float:left;
+  font-size:15px;
+  line-height:15px;
+  color:grey;
+}
+
+.recipe_ingredients_box{
+  padding-top:5px;
+  width:360px;
+  height:60px;
+  float:left;
+  line-height:15px;
+  color:@black;
+}
+
+.recipe_ingredient{
+  width:120px;
   height:15px;
   float:left;
   line-height:15px;
 }
 
-.content_item_module{
-  height:15px;
-  float:left;
-  padding-right:10px;
-}
 
-.content_item_type{
-  height:15px;
-  float:left;
-  padding-right:10px;
-}
-
-.content_item_date{
-  height:15px;
-  float:left;
-  padding-right:10px;
-}
-
-.content_item_author{
-  height:15px;
-  float:left;
-  padding-right:10px;
-}
-
-.content_item_rating_zone{
-  width:430px;
-  height:50px;
+.recipe_buttons_box{
+  padding-top:5px;
+  width:auto;
+  height:30px;
   float:left;
   font-size:15px;
-  padding-top:10px;
+  line-height:15px;
 }
 
-.content_item_rating{
+.recipe_button{
+  height:30px;
+  box-shadow:0px 0px 2px @black;
+  line-height:30px;
+  width:80px;
+  float:left;
+  background: -webkit-linear-gradient(top, #FFFFFF, #DDDDDD);
+  background: -moz-linear-gradient(top, #FFFFFF, #DDDDDD);
+  background: -ms-linear-gradient(top, #FFFFFF, #DDDDDD);
+  background: -o-linear-gradient(top, #FFFFFF, #DDDDDD);
+  margin-right:10px;
+  text-align:center;
+  color:@black;
+}
+
+.recipe_rating_box{
+  padding-top:5px;
+  width:auto;
+  height:30px;
+  float:right;
+  text-align:center;
+}
+
+.recipe_rating{
+  background-repeat:no-repeat;
+  background-size:100% 100%;
+  background-position:50% 50%;
+  background-image:url('@{base-url}/images/rating_star.png');
+  color:@black;
+  font-weight:bold;
   width: 50px;
   height: 50px;
   float: left;
-  background-position: 50% 50%;
-  background-size: 100% 100%;
-  background-repeat: no-repeat;
-  background-image: url('@{base-url}/images/rating_star.png');
-  color: @black;
-  text-align: center;
-  line-height: 52px;
-  font-weight: bold;
-  font-size: 20px;
-  margin-right: 10px;
-}
-
-.content_item_rating_people{
-  padding-top:10px;
-  width:370px;
-  height:15px;
-  float:left;
-  line-height:15px;
-}
-
-.content_item_comments_amount{
-  width:370px;
-  height:15px;
-  float:left;
-  line-height:15px;
-  padding-bottom:10px;
-}
-
-.content_item_about_zone{
-  float: left;
-  width: 430px;
-  height: 100px;
-  padding-top:10px;
-}
-
-.content_item_about{
-  float: left;
-  width: 430px;
-  height: 75px;
-  padding-bottom:10px;
-}
-
-.content_item_info{
-  float: left;
-  width: 430px;
-  height: 15px;
+  margin-top: -15px;
+  line-height:55px;
   font-size:15px;
 }
 
-.content_item_file_size{
-  float: right;
-  height: 15px;
-  padding-right:10px;
-}
-
-.content_item_file_type{
-  float: right;
-  height: 15px;
-  width:15px;
-  background-position:50% 50%;
-  background-size:100% 100%;
-  background-repeat:no-repeat;
+.recipe_rating_from{
+  width:auto;
+  height:30px;
+  float:left;
+  text-align:left;
+  padding-left:5px;
+  line-height:30px;
+  font-size:15px;
+  color:@grey;
+  float:left;
+  font-size:15px;
 }
 
 
@@ -1075,4 +1028,6 @@ p{
   left: 0px;
   height: 100%;
   right: 0px;
+  top:0px;
+  bottom:0px;
 }

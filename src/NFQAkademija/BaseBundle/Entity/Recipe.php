@@ -42,14 +42,14 @@ class Recipe
     /**
      * @var float
      *
-     * @ORM\Column(name="Rating", type="float")
+     * @ORM\Column(name="rating", type="float")
      */
     private $rating;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="Raters", type="integer")
+     * @ORM\Column(name="raters", type="integer")
      */
     private $raters;
 
@@ -63,24 +63,18 @@ class Recipe
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="CookingDuration", type="time")
+     * @ORM\Column(name="cooking_duration", type="time")
      */
     private $cookingDuration;
 
     /**
-     * Creates a Doctrine Collection for members.
-     */
-    /**
-     * @ORM\OneToMany(targetEntity="\NFQAkademija\BaseBundle\Entity\Product")
-     */
-    protected $products;
+     * @ORM\ManyToMany(targetEntity="\NFQAkademija\BaseBundle\Entity\Property", inversedBy="recipes")
+     * @ORM\JoinTable(name="recipe_property")
+     **/
+    protected $properties;
 
     /**
-     * @ORM\OneToMany(targetEntity="\NFQAkademija\BaseBundle\Entity\Property")
-     */
-    protected $properties;
-    /**
-     * @ORM\ManyToOne(targetEntity="\NFQAkademija\BaseBundle\Entity\Country", mappedBy="recipes")
+     * @ORM\ManyToOne(targetEntity="\NFQAkademija\BaseBundle\Entity\Country")
      */
     private $country;
 
@@ -89,8 +83,210 @@ class Recipe
      */
     public function __construct()
     {
-        $this->products = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->properties = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set name
+     *
+     * @param string $name
+     * @return Recipe
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string 
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Set description
+     *
+     * @param string $description
+     * @return Recipe
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Get description
+     *
+     * @return string 
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * Set rating
+     *
+     * @param float $rating
+     * @return Recipe
+     */
+    public function setRating($rating)
+    {
+        $this->rating = $rating;
+
+        return $this;
+    }
+
+    /**
+     * Get rating
+     *
+     * @return float 
+     */
+    public function getRating()
+    {
+        return $this->rating;
+    }
+
+    /**
+     * Set raters
+     *
+     * @param integer $raters
+     * @return Recipe
+     */
+    public function setRaters($raters)
+    {
+        $this->raters = $raters;
+
+        return $this;
+    }
+
+    /**
+     * Get raters
+     *
+     * @return integer 
+     */
+    public function getRaters()
+    {
+        return $this->raters;
+    }
+
+    /**
+     * Set photo
+     *
+     * @param string $photo
+     * @return Recipe
+     */
+    public function setPhoto($photo)
+    {
+        $this->photo = $photo;
+
+        return $this;
+    }
+
+    /**
+     * Get photo
+     *
+     * @return string 
+     */
+    public function getPhoto()
+    {
+        return $this->photo;
+    }
+
+    /**
+     * Set cookingDuration
+     *
+     * @param \DateTime $cookingDuration
+     * @return Recipe
+     */
+    public function setCookingDuration($cookingDuration)
+    {
+        $this->cookingDuration = $cookingDuration;
+
+        return $this;
+    }
+
+    /**
+     * Get cookingDuration
+     *
+     * @return \DateTime 
+     */
+    public function getCookingDuration()
+    {
+        return $this->cookingDuration;
+    }
+
+    /**
+     * Add properties
+     *
+     * @param \NFQAkademija\BaseBundle\Entity\Property $properties
+     * @return Recipe
+     */
+    public function addProperty(\NFQAkademija\BaseBundle\Entity\Property $properties)
+    {
+        $this->properties[] = $properties;
+
+        return $this;
+    }
+
+    /**
+     * Remove properties
+     *
+     * @param \NFQAkademija\BaseBundle\Entity\Property $properties
+     */
+    public function removeProperty(\NFQAkademija\BaseBundle\Entity\Property $properties)
+    {
+        $this->properties->removeElement($properties);
+    }
+
+    /**
+     * Get properties
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getProperties()
+    {
+        return $this->properties;
+    }
+
+    /**
+     * Set country
+     *
+     * @param \NFQAkademija\BaseBundle\Entity\Country $country
+     * @return Recipe
+     */
+    public function setCountry(\NFQAkademija\BaseBundle\Entity\Country $country = null)
+    {
+        $this->country = $country;
+
+        return $this;
+    }
+
+    /**
+     * Get country
+     *
+     * @return \NFQAkademija\BaseBundle\Entity\Country 
+     */
+    public function getCountry()
+    {
+        return $this->country;
+    }
 }

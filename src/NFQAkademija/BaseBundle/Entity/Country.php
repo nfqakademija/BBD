@@ -24,14 +24,18 @@ class Country
     /**
      * @var string
      *
-     * @ORM\Column(name="CountryName", type="string", length=255)
+     * @ORM\Column(name="Name", type="string", length=255)
      */
-    private $countryName;
+    private $Name;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="CountryFlag", type="string", length=255)
+     * @ORM\Column(name="Flag", type="string", length=255)
      */
-    private $countryFlag;
+    private $Flag;
+    /**
+     * @ORM\OneToMany(targetEntity="\NFQAkademija\BaseBundle\Entity\Recipe")
+     */
+    protected $recipes;
 }

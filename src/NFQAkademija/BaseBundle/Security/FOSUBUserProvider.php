@@ -1,5 +1,5 @@
 <?php
-namespace NFQAkademija\BaseBundle\Security\Core\User;
+namespace NFQAkademija\BaseBundle\Security;
 
 use HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface;
 use HWI\Bundle\OAuthBundle\Security\Core\User\FOSUBUserProvider as BaseClass;

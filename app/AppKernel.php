@@ -22,6 +22,7 @@ class AppKernel extends Kernel
 
             #Third party components
             new FOS\UserBundle\FOSUserBundle(),
+            new HWI\Bundle\OAuthBundle\HWIOAuthBundle(),
             new NFQAkademija\RecipesBundle\NFQAkademijaRecipesBundle(),
         );
 

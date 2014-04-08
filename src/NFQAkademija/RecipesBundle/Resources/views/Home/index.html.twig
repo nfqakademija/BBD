@@ -7,7 +7,10 @@
     </head>
     <body>
         {% block content %}
-            <a href="{{ path('nfq_akademija_recipes_new') }}">Naujas receptas</a>
+            <a href="{{ path('nfq_akademija_profile') }}">Profilis</a><br>
+            <a href="{{ path('nfq_akademija_shoppinglist') }}">Pirkinių sąrašas</a><br>
+            <a href="{{ path('nfq_akademija_recipes_new') }}">Naujas receptas</a><br><br>
+            {{ form(form) }}
             <br><br>
             <table border="3">
                 <tr>

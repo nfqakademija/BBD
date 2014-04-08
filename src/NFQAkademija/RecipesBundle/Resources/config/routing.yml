@@ -9,3 +9,15 @@ nfq_akademija_recipes_new:
 nfq_akademija_recipes_show:
     pattern:  /{id}/rodyti
     defaults: { _controller: NFQAkademijaRecipesBundle:Home:show }
+
+nfq_akademija_recipes_delete:
+    pattern:  /{id}/trinti
+    defaults: { _controller: NFQAkademijaRecipesBundle:Home:delete }
+
+nfq_akademija_profile:
+    pattern:  /profilis
+    defaults: { _controller: NFQAkademijaRecipesBundle:Home:profile }
+
+nfq_akademija_shoppinglist:
+    pattern:  /pirkiniusarasas
+    defaults: { _controller: NFQAkademijaRecipesBundle:Home:shoppingList }

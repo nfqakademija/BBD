@@ -24,14 +24,18 @@ class Category
     /**
      * @var string
      *
-     * @ORM\Column(name="CatName", type="string", length=255)
+     * @ORM\Column(name="Name", type="string", length=255)
      */
-    private $catName;
+    private $Name;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="CatPhoto", type="string", length=255)
+     * @ORM\Column(name="Photo", type="string", length=255)
      */
-    private $catPhoto;
+    private $Photo;
+    /**
+     * @ORM\OneToMany(targetEntity="\NFQAkademija\BaseBundle\Entity\Product")
+     */
+    protected $products;
 }

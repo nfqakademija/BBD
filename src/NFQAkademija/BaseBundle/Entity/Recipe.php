@@ -79,6 +79,10 @@ class Recipe
      * @ORM\OneToMany(targetEntity="\NFQAkademija\BaseBundle\Entity\Property")
      */
     protected $properties;
+    /**
+     * @ORM\ManyToOne(targetEntity="\NFQAkademija\BaseBundle\Entity\Country", mappedBy="recipes")
+     */
+    private $country;
 
     /**
      * Creates a Doctrine Collection for members.

@@ -12,11 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Product
 {
-
-    private $properties;
-
     private $shoppingLists;
-
     /**
      * @var integer
      *
@@ -25,21 +21,21 @@ class Product
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-
-    private $recipes;
-
     /**
      * @var string
      *
-     * @ORM\Column(name="ProductName", type="string", length=255)
+     * @ORM\Column(name="Name", type="string", length=255)
      */
     private $name;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="ProductPhoto", type="string", length=255)
+     * @ORM\Column(name="Photo", type="string", length=255)
      */
     private $photo;
-
+    /**
+     * @ORM\ManyToOne(targetEntity="\NFQAkademija\BaseBundle\Entity\category", mappedBy="products")
+     */
+    private $category;
 }

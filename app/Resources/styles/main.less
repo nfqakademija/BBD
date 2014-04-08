@@ -484,10 +484,28 @@ textarea{
 }
 
 .recipe_ingredient{
-  width:120px;
+  width:103px;
   height:15px;
   float:left;
   line-height:15px;
+}
+
+.recipe_ingredient_have:after {
+  width: 15px;
+  height: 15px;
+  content: url('@{base-url}/images/have.png');
+  color: green;
+  float: left;
+  margin-right: 2px;
+}
+
+.recipe_ingredient_dont_have:after {
+  width: 15px;
+  height: 15px;
+  content: url('@{base-url}/images/dont_have.png');
+  color: green;
+  float: left;
+  margin-right: 2px;
 }
 
 
@@ -1111,10 +1129,10 @@ p{
 
 
 .inside_info{
-  width:350px;
+  width:380px;
   height:400px;
   float:left;
-  padding-left:50px;
+  padding-left:20px;
 }
 
 .inside_title{
@@ -1220,12 +1238,12 @@ p{
 }
 
 .inside_button{
-  width:75px;
+  width:100px;
   margin-right:10px;
   height:28px;
   float:left;
   line-height:28px;
-  font-size:12px;
+  font-size:15px;
   border-radius: @radius;
   background: -webkit-linear-gradient(top, #FFFFFF, #DDDDDD);
   background: -moz-linear-gradient(top, #FFFFFF, #DDDDDD);
@@ -1384,4 +1402,37 @@ p{
   left:0px;
 }
 
+.add_to_shopping_list{
+  margin-top:10px;
+}
 
+.add_to_shopping_list:after{
+  content:"";
+  width: 28px;
+  height: 28px;
+  float:left;
+  background-image: url('@{base-url}/images/shoppinglist.png');
+  background-size:100% 100%;
+  background-position:50% 50%;
+  background-repeat:no-repeat;
+  margin-right: 2px;
+  margin-left:2px;
+}
+
+.cooperate_button{
+  margin-top:10px;
+}
+
+.cooperate_button:after{
+  content:"";
+  width: 24px;
+  height: 24px;
+  float:left;
+  background-image: url('@{base-url}/images/facebook.png');
+  background-size:100% 100%;
+  background-position:50% 50%;
+  background-repeat:no-repeat;
+  margin-right: 2px;
+  margin-left:2px;
+  margin-top:2px;
+}

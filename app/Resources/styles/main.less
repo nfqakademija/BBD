@@ -121,8 +121,8 @@ textarea{
   color: white;
   margin:10px; 
   margin-top:20px;
-  margin-bottom:0px;
-  //background-image:url("@{base-url}/images/logo_text.png");
+  margin-bottom:10px;
+  background-image:url("@{base-url}/images/logo_text.png");
   background-position:50% 50%;
   background-size:100% 100%;
   background-repeat:no-repeat;
@@ -149,22 +149,27 @@ textarea{
 }
 
 .nav_zone_element{
-  height:45px;
-  width:45px;
+  height:43px;
+  width:43px;
   float:left;
   margin-right:10px;
   background-position:50% 50%;
   background-size: 80% 80%;
   background-repeat:no-repeat;
+  border:1px solid transparent;
+  background-color:transparent;
 }
 
 .nav_zone_element:hover{
-  background-color:white;
+  border:1px solid black;
+  box-shadow:0px 0px 2px black;
+  background-color:rgba(255, 255, 255, 0.12);
 }
 
 .nav_element_active{
-  background-color:white;
-  color:@black !important;
+  background-color:rgba(255, 255, 255, 0.12);
+  border:1px solid black;
+  box-shadow:0px 0px 2px black;
 }
 
 #home{
@@ -194,18 +199,36 @@ textarea{
 }
 
 #search_zone{
-  width: 210px;
-  height: 45px;
+  width: 208px;
+  height: 43px;
   float: left;
   color: white;
-  line-height: 45px;
-  font-size: 45px;
-  padding:10px;
-  padding-bottom:0px;
+  line-height: 43px;
+  font-size: 43px;
+  margin:10px;
+  margin-bottom:0px;
+  border:1px solid transparent;
+}
+
+#search_index{
+  height: 43px;
+  width:43px;
+  background-color:transparent;
+  float:left;
+  background-image:url("@{base-url}/images/search.png");
+  background-position:50% 50%;
+  background-size:50% 50%;
+  background-repeat:no-repeat;
+}
+
+#search_input{
+  width:155px;
+  background-color:transparent;
+  float:left;
 }
 
 #search_container{
-  width: 210px;
+  width: 208px;
   min-height: 45px;
   background-color: white;
   max-height: 300px;
@@ -271,22 +294,7 @@ textarea{
   white-space: nowrap;
 }
 
-#search_index{
-  height: 45px;
-  width:45px;
-  background-color:white;
-  float:left;
-  background-image:url("@{base-url}/images/search.png");
-  background-position:50% 50%;
-  background-size:50% 50%;
-  background-repeat:no-repeat;
-}
 
-#search_input{
-  width:155px;
-  background-color:white;
-  float:left;
-}
 
 #filters_zone{
   width: 220px;
@@ -508,6 +516,7 @@ textarea{
   height:15px;
   float:left;
   line-height:15px;
+  margin-bottom:5px;
 }
 
 .recipe_ingredient_have:after {

@@ -16,7 +16,16 @@
         <script src="{{ asset('js/script.js') }}" type="text/javascript"></script>
         <script src="{{ asset('js/my_script.js') }}" type="text/javascript"></script>
 
-        {% block specific_scripts %}{% endblock %}
+        {% block specific_scripts %}
+            <script type="text/javascript">
+                function loader(){
+                }
+
+                function key_check(event){
+
+                }
+            </script>
+        {% endblock %}
 
         <!--[if lt IE 9]>
         <script src="http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js" type="text/javascript"></script>
@@ -34,7 +43,7 @@
         <div id="toast_loading" class="untouchable"></div>
 
         <div id="sidebar">
-            <div id="logo_zone" onclick="content_navigation('home')">BBD</div>
+            <div id="logo_zone" onclick="content_navigation('home')"></div>
             <div id="nav_zone">
                {% block nav_zone %}
                    <div class="nav_zone_element untouchable" id="home" onclick="content_navigation('home')"></div>
@@ -45,7 +54,7 @@
             </div>
             <div id="search_zone">
                 <div id='search_index' onclick="focus_input('search_input')" ></div>
-                <input id='search_input' placeholder='Ieškoti' onkeyup="search()"/>
+                <input id='search_input' placeholder='Ieškoti' onkeyup="search()" onfocus="search_input_focus()" onblur="search_input_blur()"/>
                 <div id='search_container' ></div>
             </div>
             <div id='filters_zone'>

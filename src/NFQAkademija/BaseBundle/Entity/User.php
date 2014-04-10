@@ -38,6 +38,20 @@ class User extends BaseUser
 
 
     /**
+     * @var \NFQAkademija\BaseBundle\Entity\ShoppingList
+     * @ORM\OneToMany(targetEntity="\NFQAkademija\BaseBundle\Entity\ShoppingList", mappedBy="user")
+     */
+    protected $shoppingList;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->shoppingList = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
      * Get id
      *
      * @return integer 
@@ -91,5 +105,38 @@ class User extends BaseUser
     public function getSurname()
     {
         return $this->surname;
+    }
+
+    /**
+     * Add shoppingList
+     *
+     * @param \NFQAkademija\BaseBundle\Entity\ShoppingList $shoppingList
+     * @return User
+     */
+    public function addShoppingList(\NFQAkademija\BaseBundle\Entity\ShoppingList $shoppingList)
+    {
+        $this->shoppingList[] = $shoppingList;
+
+        return $this;
+    }
+
+    /**
+     * Remove shoppingList
+     *
+     * @param \NFQAkademija\BaseBundle\Entity\ShoppingList $shoppingList
+     */
+    public function removeShoppingList(\NFQAkademija\BaseBundle\Entity\ShoppingList $shoppingList)
+    {
+        $this->shoppingList->removeElement($shoppingList);
+    }
+
+    /**
+     * Get shoppingList
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getShoppingList()
+    {
+        return $this->shoppingList;
     }
 }

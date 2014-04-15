@@ -14,6 +14,16 @@ module.exports = function (grunt) {
                         dest: 'web/fonts'
                     }
                 ]
+            },
+            images: {
+                files: [
+                    {
+                        expand: true,
+                        flatten: true,
+                        src: './app/Resources/images/*',
+                        dest: 'web/images'
+                    }
+                ]
             }
         },
         less: {
@@ -51,7 +61,7 @@ module.exports = function (grunt) {
                     'bower_components/font-awesome/css/font-awesome.css'
                 ],
                 dest: 'web/css/3rd.css'
-            },9
+            },
             js: {
                 src: [
                     'bower_components/jquery/jquery.min.js',

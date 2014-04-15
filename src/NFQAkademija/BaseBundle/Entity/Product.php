@@ -18,6 +18,15 @@ class Product
     private $shoppingListProduct;
 
     /**
+     * @ORM\OneToMany(targetEntity="\NFQAkademija\BaseBundle\Entity\RecipeProduct", mappedBy="product")
+     */
+    protected $recipeProduct;
+    /**
+     * @ORM\OneToMany(targetEntity="\NFQAkademija\BaseBundle\Entity\UserProduct", mappedBy="product")
+     */
+    protected $userProduct;
+
+    /**
      * @var integer
      *
      * @ORM\Id()
@@ -28,14 +37,14 @@ class Product
     /**
      * @var string
      *
-     * @ORM\Column(name="Name", type="string", length=255)
+     * @ORM\Column(name="name", type="string", length=255)
      */
     private $name;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="Photo", type="string", length=255)
+     * @ORM\Column(name="photo", type="string", length=255)
      */
     private $photo;
     /**
@@ -160,5 +169,71 @@ class Product
     public function getCategory()
     {
         return $this->category;
+    }
+
+    /**
+     * Add recipeProduct
+     *
+     * @param \NFQAkademija\BaseBundle\Entity\RecipeProduct $recipeProduct
+     * @return Product
+     */
+    public function addRecipeProduct(\NFQAkademija\BaseBundle\Entity\RecipeProduct $recipeProduct)
+    {
+        $this->recipeProduct[] = $recipeProduct;
+
+        return $this;
+    }
+
+    /**
+     * Remove recipeProduct
+     *
+     * @param \NFQAkademija\BaseBundle\Entity\RecipeProduct $recipeProduct
+     */
+    public function removeRecipeProduct(\NFQAkademija\BaseBundle\Entity\RecipeProduct $recipeProduct)
+    {
+        $this->recipeProduct->removeElement($recipeProduct);
+    }
+
+    /**
+     * Get recipeProduct
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getRecipeProduct()
+    {
+        return $this->recipeProduct;
+    }
+
+    /**
+     * Add userProduct
+     *
+     * @param \NFQAkademija\BaseBundle\Entity\UserProduct $userProduct
+     * @return Product
+     */
+    public function addUserProduct(\NFQAkademija\BaseBundle\Entity\UserProduct $userProduct)
+    {
+        $this->userProduct[] = $userProduct;
+
+        return $this;
+    }
+
+    /**
+     * Remove userProduct
+     *
+     * @param \NFQAkademija\BaseBundle\Entity\UserProduct $userProduct
+     */
+    public function removeUserProduct(\NFQAkademija\BaseBundle\Entity\UserProduct $userProduct)
+    {
+        $this->userProduct->removeElement($userProduct);
+    }
+
+    /**
+     * Get userProduct
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getUserProduct()
+    {
+        return $this->userProduct;
     }
 }

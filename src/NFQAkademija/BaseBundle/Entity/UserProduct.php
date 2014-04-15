@@ -5,12 +5,12 @@ namespace NFQAkademija\BaseBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * ShoppingListProduct
+ * UserProduct
  *
- * @ORM\Table(name="shopping_list_products")
+ * @ORM\Table(name="user_products")
  * @ORM\Entity
  */
-class ShoppingListProduct
+class UserProduct
 {
     /**
      * @ORM\Id()
@@ -26,17 +26,17 @@ class ShoppingListProduct
 
     /**
      * @ORM\Id()
-     * @ORM\ManyToOne(targetEntity="\NFQAkademija\BaseBundle\Entity\ShoppingList")
-     * @ORM\JoinColumn(name="shopping_list_id", referencedColumnName="id", nullable=false)
+     * @ORM\ManyToOne(targetEntity="\NFQAkademija\BaseBundle\Entity\UserFridge")
+     * @ORM\JoinColumn(name="user_fridge_id", referencedColumnName="id", nullable=false)
      */
-    protected $shopingList;
+    protected $userFridge;
 
 
     /**
      * Set product
      *
      * @param \NFQAkademija\BaseBundle\Entity\Product $product
-     * @return ShoppingListProduct
+     * @return UserProduct
      */
     public function setProduct(\NFQAkademija\BaseBundle\Entity\Product $product)
     {
@@ -56,25 +56,25 @@ class ShoppingListProduct
     }
 
     /**
-     * Set shopingList
+     * Set userFridge
      *
-     * @param \NFQAkademija\BaseBundle\Entity\ShoppingList $shopingList
-     * @return ShoppingListProduct
+     * @param \NFQAkademija\BaseBundle\Entity\UserFridge $userFridge
+     * @return UserProduct
      */
-    public function setShopingList(\NFQAkademija\BaseBundle\Entity\ShoppingList $shopingList)
+    public function setUserFridge(\NFQAkademija\BaseBundle\Entity\UserFridge $userFridge)
     {
-        $this->shopingList = $shopingList;
+        $this->userFridge = $userFridge;
 
         return $this;
     }
 
     /**
-     * Get shopingList
+     * Get userFridge
      *
-     * @return \NFQAkademija\BaseBundle\Entity\ShoppingList 
+     * @return \NFQAkademija\BaseBundle\Entity\UserFridge 
      */
-    public function getShopingList()
+    public function getUserFridge()
     {
-        return $this->shopingList;
+        return $this->userFridge;
     }
 }

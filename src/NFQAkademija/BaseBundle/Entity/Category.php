@@ -26,14 +26,14 @@ class Category
      *
      * @ORM\Column(name="name", type="string", length=255)
      */
-    private $Name;
+    private $name;
 
     /**
      * @var string
      *
      * @ORM\Column(name="photo", type="string", length=255)
      */
-    private $Photo;
+    private $photo;
 
     /**
      * @ORM\OneToMany(targetEntity="\NFQAkademija\BaseBundle\Entity\Product", mappedBy="category")
@@ -58,49 +58,49 @@ class Category
     }
 
     /**
-     * Set Name
+     * Set name
      *
      * @param string $name
      * @return Category
      */
     public function setName($name)
     {
-        $this->Name = $name;
+        $this->name = $name;
 
         return $this;
     }
 
     /**
-     * Get Name
+     * Get name
      *
      * @return string 
      */
     public function getName()
     {
-        return $this->Name;
+        return $this->name;
     }
 
     /**
-     * Set Photo
+     * Set photo
      *
      * @param string $photo
      * @return Category
      */
     public function setPhoto($photo)
     {
-        $this->Photo = $photo;
+        $this->photo = $photo;
 
         return $this;
     }
 
     /**
-     * Get Photo
+     * Get photo
      *
      * @return string 
      */
     public function getPhoto()
     {
-        return $this->Photo;
+        return $this->photo;
     }
 
     /**
@@ -125,6 +125,7 @@ class Category
     {
         $this->products->removeElement($products);
     }
+
 
     /**
      * Get products

@@ -5,12 +5,12 @@ namespace NFQAkademija\BaseBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * ShoppingListProduct
+ * RecipeProduct
  *
- * @ORM\Table(name="shopping_list_products")
+ * @ORM\Table(name="recipe_products")
  * @ORM\Entity
  */
-class ShoppingListProduct
+class RecipeProduct
 {
     /**
      * @ORM\Id()
@@ -26,17 +26,17 @@ class ShoppingListProduct
 
     /**
      * @ORM\Id()
-     * @ORM\ManyToOne(targetEntity="\NFQAkademija\BaseBundle\Entity\ShoppingList")
-     * @ORM\JoinColumn(name="shopping_list_id", referencedColumnName="id", nullable=false)
+     * @ORM\ManyToOne(targetEntity="\NFQAkademija\BaseBundle\Entity\Recipe")
+     * @ORM\JoinColumn(name="recipe_id", referencedColumnName="id", nullable=false)
      */
-    protected $shopingList;
+    protected $recipe;
 
 
     /**
      * Set product
      *
      * @param \NFQAkademija\BaseBundle\Entity\Product $product
-     * @return ShoppingListProduct
+     * @return RecipeProduct
      */
     public function setProduct(\NFQAkademija\BaseBundle\Entity\Product $product)
     {
@@ -56,25 +56,25 @@ class ShoppingListProduct
     }
 
     /**
-     * Set shopingList
+     * Set recipe
      *
-     * @param \NFQAkademija\BaseBundle\Entity\ShoppingList $shopingList
-     * @return ShoppingListProduct
+     * @param \NFQAkademija\BaseBundle\Entity\Recipe $recipe
+     * @return RecipeProduct
      */
-    public function setShopingList(\NFQAkademija\BaseBundle\Entity\ShoppingList $shopingList)
+    public function setRecipe(\NFQAkademija\BaseBundle\Entity\Recipe $recipe)
     {
-        $this->shopingList = $shopingList;
+        $this->recipe = $recipe;
 
         return $this;
     }
 
     /**
-     * Get shopingList
+     * Get recipe
      *
-     * @return \NFQAkademija\BaseBundle\Entity\ShoppingList 
+     * @return \NFQAkademija\BaseBundle\Entity\Recipe 
      */
-    public function getShopingList()
+    public function getRecipe()
     {
-        return $this->shopingList;
+        return $this->recipe;
     }
 }

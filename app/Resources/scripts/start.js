@@ -175,15 +175,15 @@ function show_filters(array_of_filters, index){
 }
 
 function filter_start(){
+    full_sidebar()
     var filters = [];
     filters[0] = "<div class='filter_element untouchable' id='types' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('" + website_index + "/images/filters/types.png');\"></div><div class='filter_element_text'>Tipai</div></div>";
     filters[1] = "<div class='filter_element untouchable' id='characteristics' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('" + website_index + "/images/filters/characteristics.png');\"></div><div class='filter_element_text'>Ypatybės</div></div>";
     filters[2] = "<div class='filter_element untouchable' id='times' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('" + website_index + "/images/filters/times.png');\"></div><div class='filter_element_text'>Laikai</div></div>";
     filters[3] = "<div class='filter_element untouchable' id='countries' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('" + website_index + "/images/filters/countries.png');\"></div><div class='filter_element_text'>Šalys</div></div>";
     filters[4] = "<div class='filter_element untouchable' id='ingredients' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('" + website_index + "/images/filters/ingredients.png');\"></div><div class='filter_element_text'>Ingredientai</div></div>";
-    filters[5] = "<div class='filter_element untouchable' id='emotions' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('" + website_index + "/images/filters/emotions.png');\"></div><div class='filter_element_text'>Nuotaikos</div></div>";
-    filters[6] = "<div class='filter_element untouchable' id='celebrations' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('" + website_index + "/images/filters/celebrations.png');\"></div><div class='filter_element_text'>Šventės</div></div>";
-    filters[7] = "<div class='filter_element untouchable' id='cooking_methods' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('" + website_index + "/images/filters/cooking_methods.png');\"></div><div class='filter_element_text'>Gaminimo būdai</div></div>";
+    filters[5] = "<div class='filter_element untouchable' id='celebrations' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('" + website_index + "/images/filters/celebrations.png');\"></div><div class='filter_element_text'>Šventės</div></div>";
+    filters[6] = "<div class='filter_element untouchable' id='cooking_methods' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('" + website_index + "/images/filters/cooking_methods.png');\"></div><div class='filter_element_text'>Gaminimo būdai</div></div>";
 
     var config_zone = "<div class='filter_element_go_back untouchable'><div class='go_back untouchable' onclick=\"filter_go_back('all')\"><<</div><div class='go_back untouchable' onclick=\"filter_go_back('one')\"><</div></div>";
 
@@ -222,6 +222,55 @@ function filter_start(){
 }
 
 function filter_category(category){
+    full_sidebar()
+    switch(category){
+        case "types":
+            var filters = [];
+            filters[0] = "<div class='filter_element untouchable' id='drinks' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('" + website_index + "/images/filters/types/drinks.png');\"></div><div class='filter_element_text'>Gėrimai</div></div>";
+            filters[1] = "<div class='filter_element untouchable' id='pastries' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('" + website_index + "/images/filters/types/pastries.png');\"></div><div class='filter_element_text'>Kepiniai</div></div>";
+            filters[2] = "<div class='filter_element untouchable' id='deserts' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('" + website_index + "/images/filters/types/deserts.png');\"></div><div class='filter_element_text'>Desertai</div></div>";
+            filters[3] = "<div class='filter_element untouchable' id='second_dishes' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('" + website_index + "/images/filters/types/second_dishes.png');\"></div><div class='filter_element_text'>Antrieji patiekalai</div></div>";
+            filters[4] = "<div class='filter_element untouchable' id='canned_meals' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('" + website_index + "/images/filters/types/canned_meals.png');\"></div><div class='filter_element_text'>Konservuoti patiekalai</div></div>";
+            filters[5] = "<div class='filter_element untouchable' id='porridges' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('" + website_index + "/images/filters/types/porridges.png');\"></div><div class='filter_element_text'>Košės</div></div>";
+            filters[6] = "<div class='filter_element untouchable' id='salads' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('" + website_index + "/images/filters/types/salads.png');\"></div><div class='filter_element_text'>Salotos</div></div>";
+            filters[7] = "<div class='filter_element untouchable' id='soups' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('" + website_index + "/images/filters/types/soups.png');\"></div><div class='filter_element_text'>Sriubos</div></div>";
+            filters[8] = "<div class='filter_element untouchable' id='sandwitches' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('" + website_index + "/images/filters/types/sandwitches.png');\"></div><div class='filter_element_text'>Sumuštiniai</div></div>";
+            filters[9] = "<div class='filter_element untouchable' id='stews' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('" + website_index + "/images/filters/types/stews.png');\"></div><div class='filter_element_text'>Troškiniai</div></div>";
+            filters[10] = "<div class='filter_element untouchable' id='jams' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('" + website_index + "/images/filters/types/jams.png');\"></div><div class='filter_element_text'>Uogienės</div></div>";
+            filters[11] = "<div class='filter_element untouchable' id='snacks' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('" + website_index + "/images/filters/types/snacks.png');\"></div><div class='filter_element_text'>Užkandžiai</div></div>";
+            filters[12] = "<div class='filter_element untouchable' id='sauces' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('" + website_index + "/images/filters/types/sauces.png');\"></div><div class='filter_element_text'>Padažai</div></div>";
+            break;
+        case "times":
+
+            var filters = [];
+            filters[0] = "<div class='filter_element untouchable' id='time_5' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('" + website_index + "/images/time.png');\"></div><div class='filter_element_text'>Iki 5min</div><div class='filter_element_indicator' id='indicator_time_5'></div></div>";
+            filters[1] = "<div class='filter_element untouchable' id='time_10' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('" + website_index + "/images/time.png');\"></div><div class='filter_element_text'>Iki 10min</div><div class='filter_element_indicator' id='indicator_time_10'></div></div>";
+            filters[2] = "<div class='filter_element untouchable' id='time_15' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('" + website_index + "/images/time.png');\"></div><div class='filter_element_text'>Iki 15min</div><div class='filter_element_indicator' id='indicator_time_15'></div></div>";
+            filters[3] = "<div class='filter_element untouchable' id='time_20' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('" + website_index + "/images/time.png');\"></div><div class='filter_element_text'>Iki 20min</div><div class='filter_element_indicator' id='indicator_time_20'></div></div>";
+            filters[4] = "<div class='filter_element untouchable' id='time_25' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('" + website_index + "/images/time.png');\"></div><div class='filter_element_text'>Iki 25min</div><div class='filter_element_indicator' id='indicator_time_25'></div></div>";
+            filters[5] = "<div class='filter_element untouchable' id='time_30' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('" + website_index + "/images/time.png');\"></div><div class='filter_element_text'>Iki 30min</div><div class='filter_element_indicator' id='indicator_time_30'></div></div>";
+            filters[6] = "<div class='filter_element untouchable' id='time_45' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('" + website_index + "/images/time.png');\"></div><div class='filter_element_text'>Iki 45min</div><div class='filter_element_indicator' id='indicator_time_45'></div></div>";
+            filters[7] = "<div class='filter_element untouchable' id='time_60' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('" + website_index + "/images/time.png');\"></div><div class='filter_element_text'>Iki 1h</div><div class='filter_element_indicator' id='indicator_time_60'></div></div>";
+            filters[8] = "<div class='filter_element untouchable' id='time_90' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('" + website_index + "/images/time.png');\"></div><div class='filter_element_text'>Iki 1h 30min</div><div class='filter_element_indicator' id='indicator_time_90'></div></div>";
+            filters[9] = "<div class='filter_element untouchable' id='time_120' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('" + website_index + "/images/time.png');\"></div><div class='filter_element_text'>Iki 2h</div><div class='filter_element_indicator' id='indicator_time_120'></div></div>";
+            filters[10] = "<div class='filter_element untouchable' id='time_180' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('" + website_index + "/images/time.png');\"></div><div class='filter_element_text'>Iki 3h</div><div class='filter_element_indicator' id='indicator_time_180'></div></div>";
+            break;
+
+    }
+
+    $("#filters_zone").fadeOut(transition_time, function(){
+        $("#filters_zone").html('');
+        $("#filters_zone").fadeIn(1);
+        show_filters(filters, 0);
+    });
+
+    var config_zone = "<div class='filter_element_go_back untouchable'><div class='go_back untouchable' onclick=\"filter_go_back('all')\"><<</div><div class='go_back untouchable' onclick=\"filter_go_back('one')\"><</div></div>";
+    $("#config_zone").fadeOut(transition_time, function(){
+        $("#config_zone").html(config_zone);
+        $("#config_zone").fadeIn(transition_time);
+    });
+
+    /*
     $.ajax({
         type: 'POST',
         url: 'ajax.php',
@@ -238,6 +287,8 @@ function filter_category(category){
             });
         }
     });
+
+    */
 }
 
 function content_navigation(type){
@@ -254,6 +305,7 @@ function content_navigation(type){
 }
 
 function filter_go_back(type){
+    full_sidebar()
     var config_zone =
         "<div class='filter_element untouchable' onclick='filter_start()'>" +
         "<div class='filter_element_image' id='add'></div>" +
@@ -292,6 +344,15 @@ function filter_go_back(type){
 }
 
 function manipulate_filter(ID){
+    full_sidebar();
+    var classes = ($("#indicator_" + ID).attr('class')).split(" ");
+    var selected = classes[1];
+    if(selected == "added"){
+        $("#indicator_" + ID).removeClass('added');
+    }else{
+        $("#indicator_" + ID).addClass('added');
+    }
+    /*
     $.ajax({
         type: 'POST',
         url: 'ajax.php',
@@ -306,6 +367,7 @@ function manipulate_filter(ID){
             append_recipes();
         }
     });
+    */
 }
 
 function filter_search_add(ID){
@@ -343,6 +405,7 @@ function filter_delete(ID){
 }
 
 function filter_selected(ID){
+    full_sidebar();
     var classes = ($("#" + ID).attr('class')).split(" ");
     var selected = classes[2];
     if(selected == "selected"){
@@ -377,6 +440,7 @@ function search(){
 }
 
 function focus_input(ID){
+    full_sidebar();
     $('#' + ID).focus();
 }
 
@@ -421,10 +485,30 @@ function search_input_focus(){
     if(!$("#search_input").is(":focus")){
         $("#search_zone").removeClass('unactive_search_zone');
         $("#search_zone").addClass('active_search_zone');
+        full_sidebar();
     }
 }
 
 function search_input_blur(){
     $("#search_zone").removeClass('active_search_zone');
     $("#search_zone").addClass('unactive_search_zone');
+}
+
+function sidebar_slide(){
+    var sidebar_class = ($("#sidebar").attr('class'));
+    if(sidebar_class == "full"){
+        squeeze_sidebar();
+    }else{
+        full_sidebar();
+    }
+}
+
+function full_sidebar(){
+    $("#sidebar").removeClass('full').removeClass('squeeze').addClass('full');
+    $("#content_wrapper").css('left','231px');
+}
+
+function squeeze_sidebar(){
+    $("#sidebar").removeClass('full').addClass('squeeze');
+    $("#content_wrapper").css('left','67px');
 }

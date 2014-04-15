@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>{% block title %}Bigger Better Dinner{% endblock %}</title>
+        <title>{% block title %}Foodex{% endblock %}</title>
         <meta charset="UTF-8" />
         <meta http-equiv="content-type" content="charset=UTF-8" />
         <meta name="description" content="recipes"/>
@@ -40,8 +40,9 @@
         <div id="toast_top" class="untouchable" onclick='to_very_top()'></div>
         <div id="toast_loading" class="untouchable"></div>
 
-        <div id="sidebar">
-            <div id="logo_zone" onclick="content_navigation('home')">Foodex</div>
+        <div id="sidebar" class="full">
+            <div id="sidebar_slider" onclick="sidebar_slide()"></div>
+            <div id="logo_zone" class="untouchable" onclick="content_navigation('home')"></div>
             <div id="nav_zone">
                {% block nav_zone %}
                    <div class="nav_zone_element untouchable" id="home" onclick="content_navigation('home')"></div>
@@ -55,7 +56,8 @@
                 <input id='search_input' placeholder='Ieškoti' onkeyup="search()" onfocus="search_input_focus()" onblur="search_input_blur()"/>
                 <div id='search_container' ></div>
             </div>
-            <div id='filters_zone'>
+            <div id="divider"></div>
+            <div id='filters_zone' onclick="full_sidebar()">
                 <div class="filter_element untouchable" id="universities-2" onclick="filter_selected(this.id)">
                     <div class="filter_element_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
                     <div class="filter_element_text">VU</div>

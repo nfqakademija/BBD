@@ -101,11 +101,18 @@ textarea{
   cursor:default;
 }
 
+.full{
+  width:230px;
+}
+
+.squeeze{
+  width:65px;
+}
+
 #sidebar{
   position:fixed;
   left:0px;
   top:0px;
-  width:230px;
   height:100%;
   background-color:@black;
   overflow:hidden;
@@ -114,28 +121,60 @@ textarea{
   border-right:1px solid black;
 }
 
+#sidebar_slider{
+  width: 15px;
+  height: 15px;
+  position: absolute;
+  background-image:url("@{base-url}/images/list.png");
+  background-position:50% 50%;
+  background-size:100% 100%;
+  background-repeat:no-repeat;
+}
+
+.full #sidebar_slider{
+  left: 211px;
+  top: 29px;
+}
+
+.squeeze #sidebar_slider{
+  left: 50px;
+  top: 25px;
+}
+
 #logo_zone{
-  width: 210px;
-  height: 45px;
+
   float: left;
   color: white;
   margin:10px; 
-  margin-top:20px;
+  margin-top:10px;
   margin-bottom:0px;
-  //background-image:url("@{base-url}/images/logo_text.png");
   background-position:50% 50%;
-  background-size:100% 100%;
+  background-size:70% 70%;
   background-repeat:no-repeat;
   font-size: 40px;
   text-align: center;
   line-height: 32px;
-  text-shadow: 0px 0px 2px white;
   font-weight: bold;
+  text-shadow:
+  -1px -1px 1px black,
+  1px -1px 1px black,
+  -1px 1px 1px black,
+  1px 1px 1px black;
+}
+
+.full #logo_zone{
+  width: 210px;
+  height: 45px;
+  background-image:url("@{base-url}/images/logo_text.png");
+}
+
+.squeeze #logo_zone{
+  width: 45px;
+  height: 45px;
+  background-image:url("@{base-url}/images/favicon.ico");
 }
 
 #nav_zone{
-  width: 220px;
-  height: 45px;
   float: left;
   color: white;
   text-transform: uppercase;
@@ -146,6 +185,20 @@ textarea{
   padding:10px;
   padding-bottom:0px;
   padding-right:0px;
+}
+
+.full #nav_zone{
+  width: 220px;
+  height: 45px;
+}
+
+.squeeze #nav_zone{
+  width: 55px;
+  height: 210px;
+}
+
+.squeeze #nav_zone .nav_zone_element{
+  margin-bottom:10px;
 }
 
 .nav_zone_element{
@@ -164,6 +217,7 @@ textarea{
   border:1px solid black;
   box-shadow:0px 0px 2px black;
   background-color:rgba(255, 255, 255, 0.12);
+  curosr:pointer;
 }
 
 .nav_element_active{
@@ -199,8 +253,6 @@ textarea{
 }
 
 #search_zone{
-  width: 208px;
-  height: 43px;
   float: left;
   color: white;
   line-height: 43px;
@@ -208,6 +260,36 @@ textarea{
   margin:10px;
   margin-bottom:0px;
   border:1px solid transparent;
+}
+
+.full #search_zone {
+  width: 208px;
+  height: 43px;
+}
+
+.squeeze #search_zone {
+  width: 43px;
+  height: 43px;
+}
+
+#divider{
+  height: 0px;
+  float: left;
+  margin-left:10px;
+  margin-top:10px;
+  background-image:url("@{base-url}/images/divider.png");
+  background-position:50% 50%;
+  background-size: 100% 100%;
+  background-repeat:no-repeat;
+  border-bottom:1px solid rgba(255, 255, 255, 0.04);
+}
+
+.full #divider{
+  width: 210px;
+}
+
+.squeeze #divider{
+  width: 45px;
 }
 
 .unactive_search_zone{
@@ -237,6 +319,14 @@ textarea{
   width:155px;
   background-color:transparent;
   float:left;
+}
+
+.full #search_input{
+  display:block;
+}
+
+.squeeze #search_input{
+  display:none;
 }
 
 #search_container{
@@ -309,7 +399,6 @@ textarea{
 
 
 #filters_zone{
-  width: 220px;
   float: left;
   color: white;
   padding: 10px;
@@ -323,15 +412,33 @@ textarea{
   overflow-x: hidden;
 }
 
+.full #filters_zone{
+  width: 220px;
+}
+
+.squeeze #filters_zone{
+  width: 45px;
+  top:340px;
+}
+
+.squeeze #filters_zone .filter_element{
+  width: 43px;
+}
+
+.squeeze #filters_zone .filter_element .filter_element_text{
+  display:none;
+}
+
+
 .filter_element{
-  width: 208px;
   height:43px;
   margin-bottom:10px;
   float:left;
   position:relative;
   border:1px solid transparent;
-
 }
+
+
 
 .filter_element:hover{
   background-color:rgba(255, 255, 255, 0.12);
@@ -396,7 +503,6 @@ textarea{
 }
 
 #config_zone{
-  width: 208px;
   height: 43px;
   float: left;
   color: white;
@@ -407,6 +513,34 @@ textarea{
   display:block;
   background-color:@black;
   border:1px solid transparent;
+}
+
+.full #config_zone{
+  width: 208px;
+}
+
+.squeeze #config_zone{
+  width: 43px;
+}
+
+.full #config_zone .filter_element{
+  width: 208px;
+}
+
+.squeeze #config_zone .filter_element{
+  width: 43px;
+}
+
+.squeeze #config_zone .filter_element .filter_element_text{
+  display:none;
+}
+
+.squeeze #config_zone .filter_element_go_back{
+  width:45px;
+}
+
+.squeeze #config_zone .filter_element_go_back .go_back {
+  width:43px;
 }
 
 #content_wrapper{
@@ -1178,7 +1312,7 @@ p{
   background-repeat: no-repeat;
   background-size: 100% 100%;
   background-position: 50% 50%;
-  background-image: url('/NFQ/web/images/rating_star.png');
+  background-image: url('@{base-url}/images/rating_star.png');
   color: #201f1d;
   font-weight: bold;
   width: 80px;

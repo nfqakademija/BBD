@@ -23,11 +23,6 @@ facebook_login:
 google_login:
     pattern: /login/check-google
 
-#NFQAkademijaRecipesBundle routes
-nfq_akademija_recipes:
-    resource: "@NFQAkademijaRecipesBundle/Resources/config/routing.yml"
-    prefix:   /
-
 #FosUserBundle Routes
 fos_user_security:
     resource: "@FOSUserBundle/Resources/config/routing/security.xml"
@@ -47,3 +42,9 @@ fos_user_resetting:
 fos_user_change_password:
     resource: "@FOSUserBundle/Resources/config/routing/change_password.xml"
     prefix: /profile
+
+#NFQAkademijaRecipesBundle routes
+nfq_akademija_recipes:
+    resource: "@NFQAkademijaRecipesBundle/Resources/config/routing.yml"
+    prefix:   /
+

@@ -28,42 +28,42 @@ class Recipe
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=255)
+     * @ORM\Column(name="name", type="string", length=255, nullable=true)
      */
     private $name;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="description", type="string", length=255)
+     * @ORM\Column(name="description", type="string", length=255, nullable=true)
      */
     private $description;
 
     /**
      * @var float
      *
-     * @ORM\Column(name="rating", type="float")
+     * @ORM\Column(name="rating", type="float", nullable=true)
      */
     private $rating;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="raters", type="integer")
+     * @ORM\Column(name="raters", type="integer", nullable=true)
      */
     private $raters;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="photo", type="string", length=255)
+     * @ORM\Column(name="photo", type="string", length=255, nullable=true)
      */
     private $photo;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="cooking_duration", type="time")
+     * @ORM\Column(name="cooking_duration", type="time", nullable=true)
      */
     private $cookingDuration;
 

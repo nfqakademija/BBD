@@ -1,44 +1,44 @@
-NFQAkademija\BaseBundle\Entity\Recipe:
-    constraints:
-        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
-            fields: [name]
-            message: "Receptas tokiu pavadinimu jau egzistuoja"
-    properties:
-        name:
-            - NotBlank: ~
-            - Length:
-                min: 3
-                max: 100
-                minMessage: "Recepto pavadinimas turi būti bent iš {{ limit }} simbolių"
-                maxMessage: "Recepto pavadinimas turi būti daugiausiai iš {{ limit }} simbolių"
-            - Regex:
-                pattern: "/^[A-z0-9ĄąČčĘęĖėĮįŠšŲųŪūŽž ,]+$/"
-                message: Nenaudokite specialių charakterių
-        description:
-            - NotBlank: ~
-            - Length:
-                min: 3
-                max: 1000
-                minMessage: "Gaminimo aprašymas turi būti bent iš {{ limit }} simbolių"
-                maxMessage: "Gaminimo aprašymas turi būti daugiausiai iš {{ limit }} simbolių"
-            - Regex:
-                pattern: "/^[-A-z0-9ĄąČčĘęĖėĮįŠšŲųŪūŽž ,().!]+$/"
-                message: Nenaudokite specialių charakterių
-        rating:
-            - NotBlank: ~
-            - Regex:
-                pattern: "/^[0]$/"
-                message: Naujas receptas įvertinimų neturi
-        raters:
-            - NotBlank: ~
-            - Regex:
-                pattern: "/^[0]$/"
-                message: Naujas receptas įvertinimų neturi
-        photo:
-            - NotBlank: ~
-            - Regex:
-                pattern: "/^[-A-z0-9ĄąČčĘęĖėĮįŠšŲųŪūŽž -.:\\\\]+$/"
-                message: Nenaudokite specialių charakterių
-        cookingDuration:
-        properties:
-        country:
+#NFQAkademija\BaseBundle\Entity\Recipe:
+#    constraints:
+#        - Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity:
+#            fields: [name]
+#            message: "Receptas tokiu pavadinimu jau egzistuoja"
+#    properties:
+#        name:
+#            - NotBlank: ~
+#            - Length:
+#                min: 3
+#                max: 100
+#                minMessage: "Recepto pavadinimas turi būti bent iš {{ limit }} simbolių"
+#                maxMessage: "Recepto pavadinimas turi būti daugiausiai iš {{ limit }} simbolių"
+#            - Regex:
+#                pattern: "/^[A-z0-9ĄąČčĘęĖėĮįŠšŲųŪūŽž ,]+$/"
+#                message: Nenaudokite specialių charakterių
+#        description:
+#            - NotBlank: ~
+#            - Length:
+#                min: 3
+#                max: 1000
+#                minMessage: "Gaminimo aprašymas turi būti bent iš {{ limit }} simbolių"
+#                maxMessage: "Gaminimo aprašymas turi būti daugiausiai iš {{ limit }} simbolių"
+#            - Regex:
+#                pattern: "/^[-A-z0-9ĄąČčĘęĖėĮįŠšŲųŪūŽž ,().!]+$/"
+#                message: Nenaudokite specialių charakterių
+#        rating:
+#            - NotBlank: ~
+#            - Regex:
+#                pattern: "/^[0]$/"
+#                message: Naujas receptas įvertinimų neturi
+#        raters:
+#            - NotBlank: ~
+#            - Regex:
+#                pattern: "/^[0]$/"
+#                message: Naujas receptas įvertinimų neturi
+#        photo:
+#            - NotBlank: ~
+#            - Regex:
+#                pattern: "/^[-A-z0-9ĄąČčĘęĖėĮįŠšŲųŪūŽž -.:\\\\]+$/"
+#                message: Nenaudokite specialių charakterių
+#        cookingDuration:
+#        properties:
+#        country:

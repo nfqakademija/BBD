@@ -1,72 +1,61 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8" />
-    <title>{% block title %}BBD{% endblock %}</title>
-    <script type="text/javascript"
-            src="{{ asset('bundles/nfqakademijarecipes/js/jquery-1.11.0.min.js') }}" ></script>
-    <script type="text/javascript">
-        $(document).ready(function() {
-            //listen for the form being submitted
-            $("#productForm").submit(function(){
-                //get the url for the form
-                var url=$("#productForm").attr("action");
-                //start send the post request
-                $.post(url,{
-                    formName:$("#name_id").val(),
-                    formQuantity:$("#quant_id").val(),
-                    other:"attributes"
-                },function(data){
-                    //the response is in the data variable
-                    if(data.responseCode==200 ){
-                        $('#output').html(data.greeting);
-                        $('#output').css("color","green");
-                    }
-                    else if(data.responseCode==400){//bad request
-                        $('#output').html(data.greeting);
-                        $('#output').css("color","red");
-                    }
-                    else{
-                        //controller did not return a json_encoded array
-                        alert("An unexpeded error occured.");
-                        //if you want to print the error:
-                        $('#output').html(data);
-                    }
-                });
-                // clear form
-                this.reset();
-                // dont what the browser to submit the form
-                return false;
-            });
-        });
-    </script>
-    {#
-    {% extends "::base.html.twig" %}
-    #}
-</head>
-<body>
+{% extends '::base.html.twig' %}
+    {% block javascripts %}
+        {{ parent() }}
+        <script type="text/javascript">
+            $(document).ready(function() {
+                var productsContainer = [];
+                $("#addProductToRecipe").on("click", function(e) {
+                    e.preventDefault()
+                    var item = $("#recipeProduct").val();
+                    var quantity = $("#productQuantity").val();
+                    var itemName = $("#recipeProduct").find(":selected").text();
+                    productsContainer.push({"item": item, "quantity": quantity});
+                    $("#recipeProductsContainer").val(JSON.stringify( { "items": productsContainer } ))
+
+                    console.log(JSON.stringify( { "items": productsContainer } ), productsContainer, itemName, item, quantity);
+                })
+            })
+        </script>
+    {% endblock %}
+
     {% block content %}
-        Pridėti naują:
-        <a href="{{ path('nfq_akademija_newcountry') }}">šalį</a>,
-        <a href="{{ path('nfq_akademija_newproperty') }}">recepto ypatybę</a>,
-        <a href="{{ path('nfq_akademija_newcategory') }}">produkto rūšį</a>,
-        <a href="{{ path('nfq_akademija_newproduct') }}">ingredientą</a><hr>
+        {#<a href="{{ path('nfq_akademija_newcountry') }}">šalį</a>,#}
+        {#<a href="{{ path('nfq_akademija_newproperty') }}">recepto ypatybę</a>,#}
+        {#<a href="{{ path('nfq_akademija_newcategory') }}">produkto rūšį</a>,#}
+        {#<a href="{{ path('nfq_akademija_newproduct') }}">ingredientą</a><hr>#}
         <h1>Sukurk savo receptą!</h1>
 
-        <div id="output"></div>
-        <form id="productForm" action="{{path('nfq_akademija_producttorecipe')}}" method="POST" >
-            Produktas:
-            <input type="text" name="name" id="name_id" value="" />
-            Kiekis:
-            <input type="text" name="quant" id="quant_id" value="" />
-            <input type="submit" value="+" />
-        </form>
-        {#
-        {{ form(productform) }}
-        #}
         <hr>
-        {{ form(form) }}
-        <hr><br>
+        {{ form_start(form) }}
+        {{ form_row(form.name) }}
+        {{ form_row(form.description) }}
+        {{ form_row(form.country) }}
+        {{ form_row(form.photo) }}
+
+        <div>
+            <div>
+            <select id="recipeProduct">
+            {% for product in products %}
+                <option value="{{ product.id }}">{{ product.name }}</option>
+            {% endfor %}
+            </select>
+            </div>
+            <div>
+                <input name="quantity" value="0" id="productQuantity">
+            </div>
+            <div><button id="addProductToRecipe">Pridėti</button></div>
+        </div>
+
+        <div>
+            Sarasas:
+            <div id="productList"></div>
+        </div>
+
+        <input id="recipeProductsContainer" type="hidden" name="products" value="[]">
+        {{ form_row(form.save) }}
+        {{ form_end(form) }}
+        <hr>
+
         <table border="1">
             <tr>
                 <th>ID</th>
@@ -106,5 +95,3 @@
             {% endfor %}
         </table>
     {% endblock %}
-</body>
-</html>

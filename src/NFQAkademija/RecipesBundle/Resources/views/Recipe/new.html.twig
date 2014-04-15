@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>{% block title %}BBD{% endblock %}</title>
+    <script type="text/javascript"
+            src="{{ asset('bundles/nfqakademijarecipes/js/jquery-1.11.0.min.js') }}" ></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            //listen for the form being submitted
+            $("#productForm").submit(function(){
+                //get the url for the form
+                var url=$("#productForm").attr("action");
+                //start send the post request
+                $.post(url,{
+                    formName:$("#name_id").val(),
+                    formQuantity:$("#quant_id").val(),
+                    other:"attributes"
+                },function(data){
+                    //the response is in the data variable
+                    if(data.responseCode==200 ){
+                        $('#output').html(data.greeting);
+                        $('#output').css("color","green");
+                    }
+                    else if(data.responseCode==400){//bad request
+                        $('#output').html(data.greeting);
+                        $('#output').css("color","red");
+                    }
+                    else{
+                        //controller did not return a json_encoded array
+                        alert("An unexpeded error occured.");
+                        //if you want to print the error:
+                        $('#output').html(data);
+                    }
+                });
+                // clear form
+                this.reset();
+                // dont what the browser to submit the form
+                return false;
+            });
+        });
+    </script>
+    {#
+    {% extends "::base.html.twig" %}
+    #}
+</head>
+<body>
+    {% block content %}
+        Pridėti naują:
+        <a href="{{ path('nfq_akademija_newcountry') }}">šalį</a>,
+        <a href="{{ path('nfq_akademija_newproperty') }}">recepto ypatybę</a>,
+        <a href="{{ path('nfq_akademija_newcategory') }}">produkto rūšį</a>,
+        <a href="{{ path('nfq_akademija_newproduct') }}">ingredientą</a><hr>
+        <h1>Sukurk savo receptą!</h1>
+
+        <div id="output"></div>
+        <form id="productForm" action="{{path('nfq_akademija_producttorecipe')}}" method="POST" >
+            Produktas:
+            <input type="text" name="name" id="name_id" value="" />
+            Kiekis:
+            <input type="text" name="quant" id="quant_id" value="" />
+            <input type="submit" value="+" />
+        </form>
+        {#
+        {{ form(productform) }}
+        #}
+        <hr>
+        {{ form(form) }}
+        <hr><br>
+        <table border="1">
+            <tr>
+                <th>ID</th>
+                <th>Pavadinimas</th>
+                <th>Apibūdinimas</th>
+                <th>Įvertinimas</th>
+                <th>Vertintojai</th>
+                <th>Foto</th>
+                <th>Laikas</th>
+                <th>Šalis</th>
+                <th>Ypatybė</th>
+            </tr>
+            {% for entity in entities %}
+                <tr>
+                    <td>{{ entity.id }}</td>
+                    <td>{{ entity.name }}</td>
+                    <td>{{ entity.description }}</td>
+                    <td>{{ entity.rating }}</td>
+                    <td>{{ entity.raters }}</td>
+                    <td>{{ entity.photo }}</td>
+                    <td>{{ entity.cookingDuration }}</td>
+                    {% if entity.country %}
+                        <td>{{ entity.country.name }}</td>
+                    {% else %}
+                        <td> - </td>
+                    {% endif %}
+                    {% if entity.properties %}
+                        <td>
+                            {% for property in entity.properties %}
+                                {{ property.name }} ,
+                            {% endfor %}
+                        </td>
+                    {% else %}
+                        <td> - </td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </table>
+    {% endblock %}
+</body>
+</html>

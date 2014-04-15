@@ -2,22 +2,40 @@ nfq_akademija_recipes_homepage:
     pattern:  /
     defaults: { _controller: NFQAkademijaRecipesBundle:Home:index }
 
-nfq_akademija_recipes_new:
-    pattern:  /naujas
-    defaults: { _controller: NFQAkademijaRecipesBundle:Home:new }
-
-nfq_akademija_recipes_show:
-    pattern:  /{id}/rodyti
-    defaults: { _controller: NFQAkademijaRecipesBundle:Home:show }
-
-nfq_akademija_recipes_delete:
-    pattern:  /{id}/trinti
-    defaults: { _controller: NFQAkademijaRecipesBundle:Home:delete }
-
 nfq_akademija_profile:
-    pattern:  /profilis
-    defaults: { _controller: NFQAkademijaRecipesBundle:Home:profile }
+    pattern:  /profile
+    defaults: { _controller: NFQAkademijaRecipesBundle:Profile:index }
 
 nfq_akademija_shoppinglist:
-    pattern:  /pirkiniusarasas
-    defaults: { _controller: NFQAkademijaRecipesBundle:Home:shoppingList }
+    pattern:  /shoppinglist
+    defaults: { _controller: NFQAkademijaRecipesBundle:ShoppingList:index }
+
+nfq_akademija_random:
+    pattern:  /random
+    defaults: { _controller: NFQAkademijaRecipesBundle:Random:index }
+
+nfq_akademija_new:
+    pattern: /new
+    defaults: { _controller: NFQAkademijaRecipesBundle:Recipe:new }
+
+nfq_akademija_producttorecipe:
+    pattern:  /producttorecipe
+    defaults: { _controller: NFQAkademijaRecipesBundle:Recipe:addProductToRecipe }
+    requirements:
+        _method:  POST
+
+nfq_akademija_newcategory:
+    pattern: /newcategory
+    defaults: { _controller: NFQAkademijaRecipesBundle:Recipe:newCategory }
+
+nfq_akademija_newcountry:
+    pattern: /newcountry
+    defaults: { _controller: NFQAkademijaRecipesBundle:Recipe:newCountry }
+
+nfq_akademija_newproduct:
+    pattern: /newproduct
+    defaults: { _controller: NFQAkademijaRecipesBundle:Recipe:newProduct }
+
+nfq_akademija_newproperty:
+    pattern: /newproperty
+    defaults: { _controller: NFQAkademijaRecipesBundle:Recipe:newProperty }

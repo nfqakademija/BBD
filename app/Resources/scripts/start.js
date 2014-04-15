@@ -9,7 +9,7 @@ var password_min_size = 5;
 var transition_time = 200;
 var scroll_animation_time = 600;
 var toast_show_time = 3000;
-var website_index = "/NFQ/web";
+var website_index = "/BBD/web";
 
 function toast(text, status){
     clearTimeout(toast_timer);

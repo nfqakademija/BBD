@@ -121,8 +121,8 @@ textarea{
   color: white;
   margin:10px; 
   margin-top:20px;
-  margin-bottom:10px;
-  background-image:url("@{base-url}/images/logo_text.png");
+  margin-bottom:0px;
+  //background-image:url("@{base-url}/images/logo_text.png");
   background-position:50% 50%;
   background-size:100% 100%;
   background-repeat:no-repeat;
@@ -208,6 +208,18 @@ textarea{
   margin:10px;
   margin-bottom:0px;
   border:1px solid transparent;
+}
+
+.unactive_search_zone{
+  background-color: transparent;
+  border: 1px solid transparent;
+  box-shadow: none;
+}
+
+.active_search_zone{
+  background-color:rgba(255, 255, 255, 0.12) !important;
+  border:1px solid black !important;
+  box-shadow:0px 0px 2px black !important;
 }
 
 #search_index{
@@ -312,27 +324,31 @@ textarea{
 }
 
 .filter_element{
-  width: 210px;
-  height:45px;
+  width: 208px;
+  height:43px;
   margin-bottom:10px;
   float:left;
   position:relative;
+  border:1px solid transparent;
 
 }
 
 .filter_element:hover{
-  background-color:white;
-  color:@black;
+  background-color:rgba(255, 255, 255, 0.12);
+  border:1px solid black;
+  box-shadow:0px 0px 2px black;
 }
 
 .filter_element:active{
-  background-color:rgb(240, 240, 240);
-  color:@black;
+  background-color:rgba(255, 255, 255, 0.2);
+  border:1px solid black;
+  box-shadow:0px 0px 2px black;
 }
 
 .selected{
-  background-color:rgb(226, 226, 226);
-  color:@black;
+  background-color:rgba(255, 255, 255, 0.2);
+  border:1px solid black;
+  box-shadow:0px 0px 2px black;
 }
 
 .filter_element > .filter_element_delete{
@@ -359,8 +375,8 @@ textarea{
 }
 
 .filter_element_image{
-  width:45px;
-  height:45px;
+  width:43px;
+  height:43px;
   margin-right:10px;
   float:left;
   background-position:50% 50%;
@@ -370,9 +386,9 @@ textarea{
 
 .filter_element_text{
   width:155px;
-  height:45px;
+  height:43px;
   float:left;
-  line-height:45px;
+  line-height:43px;
   font-size:17px;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -380,8 +396,8 @@ textarea{
 }
 
 #config_zone{
-  width: 210px;
-  height: 45px;
+  width: 208px;
+  height: 43px;
   float: left;
   color: white;
   margin:10px;
@@ -390,6 +406,7 @@ textarea{
   left:0px;
   display:block;
   background-color:@black;
+  border:1px solid transparent;
 }
 
 #content_wrapper{
@@ -565,6 +582,20 @@ textarea{
  // border:1px solid black;
 }
 
+.recipe_button:hover{
+  background: -webkit-linear-gradient(top, #F5F5F5, #A8A8A8);
+  background: -moz-linear-gradient(top, #F5F5F5, #A8A8A8);
+  background: -ms-linear-gradient(top, #F5F5F5, #A8A8A8);
+  background: -o-linear-gradient(top, #F5F5F5, #A8A8A8);
+}
+
+.recipe_button:active{
+  background: -webkit-linear-gradient(top, #C7C7C7, #727272);
+  background: -moz-linear-gradient(top, #C7C7C7, #727272);
+  background: -ms-linear-gradient(top, #C7C7C7, #727272);
+  background: -o-linear-gradient(top, #C7C7C7, #727272);
+}
+
 .recipe_rating_box{
   padding-top:5px;
   width:auto;
@@ -617,24 +648,27 @@ textarea{
 }
 
 .go_back{
-  width:105px;
-  height:45px;
+  width:103px;
+  height:43px;
   float:left;
   text-align:center;
   font-weight:bold;
   font-size:25px;
   color:white;
-  line-height:45px;
+  line-height:43px;
+  border:1px solid transparent;
 }
 
 .go_back:hover{
-  color:@black;
-  background-color:white;
+  background-color:rgba(255, 255, 255, 0.12);
+  border:1px solid black;
+  box-shadow:0px 0px 2px black;
 }
 
 .go_back:active{
-  color:@black;
-  background-color:rgb(240, 240, 240);
+  background-color:rgba(255, 255, 255, 0.2);
+  border:1px solid black;
+  box-shadow:0px 0px 2px black;
 }
 
 .filter_element_indicator {

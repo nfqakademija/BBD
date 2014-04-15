@@ -14,6 +14,16 @@ module.exports = function (grunt) {
                         dest: 'web/fonts'
                     }
                 ]
+            },
+            images: {
+                files: [
+                    {
+                        expand: true,
+                        flatten: true,
+                        src: './app/Resources/images/*',
+                        dest: 'web/images'
+                    }
+                ]
             }
         },
         less: {

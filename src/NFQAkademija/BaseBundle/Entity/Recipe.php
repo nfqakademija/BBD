@@ -12,10 +12,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Recipe
 {
-//   /**
-//    * @ORM\ManyToMany(targetEntity="Product", mappedBy="recipes")
-//    */
-//    private $products;
+//  /**
+//     * @ORM\ManyToMany(targetEntity="Product", mappedBy="recipes")
+//     */
+//   private $products;
     /**
      * @var integer
      *
@@ -61,9 +61,9 @@ class Recipe
     private $photo;
 
     /**
-     * @var string
+     * @var \DateTime
      *
-     * @ORM\Column(name="cooking_duration", type="string")
+     * @ORM\Column(name="cooking_duration", type="time")
      */
     private $cookingDuration;
 
@@ -74,7 +74,7 @@ class Recipe
     protected $properties;
 
     /**
-     * @ORM\ManyToOne(targetEntity="\NFQAkademija\BaseBundle\Entity\Country", inversedBy="recipes")
+     * @ORM\ManyToOne(targetEntity="\NFQAkademija\BaseBundle\Entity\Country")
      */
     private $country;
 
@@ -232,22 +232,6 @@ class Recipe
     public function getCookingDuration()
     {
         return $this->cookingDuration;
-    }
-
-    public static function getCookingDurations()
-    {
-        return array(
-            '<15 min'       => '<15 min',
-            '15 min'        => '15 min',
-            '30 min'        => '30 min',
-            '45 min'        => '45 min',
-            '1 val'         => '1 val',
-            '1 val, 15 min' => '1 val, 15 min',
-            '1 val, 30 min' => '1 val, 30 min',
-            '1 val, 45 min' => '1 val, 45 min',
-            '2 val'         => '2 val',
-            '>2 val'        => '>2 val',
-        );
     }
 
     /**

@@ -14,28 +14,5 @@ nfq_akademija_random:
     pattern:  /random
     defaults: { _controller: NFQAkademijaRecipesBundle:Random:index }
 
-nfq_akademija_new:
-    pattern: /new
-    defaults: { _controller: NFQAkademijaRecipesBundle:Recipe:new }
 
-nfq_akademija_producttorecipe:
-    pattern:  /producttorecipe
-    defaults: { _controller: NFQAkademijaRecipesBundle:Recipe:addProductToRecipe }
-    requirements:
-        _method:  POST
 
-nfq_akademija_newcategory:
-    pattern: /newcategory
-    defaults: { _controller: NFQAkademijaRecipesBundle:Recipe:newCategory }
-
-nfq_akademija_newcountry:
-    pattern: /newcountry
-    defaults: { _controller: NFQAkademijaRecipesBundle:Recipe:newCountry }
-
-nfq_akademija_newproduct:
-    pattern: /newproduct
-    defaults: { _controller: NFQAkademijaRecipesBundle:Recipe:newProduct }
-
-nfq_akademija_newproperty:
-    pattern: /newproperty
-    defaults: { _controller: NFQAkademijaRecipesBundle:Recipe:newProperty }

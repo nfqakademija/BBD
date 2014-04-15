@@ -1,1 +1,15 @@
-Čia {{ user }} profilis
+{% extends "::base.html.twig" %}
+
+
+{% block title %}Profile | BBD{% endblock %}
+
+{% block nav_zone %}
+    <div class="nav_zone_element untouchable" id="home" onclick="content_navigation('home')"></div>
+    <div class="nav_zone_element untouchable nav_element_active" id="profile" onclick="content_navigation('profile')"></div>
+    <div class="nav_zone_element untouchable" id="shoppinglist" onclick="content_navigation('shoppinglist')"></div>
+    <div class="nav_zone_element untouchable" id="random" onclick="content_navigation('random')"></div>
+{% endblock %}
+
+{% block content %}
+profile
+{% endblock %}

@@ -1,33 +1,14 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8" />
-        <title>{% block title %}Ai bbd{% endblock %}</title>
-        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
-    </head>
-    <body>
-        {% block content %}
-            <a href="{{ path('nfq_akademija_profile') }}">Profilis</a><br>
-            <a href="{{ path('nfq_akademija_shoppinglist') }}">Pirkinių sąrašas</a><br>
-            <a href="{{ path('nfq_akademija_recipes_new') }}">Naujas receptas</a><br><br>
-            {{ form(form) }}
-            <br><br>
-            <table border="3">
-                <tr>
-                    <th>ID</th>
-                    <th>Pavadinimas</th>
-                    <th>Tipas</th>
-                    <th>Ingredientai</th>
-                </tr>
-                {% for entity in entities %}
-                    <tr>
-                        <td><a href="{{ path('nfq_akademija_recipes_show', { 'id': entity.id }) }}">{{ entity.id }}</td>
-                        <td>{{ entity.RecipeName }}</td>
-                        <td>{{ entity.RecipeType }}</td>
-                        <td>{{ entity.RecipeIngredients }}</td>
-                    </tr>
-                {% endfor %}
-            </table>
-        {% endblock %}
-    </body>
-</html>
+{% extends "::base.html.twig" %}
+
+{% block title %}Bigger Better Dinner{% endblock %}
+
+{% block nav_zone %}
+    <div class="nav_zone_element untouchable nav_element_active" id="home" onclick="content_navigation('home')"></div>
+    <div class="nav_zone_element untouchable" id="profile" onclick="content_navigation('profile')"></div>
+    <div class="nav_zone_element  untouchable" id="shoppinglist" onclick="content_navigation('shoppinglist')"></div>
+    <div class="nav_zone_element untouchable" id="random" onclick="content_navigation('random')"></div>
+{% endblock %}
+
+{% block content %}
+   home
+{% endblock %}

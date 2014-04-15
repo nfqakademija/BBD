@@ -13,3 +13,7 @@ parameters:
 
     locale:            en
     secret:            ThisTokenIsNotSoSecretChangeIt
+    facebook_app_id:    1411099562488324
+    facebook_app_secret: af52183a641ddd35949899d6108721e2
+    google_app_id: gsdg
+    google_app_secret: gsdg

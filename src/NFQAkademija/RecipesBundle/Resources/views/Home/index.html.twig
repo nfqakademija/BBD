@@ -34,6 +34,9 @@
          function loader(){
              recipe_size = calculate_recipe_size();
              append_recipes();
+             $( window ).resize(function() {
+                 recalculate_width();
+             });
          }
      </script>
  {% endblock %}
@@ -41,7 +44,7 @@
 
 
 {% block content %}
-    <div id="content_wrapper">
+    <div id="content_wrapper" style="background-image:url('{{ asset('images/content_background.jpg') }}')">
     </div>
     <div id="sidebar_right" class="right_squeeze" id="sidebar_for_recipe_1">
         <div id="sidebar_right_image" style="background-image:url('{{ asset('images/food (5).jpg') }}')"></div>

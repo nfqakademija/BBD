@@ -8,6 +8,9 @@
         function loader(){
             recipe_size = calculate_recipe_size();
             append_recipes_to_profile();
+            $( window ).resize(function() {
+                recalculate_width();
+            });
         }
     </script>
 {% endblock %}

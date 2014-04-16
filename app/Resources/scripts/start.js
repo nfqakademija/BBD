@@ -743,6 +743,9 @@ function calculate_recipe_size(){
 function recalculate_width(){
     var content_width = parseInt(($("#content_wrapper").css('width')).replace("px", ""));
     var size_per_item = content_width / 4;
+    if(size_per_item < minimum_recipe_size){
+        size_per_item = content_width;
+    }
     $(".recipe_box").css('width', size_per_item + "px");
     $(".recipe_box").css('height', size_per_item + "px");
     $(".recipe_box").css('line-height', size_per_item + "px");

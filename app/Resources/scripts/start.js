@@ -618,6 +618,20 @@ function show_recipe(recipe_ID){
 
 }
 
+function show_random_recipe_info(recipe_ID){
+    var classes = ($("#sidebar_right").attr('class')).split(" ");
+    var selected = classes[0];
+    if(selected == "right_full"){
+        hide_random_recipe_info();
+    }else{
+        $("#sidebar_right").removeClass('right_squeeze').addClass('right_full');
+    }
+}
+
+function hide_random_recipe_info(){
+    $("#sidebar_right").removeClass('right_full').addClass('right_squeeze');
+}
+
 function hide_recipe(){
     $("#sidebar_right").removeClass('right_full').addClass('right_squeeze');
     $('.recipe_box').removeClass('recipe_active');
@@ -754,3 +768,13 @@ function recalculate_width(){
 function shoppinglist_search(){
     $('#search_container').css('display','block');
 }
+
+function coop(recipe_ID){
+    //use facebook API to share on wall to cook together with missing ingredients
+
+}
+
+function random_next(){
+    location.href = website_index + "/random";
+}
+

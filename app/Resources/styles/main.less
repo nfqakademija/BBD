@@ -172,23 +172,23 @@ textarea{
 }
 
 #sidebar_right_time:before{
-  background-image:url('@{base-url}/images/time.png');
+  background-image:url('@{base-url}/images/times.png');
 }
 
 #sidebar_right_country:before{
-  background-image:url('@{base-url}/images/time.png');
+  background-image:url('@{base-url}/images/countries.png');
 }
 
 #sidebar_right_main_cooking_method:before{
-  background-image:url('@{base-url}/images/time.png');
+  background-image:url('@{base-url}/images/cooking_methods.png');
 }
 
 #sidebar_right_type:before{
-  background-image:url('@{base-url}/images/time.png');
+  background-image:url('@{base-url}/images/types.png');
 }
 
 #sidebar_right_characteristics:before{
-  background-image:url('@{base-url}/images/time.png');
+  background-image:url('@{base-url}/images/characteristics.png');
 }
 
 
@@ -241,6 +241,15 @@ textarea{
   position: absolute;
   bottom: 65px;
   top: 391px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  width: 210px;
+}
+
+#sidebar_right_random_ingredients_zone{
+  position: absolute;
+  bottom: 65px;
+  top: 176px;
   overflow-y: scroll;
   overflow-x: hidden;
   width: 210px;
@@ -1907,11 +1916,6 @@ p{
   background: -o-linear-gradient(top, #FFAE00, #726E12);
 }
 
-#content_profile{
-
-
-}
-
 .profile_recipes{
   width:100%;
   float:left;
@@ -1925,3 +1929,73 @@ p{
   background-color:@black;
   color:@white;
 }
+
+#random_title{
+  padding: 20px;
+  height: 40px;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  font-size: 30px;
+  line-height: 40px;
+  width: auto;
+  float: left;
+  margin-left: 20px;
+  margin-top: 20px;
+  border: 1px solid black;
+  box-shadow: 0px 0px 2px black;
+}
+
+#random_button_zone{
+  position:fixed;
+  bottom:10px;
+  right:10px;
+  width:497px;
+  height:45px;
+  z-index:6;
+}
+
+.random_button{
+  border: 1px solid black;
+  box-shadow: 0px 0px 2px black;
+  height:43px;
+  width:43px;
+  float:left;
+  margin-right:10px;
+  background-color: rgba(0, 0, 0, 0.8);
+  background-size:100% 100%;
+  background-position:50% 50%;
+  background-repeat:no-repeat;
+}
+
+#sidebar_right_random_cook_button{
+  width:208px;
+  height:43px;
+  background-color:@blue;
+  border:1px solid black;
+  box-shadow:0px 0px 2px black;
+  text-align:center;
+  line-height:43px;
+  font-weight:bold;
+  font-size:18px;
+  text-transform:uppercase;
+  color:white;
+  float:left;
+  margin-left:10px;
+}
+
+#random_button_shoppinglist{
+  background-image: url('@{base-url}/images/shoppinglist.png');
+}
+
+#random_button_coop{
+  background-image: url('@{base-url}/images/facebook.png');
+}
+
+#random_button_next{
+  background-image: url('@{base-url}/images/random.png');
+  height:100px;
+  width:100px;
+  margin-right:10px;
+  margin-top:-57px;
+}
+

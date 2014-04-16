@@ -51,29 +51,19 @@
                    <div class="nav_zone_element untouchable" id="random" onclick="content_navigation('random')"></div>
                {% endblock %}
             </div>
-            <div id="search_zone">
-                <div id='search_index' onclick="focus_input('search_input')" ></div>
-                <input id='search_input' placeholder='Ieškoti' onkeyup="search()" onfocus="search_input_focus()" onblur="search_input_blur()"/>
-                <div id='search_container' ></div>
+            <div id="search_zone" onclick="full_sidebar()">
+                {% block search_zone %}
+                    <div id='search_index' onclick="focus_input('search_input')" ></div>
+                    <input id='search_input' placeholder='Ieškoti' onkeyup="search()" onfocus="search_input_focus()" onblur="search_input_blur()"/>
+                    <div id='search_container' ></div>
+                {% endblock %}
             </div>
-            <div id="divider"></div>
+            <div id="divider" onclick="full_sidebar()"></div>
             <div id='filters_zone' onclick="full_sidebar()">
-                <div class="filter_element untouchable" id="universities-2" onclick="filter_selected(this.id)">
-                    <div class="filter_element_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
-                    <div class="filter_element_text">VU</div>
-                    <div class="filter_element_delete" id="delete_universities-2" onclick="filter_delete(this.id)"></div>
-                </div>
-                <div class="filter_element untouchable" id="universities-1" onclick="filter_selected(this.id)">
-                    <div class="filter_element_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
-                    <div class="filter_element_text">VU</div>
-                    <div class="filter_element_delete" id="delete_universities-1" onclick="filter_delete(this.id)"></div>
-                </div>
+                {% block filters_zone %}{% endblock %}
             </div>
-            <div id='config_zone'>
-                <div class='filter_element untouchable' onclick="filter_start()">
-                    <div class='filter_element_image' id='add'></div>
-                    <div class='filter_element_text'>Pridėti filtrą</div>
-                </div>
+            <div id='config_zone' onclick="full_sidebar()">
+                {% block config_zone %}{% endblock %}
             </div>
         </div>
 

@@ -5,6 +5,8 @@
     <script>
         function loader(){
             getLocation();
+            $('#config_zone').css('display','none');
+            $('#filters_zone').css('bottom','10px');
         }
 
         function key_check(event){
@@ -87,6 +89,19 @@
     <div class="nav_zone_element nav_element_active untouchable" id="shoppinglist" onclick="content_navigation('shoppinglist')"></div>
     <div class="nav_zone_element untouchable" id="random" onclick="content_navigation('random')"></div>
 {% endblock %}
+
+{% block search_zone %}
+    <div id='search_index' onclick="focus_input('shoppinglist_input')" ></div>
+    <input id='shoppinglist_input' placeholder='Pridėti prekių' onkeyup="shoppinglist_search()" onfocus="shoppinglist_input_focus()" onblur="shoppinglist_input_blur()"/>
+    <div id='shoppinglist_container' ></div>
+{% endblock %}
+
+{% block filters_zone %}
+    Prekiu sarasas
+
+{% endblock %}
+
+{% block config_zone %}{% endblock %}
 
 {% block content %}
     <div id="content_wrapper">

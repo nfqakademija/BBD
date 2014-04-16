@@ -9,6 +9,26 @@
     <div class="nav_zone_element untouchable nav_element_active" id="random" onclick="content_navigation('random')"></div>
 {% endblock %}
 
+ {% block filters_zone %}
+     <div class="filter_element untouchable" id="universities-2" onclick="filter_selected(this.id)">
+         <div class="filter_element_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
+         <div class="filter_element_text">VU</div>
+         <div class="filter_element_delete" id="delete_universities-2" onclick="filter_delete(this.id)"></div>
+     </div>
+     <div class="filter_element untouchable" id="universities-1" onclick="filter_selected(this.id)">
+         <div class="filter_element_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
+         <div class="filter_element_text">VU</div>
+         <div class="filter_element_delete" id="delete_universities-1" onclick="filter_delete(this.id)"></div>
+     </div>
+ {% endblock %}
+
+{% block config_zone %}
+    <div class='filter_element untouchable' onclick="filter_start()">
+        <div class='filter_element_image' id='add'></div>
+        <div class='filter_element_text'>Pridėti filtrą</div>
+    </div>
+{% endblock %}
+
 {% block content %}
     <div id="content_wrapper" style="background-image:url('{{ asset('images/content_background.jpg') }}')">
 

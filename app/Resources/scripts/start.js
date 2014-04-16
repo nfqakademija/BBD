@@ -567,6 +567,19 @@ function search_input_blur(){
     $("#search_zone").addClass('unactive_search_zone');
 }
 
+function shoppinglist_input_focus(){
+    if(!$("#shoppinglist_input").is(":focus")){
+        $("#search_zone").removeClass('unactive_search_zone');
+        $("#search_zone").addClass('active_search_zone');
+        full_sidebar();
+    }
+}
+
+function shoppinglist_input_blur(){
+    $("#search_zone").removeClass('active_search_zone');
+    $("#search_zone").addClass('unactive_search_zone');
+}
+
 function sidebar_slide(){
     var sidebar_class = ($("#sidebar").attr('class'));
     if(sidebar_class == "full"){
@@ -605,4 +618,28 @@ function ingredient_selected(ingredient_ID){
 function add_to_shopping_list(recipe_ID){
     $('.ingredient_indicator').removeClass('ingredient_indicator_have').removeClass('ingredient_indicator_undefined').removeClass('ingredient_indicator_shoppinglist').addClass('ingredient_indicator_shoppinglist');
     //ajax add all products of recipe to shopping list
+}
+
+function calculate_recipe_size(){
+    //$(window).height();   // returns height of browser viewport
+    //$(document).height(); // returns height of HTML document
+    //$(window).width();   // returns width of browser viewport
+    //$(document).width(); // returns width of HTML document
+    //screen.height;
+    //screen.width;
+
+    var content_width = parseInt(($("#content_wrapper").css('width')).replace("px", ""));
+    var size_per_item = content_width / 4;
+    if(size_per_item < minimum_recipe_size){
+        size_per_item = content_width;
+    }
+    return size_per_item;
+
+}
+
+function recalculate_width(){
+    var content_width = parseInt(($("#content_wrapper").css('width')).replace("px", ""));
+    var size_per_item = content_width / 4;
+    $(".recipe_box").css('width',size_per_item + "px");
+    $(".recipe_box").css('height',size_per_item + "px");
 }

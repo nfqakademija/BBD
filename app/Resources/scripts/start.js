@@ -28,6 +28,92 @@ function toast(text, status){
         $("#toast_wrapper").css('height','0px');
     },toast_show_time);
 }
+function append_recipes_to_profile(){
+    var recipes = [];
+    recipes[0] = ["0","/BBD/web/images/food (0).jpg", "title0"];
+    recipes[1] = ["1","/BBD/web/images/food (1).png", "title0"];
+    recipes[2] = ["2","/BBD/web/images/food (2).jpg", "title0"];
+    recipes[3] = ["3","/BBD/web/images/food (3).jpg", "title0"];
+    recipes[4] = ["4","/BBD/web/images/food (4).jpg", "title0"];
+    recipes[5] = ["5","/BBD/web/images/food (5).jpg", "title0"];
+    recipes[6] = ["6","/BBD/web/images/food (6).jpg", "title0"];
+    recipes[7] = ["7","/BBD/web/images/food (7).jpg", "title0"];
+    recipes[8] = ["8","/BBD/web/images/food (8).jpg", "title0"];
+    recipes[9] = ["9","/BBD/web/images/food (9).jpg", "title0"];
+    recipes[10] = ["10","/BBD/web/images/food (10).jpg", "title0"];
+    recipes[11] = ["11","/BBD/web/images/food (11).jpg", "title0"];
+    recipes[12] = ["12","/BBD/web/images/food (12).jpg", "title0"];
+    recipes[13] = ["13","/BBD/web/images/food (13).jpg", "title0"];
+    recipes[14] = ["14","/BBD/web/images/food (14).jpg", "title0"];
+    recipes[15] = ["15","/BBD/web/images/food (15).jpg", "title0"];
+    recipes[16] = ["16","/BBD/web/images/food (16).jpg", "title0"];
+    recipes[17] = ["17","/BBD/web/images/food (17).jpg", "title0"];
+    recipes[18] = ["18","/BBD/web/images/food (18).jpg", "title0"];
+    recipes[19] = ["19","/BBD/web/images/food (19).jpg", "title0"];
+    recipes[20] = ["20","/BBD/web/images/food (20).jpg", "title0"];
+
+    var add_recipe = website_index + "/images/add.png";
+    //info about profile
+    var profile_image = website_index + "/images/profile.png";
+    var profile_name = "Vardas Pavardė";
+    var profile_email = "emeilas@gmail.com";
+    $("#profile_recipes").append("<div class='recipe_box' id='profile_box' style=\"background-image: url('" + profile_image + "');line-height:" + recipe_size + "px;width:" + recipe_size + "px;height:" + recipe_size + "px;\"></div>");
+    $("#profile_recipes").append("<div class='recipe_box' id='profile_box' style=\"line-height:" + recipe_size + "px;width:" + recipe_size + "px;height:" + recipe_size + "px;\">" + profile_name + "<br/>" + profile_email + "</div>");
+    $("#profile_recipes").append("<div class='recipe_box' id='profile_box' style=\"line-height:" + recipe_size + "px;width:" + recipe_size + "px;height:" + recipe_size + "px;\">Atsijungti</div>");
+    $("#profile_recipes").append("<div class='recipe_box' id='profile_box' style=\"background-image: url('" + add_recipe + "');background-size:70% 70%;line-height:" + recipe_size + "px;width:" + recipe_size + "px;height:" + recipe_size + "px;\" onclick=\"go_to_new_recipe()\"></div>");
+
+
+    //info about profile recipes
+    $("#profile_recipes").append("<div class='recipe_box' id='profile_box' style=\"line-height:" + recipe_size + "px;width:" + recipe_size + "px;height:" + recipe_size + "px;\">Vėliau</div>");
+    for(i = 0; i < 4; i++){
+        var data = recipes[i];
+        var id = data[0];
+        var image = data[1];
+        var title = data[2];
+        var appendable_data = "<div class='recipe_box' id='recipe_" + id + "' style=\"background-image: url('" + image + "');width:" + recipe_size + "px;height:" + recipe_size +  "px;\" onclick=\"show_recipe('" + id + "')\"></div>";
+        $("#profile_recipes").append(appendable_data);
+    }
+
+    $("#profile_recipes").append("<div class='recipe_box' id='profile_box' style=\"line-height:" + recipe_size + "px;width:" + recipe_size + "px;height:" + recipe_size + "px;\">Gaminta</div>");
+    for(i = 5; i < 9; i++){
+        var data = recipes[i];
+        var id = data[0];
+        var image = data[1];
+        var title = data[2];
+        var appendable_data = "<div class='recipe_box' id='recipe_" + id + "' style=\"background-image: url('" + image + "');width:" + recipe_size + "px;height:" + recipe_size +  "px;\" onclick=\"show_recipe('" + id + "')\"></div>";
+        $("#profile_recipes").append(appendable_data);
+    }
+
+    $("#profile_recipes").append("<div class='recipe_box' id='profile_box' style=\"line-height:" + recipe_size + "px;width:" + recipe_size + "px;height:" + recipe_size + "px;\">Patinka</div>");
+    for(i = 9; i < 13; i++){
+        var data = recipes[i];
+        var id = data[0];
+        var image = data[1];
+        var title = data[2];
+        var appendable_data = "<div class='recipe_box' id='recipe_" + id + "' style=\"background-image: url('" + image + "');width:" + recipe_size + "px;height:" + recipe_size +  "px;\" onclick=\"show_recipe('" + id + "')\"></div>";
+        $("#profile_recipes").append(appendable_data);
+    }
+
+    $("#profile_recipes").append("<div class='recipe_box' id='profile_box' style=\"line-height:" + recipe_size + "px;width:" + recipe_size + "px;height:" + recipe_size + "px;\">Peržiūrėta</div>");
+    for(i = 14; i < 17; i++){
+        var data = recipes[i];
+        var id = data[0];
+        var image = data[1];
+        var title = data[2];
+        var appendable_data = "<div class='recipe_box' id='recipe_" + id + "' style=\"background-image: url('" + image + "');width:" + recipe_size + "px;height:" + recipe_size +  "px;\" onclick=\"show_recipe('" + id + "')\"></div>";
+        $("#profile_recipes").append(appendable_data);
+    }
+    $("#profile_recipes").append("<div class='recipe_box' id='profile_box' style=\"line-height:" + recipe_size + "px;width:" + recipe_size + "px;height:" + recipe_size + "px;\">Tavo sukurti</div>");
+    for(i = 17; i < 20; i++){
+        var data = recipes[i];
+        var id = data[0];
+        var image = data[1];
+        var title = data[2];
+        var appendable_data = "<div class='recipe_box' id='recipe_" + id + "' style=\"background-image: url('" + image + "');width:" + recipe_size + "px;height:" + recipe_size +  "px;\" onclick=\"show_recipe('" + id + "')\"></div>";
+        $("#profile_recipes").append(appendable_data);
+    }
+}
+
 
 function append_recipes(){
     $("#content_wrapper").html('');
@@ -339,7 +425,11 @@ function content_navigation(type){
         case "random": location.href = website_index + "/random"; break;
         default: location.href = website_index + "/"; break;
     }
+}
 
+
+function go_to_new_recipe(){
+    location.href= website_index + "/new";
 }
 
 function filter_go_back(type){
@@ -457,6 +547,9 @@ function filter_selected(ID){
 function search(){
     var value = ($('#search_input').val()).trim();
     value = value.replace(/[-\/\\^$*+?.,()|[\]{}]/g, ' ');
+    $('#search_container').css('display','block');
+
+    /*
     $.ajax({
         type: 'POST',
         url: 'ajax.php',
@@ -475,6 +568,8 @@ function search(){
             }
         }
     });
+
+    */
 }
 
 function focus_input(ID){
@@ -565,6 +660,8 @@ function search_input_focus(){
 function search_input_blur(){
     $("#search_zone").removeClass('active_search_zone');
     $("#search_zone").addClass('unactive_search_zone');
+    $('#search_container').html('');
+    $('#search_container').css('display','none');
 }
 
 function shoppinglist_input_focus(){
@@ -578,6 +675,8 @@ function shoppinglist_input_focus(){
 function shoppinglist_input_blur(){
     $("#search_zone").removeClass('active_search_zone');
     $("#search_zone").addClass('unactive_search_zone');
+    $('#search_container').html('');
+    $('#search_container').css('display','none');
 }
 
 function sidebar_slide(){
@@ -640,6 +739,11 @@ function calculate_recipe_size(){
 function recalculate_width(){
     var content_width = parseInt(($("#content_wrapper").css('width')).replace("px", ""));
     var size_per_item = content_width / 4;
-    $(".recipe_box").css('width',size_per_item + "px");
-    $(".recipe_box").css('height',size_per_item + "px");
+    $(".recipe_box").css('width', size_per_item + "px");
+    $(".recipe_box").css('height', size_per_item + "px");
+    $(".recipe_box").css('line-height', size_per_item + "px");
+}
+
+function shoppinglist_search(){
+    $('#search_container').css('display','block');
 }

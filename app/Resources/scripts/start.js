@@ -10,6 +10,9 @@ var transition_time = 200;
 var scroll_animation_time = 600;
 var toast_show_time = 3000;
 var website_index = "/BBD/web";
+var minimum_recipe_size = 90;
+var recipe_size = minimum_recipe_size;
+
 
 function toast(text, status){
     clearTimeout(toast_timer);
@@ -27,7 +30,35 @@ function toast(text, status){
 }
 
 function append_recipes(){
-    $(".content_list").html('');
+    $("#content_wrapper").html('');
+
+    //later need from ajax with filters
+    var recipes = [];
+    recipes[0] = ["0","/BBD/web/images/food (0).jpg", "title0"];
+    recipes[1] = ["1","/BBD/web/images/food (1).png", "title0"];
+    recipes[2] = ["2","/BBD/web/images/food (2).jpg", "title0"];
+    recipes[3] = ["3","/BBD/web/images/food (3).jpg", "title0"];
+    recipes[4] = ["4","/BBD/web/images/food (4).jpg", "title0"];
+    recipes[5] = ["5","/BBD/web/images/food (5).jpg", "title0"];
+    recipes[6] = ["6","/BBD/web/images/food (6).jpg", "title0"];
+    recipes[7] = ["7","/BBD/web/images/food (7).jpg", "title0"];
+    recipes[8] = ["8","/BBD/web/images/food (8).jpg", "title0"];
+    recipes[9] = ["9","/BBD/web/images/food (9).jpg", "title0"];
+    recipes[10] = ["10","/BBD/web/images/food (10).jpg", "title0"];
+    recipes[11] = ["11","/BBD/web/images/food (11).jpg", "title0"];
+    recipes[12] = ["12","/BBD/web/images/food (12).jpg", "title0"];
+    recipes[13] = ["13","/BBD/web/images/food (13).jpg", "title0"];
+    recipes[14] = ["14","/BBD/web/images/food (14).jpg", "title0"];
+    recipes[15] = ["15","/BBD/web/images/food (15).jpg", "title0"];
+    recipes[16] = ["16","/BBD/web/images/food (16).jpg", "title0"];
+    recipes[17] = ["17","/BBD/web/images/food (17).jpg", "title0"];
+
+
+    for(i = 0; i < recipes.length; i++){
+        append_recipe(recipes[i]);
+    }
+
+    /*
     $.ajax({
         type: 'POST',
         url: 'ajax.php',
@@ -40,10 +71,17 @@ function append_recipes(){
             }
         }
     });
+    */
 }
 
 function append_recipe(data){
-    $(".content_list").append(data);
+    var id = data[0];
+    var image = data[1];
+    var title = data[2];
+
+    var appendable_data = "<div class='recipe_box' id='recipe_" + id + "' style=\"background-image: url('" + image + "');width:" + recipe_size + "px;height:" + recipe_size +  "px;\" onclick=\"show_recipe('" + id + "')\"></div>";
+
+    $("#content_wrapper").append(appendable_data);
 }
 
 function to_very_top(){
@@ -451,8 +489,43 @@ function last_index(){
 }
 
 function show_recipe(recipe_ID){
-    location.href = website_index + "/recipe/" + recipe_ID;
+    var classes = ($("#recipe_" + recipe_ID).attr('class')).split(" ");
+    var selected = classes[1];
+    if(selected == "recipe_active"){
+        hide_recipe();
+    }else{
+        $("#sidebar_right").removeClass('right_squeeze').addClass('right_full');
+        $('.recipe_box').removeClass('recipe_active');
+        $("#recipe_" + recipe_ID).addClass('recipe_active');
+        //$("#content_wrapper").css('right','231px');
+
+
+        //from ajax with recipe ID get
+        var image;
+        var title;
+        var country;
+        var time;
+        var rating;
+        var main_cooking_method;
+        var type;
+        var characteristics; //array of them
+        var celebration; //array of them or empty
+        var ingredients; //array of them
+
+
+    }
+
+    recalculate_width();
+
 }
+
+function hide_recipe(){
+    $("#sidebar_right").removeClass('right_full').addClass('right_squeeze');
+    $('.recipe_box').removeClass('recipe_active');
+    //$("#content_wrapper").css('right','0px');
+}
+
+
 
 function cook(recipe_ID){
     location.href = website_index + "/cook/" + recipe_ID + "/1";
@@ -506,9 +579,30 @@ function sidebar_slide(){
 function full_sidebar(){
     $("#sidebar").removeClass('full').removeClass('squeeze').addClass('full');
     $("#content_wrapper").css('left','231px');
+    recalculate_width();
 }
 
 function squeeze_sidebar(){
     $("#sidebar").removeClass('full').addClass('squeeze');
-    $("#content_wrapper").css('left','67px');
+    $("#content_wrapper").css('left','66px');
+    recalculate_width();
+}
+
+function ingredient_selected(ingredient_ID){
+    var classes = ($("#ingredient_indicator-" + ingredient_ID).attr('class')).split(" ");
+    var indicator = classes[1];
+    if(indicator == "ingredient_indicator_undefined"){
+        $("#ingredient_indicator-" + ingredient_ID).removeClass('ingredient_indicator_undefined').addClass('ingredient_indicator_shoppinglist');
+        //ajax to add to shoping list
+    }else if(indicator == "ingredient_indicator_shoppinglist"){
+        $("#ingredient_indicator-" + ingredient_ID).removeClass('ingredient_indicator_shoppinglist').addClass('ingredient_indicator_have');
+        //ajax to remove from shoping list
+    }else if(indicator == "ingredient_indicator_have"){
+        $("#ingredient_indicator-" + ingredient_ID).removeClass('ingredient_indicator_have').addClass('ingredient_indicator_undefined');
+    }
+}
+
+function add_to_shopping_list(recipe_ID){
+    $('.ingredient_indicator').removeClass('ingredient_indicator_have').removeClass('ingredient_indicator_undefined').removeClass('ingredient_indicator_shoppinglist').addClass('ingredient_indicator_shoppinglist');
+    //ajax add all products of recipe to shopping list
 }

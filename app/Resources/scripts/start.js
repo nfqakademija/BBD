@@ -499,6 +499,8 @@ function manipulate_filter(ID){
 }
 
 function filter_search_add(ID){
+
+    /*
     $.ajax({
         type: 'POST',
         url: 'ajax.php',
@@ -513,6 +515,8 @@ function filter_search_add(ID){
                 $("#filters_zone").append(data.filter);
         }
     });
+
+    */
 }
 
 

@@ -93,7 +93,56 @@
 {% block search_zone %}
     <div id='search_index' onclick="focus_input('shoppinglist_input')" ></div>
     <input id='shoppinglist_input' placeholder='Pridėti prekių' onkeyup="shoppinglist_search()" onfocus="shoppinglist_input_focus()" onblur="shoppinglist_input_blur()"/>
-    <div id='search_container'></div>
+    <div id='search_container'>
+
+        <div class="search_item untouchable" id="item-5" onclick="filter_search_add('5')">
+            <div class="search_item_image" style="background-image:url('{{ asset('images/food (2).jpg') }}')"></div>
+            <div class="search_item_title">Ananasas</div>
+            <div class="search_item_bottom_info">Ingredientas</div>
+        </div>
+
+        <div class="search_item untouchable" id="item-5" onclick="filter_search_add('5')">
+            <div class="search_item_image" style="background-image:url('{{ asset('images/food (5).jpg') }}')"></div>
+            <div class="search_item_title">Agurkas</div>
+            <div class="search_item_bottom_info">Ingredientas</div>
+        </div>
+
+        <div class="search_item untouchable" id="item-5" onclick="filter_search_add('5')">
+            <div class="search_item_image" style="background-image:url('{{ asset('images/food (3).jpg') }}')"></div>
+            <div class="search_item_title">Aguona</div>
+            <div class="search_item_bottom_info">Ingredientas</div>
+        </div>
+
+        <div class="search_item untouchable" id="item-5" onclick="filter_search_add('5')">
+            <div class="search_item_image" style="background-image:url('{{ asset('images/food (4).jpg') }}')"></div>
+            <div class="search_item_title">Apelsinas</div>
+            <div class="search_item_bottom_info">Ingredientas</div>
+        </div>
+
+        <div class="search_item untouchable" id="item-5" onclick="filter_search_add('5')">
+            <div class="search_item_image" style="background-image:url('{{ asset('images/food (4).jpg') }}')"></div>
+            <div class="search_item_title">Apelsinas</div>
+            <div class="search_item_bottom_info">Ingredientas</div>
+        </div>
+
+        <div class="search_item untouchable" id="item-5" onclick="filter_search_add('5')">
+            <div class="search_item_image" style="background-image:url('{{ asset('images/food (4).jpg') }}')"></div>
+            <div class="search_item_title">Apelsinas</div>
+            <div class="search_item_bottom_info">Ingredientas</div>
+        </div>
+
+        <div class="search_item untouchable" id="item-5" onclick="filter_search_add('5')">
+            <div class="search_item_image" style="background-image:url('{{ asset('images/food (4).jpg') }}')"></div>
+            <div class="search_item_title">Apelsinas</div>
+            <div class="search_item_bottom_info">Ingredientas</div>
+        </div>
+
+        <div class="search_item untouchable" id="item-5" onclick="filter_search_add('5')">
+            <div class="search_item_image" style="background-image:url('{{ asset('images/food (4).jpg') }}')"></div>
+            <div class="search_item_title">Apelsinas</div>
+            <div class="search_item_bottom_info">Ingredientas</div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block filters_zone %}

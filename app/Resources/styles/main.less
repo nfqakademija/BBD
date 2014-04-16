@@ -508,7 +508,7 @@ textarea{
 }
 
 #search_container{
-  width: 208px;
+  width: 188px;
   min-height: 45px;
   background-color: rgba(59, 59, 59, 1);
   max-height: 300px;
@@ -523,28 +523,33 @@ textarea{
   border-top: none;
   margin-top: -1px;
   margin-left: -1px;
+  padding:10px;
 }
 
 .search_item{
-  width:200px;
-  height:45px;
-  margin-top:10px;
-  float:left;
+  width:186px;
+  height:43px;
   font-size:15px;
-  padding-right:10px;
+  float:left;
+  position:relative;
+  border:1px solid transparent;
 }
 
 .search_item:hover{
-  background-color:rgb(240, 240, 240);
+  background-color:rgba(255, 255, 255, 0.12);
+  border:1px solid black;
+  box-shadow:0px 0px 2px black;
 }
 
 .search_item:active{
-  background-color:rgb(231, 231, 231);
+  background-color:rgba(255, 255, 255, 0.2);
+  border:1px solid black;
+  box-shadow:0px 0px 2px black;
 }
 
 .search_item_image{
-  width:45px;
-  height:45px;
+  width:43px;
+  height:43px;
   margin-right:10px;
   float:left;
   background-size:100% 100%;
@@ -553,29 +558,28 @@ textarea{
 }
 
 .search_item_title{
-  width: 145px;
-  height: 20px;
+  width: 133px;
+  height: 14px;
   float: left;
-  font-size: 15px;
-  color: @black;
-  line-height: 27px;
+  font-size: 14px;
+  color: @white;
+  margin-top:7px;
+  line-height: 14px;
   text-align: left;
   text-overflow: ellipsis;
-  overflow: hidden;
   white-space: nowrap;
-  font-weight:bold;
+  overflow: hidden;
 }
 
 .search_item_bottom_info{
-  width:145px;
+  width:133px;
   height:15px;
   float:left;
-  font-size:15px;
+  font-size:12px;
   color:grey;
-  line-height:15px;
+  line-height:12px;
   text-align:left;
   text-overflow: ellipsis;
-  overflow: hidden;
   white-space: nowrap;
 }
 

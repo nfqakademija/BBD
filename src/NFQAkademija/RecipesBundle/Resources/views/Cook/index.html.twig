@@ -4,23 +4,41 @@
 {% block title %}{{ recipe_ID }} Step {{ step_ID }} | Foodex{% endblock %}
 {% block specific_scripts %}
     <script type="text/javascript">
+        function key_check(event){}
+
         function loader(){
-            sidebar_manipulation();
-            $("#filters_zone").css('bottom','10px');
             $("#search_zone").css('height','auto');
-            $("#filters_zone").css('top','230px');
             $(".top_divider").css('margin-bottom','10px');
             $(".middle_divider").css('margin-left','10px');
-            $("#config_zone").remove();
+            //$("#filters_zone").css('bottom','10px');
+            //$("#config_zone").remove();
             $("#search_zone").attr('class', 'cook_ingredients_zone');
+            sidebar_manipulation();
+
+            //get steps amount
+            steps_amount = 5;
+
+            steps_sidebar_initialize();
             $( window ).resize(function() {
                 sidebar_manipulation();
+                steps_sidebar_manipulation();
+            });
+
+            $("#content_wrapper").scroll(function(){
+                var steps_sidebar_height = parseInt(($("#steps_sidebar").css('height').replace('px','')));
+                var content_height = parseInt(($("#content_wrapper").css('height').replace('px','')));
+                var all = $("#content_wrapper")[0].scrollHeight - content_height;
+                var current = $("#content_wrapper").scrollTop();
+
+                var percentage = current / all;
+                var pointer_height = steps_sidebar_height * percentage;
+                $("#steps_sidebar_pointer").css('height', pointer_height + 'px');
             });
         }
 
-        function key_check(event){
 
-        }
+
+
     </script>
 {% endblock %}
 {% block search_zone %}
@@ -62,44 +80,20 @@
     </div>
 {% endblock %}
 
+{% block config_zone %}
+    <div id="sidebar_right_cook_button" class="untouchable next_step" onclick="cook_step('{{ recipe_ID }}', '2')">Sekantis</div>
+{% endblock %}
+
 {% block content %}
-    <div id="content_wrapper" style="background-image:url('http://1.bp.blogspot.com/_FfkgwPNm3uA/Swk2TGwRoyI/AAAAAAAAEoQ/huQ9v3t7i6c/s400/Boob_Kitten.jpg')">
-        <div class="content_recipe">
-            <div class="cook_top_box">
-                <div class="cook_top_image" style="background-image:url('http://1.bp.blogspot.com/_FfkgwPNm3uA/Swk2TGwRoyI/AAAAAAAAEoQ/huQ9v3t7i6c/s400/Boob_Kitten.jpg')"></div>
-                <div class="cook_top_title">Šiškebabas</div>
-                <div class="cook_top_steps_box">
-                    <div class="cook_top_step active" onclick="cook_step('{{ recipe_ID }}', '1')">1</div>
-                    <div class="cook_top_step" onclick="cook_step('{{ recipe_ID }}', '2')">2</div>
-                    <div class="cook_top_step" onclick="cook_step('{{ recipe_ID }}', '3')">3</div>
-                    <div class="cook_top_step" onclick="cook_step('{{ recipe_ID }}', '4')">4</div>
-                    <div class="cook_top_step" onclick="cook_step('{{ recipe_ID }}', '5')">5</div>
-                    <div class="cook_top_step" onclick="cook_step('{{ recipe_ID }}', '6')">6</div>
-                    <div class="cook_top_step" onclick="cook_step('{{ recipe_ID }}', '7')">7</div>
-                    <div class="cook_top_step" onclick="cook_step('{{ recipe_ID }}', '8')">8</div>
-                </div>
-            </div>
-
-            <div class="cook_step_box">
-                <div class="cook_step_box_left">
-                    <div class="cook_step_box_text">
-                        Supjaustyti agurkus griežinėliais
-                    </div>
-                    <div class="cook_button untouchable " onclick="cook_step('{{ recipe_ID }}', '2')">Sekantis</div>
-
-                </div>
-                <div class="cook_step_box_right">
-                    <div class="cook_step_box_text">
-                        žingsnio foto, papildomi useriu komentarai, alternatyvos, patarimai, video, idomy info apie produktus,
-                        chronometras jeigu reikia virti
-                    </div>
-
-
-                </div>
-
-            </div>
-        </div>
+    <div id="content_wrapper" style="background-image:url('/images/food (19).jpg');right:66px;" >
+        <div class="step" id="step_1" style="background-image:url('/images/food (19).jpg')"></div>
+        <div class="step" id="step_2"></div>
+        <div class="step" id="step_3"></div>
+        <div class="step" id="step_4"></div>
+        <div class="step" id="step_5"></div>
     </div>
+
+    <div id="steps_sidebar"><div id="steps_sidebar_pointer"></div></div>
 
 
 {% endblock %}

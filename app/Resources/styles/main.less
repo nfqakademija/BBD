@@ -351,9 +351,19 @@ textarea{
 }
 
 .squeeze #logo_zone{
-  width: 45px;
-  height: 45px;
+  .nav_zone_element;
   background-image:url("/images/favicon.ico");
+  &:hover{
+    border:1px solid black;
+    box-shadow:0px 0px 2px black;
+    background-color:rgba(255, 255, 255, 0.12);
+    curosr:pointer;
+  };
+  &:active{
+    background-color:rgba(255, 255, 255, 0.12);
+    border:1px solid black;
+    box-shadow:0px 0px 2px black;
+  }
 }
 
 #nav_zone{
@@ -496,6 +506,25 @@ textarea{
   background-repeat:no-repeat;
 }
 
+.squeeze #search_index {
+  .nav_zone_element;
+  background-size:50% 50%;
+  &:hover {
+    border: 1px solid black;
+    box-shadow: 0px 0px 2px black;
+    background-color: rgba(255, 255, 255, 0.12);
+    curosr: pointer;
+  };
+  &:active {
+    background-color: rgba(255, 255, 255, 0.12);
+    border: 1px solid black;
+    box-shadow: 0px 0px 2px black;
+  }
+}
+
+
+
+
 #search_input{
   width:155px;
   background-color:transparent;
@@ -631,6 +660,11 @@ textarea{
 
 .squeeze #filters_zone .filter_element .filter_element_text{
   display:none;
+}
+
+.squeeze .ingredient{
+  width:43px;
+  overflow:hidden;
 }
 
 .ingredient{

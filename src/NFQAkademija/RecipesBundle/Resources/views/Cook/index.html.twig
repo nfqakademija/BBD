@@ -2,6 +2,49 @@
 
 
 {% block title %}{{ recipe_ID }} Step {{ step_ID }} | Foodex{% endblock %}
+{% block specific_scripts %}
+    <script type="text/javascript">
+        function loader(){
+            sidebar_manipulation();
+            $("#filters_zone").css('bottom','10px');
+            $("#config_zone").remove();
+            $( window ).resize(function() {
+                sidebar_manipulation();
+            });
+        }
+
+        function key_check(event){
+
+        }
+    </script>
+{% endblock %}
+
+{% block filters_zone %}
+    <div class="ingredient untouchable" id="ingredient-2" >
+        <div class="ingredient_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
+        <div class="ingredient_text">Bananas</div>
+        <div class="ingredient_size">5 vnt</div>
+        <div class="ingredient_indicator ingredient_indicator_undefined" id="ingredient_indicator-2"></div>
+    </div>
+    <div class="ingredient untouchable" id="ingredient-3" >
+        <div class="ingredient_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
+        <div class="ingredient_text">Jautiena</div>
+        <div class="ingredient_size">250 g</div>
+        <div class="ingredient_indicator ingredient_indicator_undefined" id="ingredient_indicator-3"></div>
+    </div>
+    <div class="ingredient untouchable" id="ingredient-4" >
+        <div class="ingredient_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
+        <div class="ingredient_text">Cukinija</div>
+        <div class="ingredient_size">500 g</div>
+        <div class="ingredient_indicator ingredient_indicator_undefined" id="ingredient_indicator-4"></div>
+    </div>
+    <div class="ingredient untouchable" id="ingredient-5" >
+        <div class="ingredient_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
+        <div class="ingredient_text">Ananasas</div>
+        <div class="ingredient_size">100 g</div>
+        <div class="ingredient_indicator ingredient_indicator_undefined" id="ingredient_indicator-5"></div>
+    </div>
+{% endblock %}
 
 {% block content %}
     <div id="content_wrapper" style="background-image:url('http://1.bp.blogspot.com/_FfkgwPNm3uA/Swk2TGwRoyI/AAAAAAAAEoQ/huQ9v3t7i6c/s400/Boob_Kitten.jpg')">

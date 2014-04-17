@@ -12,7 +12,7 @@ var toast_show_time = 3000;
 var minimum_recipe_size = 90;
 var recipe_size = minimum_recipe_size;
 var mobile_state = false;
-var user_is_loged = false;
+var user_is_loged = check_if_user_is_loged();
 
 function toast(text, status){
     clearTimeout(toast_timer);
@@ -406,6 +406,12 @@ function filter_category(category){
     */
 }
 
+
+function check_if_user_is_loged(){
+    //ajax to check if user is logged in
+    return false;
+}
+
 function content_navigation(type){
 
     switch(type){
@@ -415,10 +421,6 @@ function content_navigation(type){
             location.href = "/";
             break;
         case "profile":
-
-            //ajax to check if user is logged in
-            user_is_loged = false;
-
             if(user_is_loged){
                 $('.nav_zone_element').removeClass('nav_element_active');
                 $("#" + type).addClass('nav_element_active');
@@ -430,8 +432,7 @@ function content_navigation(type){
             break;
 
         case "shoppinglist":
-            //ajax to check if user is logged in
-            user_is_loged = false;
+
 
             if(user_is_loged){
                 $('.nav_zone_element').removeClass('nav_element_active');
@@ -470,13 +471,6 @@ function show_top_layer_account(){
 function hide_top_layer(){
     $("#top_layer").fadeOut(transition_time * 2);
 }
-
-
-
-
-
-
-
 
 function go_to_new_recipe(){
     location.href= "/new";
@@ -750,22 +744,30 @@ function shoppinglist_input_blur(){
 
 
 function ingredient_selected(ingredient_ID){
-    var classes = ($("#ingredient_indicator-" + ingredient_ID).attr('class')).split(" ");
-    var indicator = classes[1];
-    if(indicator == "ingredient_indicator_undefined"){
-        $("#ingredient_indicator-" + ingredient_ID).removeClass('ingredient_indicator_undefined').addClass('ingredient_indicator_shoppinglist');
-        //ajax to add to shoping list
-    }else if(indicator == "ingredient_indicator_shoppinglist"){
-        $("#ingredient_indicator-" + ingredient_ID).removeClass('ingredient_indicator_shoppinglist').addClass('ingredient_indicator_have');
-        //ajax to remove from shoping list
-    }else if(indicator == "ingredient_indicator_have"){
-        $("#ingredient_indicator-" + ingredient_ID).removeClass('ingredient_indicator_have').addClass('ingredient_indicator_undefined');
+    if(user_is_loged){
+        var classes = ($("#ingredient_indicator-" + ingredient_ID).attr('class')).split(" ");
+        var indicator = classes[1];
+        if(indicator == "ingredient_indicator_undefined"){
+            $("#ingredient_indicator-" + ingredient_ID).removeClass('ingredient_indicator_undefined').addClass('ingredient_indicator_shoppinglist');
+            //ajax to add to shoping list
+        }else if(indicator == "ingredient_indicator_shoppinglist"){
+            $("#ingredient_indicator-" + ingredient_ID).removeClass('ingredient_indicator_shoppinglist').addClass('ingredient_indicator_have');
+            //ajax to remove from shoping list
+        }else if(indicator == "ingredient_indicator_have"){
+            $("#ingredient_indicator-" + ingredient_ID).removeClass('ingredient_indicator_have').addClass('ingredient_indicator_undefined');
+        }
+    }else{
+        show_top_layer_account();
     }
 }
 
 function add_to_shopping_list(recipe_ID){
-    $('.ingredient_indicator').removeClass('ingredient_indicator_have').removeClass('ingredient_indicator_undefined').removeClass('ingredient_indicator_shoppinglist').addClass('ingredient_indicator_shoppinglist');
-    //ajax add all products of recipe to shopping list
+    if(user_is_loged){
+        $('.ingredient_indicator').removeClass('ingredient_indicator_have').removeClass('ingredient_indicator_undefined').removeClass('ingredient_indicator_shoppinglist').addClass('ingredient_indicator_shoppinglist');
+        //ajax add all products of recipe to shopping list
+    }else{
+        show_top_layer_account();
+    }
 }
 
 
@@ -775,7 +777,11 @@ function shoppinglist_search(){
 }
 
 function coop(recipe_ID){
-    //use facebook API to share on wall to cook together with missing ingredients
+    if(user_is_loged){
+        //use facebook API to share on wall to cook together with missing ingredients
+    }else{
+        show_top_layer_account();
+    }
 
 }
 

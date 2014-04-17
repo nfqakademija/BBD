@@ -638,6 +638,9 @@ function show_recipe(recipe_ID){
         hide_recipe();
     }else{
         $("#sidebar_right").removeClass('right_squeeze').addClass('right_full');
+        //calculate top px for ingredients zone
+        var height_from_top = $(".ingredients_divider").offset().top + 10;
+        $("#sidebar_right_ingredients_zone").css('top', height_from_top + 'px');
         $('.recipe_box').removeClass('recipe_active');
         $("#recipe_" + recipe_ID).addClass('recipe_active');
         //$("#content_wrapper").css('right','231px');
@@ -882,7 +885,10 @@ function full_sidebar(){
     $("#content_wrapper").css('left','231px');
     $("#header").css('left','231px');
     $("#config_zone").css('display','block');
-
+    $("#cook_ingredients").css('display','block');
+    //calculate top px for filters zone
+    var height_from_top = $(".middle_divider").offset().top;
+    $("#filters_zone").css('top', height_from_top + 'px');
     if(!mobile_state){
         $("#sidebar_slider").css('display','block');
         recalculate_width();
@@ -895,6 +901,11 @@ function squeeze_sidebar(){
     $("#header").css('left','66px');
     $("#sidebar_slider").css('display','none');
     $("#config_zone").css('display','block');
+    $("#cook_ingredients").css('display','none');
+
+    //calculate top px for filters zone
+    var height_from_top = $(".middle_divider").offset().top;
+    $("#filters_zone").css('top', height_from_top + 'px');
     if(!mobile_state){
         recalculate_width();
     }

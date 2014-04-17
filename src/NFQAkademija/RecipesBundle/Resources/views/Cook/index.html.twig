@@ -7,7 +7,12 @@
         function loader(){
             sidebar_manipulation();
             $("#filters_zone").css('bottom','10px');
+            $("#search_zone").css('height','auto');
+            $("#filters_zone").css('top','230px');
+            $(".top_divider").css('margin-bottom','10px');
+            $(".middle_divider").css('margin-left','10px');
             $("#config_zone").remove();
+            $("#search_zone").attr('class', 'cook_ingredients_zone');
             $( window ).resize(function() {
                 sidebar_manipulation();
             });
@@ -18,8 +23,19 @@
         }
     </script>
 {% endblock %}
+{% block search_zone %}
+    <div id="cook_ingredients">
+        <div id="divider" class="top_divider" onclick="full_sidebar()"></div>
+        <div class="sidebar_right_info_item" id="sidebar_right_time">25 min</div>
+        <div class="sidebar_right_info_item" id="sidebar_right_country">Lenkija</div>
+        <div class="sidebar_right_info_item" id="sidebar_right_main_cooking_method">Virimas</div>
+        <div class="sidebar_right_info_item" id="sidebar_right_type">Antrieji patiekalai</div>
+        <div class="sidebar_right_info_item" id="sidebar_right_characteristics">Aštru, sūru</div>
+    </div>
 
+{% endblock %}
 {% block filters_zone %}
+
     <div class="ingredient untouchable" id="ingredient-2" >
         <div class="ingredient_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
         <div class="ingredient_text">Bananas</div>

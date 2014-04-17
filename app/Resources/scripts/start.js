@@ -12,6 +12,7 @@ var toast_show_time = 3000;
 var website_index = "/BBD/web";
 var minimum_recipe_size = 90;
 var recipe_size = minimum_recipe_size;
+var mobile_state = false;
 
 
 function toast(text, status){
@@ -433,21 +434,21 @@ function go_to_new_recipe(){
 }
 
 function filter_go_back(type){
-    full_sidebar()
+    full_sidebar();
     var config_zone =
         "<div class='filter_element untouchable' onclick='filter_start()'>" +
         "<div class='filter_element_image' id='add'></div>" +
         "<div class='filter_element_text'>Pridėti filtrą</div>" +
         "</div>";
 
-    $("#filters_zone").fadeOut(transition_time, function(){
-        $("#filters_zone").html('');
-        $("#filters_zone").fadeIn(transition_time);
-    });
-    $("#config_zone").fadeOut(transition_time, function(){
-        $("#config_zone").html(config_zone);
-        $("#config_zone").fadeIn(transition_time);
-    });
+        $("#filters_zone").fadeOut(transition_time, function(){
+            $("#filters_zone").html('');
+            $("#filters_zone").fadeIn(transition_time);
+        });
+        $("#config_zone").fadeOut(transition_time, function(){
+            $("#config_zone").html(config_zone);
+            $("#config_zone").fadeIn(transition_time);
+        });
 
     /*
      $.ajax({
@@ -697,26 +698,6 @@ function shoppinglist_input_blur(){
     $('#search_container').css('display','none');
 }
 
-function sidebar_slide(){
-    var sidebar_class = ($("#sidebar").attr('class'));
-    if(sidebar_class == "full"){
-        squeeze_sidebar();
-    }else{
-        full_sidebar();
-    }
-}
-
-function full_sidebar(){
-    $("#sidebar").removeClass('full').removeClass('squeeze').addClass('full');
-    $("#content_wrapper").css('left','231px');
-    recalculate_width();
-}
-
-function squeeze_sidebar(){
-    $("#sidebar").removeClass('full').addClass('squeeze');
-    $("#content_wrapper").css('left','66px');
-    recalculate_width();
-}
 
 function ingredient_selected(ingredient_ID){
     var classes = ($("#ingredient_indicator-" + ingredient_ID).attr('class')).split(" ");
@@ -736,6 +717,25 @@ function add_to_shopping_list(recipe_ID){
     $('.ingredient_indicator').removeClass('ingredient_indicator_have').removeClass('ingredient_indicator_undefined').removeClass('ingredient_indicator_shoppinglist').addClass('ingredient_indicator_shoppinglist');
     //ajax add all products of recipe to shopping list
 }
+
+
+
+function shoppinglist_search(){
+    $('#search_container').css('display','block');
+}
+
+function coop(recipe_ID){
+    //use facebook API to share on wall to cook together with missing ingredients
+
+}
+
+function random_next(){
+    location.href = website_index + "/random";
+}
+
+
+
+//RESPONSIVE JAVASCRIPT
 
 function calculate_recipe_size(){
     //$(window).height();   // returns height of browser viewport
@@ -765,16 +765,84 @@ function recalculate_width(){
     $(".recipe_box").css('line-height', size_per_item + "px");
 }
 
-function shoppinglist_search(){
-    $('#search_container').css('display','block');
+
+
+
+
+function sidebar_manipulation(){
+    var screen_width = $(window).width();
+    if(screen_width <= 360){
+        mobile_state = true;
+        $('#header').css('display','block');
+        $('#content_wrapper').css('top','41px');
+        empty_sidebar();
+    }else{
+        mobile_state = false;
+        $('#header').css('display','none');
+        $('#content_wrapper').css('top','0px');
+        full_sidebar();
+    }
 }
 
-function coop(recipe_ID){
-    //use facebook API to share on wall to cook together with missing ingredients
+function empty_sidebar_slide(){
+    var sidebar_class = ($("#sidebar").attr('class'));
+    if(sidebar_class == "full"){
+        $("#sidebar").removeClass('full').removeClass('empty').removeClass('squeeze').addClass('empty');
+        $("#content_wrapper").css('left','1px');
+        $("#header").css('left','1px');
+        $("#sidebar_slider").css('display','block');
+        $("#header_logo").css('display','block');
+        $("#config_zone").css('display','none');
+    }else if(sidebar_class == "empty"){
+        $("#sidebar").removeClass('full').removeClass('empty').removeClass('squeeze').addClass('full');
+        $("#content_wrapper").css('left','231px');
+        $("#header").css('left','231px');
+        $("#sidebar_slider").css('display','none');
+        $("#header_logo").css('display','none');
+        $("#config_zone").css('display','block');
+    }
+    hide_recipe();
 
 }
 
-function random_next(){
-    location.href = website_index + "/random";
+
+function sidebar_slide(){
+    var sidebar_class = ($("#sidebar").attr('class'));
+    if(sidebar_class == "full"){
+        squeeze_sidebar();
+    }else{
+        full_sidebar();
+    }
 }
 
+function full_sidebar(){
+    $("#sidebar").removeClass('full').removeClass('empty').removeClass('squeeze').addClass('full');
+    $("#content_wrapper").css('left','231px');
+    $("#header").css('left','231px');
+
+    if(!mobile_state){
+        $("#sidebar_slider").css('display','block');
+        recalculate_width();
+    }
+}
+
+function squeeze_sidebar(){
+    $("#sidebar").removeClass('full').removeClass('empty').addClass('squeeze');
+    $("#content_wrapper").css('left','66px');
+    $("#header").css('left','66px');
+    $("#sidebar_slider").css('display','none');
+    if(!mobile_state){
+        recalculate_width();
+    }
+}
+
+function empty_sidebar(){
+    $("#sidebar").removeClass('full').removeClass('squeeze').addClass('empty');
+    $("#content_wrapper").css('left','1px');
+    $("#header").css('left','1px');
+    $("#header_logo").css('display','block');
+    $("#sidebar_slider").css('display','none');
+
+    recalculate_width();
+
+}

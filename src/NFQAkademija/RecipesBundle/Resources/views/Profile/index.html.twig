@@ -8,8 +8,10 @@
         function loader(){
             recipe_size = calculate_recipe_size();
             append_recipes_to_profile();
+            sidebar_manipulation();
             $( window ).resize(function() {
                 recalculate_width();
+                sidebar_manipulation();
             });
         }
     </script>

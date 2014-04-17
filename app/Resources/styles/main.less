@@ -109,6 +109,10 @@ textarea{
   width:65px;
 }
 
+.empty{
+  width:0px;
+}
+
 
 #sidebar_right{
   position:fixed;
@@ -307,9 +311,16 @@ textarea{
 .full #sidebar_slider{
   left: 203px;
   top: 29px;
+  display:block;
 }
 
 .squeeze #sidebar_slider{
+  left: 50px;
+  top: 25px;
+  display:none;
+}
+
+.empty #sidebar_slider{
   left: 50px;
   top: 25px;
   display:none;
@@ -794,6 +805,10 @@ textarea{
 
 .squeeze #config_zone{
   width: 43px;
+}
+
+.empty #config_zone{
+  display: none;
 }
 
 .full #config_zone .filter_element{
@@ -1998,4 +2013,42 @@ p{
   margin-right:10px;
   margin-top:-57px;
 }
+
+
+
+#header{
+  position:fixed;
+  left:231px;
+  right:0px;
+  height:40px;
+  top:0px;
+  background-color:@black;
+  z-index: 2;
+  display:none;
+  border-bottom:1px solid black;
+  box-shadow:0px 0px 2px black;
+}
+
+#header_list{
+  height:40px;
+  width:40px;
+  float:left;
+  margin-left:10px;
+  background-image: url('@{base-url}/images/list.png');
+  background-size:60% 60%;
+  background-position:50% 50%;
+  background-repeat:no-repeat;
+}
+
+#header_logo{
+  width:200px;
+  height:40px;
+  background-image: url('@{base-url}/images/logo_text.png');
+  background-size:70% 70%;
+  background-position:50% 50%;
+  background-repeat:no-repeat;
+  margin:0 auto;
+}
+
+
 

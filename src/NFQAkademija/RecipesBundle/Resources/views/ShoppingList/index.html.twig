@@ -5,8 +5,13 @@
     <script>
         function loader(){
             getLocation();
-            $('#config_zone').css('display','none');
             $('#filters_zone').css('bottom','10px');
+            sidebar_manipulation();
+            $('#config_zone').css('display','none');
+            $( window ).resize(function() {
+                sidebar_manipulation();
+                $('#config_zone').css('display','none');
+            });
         }
 
         function key_check(event){

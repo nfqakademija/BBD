@@ -9,7 +9,6 @@ var password_min_size = 5;
 var transition_time = 200;
 var scroll_animation_time = 600;
 var toast_show_time = 3000;
-var website_index = "";
 var minimum_recipe_size = 90;
 var recipe_size = minimum_recipe_size;
 var mobile_state = false;
@@ -293,13 +292,13 @@ function show_filters(array_of_filters, index){
 function filter_start(){
     full_sidebar()
     var filters = [];
-    filters[0] = "<div class='filter_element untouchable' id='types' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('" + website_index + "/images/types.png');\"></div><div class='filter_element_text'>Tipai</div></div>";
-    filters[1] = "<div class='filter_element untouchable' id='characteristics' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('" + website_index + "/images/characteristics.png');\"></div><div class='filter_element_text'>Ypatybės</div></div>";
-    filters[2] = "<div class='filter_element untouchable' id='times' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('" + website_index + "/images/times.png');\"></div><div class='filter_element_text'>Laikai</div></div>";
-    filters[3] = "<div class='filter_element untouchable' id='countries' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('" + website_index + "/images/countries.png');\"></div><div class='filter_element_text'>Šalys</div></div>";
-    filters[4] = "<div class='filter_element untouchable' id='ingredients' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('" + website_index + "/images/ingredients.png');\"></div><div class='filter_element_text'>Ingredientai</div></div>";
-    filters[5] = "<div class='filter_element untouchable' id='celebrations' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('" + website_index + "/images/celebrations.png');\"></div><div class='filter_element_text'>Šventės</div></div>";
-    filters[6] = "<div class='filter_element untouchable' id='cooking_methods' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('" + website_index + "/images/cooking_methods.png');\"></div><div class='filter_element_text'>Gaminimo būdai</div></div>";
+    filters[0] = "<div class='filter_element untouchable' id='types' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/types.png');\"></div><div class='filter_element_text'>Tipai</div></div>";
+    filters[1] = "<div class='filter_element untouchable' id='characteristics' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/characteristics.png');\"></div><div class='filter_element_text'>Ypatybės</div></div>";
+    filters[2] = "<div class='filter_element untouchable' id='times' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/times.png');\"></div><div class='filter_element_text'>Laikai</div></div>";
+    filters[3] = "<div class='filter_element untouchable' id='countries' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/countries.png');\"></div><div class='filter_element_text'>Šalys</div></div>";
+    filters[4] = "<div class='filter_element untouchable' id='ingredients' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/ingredients.png');\"></div><div class='filter_element_text'>Ingredientai</div></div>";
+    filters[5] = "<div class='filter_element untouchable' id='celebrations' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/celebrations.png');\"></div><div class='filter_element_text'>Šventės</div></div>";
+    filters[6] = "<div class='filter_element untouchable' id='cooking_methods' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/cooking_methods.png');\"></div><div class='filter_element_text'>Gaminimo būdai</div></div>";
 
     var config_zone = "<div class='filter_element_go_back untouchable'><div class='go_back untouchable' onclick=\"filter_go_back('all')\"><<</div><div class='go_back untouchable' onclick=\"filter_go_back('one')\"><</div></div>";
 
@@ -342,34 +341,34 @@ function filter_category(category){
     switch(category){
         case "types":
             var filters = [];
-            filters[0] = "<div class='filter_element untouchable' id='drinks' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('" + website_index + "/images/drinks.png');\"></div><div class='filter_element_text'>Gėrimai</div></div>";
-            filters[1] = "<div class='filter_element untouchable' id='pastries' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('" + website_index + "/images/pastries.png');\"></div><div class='filter_element_text'>Kepiniai</div></div>";
-            filters[2] = "<div class='filter_element untouchable' id='deserts' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('" + website_index + "/images/deserts.png');\"></div><div class='filter_element_text'>Desertai</div></div>";
-            filters[3] = "<div class='filter_element untouchable' id='second_dishes' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('" + website_index + "/images/second_dishes.png');\"></div><div class='filter_element_text'>Antrieji patiekalai</div></div>";
-            filters[4] = "<div class='filter_element untouchable' id='canned_meals' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('" + website_index + "/images/canned_meals.png');\"></div><div class='filter_element_text'>Konservuoti patiekalai</div></div>";
-            filters[5] = "<div class='filter_element untouchable' id='porridges' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('" + website_index + "/images/porridges.png');\"></div><div class='filter_element_text'>Košės</div></div>";
-            filters[6] = "<div class='filter_element untouchable' id='salads' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('" + website_index + "/images/salads.png');\"></div><div class='filter_element_text'>Salotos</div></div>";
-            filters[7] = "<div class='filter_element untouchable' id='soups' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('" + website_index + "/images/soups.png');\"></div><div class='filter_element_text'>Sriubos</div></div>";
-            filters[8] = "<div class='filter_element untouchable' id='sandwitches' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('" + website_index + "/images/sandwitches.png');\"></div><div class='filter_element_text'>Sumuštiniai</div></div>";
-            filters[9] = "<div class='filter_element untouchable' id='stews' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('" + website_index + "/images/stews.png');\"></div><div class='filter_element_text'>Troškiniai</div></div>";
-            filters[10] = "<div class='filter_element untouchable' id='jams' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('" + website_index + "/images/jams.png');\"></div><div class='filter_element_text'>Uogienės</div></div>";
-            filters[11] = "<div class='filter_element untouchable' id='snacks' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('" + website_index + "/images/snacks.png');\"></div><div class='filter_element_text'>Užkandžiai</div></div>";
-            filters[12] = "<div class='filter_element untouchable' id='sauces' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('" + website_index + "/images/sauces.png');\"></div><div class='filter_element_text'>Padažai</div></div>";
+            filters[0] = "<div class='filter_element untouchable' id='drinks' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/drinks.png');\"></div><div class='filter_element_text'>Gėrimai</div></div>";
+            filters[1] = "<div class='filter_element untouchable' id='pastries' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/pastries.png');\"></div><div class='filter_element_text'>Kepiniai</div></div>";
+            filters[2] = "<div class='filter_element untouchable' id='deserts' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/deserts.png');\"></div><div class='filter_element_text'>Desertai</div></div>";
+            filters[3] = "<div class='filter_element untouchable' id='second_dishes' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/second_dishes.png');\"></div><div class='filter_element_text'>Antrieji patiekalai</div></div>";
+            filters[4] = "<div class='filter_element untouchable' id='canned_meals' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/canned_meals.png');\"></div><div class='filter_element_text'>Konservuoti patiekalai</div></div>";
+            filters[5] = "<div class='filter_element untouchable' id='porridges' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/porridges.png');\"></div><div class='filter_element_text'>Košės</div></div>";
+            filters[6] = "<div class='filter_element untouchable' id='salads' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('images/salads.png');\"></div><div class='filter_element_text'>Salotos</div></div>";
+            filters[7] = "<div class='filter_element untouchable' id='soups' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/soups.png');\"></div><div class='filter_element_text'>Sriubos</div></div>";
+            filters[8] = "<div class='filter_element untouchable' id='sandwitches' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/sandwitches.png');\"></div><div class='filter_element_text'>Sumuštiniai</div></div>";
+            filters[9] = "<div class='filter_element untouchable' id='stews' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/stews.png');\"></div><div class='filter_element_text'>Troškiniai</div></div>";
+            filters[10] = "<div class='filter_element untouchable' id='jams' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/jams.png');\"></div><div class='filter_element_text'>Uogienės</div></div>";
+            filters[11] = "<div class='filter_element untouchable' id='snacks' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/snacks.png');\"></div><div class='filter_element_text'>Užkandžiai</div></div>";
+            filters[12] = "<div class='filter_element untouchable' id='sauces' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/sauces.png');\"></div><div class='filter_element_text'>Padažai</div></div>";
             break;
         case "times":
 
             var filters = [];
-            filters[0] = "<div class='filter_element untouchable' id='time_5' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('" + website_index + "/images/time.png');\"></div><div class='filter_element_text'>Iki 5min</div><div class='filter_element_indicator' id='indicator_time_5'></div></div>";
-            filters[1] = "<div class='filter_element untouchable' id='time_10' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('" + website_index + "/images/time.png');\"></div><div class='filter_element_text'>Iki 10min</div><div class='filter_element_indicator' id='indicator_time_10'></div></div>";
-            filters[2] = "<div class='filter_element untouchable' id='time_15' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('" + website_index + "/images/time.png');\"></div><div class='filter_element_text'>Iki 15min</div><div class='filter_element_indicator' id='indicator_time_15'></div></div>";
-            filters[3] = "<div class='filter_element untouchable' id='time_20' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('" + website_index + "/images/time.png');\"></div><div class='filter_element_text'>Iki 20min</div><div class='filter_element_indicator' id='indicator_time_20'></div></div>";
-            filters[4] = "<div class='filter_element untouchable' id='time_25' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('" + website_index + "/images/time.png');\"></div><div class='filter_element_text'>Iki 25min</div><div class='filter_element_indicator' id='indicator_time_25'></div></div>";
-            filters[5] = "<div class='filter_element untouchable' id='time_30' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('" + website_index + "/images/time.png');\"></div><div class='filter_element_text'>Iki 30min</div><div class='filter_element_indicator' id='indicator_time_30'></div></div>";
-            filters[6] = "<div class='filter_element untouchable' id='time_45' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('" + website_index + "/images/time.png');\"></div><div class='filter_element_text'>Iki 45min</div><div class='filter_element_indicator' id='indicator_time_45'></div></div>";
-            filters[7] = "<div class='filter_element untouchable' id='time_60' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('" + website_index + "/images/time.png');\"></div><div class='filter_element_text'>Iki 1h</div><div class='filter_element_indicator' id='indicator_time_60'></div></div>";
-            filters[8] = "<div class='filter_element untouchable' id='time_90' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('" + website_index + "/images/time.png');\"></div><div class='filter_element_text'>Iki 1h 30min</div><div class='filter_element_indicator' id='indicator_time_90'></div></div>";
-            filters[9] = "<div class='filter_element untouchable' id='time_120' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('" + website_index + "/images/time.png');\"></div><div class='filter_element_text'>Iki 2h</div><div class='filter_element_indicator' id='indicator_time_120'></div></div>";
-            filters[10] = "<div class='filter_element untouchable' id='time_180' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('" + website_index + "/images/time.png');\"></div><div class='filter_element_text'>Iki 3h</div><div class='filter_element_indicator' id='indicator_time_180'></div></div>";
+            filters[0] = "<div class='filter_element untouchable' id='time_5' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/time.png');\"></div><div class='filter_element_text'>Iki 5min</div><div class='filter_element_indicator' id='indicator_time_5'></div></div>";
+            filters[1] = "<div class='filter_element untouchable' id='time_10' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/time.png');\"></div><div class='filter_element_text'>Iki 10min</div><div class='filter_element_indicator' id='indicator_time_10'></div></div>";
+            filters[2] = "<div class='filter_element untouchable' id='time_15' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/time.png');\"></div><div class='filter_element_text'>Iki 15min</div><div class='filter_element_indicator' id='indicator_time_15'></div></div>";
+            filters[3] = "<div class='filter_element untouchable' id='time_20' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/time.png');\"></div><div class='filter_element_text'>Iki 20min</div><div class='filter_element_indicator' id='indicator_time_20'></div></div>";
+            filters[4] = "<div class='filter_element untouchable' id='time_25' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/time.png');\"></div><div class='filter_element_text'>Iki 25min</div><div class='filter_element_indicator' id='indicator_time_25'></div></div>";
+            filters[5] = "<div class='filter_element untouchable' id='time_30' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/time.png');\"></div><div class='filter_element_text'>Iki 30min</div><div class='filter_element_indicator' id='indicator_time_30'></div></div>";
+            filters[6] = "<div class='filter_element untouchable' id='time_45' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/time.png');\"></div><div class='filter_element_text'>Iki 45min</div><div class='filter_element_indicator' id='indicator_time_45'></div></div>";
+            filters[7] = "<div class='filter_element untouchable' id='time_60' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/time.png');\"></div><div class='filter_element_text'>Iki 1h</div><div class='filter_element_indicator' id='indicator_time_60'></div></div>";
+            filters[8] = "<div class='filter_element untouchable' id='time_90' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/time.png');\"></div><div class='filter_element_text'>Iki 1h 30min</div><div class='filter_element_indicator' id='indicator_time_90'></div></div>";
+            filters[9] = "<div class='filter_element untouchable' id='time_120' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/time.png');\"></div><div class='filter_element_text'>Iki 2h</div><div class='filter_element_indicator' id='indicator_time_120'></div></div>";
+            filters[10] = "<div class='filter_element untouchable' id='time_180' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/time.png');\"></div><div class='filter_element_text'>Iki 3h</div><div class='filter_element_indicator' id='indicator_time_180'></div></div>";
             break;
 
     }
@@ -411,14 +410,14 @@ function content_navigation(type){
     $('.nav_zone_element').removeClass('nav_element_active');
     $("#" + type).addClass('nav_element_active');
     switch(type){
-        case "home": location.href = website_index + "/"; break;
+        case "home": location.href = "/"; break;
         case "profile":
 
             //ajax to check if user is logged in
             user_is_loged = false;
 
             if(user_is_loged){
-                location.href = website_index + "/profile";
+                location.href = "/profile";
             }else{
                 show_top_layer_account();
             }
@@ -431,14 +430,14 @@ function content_navigation(type){
             user_is_loged = false;
 
             if(user_is_loged){
-                location.href = website_index + "/shoppinglist";
+                location.href = "/shoppinglist";
             }else{
                 show_top_layer_account();
             }
 
             break;
-        case "random": location.href = website_index + "/random"; break;
-        default: location.href = website_index + "/"; break;
+        case "random": location.href = "/random"; break;
+        default: location.href = "/"; break;
     }
 }
 
@@ -465,7 +464,7 @@ function hide_top_layer(){
 
 
 function go_to_new_recipe(){
-    location.href= website_index + "/new";
+    location.href= "/new";
 }
 
 function filter_go_back(type){
@@ -678,13 +677,13 @@ function hide_recipe(){
 
 
 function cook(recipe_ID){
-    location.href = website_index + "/cook/" + recipe_ID + "/1";
+    location.href = "/cook/" + recipe_ID + "/1";
 
     //send ajax can keep track of time spent on cooking. starting time
 }
 
 function cook_step(recipe_ID, step_ID){
-    location.href = website_index + "/cook/" + recipe_ID + "/" + step_ID;
+    location.href = "/cook/" + recipe_ID + "/" + step_ID;
 
     //send ajax can keep track of time spent on this step cooking.
 }
@@ -766,7 +765,7 @@ function coop(recipe_ID){
 }
 
 function random_next(){
-    location.href = website_index + "/random";
+    location.href = "/random";
 }
 
 

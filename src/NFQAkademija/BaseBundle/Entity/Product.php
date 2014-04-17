@@ -39,7 +39,7 @@ class Product
      */
     private $photo;
     /**
-     * @ORM\ManyToOne(targetEntity="\NFQAkademija\BaseBundle\Entity\Category")
+     * @ORM\ManyToOne(targetEntity="\NFQAkademija\BaseBundle\Entity\Category", inversedBy="products")
      */
     private $category;
     /**

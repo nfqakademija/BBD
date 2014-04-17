@@ -17,6 +17,3 @@ nfq_akademija_random:
 nfq_akademija_new_recipe:
     pattern:  /new
     defaults: { _controller: NFQAkademijaRecipesBundle:Recipe:new }
-
-
-

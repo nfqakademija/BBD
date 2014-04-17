@@ -1,97 +1,85 @@
 {% extends '::base.html.twig' %}
-    {% block javascripts %}
-        {{ parent() }}
-        <script type="text/javascript">
-            $(document).ready(function() {
-                var productsContainer = [];
-                $("#addProductToRecipe").on("click", function(e) {
-                    e.preventDefault()
-                    var item = $("#recipeProduct").val();
-                    var quantity = $("#productQuantity").val();
-                    var itemName = $("#recipeProduct").find(":selected").text();
-                    productsContainer.push({"item": item, "quantity": quantity});
-                    $("#recipeProductsContainer").val(JSON.stringify( { "items": productsContainer } ))
-
-                    console.log(JSON.stringify( { "items": productsContainer } ), productsContainer, itemName, item, quantity);
-                })
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        $(document).ready(function() {
+            var productsContainer = [];
+            $("#addProductToRecipe").on("click", function(e) {
+                e.preventDefault();
+                var item = $("#recipeProduct").val();
+                var quantity = $("#productQuantity").val();
+                var itemName = $("#recipeProduct").find(":selected").text();
+                productsContainer.push({"item": item, "quantity": quantity});
+                $("#recipeProductsContainer").val(JSON.stringify(productsContainer));
+                console.log(JSON.stringify(productsContainer), productsContainer, itemName, item, quantity);
+                $("#productList").append(quantity + " " + itemName + '<br>');
+                $("#productQuantity").val("0");
             })
-        </script>
-    {% endblock %}
+        })
+    </script>
+{% endblock %}
 
-    {% block content %}
-        {#<a href="{{ path('nfq_akademija_newcountry') }}">šalį</a>,#}
-        {#<a href="{{ path('nfq_akademija_newproperty') }}">recepto ypatybę</a>,#}
-        {#<a href="{{ path('nfq_akademija_newcategory') }}">produkto rūšį</a>,#}
-        {#<a href="{{ path('nfq_akademija_newproduct') }}">ingredientą</a><hr>#}
-        <h1>Sukurk savo receptą!</h1>
-
-        <hr>
-        {{ form_start(form) }}
-        {{ form_row(form.name) }}
-        {{ form_row(form.description) }}
-        {{ form_row(form.country) }}
-        {{ form_row(form.photo) }}
-
-        <div>
-            <div>
-            <select id="recipeProduct">
+{% block content %}
+    {{ form_start(form) }}
+    {{ form_row(form.name) }}
+    <div>
+        <label>Sąrašas:</label>
+        <div id="productList"></div>
+    </div>
+    <div>
+        <input name="quantity" value="0" id="productQuantity">
+        <select id="recipeProduct">
             {% for product in products %}
                 <option value="{{ product.id }}">{{ product.name }}</option>
             {% endfor %}
-            </select>
-            </div>
-            <div>
-                <input name="quantity" value="0" id="productQuantity">
-            </div>
-            <div><button id="addProductToRecipe">Pridėti</button></div>
-        </div>
-
-        <div>
-            Sarasas:
-            <div id="productList"></div>
-        </div>
-
-        <input id="recipeProductsContainer" type="hidden" name="products" value="[]">
-        {{ form_row(form.save) }}
-        {{ form_end(form) }}
-        <hr>
-
-        <table border="1">
+        </select>
+        <button id="addProductToRecipe">+</button>
+    </div>
+    <input id="recipeProductsContainer" type="hidden" name="products" value="[]">
+    {{ form_row(form.properties) }}
+    {{ form_row(form.cookingDuration) }}
+    {{ form_row(form.description) }}
+    {{ form_row(form.country) }}
+    {{ form_row(form.photo) }}
+    {{ form_row(form.save) }}
+    {{ form_end(form) }}
+    <hr>
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>Pavadinimas</th>
+            <th>Aprašymas</th>
+            <th>Įvertinimas</th>
+            <th>Vertintojai</th>
+            <th>Foto</th>
+            <th>Laikas</th>
+            <th>Šalis</th>
+            <th>Ypatybė</th>
+        </tr>
+        {% for entity in entities %}
             <tr>
-                <th>ID</th>
-                <th>Pavadinimas</th>
-                <th>Apibūdinimas</th>
-                <th>Įvertinimas</th>
-                <th>Vertintojai</th>
-                <th>Foto</th>
-                <th>Laikas</th>
-                <th>Šalis</th>
-                <th>Ypatybė</th>
+                <td>{{ entity.id }}</td>
+                <td>{{ entity.name }}</td>
+                <td>{{ entity.description }}</td>
+                <td>{{ entity.rating }}</td>
+                <td>{{ entity.raters }}</td>
+                <td>{{ entity.photo }}</td>
+                <td>{{ entity.cookingDuration|date('H:i') }}</td>
+                {% if entity.country %}
+                    <td>{{ entity.country.name }}</td>
+                {% else %}
+                    <td> - </td>
+                {% endif %}
+                {% if entity.properties %}
+                    <td>
+                        {% for property in entity.properties %}
+                            {{ property.name }} ,
+                        {% endfor %}
+                    </td>
+                {% else %}
+                    <td> - </td>
+                {% endif %}
             </tr>
-            {% for entity in entities %}
-                <tr>
-                    <td>{{ entity.id }}</td>
-                    <td>{{ entity.name }}</td>
-                    <td>{{ entity.description }}</td>
-                    <td>{{ entity.rating }}</td>
-                    <td>{{ entity.raters }}</td>
-                    <td>{{ entity.photo }}</td>
-                    <td>{{ entity.cookingDuration }}</td>
-                    {% if entity.country %}
-                        <td>{{ entity.country.name }}</td>
-                    {% else %}
-                        <td> - </td>
-                    {% endif %}
-                    {% if entity.properties %}
-                        <td>
-                            {% for property in entity.properties %}
-                                {{ property.name }} ,
-                            {% endfor %}
-                        </td>
-                    {% else %}
-                        <td> - </td>
-                    {% endif %}
-                </tr>
-            {% endfor %}
-        </table>
-    {% endblock %}
+        {% endfor %}
+    </table>
+{% endblock %}

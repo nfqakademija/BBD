@@ -14,7 +14,7 @@ class ShoppingListProduct
 {
     /**
      * @ORM\Id()
-     * @ORM\ManyToOne(targetEntity="\NFQAkademija\BaseBundle\Entity\Product")
+     * @ORM\ManyToOne(targetEntity="\NFQAkademija\BaseBundle\Entity\Product", inversedBy="shoppingListProduct")
      * @ORM\JoinColumn(name="product_id", referencedColumnName="id", nullable=false)
      */
     protected $product;
@@ -26,7 +26,7 @@ class ShoppingListProduct
 
     /**
      * @ORM\Id()
-     * @ORM\ManyToOne(targetEntity="\NFQAkademija\BaseBundle\Entity\ShoppingList")
+     * @ORM\ManyToOne(targetEntity="\NFQAkademija\BaseBundle\Entity\ShoppingList", inversedBy="products")
      * @ORM\JoinColumn(name="shopping_list_id", referencedColumnName="id", nullable=false)
      */
     protected $shopingList;

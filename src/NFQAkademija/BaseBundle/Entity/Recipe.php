@@ -74,7 +74,7 @@ class Recipe
     protected $properties;
 
     /**
-     * @ORM\ManyToOne(targetEntity="\NFQAkademija\BaseBundle\Entity\Country")
+     * @ORM\ManyToOne(targetEntity="\NFQAkademija\BaseBundle\Entity\Country", inversedBy="recipes")
      */
     private $country;
 
@@ -83,8 +83,9 @@ class Recipe
      */
     public function __construct()
     {
+        $this->rating = 0;
+        $this->raters = 0;
     }
-
 
     /**
      * Get id

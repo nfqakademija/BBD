@@ -28,6 +28,7 @@ function toast(text, status){
         $("#toast_wrapper").css('height','0px');
     },toast_show_time);
 }
+
 function append_recipes_to_profile(){
     var recipes = [];
     recipes[0] = ["0","/images/food (0).jpg", "title0"];
@@ -130,7 +131,6 @@ function append_recipes(){
     recipes[16] = ["16","/images/food (16).jpg", "title0"];
     recipes[17] = ["17","/images/food (17).jpg", "title0"];
 
-
     for(i = 0; i < recipes.length; i++){
         append_recipe(recipes[i]);
     }
@@ -162,21 +162,12 @@ function append_recipe(data){
 }
 
 function to_very_top(){
-    $("html, body").animate({scrollTop: 0}, scroll_animation_time);
+    $("#content_wrapper").animate({scrollTop: 0}, scroll_animation_time);
 }
 
 function to_very_bottom(){
-    $("html, body").animate({scrollTop: $(document).height()}, scroll_animation_time);
+    $("#content_wrapper").animate({scrollTop: $(document).height()}, scroll_animation_time);
 }
-
-
-$(window).scroll(function(){
-    scrolled = $(document).scrollTop();
-    if(scrolled > 800)
-        toast_top('show');
-    else
-        toast_top('hide');
-});
 
 function getDocHeight(){
     return Math.max(

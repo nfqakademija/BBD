@@ -9,6 +9,9 @@
     <div class="nav_zone_element untouchable" id="random" onclick="content_navigation('random')"></div>
 {% endblock %}
 
+ {% block divider %}
+     <div id="divider" class="middle_divider" style="margin-left:10px;margin-top:0px;" onclick="full_sidebar()"></div>
+ {% endblock %}
  {% block filters_zone %}
      <div class="filter_element untouchable" id="universities-2" onclick="filter_selected(this.id)">
          <div class="filter_element_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
@@ -39,6 +42,66 @@
                  recalculate_width();
                  sidebar_manipulation()
              });
+             $("#content_wrapper").scroll(function(){
+                 scrolled = $("#content_wrapper").scrollTop();
+                 if(scrolled > 400)
+                     toast_top('show');
+                 else
+                     toast_top('hide');
+
+                 var scroll_height = $("#content_wrapper")[0].scrollHeight;
+                 var item_height = $("#content_wrapper").css('height');
+                 item_height = parseInt(item_height.replace('px'));
+                 var height = scroll_height - item_height;
+                 var height_constant = 100;
+                 if(height - scrolled <= height_constant){
+                     load_more();
+                 }
+             });
+         }
+
+         var load_more_end = false;
+         var loading_more_status = false;
+         function load_more(){
+             if(!loading_more_status && !load_more_end){
+                 loading_more_status = true;
+                 show_loading();
+
+                 var recipes = [];
+                 recipes[0] = ["0","/images/food (0).jpg", "title0"];
+                 recipes[1] = ["1","/images/food (1).png", "title0"];
+                 recipes[2] = ["2","/images/food (2).jpg", "title0"];
+                 recipes[3] = ["3","/images/food (3).jpg", "title0"];
+                 recipes[4] = ["4","/images/food (4).jpg", "title0"];
+                 recipes[5] = ["5","/images/food (5).jpg", "title0"];
+                 for(i = 0; i < recipes.length; i++){
+                     append_recipe(recipes[i]);
+                 }
+                 loading_more_status = false;
+                 hide_loading();
+                 load_more_end = true;
+                 /*
+                 $.ajax({
+                     type: 'POST',
+                     url: 'ajax.php',
+                     data: { load_more: 'true'},
+                     beforeSend:function(){
+                         if(!load_more_end)
+                             show_loading();
+                     },
+                     success:function(data){
+                         loading_more_status = false;
+                         var data = " ";
+                         if(data != ""){
+                             hide_loading();
+                         }else if(data == ""){
+                             hide_loading();
+                             load_more_end = true;
+                         }
+                     }
+                 });
+                  */
+             }
          }
 
          function key_check(event){

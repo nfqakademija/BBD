@@ -44,10 +44,10 @@
         <div class='top_layer_item' id="top_layer">
             <div class='top_layer_item' id="top_box">
                 <div id="top_box_up">
-                    <div id="top_box_title">Prisijungti</div>
-                    <div class="top_box_social_box" id="top_box_social_facebook" onclick="facebook_login()"></div>
+                    <div id="top_box_title" class="untouchale">Prisijungti</div>
+                    <div class="top_box_social_box untouchale" id="top_box_social_facebook" onclick="facebook_login()"></div>
                 </div>
-                <div id="top_box_content">Prisijunkite prie Foodex bendruomenės</div>
+                <div id="top_box_content" class="untouchale">Prisijunkite prie Foodex bendruomenės</div>
             </div>
 
         </div>
@@ -124,7 +124,10 @@
                     </div>
                 {% endblock %}
             </div>
-            <div id="divider" class="middle_divider" onclick="full_sidebar()"></div>
+            {% block divider %}
+                <div id="divider" class="middle_divider" onclick="full_sidebar()"></div>
+            {% endblock %}
+
             <div id='filters_zone' onclick="full_sidebar()">
                 {% block filters_zone %}{% endblock %}
             </div>

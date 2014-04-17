@@ -1434,9 +1434,11 @@ div ::-webkit-scrollbar {
   z-index: 5;
   bottom: 50px;
   right: 70px;
-  color: #FFF;
-  width:50px;
-  height:50px;
+  color: @white;
+  width:43px;
+  height:43px;
+  border:1px solid black;
+  box-shadow:0px 0px 2px black;
   cursor: default;
   display: none;
   background-repeat:no-repeat;
@@ -1444,7 +1446,6 @@ div ::-webkit-scrollbar {
   background-size:100%;
   background-position:50% 50%;
   opacity:0.2;
-  box-shadow:0px 0px 2px @black;
   background-color:@black;
 }
 
@@ -2160,6 +2161,7 @@ p{
 }
 
 #top_box_title{
+
   padding:15px;
   width:auto;
   text-transform:uppercase;

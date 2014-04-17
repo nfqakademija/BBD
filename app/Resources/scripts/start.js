@@ -407,37 +407,52 @@ function filter_category(category){
 }
 
 function content_navigation(type){
-    $('.nav_zone_element').removeClass('nav_element_active');
-    $("#" + type).addClass('nav_element_active');
+
     switch(type){
-        case "home": location.href = "/"; break;
+        case "home":
+            $('.nav_zone_element').removeClass('nav_element_active');
+            $("#" + type).addClass('nav_element_active');
+            location.href = "/";
+            break;
         case "profile":
 
             //ajax to check if user is logged in
             user_is_loged = false;
 
             if(user_is_loged){
+                $('.nav_zone_element').removeClass('nav_element_active');
+                $("#" + type).addClass('nav_element_active');
                 location.href = "/profile";
             }else{
                 show_top_layer_account();
             }
 
-
-
             break;
+
         case "shoppinglist":
             //ajax to check if user is logged in
             user_is_loged = false;
 
             if(user_is_loged){
+                $('.nav_zone_element').removeClass('nav_element_active');
+                $("#" + type).addClass('nav_element_active');
                 location.href = "/shoppinglist";
             }else{
                 show_top_layer_account();
             }
-
             break;
-        case "random": location.href = "/random"; break;
-        default: location.href = "/"; break;
+
+        case "random":
+            $('.nav_zone_element').removeClass('nav_element_active');
+            $("#" + type).addClass('nav_element_active');
+            location.href = "/random";
+            break;
+
+        default:
+            $('.nav_zone_element').removeClass('nav_element_active');
+            $("#" + type).addClass('nav_element_active');
+            location.href = "/";
+            break;
     }
 }
 
@@ -887,5 +902,8 @@ function empty_sidebar(){
     $("#sidebar_slider").css('display','none');
     $("#config_zone").css('display','none');
     recalculate_width();
+}
+
+function facebook_login(){
 
 }

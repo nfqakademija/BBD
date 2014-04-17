@@ -9,8 +9,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * User
  *
- * @ORM\Entity(repositoryClass="NFQAkademija\BaseBundle\Entity\UserRepository")
  * @ORM\Table(name="users")
+ * @ORM\Entity(repositoryClass="NFQAkademija\BaseBundle\Entity\UserRepository")
  */
 class User extends BaseUser
 {
@@ -49,6 +49,20 @@ class User extends BaseUser
      */
     protected $surname;
 
+
+    /**
+     * @var \NFQAkademija\BaseBundle\Entity\ShoppingList
+     * @ORM\OneToMany(targetEntity="\NFQAkademija\BaseBundle\Entity\ShoppingList", mappedBy="user")
+     */
+    protected $shoppingList;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->shoppingList = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 
     /**
      * Get id
@@ -196,5 +210,38 @@ class User extends BaseUser
     public function getGoogleAccessToken()
     {
         return $this->google_access_token;
+    }
+
+    /**
+     * Add shoppingList
+     *
+     * @param \NFQAkademija\BaseBundle\Entity\ShoppingList $shoppingList
+     * @return User
+     */
+    public function addShoppingList(\NFQAkademija\BaseBundle\Entity\ShoppingList $shoppingList)
+    {
+        $this->shoppingList[] = $shoppingList;
+
+        return $this;
+    }
+
+    /**
+     * Remove shoppingList
+     *
+     * @param \NFQAkademija\BaseBundle\Entity\ShoppingList $shoppingList
+     */
+    public function removeShoppingList(\NFQAkademija\BaseBundle\Entity\ShoppingList $shoppingList)
+    {
+        $this->shoppingList->removeElement($shoppingList);
+    }
+
+    /**
+     * Get shoppingList
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getShoppingList()
+    {
+        return $this->shoppingList;
     }
 }

@@ -1,10 +1,23 @@
 {% extends "::base.html.twig" %}
 
 {% block specific_scripts %}
+    <script src="https://maps.googleapis.com/maps/api/js?sensor=false" type="text/javascript"></script>
     <script>
         function loader(){
             getLocation();
+            $('#filters_zone').css('bottom','10px');
+            sidebar_manipulation();
+            $('#config_zone').css('display','none');
+            $( window ).resize(function() {
+                sidebar_manipulation();
+                $('#config_zone').css('display','none');
+            });
         }
+
+        function key_check(event){
+
+        }
+
         //NFQ koordinates
         var your_X = 54.903431;
         var your_Y = 23.88197;
@@ -53,23 +66,27 @@
 
             }
             var map = new google.maps.Map(map_canvas, map_options);
+            var iconBase = 'https://maps.google.com/mapfiles/';
 
-            var marker = new google.maps.Marker({
+            var your_position = new google.maps.Marker({
                 position: new google.maps.LatLng(your_X, your_Y),
                 map: map,
+                icon: iconBase + 'marker.png',
                 title:"Tu esi čia"
             });
 
+            var molas = new google.maps.Marker({
+                position: new google.maps.LatLng(54.900611,23.968089),
+                map: map,
+                icon: iconBase + 'marker_green.png',
+                title:"PC 'Molas'"
+            });
+
         }
-
-        //google.maps.event.addDomListener(window, 'load', maps_initialize);
-
-
-
     </script>
 {% endblock %}
 
-{% block title %}Shopping list | BBD{% endblock %}
+{% block title %}Shopping list | Foodex{% endblock %}
 
 {% block nav_zone %}
     <div class="nav_zone_element untouchable " id="home" onclick="content_navigation('home')"></div>
@@ -78,6 +95,71 @@
     <div class="nav_zone_element untouchable" id="random" onclick="content_navigation('random')"></div>
 {% endblock %}
 
+{% block search_zone %}
+    <div id='search_index' onclick="focus_input('shoppinglist_input')" ></div>
+    <input id='shoppinglist_input' placeholder='Pridėti prekių' onkeyup="shoppinglist_search()" onfocus="shoppinglist_input_focus()" onblur="shoppinglist_input_blur()"/>
+    <div id='search_container'>
+
+        <div class="search_item untouchable" id="item-5" onclick="filter_search_add('5')">
+            <div class="search_item_image" style="background-image:url('{{ asset('images/food (2).jpg') }}')"></div>
+            <div class="search_item_title">Ananasas</div>
+            <div class="search_item_bottom_info">Ingredientas</div>
+        </div>
+
+        <div class="search_item untouchable" id="item-5" onclick="filter_search_add('5')">
+            <div class="search_item_image" style="background-image:url('{{ asset('images/food (5).jpg') }}')"></div>
+            <div class="search_item_title">Agurkas</div>
+            <div class="search_item_bottom_info">Ingredientas</div>
+        </div>
+
+        <div class="search_item untouchable" id="item-5" onclick="filter_search_add('5')">
+            <div class="search_item_image" style="background-image:url('{{ asset('images/food (3).jpg') }}')"></div>
+            <div class="search_item_title">Aguona</div>
+            <div class="search_item_bottom_info">Ingredientas</div>
+        </div>
+
+        <div class="search_item untouchable" id="item-5" onclick="filter_search_add('5')">
+            <div class="search_item_image" style="background-image:url('{{ asset('images/food (4).jpg') }}')"></div>
+            <div class="search_item_title">Apelsinas</div>
+            <div class="search_item_bottom_info">Ingredientas</div>
+        </div>
+
+        <div class="search_item untouchable" id="item-5" onclick="filter_search_add('5')">
+            <div class="search_item_image" style="background-image:url('{{ asset('images/food (4).jpg') }}')"></div>
+            <div class="search_item_title">Apelsinas</div>
+            <div class="search_item_bottom_info">Ingredientas</div>
+        </div>
+
+        <div class="search_item untouchable" id="item-5" onclick="filter_search_add('5')">
+            <div class="search_item_image" style="background-image:url('{{ asset('images/food (4).jpg') }}')"></div>
+            <div class="search_item_title">Apelsinas</div>
+            <div class="search_item_bottom_info">Ingredientas</div>
+        </div>
+
+        <div class="search_item untouchable" id="item-5" onclick="filter_search_add('5')">
+            <div class="search_item_image" style="background-image:url('{{ asset('images/food (4).jpg') }}')"></div>
+            <div class="search_item_title">Apelsinas</div>
+            <div class="search_item_bottom_info">Ingredientas</div>
+        </div>
+
+        <div class="search_item untouchable" id="item-5" onclick="filter_search_add('5')">
+            <div class="search_item_image" style="background-image:url('{{ asset('images/food (4).jpg') }}')"></div>
+            <div class="search_item_title">Apelsinas</div>
+            <div class="search_item_bottom_info">Ingredientas</div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block filters_zone %}
+    Prekiu sarasas
+
+{% endblock %}
+
+{% block config_zone %}{% endblock %}
+
 {% block content %}
-    <div id="map_canvas"></div>
+    <div id="content_wrapper" style="background-image:url('{{ asset('images/content_background.jpg') }}')">
+        <div id="map_canvas"></div>
+    </div>
+
 {% endblock %}

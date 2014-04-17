@@ -13,6 +13,7 @@ var minimum_recipe_size = 90;
 var recipe_size = minimum_recipe_size;
 var mobile_state = false;
 var user_is_loged = check_if_user_is_loged();
+var steps_amount = 2;
 
 function toast(text, status){
     clearTimeout(toast_timer);
@@ -787,6 +788,14 @@ function random_next(){
 
 //RESPONSIVE JAVASCRIPT
 
+function steps_manipulation(){
+    var step_height = parseInt(($("#content_wrapper").css('height')).replace("px", ""));
+    var step_width = parseInt(($("#content_wrapper").css('width')).replace("px", ""));
+    $(".step").css('height', step_height + "px");
+    $(".step").css('width', step_width + "px");
+
+}
+
 function calculate_recipe_size(){
     //$(window).height();   // returns height of browser viewport
     //$(document).height(); // returns height of HTML document
@@ -877,6 +886,8 @@ function full_sidebar(){
     $("#header").css('left','231px');
     $("#config_zone").css('display','block');
     $("#cook_ingredients").css('display','block');
+    $(".next_step").html("Sekantis");
+    $("#steps_sidebar").css('top','0px');
     //calculate top px for filters zone
     var height_from_top = $(".middle_divider").offset().top;
     $("#filters_zone").css('top', height_from_top + 'px');
@@ -884,6 +895,7 @@ function full_sidebar(){
         $("#sidebar_slider").css('display','block');
         recalculate_width();
     }
+    steps_manipulation();
 }
 
 function squeeze_sidebar(){
@@ -893,13 +905,15 @@ function squeeze_sidebar(){
     $("#sidebar_slider").css('display','none');
     $("#config_zone").css('display','block');
     $("#cook_ingredients").css('display','none');
-
+    $(".next_step").html(">>");
+    $("#steps_sidebar").css('top','0px');
     //calculate top px for filters zone
     var height_from_top = $(".middle_divider").offset().top;
     $("#filters_zone").css('top', height_from_top + 'px');
     if(!mobile_state){
         recalculate_width();
     }
+    steps_manipulation();
 }
 
 function empty_sidebar(){
@@ -909,7 +923,45 @@ function empty_sidebar(){
     $("#header_logo").css('display','block');
     $("#sidebar_slider").css('display','none');
     $("#config_zone").css('display','none');
+    $("#steps_sidebar").css('top','41px');
     recalculate_width();
+    steps_manipulation();
+}
+
+
+function steps_sidebar_initialize(){
+    var screen_height = $("#steps_sidebar").height();
+    var step_height = screen_height / steps_amount - 1;
+
+    for(i = 1; i <= steps_amount; i++){
+        var step = "<div class='step_indicator' style=\"height:" + step_height + "px;line-height:" + step_height + "px;\">" + i + "</div>";
+        $("#steps_sidebar").append(step);
+    }
+    if(mobile_state){
+        $("#steps_sidebar").css('width', '30px');
+        $("#content_wrapper").css('right', '31px');
+    }else{
+        $("#steps_sidebar").css('width', '65px');
+        $("#content_wrapper").css('right', '66px');
+    }
+    steps_manipulation();
+}
+
+
+
+
+function steps_sidebar_manipulation(){
+    var screen_height = $("#steps_sidebar").height();
+    var step_height = screen_height / steps_amount - 1;
+    $(".step_indicator").css('height', step_height + 'px').css('line-height', step_height + 'px');
+    if(mobile_state){
+        $("#steps_sidebar").css('width', '30px');
+        $("#content_wrapper").css('right', '31px');
+    }else{
+        $("#steps_sidebar").css('width', '65px');
+        $("#content_wrapper").css('right', '66px');
+    }
+    steps_manipulation();
 }
 
 function facebook_login(){

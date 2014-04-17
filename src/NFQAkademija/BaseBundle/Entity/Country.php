@@ -24,16 +24,16 @@ class Country
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=255)
+     * @ORM\Column(name="Name", type="string", length=255)
      */
-    private $name;
+    private $Name;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="flag", type="string", length=255)
+     * @ORM\Column(name="Flag", type="string", length=255)
      */
-    private $flag;
+    private $Flag;
     /**
      * @ORM\OneToMany(targetEntity="\NFQAkademija\BaseBundle\Entity\Recipe", mappedBy="country")
      */
@@ -46,7 +46,6 @@ class Country
         $this->recipes = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
-
     /**
      * Get id
      *
@@ -58,49 +57,49 @@ class Country
     }
 
     /**
-     * Set name
+     * Set Name
      *
      * @param string $name
      * @return Country
      */
     public function setName($name)
     {
-        $this->name = $name;
+        $this->Name = $name;
 
         return $this;
     }
 
     /**
-     * Get name
+     * Get Name
      *
      * @return string 
      */
     public function getName()
     {
-        return $this->name;
+        return $this->Name;
     }
 
     /**
-     * Set flag
+     * Set Flag
      *
      * @param string $flag
      * @return Country
      */
     public function setFlag($flag)
     {
-        $this->flag = $flag;
+        $this->Flag = $flag;
 
         return $this;
     }
 
     /**
-     * Get flag
+     * Get Flag
      *
      * @return string 
      */
     public function getFlag()
     {
-        return $this->flag;
+        return $this->Flag;
     }
 
     /**

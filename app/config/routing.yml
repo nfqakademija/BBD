@@ -28,7 +28,7 @@ nfq_akademija_recipes:
     resource: "@NFQAkademijaRecipesBundle/Resources/config/routing.yml"
     prefix:   /
 
-#FosUserBundle Routes
+# app/config/routing.yml
 fos_user_security:
     resource: "@FOSUserBundle/Resources/config/routing/security.xml"
 

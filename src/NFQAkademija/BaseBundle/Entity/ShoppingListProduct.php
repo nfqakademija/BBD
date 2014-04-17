@@ -5,9 +5,9 @@ namespace NFQAkademija\BaseBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * ShoppingListProduct
+ * ProductQuantity
  *
- * @ORM\Table(name="shopping_list_products")
+ * @ORM\Table(name="product_quantities")
  * @ORM\Entity
  */
 class ShoppingListProduct
@@ -30,6 +30,7 @@ class ShoppingListProduct
      * @ORM\JoinColumn(name="shopping_list_id", referencedColumnName="id", nullable=false)
      */
     protected $shopingList;
+
 
 
     /**

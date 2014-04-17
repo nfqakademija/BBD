@@ -12,6 +12,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Recipe
 {
+//  /**
+//     * @ORM\ManyToMany(targetEntity="Product", mappedBy="recipes")
+//     */
+//   private $products;
     /**
      * @var integer
      *
@@ -73,10 +77,6 @@ class Recipe
      * @ORM\ManyToOne(targetEntity="\NFQAkademija\BaseBundle\Entity\Country")
      */
     private $country;
-    /**
-     * @ORM\OneToMany(targetEntity="\NFQAkademija\BaseBundle\Entity\RecipeProduct", mappedBy="recipe")
-     */
-    protected $products;
 
     /**
      * Creates a Doctrine Collection for members.
@@ -288,38 +288,5 @@ class Recipe
     public function getCountry()
     {
         return $this->country;
-    }
-
-    /**
-     * Add products
-     *
-     * @param \NFQAkademija\BaseBundle\Entity\RecipeProduct $products
-     * @return Recipe
-     */
-    public function addProduct(\NFQAkademija\BaseBundle\Entity\RecipeProduct $products)
-    {
-        $this->products[] = $products;
-
-        return $this;
-    }
-
-    /**
-     * Remove products
-     *
-     * @param \NFQAkademija\BaseBundle\Entity\RecipeProduct $products
-     */
-    public function removeProduct(\NFQAkademija\BaseBundle\Entity\RecipeProduct $products)
-    {
-        $this->products->removeElement($products);
-    }
-
-    /**
-     * Get products
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getProducts()
-    {
-        return $this->products;
     }
 }

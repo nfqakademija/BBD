@@ -121,95 +121,36 @@ class User extends BaseUser
     }
 
     /**
-     * Set facebook_id
+     * Add shoppingList
      *
-     * @param string $facebookId
+     * @param \NFQAkademija\BaseBundle\Entity\ShoppingList $shoppingList
      * @return User
      */
-    public function setFacebookId($facebookId)
+    public function addShoppingList(\NFQAkademija\BaseBundle\Entity\ShoppingList $shoppingList)
     {
-        $this->facebook_id = $facebookId;
+        $this->shoppingList[] = $shoppingList;
 
         return $this;
     }
 
     /**
-     * Get facebook_id
+     * Remove shoppingList
      *
-     * @return string 
+     * @param \NFQAkademija\BaseBundle\Entity\ShoppingList $shoppingList
      */
-    public function getFacebookId()
+    public function removeShoppingList(\NFQAkademija\BaseBundle\Entity\ShoppingList $shoppingList)
     {
-        return $this->facebook_id;
+        $this->shoppingList->removeElement($shoppingList);
     }
 
     /**
-     * Set facebook_access_token
+     * Get shoppingList
      *
-     * @param string $facebookAccessToken
-     * @return User
+     * @return \Doctrine\Common\Collections\Collection 
      */
-    public function setFacebookAccessToken($facebookAccessToken)
+    public function getShoppingList()
     {
-        $this->facebook_access_token = $facebookAccessToken;
-
-        return $this;
-    }
-
-    /**
-     * Get facebook_access_token
-     *
-     * @return string 
-     */
-    public function getFacebookAccessToken()
-    {
-        return $this->facebook_access_token;
-    }
-
-    /**
-     * Set google_id
-     *
-     * @param string $googleId
-     * @return User
-     */
-    public function setGoogleId($googleId)
-    {
-        $this->google_id = $googleId;
-
-        return $this;
-    }
-
-    /**
-     * Get google_id
-     *
-     * @return string 
-     */
-    public function getGoogleId()
-    {
-        return $this->google_id;
-    }
-
-    /**
-     * Set google_access_token
-     *
-     * @param string $googleAccessToken
-     * @return User
-     */
-    public function setGoogleAccessToken($googleAccessToken)
-    {
-        $this->google_access_token = $googleAccessToken;
-
-        return $this;
-    }
-
-    /**
-     * Get google_access_token
-     *
-     * @return string 
-     */
-    public function getGoogleAccessToken()
-    {
-        return $this->google_access_token;
+        return $this->shoppingList;
     }
 
     /**

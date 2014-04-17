@@ -9,7 +9,7 @@ var password_min_size = 5;
 var transition_time = 200;
 var scroll_animation_time = 600;
 var toast_show_time = 3000;
-var website_index = "/BBD/web";
+var website_index = "";
 var minimum_recipe_size = 90;
 var recipe_size = minimum_recipe_size;
 var mobile_state = false;
@@ -31,27 +31,27 @@ function toast(text, status){
 }
 function append_recipes_to_profile(){
     var recipes = [];
-    recipes[0] = ["0","/BBD/web/images/food (0).jpg", "title0"];
-    recipes[1] = ["1","/BBD/web/images/food (1).png", "title0"];
-    recipes[2] = ["2","/BBD/web/images/food (2).jpg", "title0"];
-    recipes[3] = ["3","/BBD/web/images/food (3).jpg", "title0"];
-    recipes[4] = ["4","/BBD/web/images/food (4).jpg", "title0"];
-    recipes[5] = ["5","/BBD/web/images/food (5).jpg", "title0"];
-    recipes[6] = ["6","/BBD/web/images/food (6).jpg", "title0"];
-    recipes[7] = ["7","/BBD/web/images/food (7).jpg", "title0"];
-    recipes[8] = ["8","/BBD/web/images/food (8).jpg", "title0"];
-    recipes[9] = ["9","/BBD/web/images/food (9).jpg", "title0"];
-    recipes[10] = ["10","/BBD/web/images/food (10).jpg", "title0"];
-    recipes[11] = ["11","/BBD/web/images/food (11).jpg", "title0"];
-    recipes[12] = ["12","/BBD/web/images/food (12).jpg", "title0"];
-    recipes[13] = ["13","/BBD/web/images/food (13).jpg", "title0"];
-    recipes[14] = ["14","/BBD/web/images/food (14).jpg", "title0"];
-    recipes[15] = ["15","/BBD/web/images/food (15).jpg", "title0"];
-    recipes[16] = ["16","/BBD/web/images/food (16).jpg", "title0"];
-    recipes[17] = ["17","/BBD/web/images/food (17).jpg", "title0"];
-    recipes[18] = ["18","/BBD/web/images/food (18).jpg", "title0"];
-    recipes[19] = ["19","/BBD/web/images/food (19).jpg", "title0"];
-    recipes[20] = ["20","/BBD/web/images/food (20).jpg", "title0"];
+    recipes[0] = ["0","/images/food (0).jpg", "title0"];
+    recipes[1] = ["1","/images/food (1).png", "title0"];
+    recipes[2] = ["2","/images/food (2).jpg", "title0"];
+    recipes[3] = ["3","/images/food (3).jpg", "title0"];
+    recipes[4] = ["4","/images/food (4).jpg", "title0"];
+    recipes[5] = ["5","/images/food (5).jpg", "title0"];
+    recipes[6] = ["6","/images/food (6).jpg", "title0"];
+    recipes[7] = ["7","/images/food (7).jpg", "title0"];
+    recipes[8] = ["8","/images/food (8).jpg", "title0"];
+    recipes[9] = ["9","/images/food (9).jpg", "title0"];
+    recipes[10] = ["10","/images/food (10).jpg", "title0"];
+    recipes[11] = ["11","/images/food (11).jpg", "title0"];
+    recipes[12] = ["12","/images/food (12).jpg", "title0"];
+    recipes[13] = ["13","/images/food (13).jpg", "title0"];
+    recipes[14] = ["14","/images/food (14).jpg", "title0"];
+    recipes[15] = ["15","/images/food (15).jpg", "title0"];
+    recipes[16] = ["16","/images/food (16).jpg", "title0"];
+    recipes[17] = ["17","/images/food (17).jpg", "title0"];
+    recipes[18] = ["18","/images/food (18).jpg", "title0"];
+    recipes[19] = ["19","/images/food (19).jpg", "title0"];
+    recipes[20] = ["20","/images/food (20).jpg", "title0"];
 
 
     //info about profile recipes
@@ -112,24 +112,24 @@ function append_recipes(){
 
     //later need from ajax with filters
     var recipes = [];
-    recipes[0] = ["0","/BBD/web/images/food (0).jpg", "title0"];
-    recipes[1] = ["1","/BBD/web/images/food (1).png", "title0"];
-    recipes[2] = ["2","/BBD/web/images/food (2).jpg", "title0"];
-    recipes[3] = ["3","/BBD/web/images/food (3).jpg", "title0"];
-    recipes[4] = ["4","/BBD/web/images/food (4).jpg", "title0"];
-    recipes[5] = ["5","/BBD/web/images/food (5).jpg", "title0"];
-    recipes[6] = ["6","/BBD/web/images/food (6).jpg", "title0"];
-    recipes[7] = ["7","/BBD/web/images/food (7).jpg", "title0"];
-    recipes[8] = ["8","/BBD/web/images/food (8).jpg", "title0"];
-    recipes[9] = ["9","/BBD/web/images/food (9).jpg", "title0"];
-    recipes[10] = ["10","/BBD/web/images/food (10).jpg", "title0"];
-    recipes[11] = ["11","/BBD/web/images/food (11).jpg", "title0"];
-    recipes[12] = ["12","/BBD/web/images/food (12).jpg", "title0"];
-    recipes[13] = ["13","/BBD/web/imagesfood (13).jpg", "title0"];
-    recipes[14] = ["14","/BBD/web/images/food (14).jpg", "title0"];
-    recipes[15] = ["15","/BBD/web/images/food (15).jpg", "title0"];
-    recipes[16] = ["16","/BBD/web/images/food (16).jpg", "title0"];
-    recipes[17] = ["17","/BBD/web/images/food (17).jpg", "title0"];
+    recipes[0] = ["0","/images/food (0).jpg", "title0"];
+    recipes[1] = ["1","/images/food (1).png", "title0"];
+    recipes[2] = ["2","/images/food (2).jpg", "title0"];
+    recipes[3] = ["3","/images/food (3).jpg", "title0"];
+    recipes[4] = ["4","/images/food (4).jpg", "title0"];
+    recipes[5] = ["5","/images/food (5).jpg", "title0"];
+    recipes[6] = ["6","/images/food (6).jpg", "title0"];
+    recipes[7] = ["7","/images/food (7).jpg", "title0"];
+    recipes[8] = ["8","/images/food (8).jpg", "title0"];
+    recipes[9] = ["9","/images/food (9).jpg", "title0"];
+    recipes[10] = ["10","/images/food (10).jpg", "title0"];
+    recipes[11] = ["11","/images/food (11).jpg", "title0"];
+    recipes[12] = ["12","/images/food (12).jpg", "title0"];
+    recipes[13] = ["13","/images/food (13).jpg", "title0"];
+    recipes[14] = ["14","/images/food (14).jpg", "title0"];
+    recipes[15] = ["15","/images/food (15).jpg", "title0"];
+    recipes[16] = ["16","/images/food (16).jpg", "title0"];
+    recipes[17] = ["17","/images/food (17).jpg", "title0"];
 
 
     for(i = 0; i < recipes.length; i++){

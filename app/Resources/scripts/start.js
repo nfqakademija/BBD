@@ -840,12 +840,17 @@ function sidebar_manipulation(){
         mobile_state = true;
         $('#header').css('display','block');
         $('#content_wrapper').css('top','41px');
+        $("#steps_sidebar").css('top','41px');
         empty_sidebar();
     }else{
         mobile_state = false;
         $('#header').css('display','none');
         $('#content_wrapper').css('top','0px');
-        full_sidebar();
+        $("#steps_sidebar").css('top','0px');
+        if(get_sidebar_state() == "squeeze")
+            squeeze_sidebar();
+        else
+            full_sidebar();
     }
 }
 
@@ -858,6 +863,11 @@ function empty_sidebar_slide(){
         $("#sidebar_slider").css('display','block');
         $("#header_logo").css('display','block');
         $("#config_zone").css('display','none');
+        $("#cook_ingredients").css('display','none');
+        $(".next_step").html(">>");
+        var height_from_top = $(".middle_divider").offset().top;
+        $("#filters_zone").css('top', height_from_top + 'px');
+
     }else if(sidebar_class == "empty"){
         $("#sidebar").removeClass('full').removeClass('empty').removeClass('squeeze').addClass('full');
         $("#content_wrapper").css('left','231px');
@@ -865,6 +875,10 @@ function empty_sidebar_slide(){
         $("#sidebar_slider").css('display','none');
         $("#header_logo").css('display','none');
         $("#config_zone").css('display','block');
+        $("#cook_ingredients").css('display','block');
+        $(".next_step").html("Sekantis");
+        var height_from_top = $(".middle_divider").offset().top;
+        $("#filters_zone").css('top', height_from_top + 'px');
     }
     hide_recipe();
 
@@ -887,15 +901,17 @@ function full_sidebar(){
     $("#config_zone").css('display','block');
     $("#cook_ingredients").css('display','block');
     $(".next_step").html("Sekantis");
-    $("#steps_sidebar").css('top','0px');
     //calculate top px for filters zone
     var height_from_top = $(".middle_divider").offset().top;
     $("#filters_zone").css('top', height_from_top + 'px');
     if(!mobile_state){
         $("#sidebar_slider").css('display','block');
         recalculate_width();
+        steps_manipulation();
     }
-    steps_manipulation();
+
+    set_sidebar_state('full');
+    hide_recipe();
 }
 
 function squeeze_sidebar(){
@@ -906,7 +922,6 @@ function squeeze_sidebar(){
     $("#config_zone").css('display','block');
     $("#cook_ingredients").css('display','none');
     $(".next_step").html(">>");
-    $("#steps_sidebar").css('top','0px');
     //calculate top px for filters zone
     var height_from_top = $(".middle_divider").offset().top;
     $("#filters_zone").css('top', height_from_top + 'px');
@@ -914,6 +929,7 @@ function squeeze_sidebar(){
         recalculate_width();
     }
     steps_manipulation();
+    set_sidebar_state('squeeze');
 }
 
 function empty_sidebar(){
@@ -923,10 +939,19 @@ function empty_sidebar(){
     $("#header_logo").css('display','block');
     $("#sidebar_slider").css('display','none');
     $("#config_zone").css('display','none');
-    $("#steps_sidebar").css('top','41px');
     recalculate_width();
     steps_manipulation();
 }
+
+function get_sidebar_state(){
+    return localStorage["sidebar_state"];
+}
+
+function set_sidebar_state(state){
+    localStorage.setItem('sidebar_state', state);
+    return true;
+}
+
 
 
 function steps_sidebar_initialize(){
@@ -936,13 +961,6 @@ function steps_sidebar_initialize(){
     for(i = 1; i <= steps_amount; i++){
         var step = "<div class='step_indicator' style=\"height:" + step_height + "px;line-height:" + step_height + "px;\">" + i + "</div>";
         $("#steps_sidebar").append(step);
-    }
-    if(mobile_state){
-        $("#steps_sidebar").css('width', '30px');
-        $("#content_wrapper").css('right', '31px');
-    }else{
-        $("#steps_sidebar").css('width', '65px');
-        $("#content_wrapper").css('right', '66px');
     }
     steps_manipulation();
 }
@@ -954,13 +972,6 @@ function steps_sidebar_manipulation(){
     var screen_height = $("#steps_sidebar").height();
     var step_height = screen_height / steps_amount - 1;
     $(".step_indicator").css('height', step_height + 'px').css('line-height', step_height + 'px');
-    if(mobile_state){
-        $("#steps_sidebar").css('width', '30px');
-        $("#content_wrapper").css('right', '31px');
-    }else{
-        $("#steps_sidebar").css('width', '65px');
-        $("#content_wrapper").css('right', '66px');
-    }
     steps_manipulation();
 }
 

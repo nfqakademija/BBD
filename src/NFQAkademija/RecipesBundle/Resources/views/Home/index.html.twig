@@ -13,20 +13,11 @@
      <div id="divider" class="middle_divider" style="margin-left:10px;margin-top:0px;" onclick="full_sidebar()"></div>
  {% endblock %}
  {% block filters_zone %}
-     <div class="filter_element untouchable" id="universities-2" onclick="filter_selected(this.id)">
-         <div class="filter_element_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
-         <div class="filter_element_text">VU</div>
-         <div class="filter_element_delete" id="delete_universities-2" onclick="filter_delete(this.id)"></div>
-     </div>
-     <div class="filter_element untouchable" id="universities-1" onclick="filter_selected(this.id)">
-         <div class="filter_element_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
-         <div class="filter_element_text">VU</div>
-         <div class="filter_element_delete" id="delete_universities-1" onclick="filter_delete(this.id)"></div>
-     </div>
+
  {% endblock %}
 
 {% block config_zone %}
-    <div class='filter_element untouchable' onclick="filter_start()">
+    <div class='filter_element untouchable' onclick="filter_start();show_config_zone(1)">
         <div class='filter_element_image' id='add'></div>
         <div class='filter_element_text'>Pridėti filtrą</div>
     </div>
@@ -65,8 +56,8 @@
          function load_more(){
              if(!loading_more_status && !load_more_end){
                  loading_more_status = true;
-                 show_loading();
-
+                 recipe_size = calculate_recipe_size();
+                 show_loading_more();
                  var recipes = [];
                  recipes[0] = ["0","/images/food (0).jpg", "title0"];
                  recipes[1] = ["1","/images/food (1).png", "title0"];
@@ -74,11 +65,12 @@
                  recipes[3] = ["3","/images/food (3).jpg", "title0"];
                  recipes[4] = ["4","/images/food (4).jpg", "title0"];
                  recipes[5] = ["5","/images/food (5).jpg", "title0"];
+                 hide_loading_more();
                  for(i = 0; i < recipes.length; i++){
                      append_recipe(recipes[i]);
                  }
+
                  loading_more_status = false;
-                 hide_loading();
                  load_more_end = true;
                  /*
                  $.ajax({
@@ -119,6 +111,7 @@
         <div id="sidebar_right_image" style="background-image:url('{{ asset('images/food (5).jpg') }}')"></div>
         <div id="sidebar_right_title">Kepnys "Omledufe"</div>
         <div id="sidebar_right_info">
+            <div class="sidebar_right_info_item" id="sidebar_right_like" onclick="recipe_like('1')">59</div>
             <div class="sidebar_right_info_item" id="sidebar_right_time">25 min</div>
             <div class="sidebar_right_info_item" id="sidebar_right_country">Lenkija</div>
             <div class="sidebar_right_info_item" id="sidebar_right_main_cooking_method">Virimas</div>
@@ -167,7 +160,7 @@
 
 
         <div id="sidebar_right_bottom_zone">
-            <div id="sidebar_right_cook_button" onclick="cook('1','1')">Gaminti</div>
+            <div id="sidebar_right_cook_button" onclick="cook('1')">Gaminti</div>
         </div>
 
     </div>

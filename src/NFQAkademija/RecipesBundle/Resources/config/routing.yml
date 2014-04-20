@@ -15,5 +15,5 @@ nfq_akademija_random:
     defaults: { _controller: NFQAkademijaRecipesBundle:Random:index }
 
 nfq_akademija_cook:
-    pattern:  /cook/{recipe_ID}/{step_ID}
+    pattern:  /cook/{recipe_ID}
     defaults: { _controller: NFQAkademijaRecipesBundle:Cook:index }

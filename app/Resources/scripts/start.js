@@ -14,6 +14,7 @@ var recipe_size = minimum_recipe_size;
 var mobile_state = false;
 var user_is_loged = check_if_user_is_loged();
 var steps_amount = 2;
+var current_step = 0;
 
 function toast(text, status){
     clearTimeout(toast_timer);
@@ -179,6 +180,10 @@ function getDocHeight(){
 }
 
 function toast_top(display){
+    if(mobile_state){
+        $("#toast_top").fadeOut(transition_time * 2);
+        return true;
+    }
     if(display == "show")
         $("#toast_top").fadeIn(transition_time * 2);
     else if(display == "hide")
@@ -191,6 +196,15 @@ function show_loading(){
 
 function hide_loading(){
     $("#toast_loading").fadeOut(transition_time * 2);
+}
+
+function show_loading_more(){
+    var loading_more_box = "<div class='recipe_box' id='loading_more_box' style=\"width:" + recipe_size + "px;height:" + recipe_size +  "px;\"></div>";
+    $("#content_wrapper").append(loading_more_box);
+}
+
+function hide_loading_more(){
+    $('#loading_more_box').remove();
 }
 
 function refresh(){
@@ -681,15 +695,9 @@ function hide_recipe(){
 
 
 function cook(recipe_ID){
-    location.href = "/cook/" + recipe_ID + "/1";
+    location.href = "/cook/" + recipe_ID;
 
     //send ajax can keep track of time spent on cooking. starting time
-}
-
-function cook_step(recipe_ID, step_ID){
-    location.href = "/cook/" + recipe_ID + "/" + step_ID;
-
-    //send ajax can keep track of time spent on this step cooking.
 }
 
 function remember_recipe(recipe_ID){
@@ -789,8 +797,16 @@ function random_next(){
 //RESPONSIVE JAVASCRIPT
 
 function steps_manipulation(){
-    var step_height = parseInt(($("#content_wrapper").css('height')).replace("px", ""));
+    var step_height = parseInt(($("#content_wrapper").css('height')).replace("px", "")) - 1;
     var step_width = parseInt(($("#content_wrapper").css('width')).replace("px", ""));
+    if(mobile_state){
+        //$("#content_wrapper").css('height', step_height - 41 + "px");
+        //step_height = step_height - 41;
+        $('.step').addClass('squeezed_step')
+    }else{
+        $('.step').removeClass('squeezed_step');
+    }
+
     $(".step").css('height', step_height + "px");
     $(".step").css('width', step_width + "px");
 
@@ -956,12 +972,23 @@ function set_sidebar_state(state){
 
 function steps_sidebar_initialize(){
     var screen_height = $("#steps_sidebar").height();
-    var step_height = screen_height / steps_amount - 1;
+    var real_steps_amount = steps_amount + 2;
+    var step_height = screen_height / real_steps_amount - 1;
+    var step;
+
+    //pradinis
+    step = "<div class='step_indicator' style=\"height:" + step_height + "px;line-height:" + step_height + "px;\" onclick=\"step_go('0')\">0</div>";
+    $("#steps_sidebar").append(step);
 
     for(i = 1; i <= steps_amount; i++){
-        var step = "<div class='step_indicator' style=\"height:" + step_height + "px;line-height:" + step_height + "px;\">" + i + "</div>";
+        step = "<div class='step_indicator' style=\"height:" + step_height + "px;line-height:" + step_height + "px;\" onclick=\"step_go('" + i + "')\">" + i + "</div>";
         $("#steps_sidebar").append(step);
     }
+
+    //paskutinis
+    step = "<div class='step_indicator' style=\"height:" + step_height + "px;line-height:" + step_height + "px;\" onclick=\"step_go('last')\">*</div>";
+    $("#steps_sidebar").append(step);
+
     steps_manipulation();
 }
 
@@ -970,11 +997,51 @@ function steps_sidebar_initialize(){
 
 function steps_sidebar_manipulation(){
     var screen_height = $("#steps_sidebar").height();
-    var step_height = screen_height / steps_amount - 1;
+    var real_steps_amount = steps_amount + 2;
+    var step_height = screen_height / real_steps_amount - 1;
     $(".step_indicator").css('height', step_height + 'px').css('line-height', step_height + 'px');
     steps_manipulation();
 }
 
 function facebook_login(){
+
+}
+
+
+function step_go(id){
+    var ID = "step_" + id;
+    current_step = id;
+    var modulation = 0;
+    if(mobile_state){
+        modulation = 41;
+    }
+    $("#content_wrapper").animate({scrollTop: $("#" + ID).offset().top + $("#content_wrapper").scrollTop() - modulation}, 600);
+}
+
+function next_step(){
+    if(current_step == "last"){
+        return false;
+    }else{
+        var next = parseInt(current_step) + 1;
+        if($("#step_" + next).length != 0){
+            step_go(next);
+        }else {
+            step_go('last');
+        }
+    }
+}
+
+function previous_step(){
+    if(current_step == "0"){
+        return false;
+    }else if(current_step != "last"){
+        var previous = parseInt(current_step) - 1;
+        step_go(previous);
+    }else{
+        step_go(steps_amount);
+    }
+}
+
+function recipe_like(recipe_ID){
 
 }

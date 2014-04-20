@@ -1,25 +1,75 @@
 {% extends "::base.html.twig" %}
 
 
-{% block title %}{{ recipe_ID }} Step {{ step_ID }} | Foodex{% endblock %}
+{% block title %}{{ recipe_ID }} | Foodex{% endblock %}
 {% block specific_scripts %}
     <script type="text/javascript">
-        function loader(){
-            sidebar_manipulation();
-            $("#filters_zone").css('bottom','10px');
-            $("#config_zone").remove();
-            $( window ).resize(function() {
-                sidebar_manipulation();
-            });
-        }
-
         function key_check(event){
+            event.preventDefault();
+            switch (event.keyCode){
+                case 37: previous_step(); break;
+                case 38: previous_step(); break;
+                case 39: next_step(); break;
+                case 40: next_step(); break;
+            }
+        }
+
+        function loader() {
+            $("#search_zone").css('height', 'auto');
+            $(".top_divider").css('margin-bottom', '10px');
+            $(".middle_divider").css('margin-left', '10px');
+            //$("#filters_zone").css('bottom','10px');
+            //$("#config_zone").remove();
+            $("#search_zone").attr('class', 'cook_ingredients_zone');
+            sidebar_manipulation();
+
+            //get steps amount
+            steps_amount = 3;
+
+            steps_sidebar_initialize();
+            $(window).resize(function () {
+                sidebar_manipulation();
+                steps_sidebar_manipulation();
+            });
+
+            $("#content_wrapper").scroll(function () {
+                var content_height = parseInt(($("#content_wrapper").css('height').replace('px', '')));
+                var all = $("#content_wrapper")[0].scrollHeight;
+                var current = $("#content_wrapper").scrollTop();
+
+                var percentage = current / all;
+                var pointer_height = parseInt(content_height * percentage) ;
+                $("#steps_sidebar_pointer").css('height', pointer_height + 'px');
+            });
+
+            $("#content_wrapper").bind('mousewheel DOMMouseScroll', function(event){
+                event.preventDefault();
+                if (event.originalEvent.wheelDelta > 0 || event.originalEvent.detail < 0) {
+                    // scroll up
+                    previous_step();
+                }else {
+                    // scroll down
+                    next_step();
+                }
+            });
 
         }
+
     </script>
 {% endblock %}
+{% block search_zone %}
+    <div id="cook_ingredients">
+        <div id="divider" class="top_divider" onclick="full_sidebar()"></div>
+        <div class="sidebar_right_info_item" id="sidebar_right_time">25 min</div>
+        <div class="sidebar_right_info_item" id="sidebar_right_country">Lenkija</div>
+        <div class="sidebar_right_info_item" id="sidebar_right_main_cooking_method">Virimas</div>
+        <div class="sidebar_right_info_item" id="sidebar_right_type">Antrieji patiekalai</div>
+        <div class="sidebar_right_info_item" id="sidebar_right_characteristics">Aštru, sūru</div>
+    </div>
 
+{% endblock %}
 {% block filters_zone %}
+
     <div class="ingredient untouchable" id="ingredient-2" >
         <div class="ingredient_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
         <div class="ingredient_text">Bananas</div>
@@ -46,44 +96,44 @@
     </div>
 {% endblock %}
 
+{% block config_zone %}
+    <div id="sidebar_right_cook_button" class="untouchable next_step" onclick="next_step()">Sekantis</div>
+{% endblock %}
+
 {% block content %}
-    <div id="content_wrapper" style="background-image:url('http://1.bp.blogspot.com/_FfkgwPNm3uA/Swk2TGwRoyI/AAAAAAAAEoQ/huQ9v3t7i6c/s400/Boob_Kitten.jpg')">
-        <div class="content_recipe">
-            <div class="cook_top_box">
-                <div class="cook_top_image" style="background-image:url('http://1.bp.blogspot.com/_FfkgwPNm3uA/Swk2TGwRoyI/AAAAAAAAEoQ/huQ9v3t7i6c/s400/Boob_Kitten.jpg')"></div>
-                <div class="cook_top_title">Šiškebabas</div>
-                <div class="cook_top_steps_box">
-                    <div class="cook_top_step active" onclick="cook_step('{{ recipe_ID }}', '1')">1</div>
-                    <div class="cook_top_step" onclick="cook_step('{{ recipe_ID }}', '2')">2</div>
-                    <div class="cook_top_step" onclick="cook_step('{{ recipe_ID }}', '3')">3</div>
-                    <div class="cook_top_step" onclick="cook_step('{{ recipe_ID }}', '4')">4</div>
-                    <div class="cook_top_step" onclick="cook_step('{{ recipe_ID }}', '5')">5</div>
-                    <div class="cook_top_step" onclick="cook_step('{{ recipe_ID }}', '6')">6</div>
-                    <div class="cook_top_step" onclick="cook_step('{{ recipe_ID }}', '7')">7</div>
-                    <div class="cook_top_step" onclick="cook_step('{{ recipe_ID }}', '8')">8</div>
-                </div>
-            </div>
+    <div id="content_wrapper" style="background-image:url('/images/food (19).jpg');right:31px;" >
+        <div class="step" id="step_0" style="background-image:url('/images/food (19).jpg')">
+            <div class="step_title">Šiškebabas</div>
+            <div class="step_info">Šiškebabas yra puikus produktus valgykite ir džiaukitės</div>
+            <div class="step_go step_down" onclick="next_step()"></div>
+        </div>
+        <div class="step" id="step_1">
+            <div class="step_go step_up" onclick="previous_step()"></div>
+            <div class="step_id">Žingsnis 1</div>
+            <div class="step_info">Supjaustyti agurkus</div>
+            <div class="step_go step_down" onclick="next_step()"></div>
+        </div>
+        <div class="step" id="step_2">
+            <div class="step_go step_up" onclick="previous_step()"></div>
+            <div class="step_id">Žingsnis 2</div>
+            <div class="step_info">Išvirti agurkus</div>
+            <div class="step_go step_down" onclick="next_step()"></div>
+        </div>
+        <div class="step" id="step_3">
+            <div class="step_go step_up" onclick="previous_step()"></div>
+            <div class="step_id">Žingsnis 3</div>
+            <div class="step_info">Agurkus sudėti į lėkštę</div>
+            <div class="step_go step_down" onclick="next_step()"></div>
+        </div>
 
-            <div class="cook_step_box">
-                <div class="cook_step_box_left">
-                    <div class="cook_step_box_text">
-                        Supjaustyti agurkus griežinėliais
-                    </div>
-                    <div class="cook_button untouchable " onclick="cook_step('{{ recipe_ID }}', '2')">Sekantis</div>
-
-                </div>
-                <div class="cook_step_box_right">
-                    <div class="cook_step_box_text">
-                        žingsnio foto, papildomi useriu komentarai, alternatyvos, patarimai, video, idomy info apie produktus,
-                        chronometras jeigu reikia virti
-                    </div>
-
-
-                </div>
-
-            </div>
+        <div class="step" id="step_last">
+            <div class="step_go step_up" onclick="previous_step()"></div>
+            <div class="step_id">Skanaus</div>
+            <div class="step_info">Sharinti pagaminta maista, spausti patinka, parasyti pastebejimu</div>
         </div>
     </div>
+
+    <div id="steps_sidebar"><div id="steps_sidebar_pointer"></div></div>
 
 
 {% endblock %}

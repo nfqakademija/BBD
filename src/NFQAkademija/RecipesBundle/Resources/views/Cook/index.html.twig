@@ -30,6 +30,9 @@
             $(window).resize(function () {
                 sidebar_manipulation();
                 steps_sidebar_manipulation();
+                $(window).bind('resizeEnd', function() {
+                    step_go(current_step);
+                });
             });
 
             $("#content_wrapper").scroll(function () {

@@ -1,10 +1,14 @@
 {% extends "::base.html.twig" %}
 
 {% block specific_scripts %}
-    <script src="https://maps.googleapis.com/maps/api/js?sensor=false" type="text/javascript"></script>
+    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=places&sensor=true"></script>
     <script>
+        function key_check(event){}
         function loader(){
+            //initialize maps and other stuff related to maps
             getLocation();
+
+            //frontend things
             $('#filters_zone').css('bottom','10px');
             sidebar_manipulation();
             $('#config_zone').css('display','none');
@@ -14,13 +18,13 @@
             });
         }
 
-        function key_check(event){
-
-        }
-
-        //NFQ koordinates
+        //NFQ coordinates will be used if your location is unavailable
         var your_X = 54.903431;
         var your_Y = 23.88197;
+        var my_location = new google.maps.LatLng(your_X, your_Y);
+        var markersArray = [];
+        var infowindow;
+        var map;
 
         function getLocation(){
             if (navigator.geolocation){
@@ -34,6 +38,7 @@
         function showPosition(position){
             your_X = position.coords.latitude;
             your_Y = position.coords.longitude;
+            my_location = new google.maps.LatLng(your_X, your_Y);
             maps_initialize();
         }
 
@@ -55,38 +60,111 @@
             maps_initialize();
         }
 
-
-
         function maps_initialize() {
             var map_canvas = document.getElementById('map_canvas');
             var map_options = {
-                center: new google.maps.LatLng(your_X, your_Y),
+                center: my_location,
                 zoom: 16,
                 mapTypeId: google.maps.MapTypeId.ROADMAP,
-
             }
-            var map = new google.maps.Map(map_canvas, map_options);
-            var iconBase = 'https://maps.google.com/mapfiles/';
 
+            map = new google.maps.Map(map_canvas, map_options);
             var your_position = new google.maps.Marker({
-                position: new google.maps.LatLng(your_X, your_Y),
+                position: my_location,
                 map: map,
-                icon: iconBase + 'marker.png',
-                title:"Tu esi čia"
+                icon: "/images/profile.png",
+                title: "Tu esi čia"
+            });
+            infowindow = new google.maps.InfoWindow();
+            google.maps.event.addListener(your_position, 'click', function () {
+                infowindow.setContent("Tu esi čia");
+                infowindow.open(map, this);
             });
 
-            var molas = new google.maps.Marker({
-                position: new google.maps.LatLng(54.900611,23.968089),
-                map: map,
-                icon: iconBase + 'marker_green.png',
-                title:"PC 'Molas'"
-            });
-
+            show_on_map('Kebabinė', false);
+            show_on_map('Picerija', false);
+            show_on_map('Palink', false);
+            show_on_map('Maxima', false);
+            show_on_map('greito maisto restoranas', false);
         }
+
+        function initializeMarkers(results, status, pagination){
+            if (status == google.maps.places.PlacesServiceStatus.OK) {
+                for (var i = 0; i < results.length; i++) {
+                    createMarker(results[i]);
+                }
+                if (pagination.hasNextPage) {
+                    pagination.nextPage();
+                }
+            }
+        }
+
+        function createMarker(place) {
+            var placeLocation = place.geometry.location;
+            var placeName = place.name;
+            var placeReference = place.reference;
+            var placePhoto = place.photos;
+            if(placePhoto){
+                placePhoto = placePhoto[0].getUrl({'maxWidth': 25, 'maxHeight': 25});
+            }else{
+                placePhoto = place.icon;
+            }
+
+            var placeImage = {
+                url: place.icon,
+                size: new google.maps.Size(25, 25),
+                origin: new google.maps.Point(0, 0),
+                anchor: new google.maps.Point(17, 34),
+                scaledSize: new google.maps.Size(25, 25)
+            };
+
+            var marker = new google.maps.Marker({
+                position: placeLocation,
+                map: map,
+                icon: placeImage,
+                animation: google.maps.Animation.DROP,
+                title: placeName
+            });
+            markersArray.push(marker);
+
+            google.maps.event.addListener(marker, 'click', function() {
+                this.setAnimation(google.maps.Animation.BOUNCE);
+                //float distance = (float) loc.distanceTo(loc2);
+                var placeContent =
+                "<image class='google_map_tooltip_image' src='" + placePhoto + "' />" +
+                "<div class='google_map_tooltip_title'>" + placeName + "</div>";
+
+                infowindow.setContent(placeContent);
+                infowindow.open(map, this);
+            });
+        }
+
+
+        function show_on_map(type, delete_index){
+            if(delete_index){
+                //prevuos markers delete
+                for(i = 0; i < markersArray.length; i++){
+                    markersArray[i].setMap(null);
+                }
+                markersArray = [];
+            }
+
+
+            var request = {
+                location: my_location,
+                rankBy: google.maps.places.RankBy.DISTANCE,
+                keyword: type,
+                //types: ['bar', 'restaurant', 'cafe', 'grocery_or_supermarket', 'shopping_mall', 'food']
+            };
+
+            var service = new google.maps.places.PlacesService(map);
+            service.nearbySearch(request, initializeMarkers);
+        }
+
     </script>
 {% endblock %}
 
-{% block title %}Shopping list | Foodex{% endblock %}
+{% block title %}Pirkiniai | Foodex{% endblock %}
 
 {% block nav_zone %}
     <div class="nav_zone_element untouchable " id="home" onclick="content_navigation('home')"></div>

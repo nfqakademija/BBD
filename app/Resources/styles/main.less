@@ -302,6 +302,7 @@ textarea{
 #sidebar_right_cook_button{
   width:208px;
   height:43px;
+  background:#2e5eff;
   background: -webkit-linear-gradient(top, #2e5eff, #3B4CCE);
   background: -moz-linear-gradient(top, #2e5eff, #3B4CCE);
   background: -ms-linear-gradient(top, #2e5eff, #3B4CCE);
@@ -313,6 +314,20 @@ textarea{
   font-weight:bold;
   font-size:18px;
   text-transform:uppercase;
+  &:hover{
+    background:#1947DF;
+    background: -webkit-linear-gradient(top, #1947DF, #2635A7);
+    background: -moz-linear-gradient(top, #1947DF, #2635A7);
+    background: -ms-linear-gradient(top, #1947DF, #2635A7);
+    background: -o-linear-gradient(top, #1947DF, #2635A7);
+  }
+  &:active{
+    background:#1237B3;
+    background: -webkit-linear-gradient(top, #1237B3, #121F81);
+    background: -moz-linear-gradient(top, #1237B3, #121F81);
+    background: -ms-linear-gradient(top, #1237B3, #121F81);
+    background: -o-linear-gradient(top, #1237B3, #121F81);
+  }
 }
 
 #sidebar{
@@ -2239,6 +2254,7 @@ p{
   border-bottom:1px solid black;
   position:relative;
   display:table;
+  table-layout: fixed;
 }
 
 .step_title{
@@ -2308,7 +2324,7 @@ p{
 }
 
 .step_info{
-  width:auto;
+  width:100%;
   height:auto;
   color: @white;
   color: #ffffff;
@@ -2320,6 +2336,7 @@ p{
   padding-left: 20px;
   padding-right: 20px;
   text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+  word-wrap: break-word;
 }
 
 #steps_sidebar{
@@ -2356,6 +2373,12 @@ p{
   position:relative;
   background-color:transparent;
   z-index:3;
+  &:hover{
+    background-color:rgba(255, 255, 255, 0.2);
+  }
+  &:active{
+    background-color:rgba(255, 255, 255, 0.4);
+  }
 }
 
 #loading_more_box{

@@ -599,6 +599,7 @@ function show_config_zone(state){
         });
     }
 }
+
 function filter_show_selected(){
     //show selected filters
     filter_level = 0;
@@ -643,6 +644,15 @@ function manipulate_filter(ID){
 }
 
 function filter_search_add(ID){
+    var id = ID.replace('search-','');
+    var image = $('#' + ID + " .search_item_image").css('background-image');
+    var title = $('#' + ID + " .search_item_title").html();
+    $("#search_input").val('');
+    search_input_blur();
+    var filters = [];
+    var data = "<div class='filter_element untouchable' id='" + id + "' onclick='filter_selected(this.id)'><div class='filter_element_image' style=\"background-image:" + image + ";\"></div><div class='filter_element_text'>" + title + "</div><div class='filter_element_delete' id='delete_" + id + "' onclick='filter_delete(this.id)'></div></div>";
+    filters[0] = data;
+    show_filters(filters, 0);
 
     /*
     $.ajax({
@@ -667,6 +677,8 @@ function filter_search_add(ID){
 
 function filter_delete(ID){
     ID = ID.replace('delete_','');
+    $('#' + ID).remove();
+    /*
     $.ajax({
         type: 'POST',
         url: 'ajax.php',
@@ -678,6 +690,7 @@ function filter_delete(ID){
             append_recipes();
         }
     });
+    */
 }
 
 function filter_selected(ID){
@@ -695,7 +708,27 @@ function filter_selected(ID){
 function search(){
     var value = ($('#search_input').val()).trim();
     value = value.replace(/[-\/\\^$*+?.,()|[\]{}]/g, ' ');
-    $('#search_container').css('display','block');
+    if(value == ""){
+        $('#search_container').css('display','none');
+        $('#search_container').html('');
+    }else{
+        $('#search_container').html('');
+        $('#search_container').css('display','block');
+
+        //get data with ajax from search_value
+        var data = [];
+        for(i = 0; i < 7; i++){
+            data[i] = "<div class='s_e search_item untouchable' id='search-ingredient-95' onclick='filter_search_add(this.id)'>"+
+            "<div class='s_e search_item_image' style=\"background-image:url('images/food (2).jpg')\"></div>"+
+            "<div class='s_e search_item_title'>Ananasas</div>"+
+            "<div class='s_e search_item_bottom_info'>Ingredientas</div>"+
+            "</div>";
+        }
+
+        for(i = 0; i < 7; i++){
+            $("#search_container").append(data[i]);
+        }
+    }
 
     /*
     $.ajax({
@@ -794,28 +827,25 @@ function cook(recipe_ID){
     //send ajax can keep track of time spent on cooking. starting time
 }
 
-function remember_recipe(recipe_ID){
-    var classes = ($("#remember_" + recipe_ID).attr('class')).split(" ");
-    var selected = classes[3];
-    if(selected == "remembered"){
-        $("#remember_" + recipe_ID).removeClass('remembered');
-        $("#remember_" + recipe_ID).html('Įsiminti');
-    }else{
-        $("#remember_" + recipe_ID).addClass('remembered');
-        $("#remember_" + recipe_ID).html('Įsiminta');
-    }
-
-    //send to server profile that recipe is remebered ajax
-}
-
-
 function search_input_focus(){
     if(!$("#search_input").is(":focus")){
         $("#search_zone").removeClass('unactive_search_zone');
         $("#search_zone").addClass('active_search_zone');
         full_sidebar();
+        search();
     }
 }
+
+//tracks down mouse click
+$(document).mousedown(function(event){
+    if($(event.target).attr("id") == "search_container" || (($(event.target).attr("class")).split(" "))[0] == "s_e"){
+        //alert($(event.target).attr("id"));
+        //$('#search_input').focus();
+        //event.stopImmediatePropagation();
+        //&& $("#search_input").is(":focus")
+        event.preventDefault();
+    }
+});
 
 function search_input_blur(){
     $("#search_zone").removeClass('active_search_zone');
@@ -1101,16 +1131,28 @@ function facebook_login(){
 
 }
 
-
+var step_going = false;
 function step_go(id){
-    var ID = "step_" + id;
-    current_step = id;
-    var modulation = 0;
-    if(mobile_state){
-        modulation = 41;
+    if(!step_going){
+        step_going = true;
+        var ID = "step_" + id;
+        current_step = id;
+        var modulation = 0;
+        if(mobile_state){
+            modulation = 41;
+        }
+        $("#content_wrapper").animate({scrollTop: $("#" + ID).offset().top + $("#content_wrapper").scrollTop() - modulation}, 600);
+        setTimeout(function(){step_going = false;},600);
     }
-    $("#content_wrapper").animate({scrollTop: $("#" + ID).offset().top + $("#content_wrapper").scrollTop() - modulation}, 600);
 }
+
+//resize-end event trigger
+$(window).resize(function() {
+    if(this.resizeTO) clearTimeout(this.resizeTO);
+    this.resizeTO = setTimeout(function() {
+        $(this).trigger('resizeEnd');
+    }, 500);
+});
 
 function next_step(){
     if(current_step == "last"){

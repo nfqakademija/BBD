@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * ProductQuantity
  *
- * @ORM\Table(name="product_quantities")
+ * @ORM\Table(name="shopping_list_products")
  * @ORM\Entity
  */
 class ShoppingListProduct
@@ -21,6 +21,7 @@ class ShoppingListProduct
 
     /**
      * @var integer
+     *  @ORM\Column(name="quantity", type="integer")
      */
     protected $quantity;
 
@@ -77,5 +78,28 @@ class ShoppingListProduct
     public function getShopingList()
     {
         return $this->shopingList;
+    }
+
+    /**
+     * Set quantity
+     *
+     * @param integer $quantity
+     * @return ShoppingListProduct
+     */
+    public function setQuantity($quantity)
+    {
+        $this->quantity = $quantity;
+
+        return $this;
+    }
+
+    /**
+     * Get quantity
+     *
+     * @return integer 
+     */
+    public function getQuantity()
+    {
+        return $this->quantity;
     }
 }

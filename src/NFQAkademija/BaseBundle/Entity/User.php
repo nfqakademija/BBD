@@ -159,30 +159,97 @@ class User extends BaseUser
      * @param \NFQAkademija\BaseBundle\Entity\ShoppingList $shoppingList
      * @return User
      */
-    public function addShoppingList(\NFQAkademija\BaseBundle\Entity\ShoppingList $shoppingList)
+
+
+    /**
+     * Set facebook_id
+     *
+     * @param string $facebookId
+     * @return User
+     */
+    public function setFacebookId($facebookId)
     {
-        $this->shoppingList[] = $shoppingList;
+        $this->facebook_id = $facebookId;
 
         return $this;
     }
 
     /**
-     * Remove shoppingList
+     * Get facebook_id
      *
-     * @param \NFQAkademija\BaseBundle\Entity\ShoppingList $shoppingList
+     * @return string 
      */
-    public function removeShoppingList(\NFQAkademija\BaseBundle\Entity\ShoppingList $shoppingList)
+    public function getFacebookId()
     {
-        $this->shoppingList->removeElement($shoppingList);
+        return $this->facebook_id;
     }
 
     /**
-     * Get shoppingList
+     * Set facebook_access_token
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @param string $facebookAccessToken
+     * @return User
      */
-    public function getShoppingList()
+    public function setFacebookAccessToken($facebookAccessToken)
     {
-        return $this->shoppingList;
+        $this->facebook_access_token = $facebookAccessToken;
+
+        return $this;
+    }
+
+    /**
+     * Get facebook_access_token
+     *
+     * @return string 
+     */
+    public function getFacebookAccessToken()
+    {
+        return $this->facebook_access_token;
+    }
+
+    /**
+     * Set google_id
+     *
+     * @param string $googleId
+     * @return User
+     */
+    public function setGoogleId($googleId)
+    {
+        $this->google_id = $googleId;
+
+        return $this;
+    }
+
+    /**
+     * Get google_id
+     *
+     * @return string 
+     */
+    public function getGoogleId()
+    {
+        return $this->google_id;
+    }
+
+    /**
+     * Set google_access_token
+     *
+     * @param string $googleAccessToken
+     * @return User
+     */
+    public function setGoogleAccessToken($googleAccessToken)
+    {
+        $this->google_access_token = $googleAccessToken;
+
+        return $this;
+    }
+
+    /**
+     * Get google_access_token
+     *
+     * @return string 
+     */
+    public function getGoogleAccessToken()
+    {
+        return $this->google_access_token;
     }
 }

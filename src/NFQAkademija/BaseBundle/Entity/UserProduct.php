@@ -21,6 +21,7 @@ class UserProduct
 
     /**
      * @var integer
+     *  @ORM\Column(name="quantity", type="integer")
      */
     protected $quantity;
 
@@ -32,6 +33,7 @@ class UserProduct
     protected $userFridge;
 
 
+    /**
     /**
      * Set product
      *
@@ -76,5 +78,28 @@ class UserProduct
     public function getUserFridge()
     {
         return $this->userFridge;
+    }
+
+    /**
+     * Set quantity
+     *
+     * @param integer $quantity
+     * @return UserProduct
+     */
+    public function setQuantity($quantity)
+    {
+        $this->quantity = $quantity;
+
+        return $this;
+    }
+
+    /**
+     * Get quantity
+     *
+     * @return integer 
+     */
+    public function getQuantity()
+    {
+        return $this->quantity;
     }
 }

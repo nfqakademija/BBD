@@ -21,6 +21,7 @@ class RecipeProduct
 
     /**
      * @var integer
+     *  @ORM\Column(name="quantity", type="integer")
      */
     protected $quantity;
 
@@ -76,5 +77,28 @@ class RecipeProduct
     public function getRecipe()
     {
         return $this->recipe;
+    }
+
+    /**
+     * Set quantity
+     *
+     * @param integer $quantity
+     * @return RecipeProduct
+     */
+    public function setQuantity($quantity)
+    {
+        $this->quantity = $quantity;
+
+        return $this;
+    }
+
+    /**
+     * Get quantity
+     *
+     * @return integer 
+     */
+    public function getQuantity()
+    {
+        return $this->quantity;
     }
 }

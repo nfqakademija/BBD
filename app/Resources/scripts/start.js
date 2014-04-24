@@ -56,18 +56,7 @@ function append_recipes_to_profile(){
     recipes[19] = ["19","/images/food (19).jpg", "title0"];
     recipes[20] = ["20","/images/food (20).jpg", "title0"];
 
-
     //info about profile recipes
-    $("#profile_recipes").append("<div class='recipe_box untouchable' id='profile_box' style=\"line-height:" + recipe_size + "px;width:" + recipe_size + "px;height:" + recipe_size + "px;\">Vėliau</div>");
-    for(i = 0; i < 4; i++){
-        var data = recipes[i];
-        var id = data[0];
-        var image = data[1];
-        var title = data[2];
-        var appendable_data = "<div class='recipe_box' id='recipe_" + id + "' style=\"background-image: url('" + image + "');width:" + recipe_size + "px;height:" + recipe_size +  "px;\" onclick=\"show_recipe('" + id + "')\"></div>";
-        $("#profile_recipes").append(appendable_data);
-    }
-
     $("#profile_recipes").append("<div class='recipe_box untouchable' id='profile_box' style=\"line-height:" + recipe_size + "px;width:" + recipe_size + "px;height:" + recipe_size + "px;\">Gaminta</div>");
     for(i = 5; i < 9; i++){
         var data = recipes[i];
@@ -98,7 +87,7 @@ function append_recipes_to_profile(){
         $("#profile_recipes").append(appendable_data);
     }
 
-    $("#profile_recipes").append("<div class='recipe_box untouchable' id='profile_box' style=\"line-height:" + recipe_size + "px;width:" + recipe_size + "px;height:" + recipe_size + "px;\">Tavo sukurti</div>");
+    $("#profile_recipes").append("<div class='recipe_box untouchable' id='profile_box' style=\"line-height:" + recipe_size + "px;width:" + recipe_size + "px;height:" + recipe_size + "px;\">Sukurta</div>");
     for(i = 17; i < 20; i++){
         var data = recipes[i];
         var id = data[0];
@@ -160,7 +149,6 @@ function append_recipe(data){
     var title = data[2];
 
     var appendable_data = "<div class='recipe_box' id='recipe_" + id + "' style=\"background-image: url('" + image + "');width:" + recipe_size + "px;height:" + recipe_size +  "px;\" onclick=\"show_recipe('" + id + "')\"></div>";
-
     $("#content_wrapper").append(appendable_data);
 }
 
@@ -502,7 +490,7 @@ function content_navigation(type){
                 $("#" + type).addClass('nav_element_active');
                 location.href = "/profile";
             }else{
-                show_top_layer_account();
+                show_top_layer('account');
             }
 
             break;
@@ -515,7 +503,7 @@ function content_navigation(type){
                 $("#" + type).addClass('nav_element_active');
                 location.href = "/shoppinglist";
             }else{
-                show_top_layer_account();
+                show_top_layer('account');
             }
             break;
 
@@ -533,7 +521,33 @@ function content_navigation(type){
     }
 }
 
-function show_top_layer_account(){
+function show_top_layer(type){
+    var data;
+    switch(type){
+        case "account":
+            data =
+                "<div id='top_box_up'>" +
+                    "<div id='top_box_title' class='untouchale'>Prisijungti</div>" +
+                    "<div class='top_box_social_box untouchale' id='top_box_social_facebook' onclick='facebook_login()'></div>" +
+                "</div>" +
+                "<div id='top_box_content' class='untouchale'>Prisijunkite prie Foodex bendruomenės</div>";
+            break;
+        case "options":
+            data =
+                "<div id='top_box_up'>" +
+                    "<div id='top_box_title' class='untouchale'>Nustatymai</div>" +
+                    "<div class='top_box_social_box untouchale' id='top_box_social_delete_account' onclick='show_top_layer_new_content(\"delete_account\")''></div>" +
+                    "<div class='top_box_social_box untouchale' id='top_box_social_change_pass' onclick='show_top_layer_new_content(\"change_pass\")'></div>" +
+                "</div>" +
+                "<div id='top_box_content' class='untouchale'>Profilio nustatymai</div>";
+            break;
+    }
+
+    $("#top_box").html(data);
+    if(type == "options"){
+        show_top_layer_new_content('change_pass');
+    }
+
     $("#top_layer").fadeIn(transition_time * 2);
     $(function(){
         $('.top_layer_item').click(function(event){
@@ -542,6 +556,24 @@ function show_top_layer_account(){
             }
         });
     });
+}
+
+function show_top_layer_new_content(type){
+    var data;
+    switch(type){
+        case "change_pass":
+            data =
+                "Change passs";
+            break;
+        case "delete_account":
+            data =
+                "Delete";
+            break;
+    }
+
+    $("#top_box_content").html(data);
+    $(".top_box_social_box ").removeClass('active_top_box');
+    $("#top_box_social_" + type).addClass('active_top_box');
 }
 
 function hide_top_layer(){
@@ -884,7 +916,7 @@ function ingredient_selected(ingredient_ID){
             $("#ingredient_indicator-" + ingredient_ID).removeClass('ingredient_indicator_have').addClass('ingredient_indicator_undefined');
         }
     }else{
-        show_top_layer_account();
+        show_top_layer('account');
     }
 }
 
@@ -893,7 +925,7 @@ function add_to_shopping_list(recipe_ID){
         $('.ingredient_indicator').removeClass('ingredient_indicator_have').removeClass('ingredient_indicator_undefined').removeClass('ingredient_indicator_shoppinglist').addClass('ingredient_indicator_shoppinglist');
         //ajax add all products of recipe to shopping list
     }else{
-        show_top_layer_account();
+        show_top_layer('account');
     }
 }
 
@@ -907,7 +939,7 @@ function coop(recipe_ID){
     if(user_is_loged){
         //use facebook API to share on wall to cook together with missing ingredients
     }else{
-        show_top_layer_account();
+        show_top_layer('account');
     }
 
 }
@@ -1185,6 +1217,11 @@ function recipe_like(recipe_ID){
         //ajax to check if you already liked it and unlike or send like
 
     }else{
-        show_top_layer_account();
+        show_top_layer('account');
     }
+}
+
+function logout(){
+    //ajax to logout
+    location.href = "/";
 }

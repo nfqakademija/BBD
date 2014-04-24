@@ -2042,12 +2042,107 @@ p{
   font-size:30px;
   background-color:@black;
   font-weight: bold;
+  float:left;
 }
 
 #profile_info{
   width:100%;
   float:left;
   height:auto;
+}
+
+#profile_image{
+}
+
+#profile_info_box{
+  width:auto;
+  float:left;
+  height:auto;
+  padding: 10px;
+}
+
+#profile_name{
+  color:@black;
+  font-size:30px;
+  min-height:30px;
+  line-height:30px;
+  float:left;
+  width:100%;
+  padding-bottom:10px;
+
+}
+
+#profile_email{
+  color:@grey;
+  font-size:15px;
+  width:100%;
+  padding-bottom:10px;
+  float:left;
+  font-size:15px;
+  min-height:15px;
+  line-height:15px;
+}
+
+#profile_statististics_box{
+  width:auto;
+  clear:both;
+  height:auto;
+}
+
+#profile_buttons_box{
+  width:auto;
+  float:left;
+  height:auto;
+}
+
+.profile_button{
+  #sidebar_right_cook_button;
+  float:left;
+  color:@white;
+  font-size:12px;
+  margin-right:10px;
+  margin-bottom:10px;
+  width:140px;
+  height:30px;
+  line-height:30px;
+}
+
+.profile_statististics_box_item{
+  width:auto;
+  float:left;
+  height:30px;
+  color:@black;
+  font-size:15px;
+  line-height:30px;
+  padding-right: 10px;
+  padding-bottom: 10px;
+}
+
+.profile_statististics_box_item:after{
+  background-size:100% 100%;
+  background-position:50% 50%;
+  background-repeat:no-repeat;
+  width:30px;
+  height:30px;
+  float:left;
+  margin-right:5px;
+  content:"";
+}
+
+#psbi_cooked:after{
+  background-image: url('/images/cook.png');
+}
+
+#psbi_created:after{
+  background-image: url('/images/add.png');
+}
+
+#psbi_liked:after{
+  background-image: url('/images/like.png');
+}
+
+#psbi_watched:after{
+  background-image: url('/images/watch.png');
 }
 
 #profile_box{
@@ -2057,78 +2152,8 @@ p{
   background-color:@black;
   color:@white;
   box-shadow: 0px 0px 2px black;
-}
-
-#random_title{
-  padding: 20px;
-  height: 40px;
-  background-color: rgba(0, 0, 0, 0.8);
-  color: white;
-  font-size: 30px;
-  line-height: 40px;
-  width: auto;
-  float: left;
-  margin-left: 20px;
-  margin-top: 20px;
-  border: 1px solid black;
-  box-shadow: 0px 0px 2px black;
-}
-
-#random_button_zone{
-  position:fixed;
-  bottom:10px;
-  right:10px;
-  width:497px;
-  height:45px;
-  z-index:6;
-}
-
-.random_button{
-  border: 1px solid black;
-  box-shadow: 0px 0px 2px black;
-  height:43px;
-  width:43px;
-  float:left;
-  margin-right:10px;
-  background-color: rgba(0, 0, 0, 0.8);
-  background-size:100% 100%;
-  background-position:50% 50%;
-  background-repeat:no-repeat;
-}
-
-#sidebar_right_random_cook_button{
-  width:208px;
-  height:43px;
-  background: -webkit-linear-gradient(top, #2e5eff, #3B4CCE);
-  background: -moz-linear-gradient(top, #2e5eff, #3B4CCE);
-  background: -ms-linear-gradient(top, #2e5eff, #3B4CCE);
-  background: -o-linear-gradient(top, #2e5eff, #3B4CCE);
-  border:1px solid black;
-  box-shadow:0px 0px 2px black;
-  text-align:center;
-  line-height:43px;
-  font-weight:bold;
-  font-size:18px;
-  text-transform:uppercase;
-  color:white;
-  float:left;
-  margin-left:10px;
-}
-
-#random_button_shoppinglist{
-  background-image: url('/images/shoppinglist.png');
-}
-
-#random_button_coop{
-  background-image: url('/images/facebook.png');
-}
-
-#random_button_next{
-  background-image: url('/images/random.png');
   height:100px;
   width:100px;
-  margin-right:10px;
-  margin-top:-57px;
 }
 
 
@@ -2399,6 +2424,10 @@ p{
   line-height:25px;
 }
 
+
+.active_top_box{
+  background-color:@grey_background;
+}
 //RESPONSIVE CSS DESIGN
 
 //for "Profile" page

@@ -16,6 +16,7 @@ var user_is_loged = check_if_user_is_loged();
 var steps_amount = 2;
 var current_step = 0;
 var filter_level = 0;
+var recipe_box_margin_size = 10;
 
 function toast(text, status){
     clearTimeout(toast_timer);
@@ -975,26 +976,27 @@ function calculate_recipe_size(){
     //$(document).width(); // returns width of HTML document
     //screen.height;
     //screen.width;
-
-    var content_width = parseInt(($("#content_wrapper").css('width')).replace("px", ""));
-    var size_per_item = content_width / 4;
+    var content_width = parseInt(($("#content_wrapper").css('width')).replace("px", "")) - recipe_box_margin_size;
+    var size_per_item = content_width / 4 - recipe_box_margin_size;
     if(size_per_item < minimum_recipe_size){
-        size_per_item = content_width;
+        size_per_item = content_width - recipe_box_margin_size;
     }
     return size_per_item;
 
 }
 
 function recalculate_width(){
-    var content_width = parseInt(($("#content_wrapper").css('width')).replace("px", ""));
-    var size_per_item = content_width / 4;
+    var content_width = parseInt(($("#content_wrapper").css('width')).replace("px", "")) - recipe_box_margin_size;
+    var size_per_item = content_width / 4 - recipe_box_margin_size;
     if(size_per_item < minimum_recipe_size){
-        size_per_item = content_width;
+        size_per_item = content_width - recipe_box_margin_size;
         $(".recipe_box").css("font-size","30px");
         $("#profile_divider").css("font-size","16px");
+        $("#profile_image").css("margin-bottom","0px");
     }else{
         $(".recipe_box").css("font-size","");
         $("#profile_divider").css("font-size","");
+        $("#profile_image").css("margin-bottom","10px");
     }
 
     $(".recipe_box").css('width', size_per_item + "px");

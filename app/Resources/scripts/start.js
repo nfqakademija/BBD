@@ -17,6 +17,8 @@ var steps_amount = 2;
 var current_step = 0;
 var filter_level = 0;
 var recipe_box_margin_size = 10;
+var content_right_margin = 30;
+var scrollbar_width = 5;
 
 function toast(text, status){
     clearTimeout(toast_timer);
@@ -620,10 +622,12 @@ function show_config_zone(state){
             "<div class='filter_element_image' id='add'></div>" +
             "<div class='filter_element_text'>Pridėti filtrą</div>" +
             "</div>";
+
         $("#config_zone").fadeOut(transition_time, function(){
             $("#config_zone").html(config_zone);
             $("#config_zone").fadeIn(transition_time);
         });
+
     }else{
         var config_zone = "<div class='filter_element_go_back untouchable'><div class='go_back untouchable' onclick=\"filter_go_back('all')\"><<</div><div class='go_back untouchable' onclick=\"filter_go_back('one')\"><</div></div>";
         $("#config_zone").fadeOut(transition_time, function(){
@@ -789,13 +793,26 @@ function filter_selected(ID){
 function shoppinglist_item_selected(ID){
     full_sidebar();
     var classes = ($("#" + ID).attr('class')).split(" ");
+    var product_name = $("#" + ID + " .filter_element_text").html();
     var selected = classes[2];
 
     $(".filter_element").removeClass('selected');
     if(selected != "selected"){
         $("#" + ID).addClass('selected');
+        show_prices(product_name);
+    }else{
+        close_prices();
     }
-    //parodo kainas kur kokios parduotuveje ir artmiausias vietas
+}
+
+function show_prices(product_name){
+    alert(product_name)
+    //pagal id parodo kainas kur kokios parduotuveje ir artmiausias vietas
+    //pagal pavadnima title bando atspeti produkta  parodo kainas kur kokios parduotuveje ir artmiausias vietas
+}
+
+function close_prices(){
+
 }
 
 function shoppinglist_search(){
@@ -803,10 +820,10 @@ function shoppinglist_search(){
     value = value.replace(/[-\/\\^$*+?.,()|[\]{}]/g, ' ');
     if(value == ""){
         $('#search_container').css('display','none');
-        $('#search_container').html('');
+        $('#search_container_inside').html('');
     }else{
         $('#search_container').html('');
-        $('#search_container').css('display','block');
+        $('#search_container_inside').css('display','block');
 
         //get data with ajax from search_value
         var data = [];
@@ -819,7 +836,7 @@ function shoppinglist_search(){
         }
 
         for(i = 0; i < 7; i++){
-            $("#search_container").append(data[i]);
+            $("#search_container_inside").append(data[i]);
         }
     }
 }
@@ -828,10 +845,10 @@ function search(){
     var value = ($('#search_input').val()).trim();
     value = value.replace(/[-\/\\^$*+?.,()|[\]{}]/g, ' ');
     if(value == ""){
+        $('#search_container_inside').html('');
         $('#search_container').css('display','none');
-        $('#search_container').html('');
     }else{
-        $('#search_container').html('');
+        $('#search_container_inside').html('');
         $('#search_container').css('display','block');
 
         //get data with ajax from search_value
@@ -845,7 +862,7 @@ function search(){
         }
 
         for(i = 0; i < 7; i++){
-            $("#search_container").append(data[i]);
+            $("#search_container_inside").append(data[i]);
         }
     }
 
@@ -971,7 +988,7 @@ function search_input_focus(){
 function search_input_blur(){
     $("#search_zone").removeClass('active_search_zone');
     $("#search_zone").addClass('unactive_search_zone');
-    $('#search_container').html('');
+    $('#search_container_inside').html('');
     $('#search_container').css('display','none');
 }
 
@@ -985,7 +1002,7 @@ function shoppinglist_input_focus(){
 function shoppinglist_input_blur(){
     $("#search_zone").removeClass('active_search_zone');
     $("#search_zone").addClass('unactive_search_zone');
-    $('#search_container').html('');
+    $('#search_container_inside').html('');
     $('#search_container').css('display','none');
 }
 
@@ -1061,7 +1078,7 @@ function calculate_recipe_size(){
     //$(document).width(); // returns width of HTML document
     //screen.height;
     //screen.width;
-    var content_width = parseInt(($("#content_wrapper").css('width')).replace("px", "")) - recipe_box_margin_size;
+    var content_width = parseInt(($("#content_wrapper").css('width')).replace("px", "")) - recipe_box_margin_size - content_right_margin;
     var size_per_item = content_width / 4 - recipe_box_margin_size;
     if(size_per_item < minimum_recipe_size){
         size_per_item = content_width - recipe_box_margin_size;
@@ -1071,7 +1088,7 @@ function calculate_recipe_size(){
 }
 
 function recalculate_width(){
-    var content_width = parseInt(($("#content_wrapper").css('width')).replace("px", "")) - recipe_box_margin_size;
+    var content_width = parseInt(($("#content_wrapper").css('width')).replace("px", "")) - recipe_box_margin_size - content_right_margin;
     var size_per_item = content_width / 4 - recipe_box_margin_size;
     if(size_per_item < minimum_recipe_size){
         size_per_item = content_width - recipe_box_margin_size;
@@ -1311,4 +1328,75 @@ function recipe_like(recipe_ID){
 function logout(){
     //ajax to logout
     location.href = "/";
+}
+
+
+
+function show_scrollbar(HTMLObejct){
+   var ID = HTMLObejct.id;
+   var scrollbar =
+       "<div class='scrollbar_box' id='scrollbar_box-" + ID + "'>" +
+           "<div class='scrollbar' id='scrollbar-" + ID + "'></div>" +
+       "</div>";
+   $("#" + ID).append(scrollbar);
+
+   var top = $("#" + ID).offset().top;
+   var left = $("#" + ID).offset().left + $("#" + ID).outerWidth() - content_right_margin - scrollbar_width - 1;
+   var height = parseInt(($("#" + ID).css('height')).replace("px", ""));
+   $("#scrollbar_box-" + ID).css('top', top + 'px');
+   $("#scrollbar_box-" + ID).css('left',left + 'px');
+   $("#scrollbar_box-" + ID).css('height',height + 'px');
+
+    var scrolled = $("#" + ID).scrollTop();
+    var all_height = $("#" + ID)[0].scrollHeight;
+    var scrollbar_height = height / all_height * height;
+    var scrollbar_top = scrolled / all_height * (height);
+    $("#scrollbar-" + ID).css('height',scrollbar_height + 'px');
+    $("#scrollbar-" + ID).css('top',scrollbar_top + 'px');
+
+    $("#" + ID).scroll(function(){
+        var scrolled = $("#" + ID).scrollTop();
+        var all_height = $("#" + ID)[0].scrollHeight;
+        var scrollbar_height = height / all_height * height;
+        var scrollbar_top = scrolled / all_height * (height);
+        $("#scrollbar-" + ID).css('height',scrollbar_height + 'px');
+        $("#scrollbar-" + ID).css('top',scrollbar_top + 'px');
+    });
+
+    $('#scrollbar-' + ID).mousedown(function(e) {
+        var position_in_element = e.pageY - $('#scrollbar-' + ID).offset().top;
+        $('#' + ID).mousemove(function(e){
+            var new_scrollbar_position = e.pageY - position_in_element;
+            if(new_scrollbar_position >= 0 && (new_scrollbar_position + scrollbar_height) <= height){
+                //$('#scrollbar-' + ID).css('top', new_scrollbar_position + "px");
+                var distance_to_top = new_scrollbar_position - $('#scrollbar_box-' + ID).offset().top;
+                var scrolling_height = distance_to_top / height * all_height;
+                $("#" + ID).scrollTop(scrolling_height);
+            }
+        });
+    }).mouseup(function(e) {
+        $('#' + ID).unbind('mousemove');
+    });
+    $('#' + ID).mouseup(function(e) {
+        $('#' + ID).unbind('mousemove');
+    });
+}
+
+
+
+function hide_scrollbar(HTMLObejct){
+    var ID = HTMLObejct.id;
+    //$("#scrollbar_box-" + ID).fadeOut(transition_time * 2, function(){
+        $("#scrollbar_box-" + ID).remove();
+    //});
+}
+
+function initialize_scrollbar(){
+    $('.contains_scrollbar').hover(function(){
+        // Hover in
+        show_scrollbar(this);
+    }, function() {
+        // Hover out
+        hide_scrollbar(this);
+    });
 }

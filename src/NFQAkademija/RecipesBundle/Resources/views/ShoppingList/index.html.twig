@@ -1,20 +1,30 @@
 {% extends "::base.html.twig" %}
 
 {% block specific_scripts %}
-    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=places&sensor=true"></script>
+    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?v=3&libraries=places,geometry&sensor=true"></script>
     <script>
-        function key_check(event){}
+        function key_check(event){
+            if(event.keyCode == 13 && $('#search_input').val() != "" && $("#search_input").is(":focus")){
+                shoppinglist_add_enter();
+            }
+        }
+
         function loader(){
             //initialize maps and other stuff related to maps
             getLocation();
-
+            $('#config_zone').remove();
             //frontend things
             $('#filters_zone').css('bottom','10px');
             sidebar_manipulation();
             $('#config_zone').css('display','none');
             $( window ).resize(function() {
                 sidebar_manipulation();
-                $('#config_zone').css('display','none');
+            });
+            initialize_scrollbar();
+
+            $(window).bind('resizeEnd', function() {
+                refresh_location();
+                show_center();
             });
         }
 
@@ -25,6 +35,9 @@
         var markersArray = [];
         var infowindow;
         var map;
+        var your_position;
+        var directionsDisplay;
+        var directionsService = new google.maps.DirectionsService();
 
         function getLocation(){
             if (navigator.geolocation){
@@ -66,13 +79,15 @@
                 center: my_location,
                 zoom: 16,
                 mapTypeId: google.maps.MapTypeId.ROADMAP,
+                disableDefaultUI: true
             }
 
             map = new google.maps.Map(map_canvas, map_options);
-            var your_position = new google.maps.Marker({
+
+            your_position = new google.maps.Marker({
                 position: my_location,
                 map: map,
-                icon: "/images/profile.png",
+                icon: "/images/here.png",
                 title: "Tu esi čia"
             });
             infowindow = new google.maps.InfoWindow();
@@ -81,11 +96,40 @@
                 infowindow.open(map, this);
             });
 
+            directionsDisplay = new google.maps.DirectionsRenderer();
+            directionsDisplay.setMap(map);
+
+            add_center_controller();
+
             show_on_map('Kebabinė', false);
             show_on_map('Picerija', false);
             show_on_map('Palink', false);
             show_on_map('Maxima', false);
             show_on_map('greito maisto restoranas', false);
+        }
+
+        var start = document.getElementById("start").value;
+        var end = document.getElementById("end").value;
+
+        function calcRoute(end, type){
+            var start = my_location;
+            var travel_mode;
+            switch(type){
+                case "walk": travel_mode = google.maps.TravelMode.WALKING;break;
+                case "drive": travel_mode = google.maps.TravelMode.DRIVING;break;
+                default: travel_mode = google.maps.TravelMode.DRIVING;break;
+            }
+            var request = {
+                origin:start,
+                destination:end,
+                travelMode: travel_mode
+            };
+            directionsService.route(request, function(result, status) {
+                if (status == google.maps.DirectionsStatus.OK) {
+                    directionsDisplay.setDirections(result);
+                    infowindow.close();
+                }
+            });
         }
 
         function initializeMarkers(results, status, pagination){
@@ -128,15 +172,32 @@
             markersArray.push(marker);
 
             google.maps.event.addListener(marker, 'click', function() {
-                this.setAnimation(google.maps.Animation.BOUNCE);
-                //float distance = (float) loc.distanceTo(loc2);
+                //this.setAnimation(google.maps.Animation.BOUNCE);
+                //var distance = my_location.distanceTo(marker.position);
+                var distance = google.maps.geometry.spherical.computeDistanceBetween (my_location, marker.position);
+                distance = distanceConverter(distance.toFixed(0));
                 var placeContent =
                 "<image class='google_map_tooltip_image' src='" + placePhoto + "' />" +
-                "<div class='google_map_tooltip_title'>" + placeName + "</div>";
+                "<div class='google_map_tooltip_title'>" + placeName + "</div>" +
+                "<div style='clear:both;'></div>" +
+                "<div id='walk_button' class='google_map_tooltip_button' onclick=\"calcRoute('" + marker.position + "','walk')\">Eiti</div>" +
+                "<div id='drive_button' class='google_map_tooltip_button' onclick=\"calcRoute('" + marker.position + "','drive')\">Važiuoti</div>" +
+                "<div class='google_map_tooltip_text'>Atstumas ~" + distance + "</div>";
 
                 infowindow.setContent(placeContent);
                 infowindow.open(map, this);
             });
+        }
+
+        function distanceConverter(distance){
+            if (distance < 0){
+                distance = 0 + " m";
+            }else if (distance < 1000){
+                distance = distance + " m";
+            }else if (distance >= 1000){
+                distance = distance / 1000 + " km";
+            }
+            return distance;
         }
 
 
@@ -161,6 +222,38 @@
             service.nearbySearch(request, initializeMarkers);
         }
 
+
+        function add_center_controller(){
+            var controller = document.createElement('div');
+            controller.id = "map_center_controller";
+            controller.index = 1;
+
+            google.maps.event.addDomListener(controller, 'click', function() {
+                refresh_location();
+                show_center();
+            });
+
+            map.controls[google.maps.ControlPosition.TOP_LEFT].push(controller);
+        }
+
+        function show_center(){
+            map.panTo(my_location);
+        }
+
+        function refresh_location(){
+            if (navigator.geolocation){
+                navigator.geolocation.getCurrentPosition(getNewPosition, showError);
+            }
+        }
+
+        function getNewPosition(){
+            your_X = position.coords.latitude;
+            your_Y = position.coords.longitude;
+            my_location = new google.maps.LatLng(your_X, your_Y);
+            your_position.setPosition(my_location);
+        }
+
+
     </script>
 {% endblock %}
 
@@ -174,69 +267,23 @@
 {% endblock %}
 
 {% block search_zone %}
-    <div id='search_index' onclick="focus_input('shoppinglist_input')" ></div>
-    <input id='shoppinglist_input' placeholder='Pridėti prekių' onkeyup="shoppinglist_search()" onfocus="shoppinglist_input_focus()" onblur="shoppinglist_input_blur()"/>
+    <div id='search_index' onclick="focus_input('search_input')" ></div>
+    <input id='search_input' placeholder='Pridėti prekių' onkeyup="shoppinglist_search()" onfocus="shoppinglist_input_focus()" onblur="shoppinglist_input_blur()"/>
     <div id='search_container'>
-
-        <div class="search_item untouchable" id="item-5" onclick="filter_search_add('5')">
-            <div class="search_item_image" style="background-image:url('{{ asset('images/food (2).jpg') }}')"></div>
-            <div class="search_item_title">Ananasas</div>
-            <div class="search_item_bottom_info">Ingredientas</div>
-        </div>
-
-        <div class="search_item untouchable" id="item-5" onclick="filter_search_add('5')">
-            <div class="search_item_image" style="background-image:url('{{ asset('images/food (5).jpg') }}')"></div>
-            <div class="search_item_title">Agurkas</div>
-            <div class="search_item_bottom_info">Ingredientas</div>
-        </div>
-
-        <div class="search_item untouchable" id="item-5" onclick="filter_search_add('5')">
-            <div class="search_item_image" style="background-image:url('{{ asset('images/food (3).jpg') }}')"></div>
-            <div class="search_item_title">Aguona</div>
-            <div class="search_item_bottom_info">Ingredientas</div>
-        </div>
-
-        <div class="search_item untouchable" id="item-5" onclick="filter_search_add('5')">
-            <div class="search_item_image" style="background-image:url('{{ asset('images/food (4).jpg') }}')"></div>
-            <div class="search_item_title">Apelsinas</div>
-            <div class="search_item_bottom_info">Ingredientas</div>
-        </div>
-
-        <div class="search_item untouchable" id="item-5" onclick="filter_search_add('5')">
-            <div class="search_item_image" style="background-image:url('{{ asset('images/food (4).jpg') }}')"></div>
-            <div class="search_item_title">Apelsinas</div>
-            <div class="search_item_bottom_info">Ingredientas</div>
-        </div>
-
-        <div class="search_item untouchable" id="item-5" onclick="filter_search_add('5')">
-            <div class="search_item_image" style="background-image:url('{{ asset('images/food (4).jpg') }}')"></div>
-            <div class="search_item_title">Apelsinas</div>
-            <div class="search_item_bottom_info">Ingredientas</div>
-        </div>
-
-        <div class="search_item untouchable" id="item-5" onclick="filter_search_add('5')">
-            <div class="search_item_image" style="background-image:url('{{ asset('images/food (4).jpg') }}')"></div>
-            <div class="search_item_title">Apelsinas</div>
-            <div class="search_item_bottom_info">Ingredientas</div>
-        </div>
-
-        <div class="search_item untouchable" id="item-5" onclick="filter_search_add('5')">
-            <div class="search_item_image" style="background-image:url('{{ asset('images/food (4).jpg') }}')"></div>
-            <div class="search_item_title">Apelsinas</div>
-            <div class="search_item_bottom_info">Ingredientas</div>
-        </div>
+        <div id='search_container_inside'></div>
     </div>
 {% endblock %}
 
-{% block filters_zone %}
-    Prekiu sarasas
+ {% block divider %}
+     <div id="divider" class="middle_divider" style="margin-left:10px;margin-top:0px;" onclick="full_sidebar()"></div>
+ {% endblock %}
 
-{% endblock %}
+{% block filters_zone %}{% endblock %}
 
 {% block config_zone %}{% endblock %}
 
 {% block content %}
-    <div id="content_wrapper" style="background-image:url('{{ asset('images/content_background.jpg') }}')">
+    <div id="content_wrapper" style="right:0px;background-image:url('{{ asset('images/content_background.jpg') }}')">
         <div id="map_canvas"></div>
     </div>
 

@@ -67,6 +67,7 @@ module.exports = function (grunt) {
                     'bower_components/jquery/dist/jquery.min.js',
                     'bower_components/bootstrap/dist/js/bootstrap.min.js',
                     'app/Resources/scripts/start.js'
+
                 ],
                 dest: 'web/js/script.js'
             }

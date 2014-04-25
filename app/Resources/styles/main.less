@@ -114,7 +114,7 @@ textarea{
 
 #sidebar_right{
   position:fixed;
-  right:0px;
+  right:-1px;
   top:0px;
   bottom:0px;
   background-color:@black;
@@ -128,10 +128,12 @@ textarea{
 .right_full{
   width:210px;
   padding:10px;
+  right:0px;
 }
 
 .right_squeeze{
   width:0px;
+  right:-1px;
 }
 
 #sidebar_right_image{
@@ -272,6 +274,7 @@ textarea{
   bottom: 65px;
   top: 391px;
   overflow-y: scroll;
+  padding-right:30px;
   overflow-x: hidden;
   width: 210px;
 }
@@ -280,6 +283,7 @@ textarea{
   position: absolute;
   bottom: 65px;
   top: 176px;
+  padding-right:30px;
   overflow-y: scroll;
   overflow-x: hidden;
   width: 210px;
@@ -608,14 +612,23 @@ textarea{
   float: left;
   z-index: 10;
   position: relative;
-  overflow-x: hidden;
-  overflow-y: scroll;
+  overflow:hidden;
   box-shadow: 0px 0px 4px black;
   border-top: none;
   margin-top: -1px;
   margin-left: 0px;
   border: 10px solid #3b3b3b;
   outline: 1px solid black;
+}
+
+#search_container_inside{
+  min-height: 45px;
+  max-height: 300px;
+  padding-right: 30px;
+  float:left;
+  width: 188px;
+  overflow-x: hidden;
+  overflow-y: scroll;
 }
 
 .search_item{
@@ -682,6 +695,7 @@ textarea{
   color: white;
   padding: 10px;
   padding-bottom:0px;
+  padding-right:30px;
   margin-top:10px;
   padding-top:0px;
   position: absolute;
@@ -926,7 +940,7 @@ textarea{
   //height:100%;
   position:fixed;
   left:231px;
-  right:0px;
+  right:-30px;
   bottom:0px;
   top:0px;
   overflow-x:hidden;
@@ -958,12 +972,18 @@ textarea{
   position:relative;
   margin-left:10px;
   margin-top:10px;
+  &:hover{
+    box-shadow:0px 0px 2px @white;
+  }
 }
 
 .recipe_active{
   box-shadow: 0px 0px 60px black inset;
   z-index:2;
   outline:5px solid white;
+  &:hover{
+    box-shadow: 0px 0px 60px black inset;
+  }
 }
 
 .recipe_image{
@@ -2214,6 +2234,20 @@ p{
   color:white;
   float:left;
   margin-left:10px;
+  &:hover{
+    background:#1947DF;
+    background: -webkit-linear-gradient(top, #1947DF, #2635A7);
+    background: -moz-linear-gradient(top, #1947DF, #2635A7);
+    background: -ms-linear-gradient(top, #1947DF, #2635A7);
+    background: -o-linear-gradient(top, #1947DF, #2635A7);
+  }
+  &:active{
+    background:#1237B3;
+    background: -webkit-linear-gradient(top, #1237B3, #121F81);
+    background: -moz-linear-gradient(top, #1237B3, #121F81);
+    background: -ms-linear-gradient(top, #1237B3, #121F81);
+    background: -o-linear-gradient(top, #1237B3, #121F81);
+  }
 }
 
 #random_button_shoppinglist{
@@ -2554,6 +2588,20 @@ p{
   background-color:white;
   border:1px solid @black_faded;
   box-shadow:0px 0px 2px black;
+}
+
+.scrollbar_box{
+  position:fixed;
+  width:5px;
+  background:transparent;
+  z-index:3;
+}
+
+.scrollbar{
+  width:5px;
+  background:white;
+  box-shadow:0px 0px 2px black;
+  position:absolute;
 }
 
 

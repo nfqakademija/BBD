@@ -34,6 +34,7 @@
                  recalculate_width();
                  sidebar_manipulation()
              });
+             initialize_scrollbar();
              $("#content_wrapper").scroll(function(){
                  scrolled = $("#content_wrapper").scrollTop();
                  if(scrolled > 400)
@@ -106,8 +107,7 @@
 
 
 {% block content %}
-    <div id="content_wrapper" style="background-image:url('{{ asset('images/content_background.jpg') }}')">
-    </div>
+    <div class="contains_scrollbar" id="content_wrapper" style="background-color:black;padding-bottom:10px;"></div>
     <div id="sidebar_right" class="right_squeeze" id="sidebar_for_recipe_1">
         <div id="sidebar_right_image" style="background-image:url('{{ asset('images/food (5).jpg') }}')"></div>
         <div id="sidebar_right_title">Kepnys "Omledufe"</div>
@@ -125,7 +125,7 @@
             <div class="sidebar_right_ingredients_button" id="sidebar_right_ingredients_shoppinglist" onclick="add_to_shopping_list('1')"></div>
         </div>
         <div id="divider" class="ingredients_divider"></div>
-        <div id="sidebar_right_ingredients_zone">
+        <div id="sidebar_right_ingredients_zone" class="contains_scrollbar">
             <div class="ingredient untouchable" id="ingredient-2" onclick="ingredient_selected('2')">
                 <div class="ingredient_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
                 <div class="ingredient_text">Bananas</div>

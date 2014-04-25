@@ -963,6 +963,7 @@ textarea{
 .recipe_active{
   box-shadow: 0px 0px 60px black inset;
   z-index:2;
+  outline:5px solid white;
 }
 
 .recipe_image{
@@ -2500,12 +2501,63 @@ p{
   line-height:25px;
 }
 
+.google_map_tooltip_button{
+  #sidebar_right_cook_button;
+  color: white;
+  height: 19px;
+  line-height: 19px;
+  width: 60px;
+  font-size: 10px !important;
+  float:left;
+  margin-top:10px;
+  margin-right:10px;
+}
+
+#walk_button{
+  //background-image:url('/images/walk.png');
+}
+
+#drive_button{
+  //background-image:url('/images/drive.png');
+}
+
+.google_map_tooltip_text{
+  color: @black;
+  height: 20px;
+  line-height: 20px;
+  width: auto;
+  font-size: 13px;
+  float:right;
+  margin-top:10px;
+}
+
 
 .active_top_box{
   background-color:@grey_background;
 }
-//RESPONSIVE CSS DESIGN
 
+
+
+.gmnoprint, .gm-style-cc{
+  display:none !important;
+}
+
+#map_center_controller{
+  width: 30px;
+  height: 30px;
+  margin-left: 30px;
+  margin-top: 30px;
+  background-image:url('/images/center.png');
+  background-repeat:no-repeat;
+  background-size:100% 100%;
+  background-position:50% 50%;
+  background-color:white;
+  border:1px solid @black_faded;
+  box-shadow:0px 0px 2px black;
+}
+
+
+//RESPONSIVE CSS DESIGN
 //for "Profile" page
 @media screen and (max-width: 1000px){
   #profile_box{

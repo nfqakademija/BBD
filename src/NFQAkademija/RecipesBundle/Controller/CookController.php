@@ -8,6 +8,9 @@ class CookController extends Controller
 {
     public function indexAction($recipe_ID)
     {
+
+
         return $this->render('NFQAkademijaRecipesBundle:Cook:index.html.twig', array("recipe_ID" => $recipe_ID));
     }
+
 }

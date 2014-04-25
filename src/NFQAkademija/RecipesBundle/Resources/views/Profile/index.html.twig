@@ -13,6 +13,7 @@
                 recalculate_width();
                 sidebar_manipulation();
             });
+            initialize_scrollbar();
         }
 
         function key_check(event){
@@ -46,9 +47,23 @@
  {% endblock %}
 
 {% block content %}
-<div id="content_wrapper" style="background-image:url('{{ asset('images/content_background.jpg') }}')">
-    <div id="profile_info" >
-       <!-- <div class='recipe_box' id='profile_box' style=\"background-image: url('" + profile_image + "');line-height:" + recipe_size + "px;width:" + recipe_size + "px;height:" + recipe_size + "px;\"></div>-->
+<div id="content_wrapper" class="contains_scrollbar" style="padding-bottom:10px;background-image:url('{{ asset('images/content_background.jpg') }}')">
+    <div id="profile_info">
+        <div class="recipe_box" id="profile_image" style="background-image: url('/images/food (5).jpg')"></div>
+        <div id="profile_info_box">
+            <div id="profile_name">Ignas Lekas</div>
+            <div id="profile_email">ignas.lekas@gmail.com</div>
+            <div id="profile_statististics_box">
+                <div class="profile_statististics_box_item" id="psbi_cooked">14</div>
+                <div class="profile_statististics_box_item" id="psbi_liked">63</div>
+                <div class="profile_statististics_box_item" id="psbi_created">3</div>
+                <div class="profile_statististics_box_item" id="psbi_watched">698</div>
+            </div>
+            <div id="profile_buttons_box">
+                <div class="profile_button" onclick="show_top_layer('options')">Nustatymai</div>
+                <div class="profile_button" style="margin-bottom:0px;" onclick="logout()">Atsijungti</div>
+            </div>
+        </div>
 
     </div>
     <div id="profile_divider" class="untouchable">Receptų istorija</div>
@@ -102,7 +117,6 @@
                 <div class="ingredient_size">6 vnt</div>
                 <div class="ingredient_indicator ingredient_indicator_undefined" id="ingredient_indicator-6"></div>
             </div>
-
         </div>
 
 

@@ -676,12 +676,61 @@ function manipulate_filter(ID){
     */
 }
 
+function shoppinglist_add(ID){
+    var id = ID.replace('shoppinglist-','');
+    var image = $('#' + ID + " .search_item_image").css('background-image');
+    var title = $('#' + ID + " .search_item_title").html();
+    $("#search_input").val('');
+    shoppinglist_input_blur();
+    shoppinglist_input_focus();
+    var shopping_items = [];
+    var data = "<div class='filter_element untouchable' id='" + id + "' onclick='shoppinglist_item_selected(this.id)'><div class='filter_element_image' style=\"background-image:" + image + ";\"></div><div class='filter_element_text'>" + title + "</div><div class='filter_element_delete' id='delete_" + id + "' onclick='shoppinglist_delete(this.id)'></div></div>";
+    shopping_items[0] = data;
+    show_filters(shopping_items, 0);
+    //ajax to add to shoopinglist
+}
+
+var shoppinglist_items_ids = 1;
+function shoppinglist_add_enter(){
+    var id = shoppinglist_items_ids++;
+    var image = "url('/images/shoppinglist_item.png')";
+    var title = $("#search_input").val();
+    $("#search_input").val('');
+    shoppinglist_input_blur();
+    shoppinglist_input_focus();
+    var shopping_items = [];
+    var data = "<div class='filter_element untouchable' id='" + id + "' onclick='shoppinglist_item_selected(this.id)'><div class='filter_element_image' style=\"background-image:" + image + ";\"></div><div class='filter_element_text'>" + title + "</div><div class='filter_element_delete' id='delete_" + id + "' onclick='shoppinglist_delete(this.id)'></div></div>";
+    shopping_items[0] = data;
+    show_filters(shopping_items, 0);
+    //ajax to add to shoopinglist
+}
+
+
+function shoppinglist_delete(ID){
+    ID = ID.replace('delete_','');
+    $('#' + ID).remove();
+    /*
+     $.ajax({
+     type: 'POST',
+     url: 'ajax.php',
+     data: { filter_delete: ID },
+     beforeSend:function(){
+     },
+     success:function(data){
+     $('#' + ID).remove();
+     append_recipes();
+     }
+     });
+     */
+}
+
 function filter_search_add(ID){
     var id = ID.replace('search-','');
     var image = $('#' + ID + " .search_item_image").css('background-image');
     var title = $('#' + ID + " .search_item_title").html();
     $("#search_input").val('');
     search_input_blur();
+    search_input_focus();
     var filters = [];
     var data = "<div class='filter_element untouchable' id='" + id + "' onclick='filter_selected(this.id)'><div class='filter_element_image' style=\"background-image:" + image + ";\"></div><div class='filter_element_text'>" + title + "</div><div class='filter_element_delete' id='delete_" + id + "' onclick='filter_delete(this.id)'></div></div>";
     filters[0] = data;
@@ -737,6 +786,43 @@ function filter_selected(ID){
     }
 }
 
+function shoppinglist_item_selected(ID){
+    full_sidebar();
+    var classes = ($("#" + ID).attr('class')).split(" ");
+    var selected = classes[2];
+
+    $(".filter_element").removeClass('selected');
+    if(selected != "selected"){
+        $("#" + ID).addClass('selected');
+    }
+    //parodo kainas kur kokios parduotuveje ir artmiausias vietas
+}
+
+function shoppinglist_search(){
+    var value = ($('#search_input').val()).trim();
+    value = value.replace(/[-\/\\^$*+?.,()|[\]{}]/g, ' ');
+    if(value == ""){
+        $('#search_container').css('display','none');
+        $('#search_container').html('');
+    }else{
+        $('#search_container').html('');
+        $('#search_container').css('display','block');
+
+        //get data with ajax from search_value
+        var data = [];
+        for(i = 0; i < 7; i++){
+            data[i] = "<div class='s_e search_item untouchable' id='shoppinglist-ingredient-95' onclick='shoppinglist_add(this.id)'>"+
+            "<div class='s_e search_item_image' style=\"background-image:url('images/food (2).jpg')\"></div>"+
+            "<div class='s_e search_item_title'>Ananasas</div>"+
+            "<div class='s_e search_item_bottom_info'>Ingredientas</div>"+
+            "</div>";
+        }
+
+        for(i = 0; i < 7; i++){
+            $("#search_container").append(data[i]);
+        }
+    }
+}
 
 function search(){
     var value = ($('#search_input').val()).trim();
@@ -788,7 +874,9 @@ function search(){
 
 function focus_input(ID){
     full_sidebar();
-    $('#' + ID).focus();
+    if(!$('#' + ID).is(':focus')){
+        $('#' + ID).focus();
+    }
 }
 
 function last_index(){
@@ -860,14 +948,7 @@ function cook(recipe_ID){
     //send ajax can keep track of time spent on cooking. starting time
 }
 
-function search_input_focus(){
-    if(!$("#search_input").is(":focus")){
-        $("#search_zone").removeClass('unactive_search_zone');
-        $("#search_zone").addClass('active_search_zone');
-        full_sidebar();
-        search();
-    }
-}
+
 
 //tracks down mouse click
 $(document).mousedown(function(event){
@@ -880,6 +961,13 @@ $(document).mousedown(function(event){
     }
 });
 
+function search_input_focus(){
+    $("#search_zone").removeClass('unactive_search_zone');
+    $("#search_zone").addClass('active_search_zone');
+    full_sidebar();
+    search();
+}
+
 function search_input_blur(){
     $("#search_zone").removeClass('active_search_zone');
     $("#search_zone").addClass('unactive_search_zone');
@@ -888,11 +976,10 @@ function search_input_blur(){
 }
 
 function shoppinglist_input_focus(){
-    if(!$("#shoppinglist_input").is(":focus")){
-        $("#search_zone").removeClass('unactive_search_zone');
-        $("#search_zone").addClass('active_search_zone');
-        full_sidebar();
-    }
+    $("#search_zone").removeClass('unactive_search_zone');
+    $("#search_zone").addClass('active_search_zone');
+    full_sidebar();
+    shoppinglist_search();
 }
 
 function shoppinglist_input_blur(){
@@ -932,9 +1019,7 @@ function add_to_shopping_list(recipe_ID){
 
 
 
-function shoppinglist_search(){
-    $('#search_container').css('display','block');
-}
+
 
 function coop(recipe_ID){
     if(user_is_loged){

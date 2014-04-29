@@ -2665,6 +2665,55 @@ p{
   background-image:url('/images/facebook.png');
 }
 
+.squeezed_step #step_about_box{
+  right:20px;
+}
+
+#step_about_box{
+  position:absolute;
+  top:112px;
+  left:20px;
+  bottom:20px;
+  right:262px;
+  overflow:hidden;
+}
+
+#step_about{
+  width:100%;
+  height:auto;
+  color: @white;
+  font-size: 30px;
+  line-height: 30px;
+  text-align: left;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+  word-wrap: break-word;
+}
+
+#step_about_title{
+  width:100%;
+  height:30px;
+  padding-bottom:10px;
+  border-bottom:1px solid grey;
+  font-size:30px;
+  color:@white;
+  text-align:left;
+  line-height:30px;
+  float:left;
+  margin-bottom:10px;
+  text-shadow: -1px -1px 0 #000000, 1px -1px 0 #000000, -1px 1px 0 #000000, 1px 1px 0 #000000;
+}
+
+.squeezed_step .step_button{
+  left: 50%;
+  margin-left: -111px;
+}
+
+.squeezed_step #step_comment_box{
+  bottom: 20px;
+  top: 235px;
+  left: 50%;
+  margin-left: -111px;
+}
 
 #step_comment_box{
   width: 222px;
@@ -2672,6 +2721,22 @@ p{
   top:20px;
   right: 20px;
   position: absolute;
+}
+
+.squeezed_step .step_answers_box{
+  display:none;
+}
+
+#step_comment_answers_box{
+  width: 200px;
+  top: 50px;
+  position: absolute;
+  bottom: 0px;
+  padding: 10px;
+  margin: 0;
+  border: 1px solid black;
+  background-color:white;
+  box-shadow: 0px 0px 2px black;
 }
 
 #step_comment_title{
@@ -2731,6 +2796,9 @@ p{
   background-image:url('/images/write.png');
 }
 
+.squeezed_step #step_others_like{
+  display:none;
+}
 
 #step_others_like{
   position:absolute;
@@ -2773,15 +2841,41 @@ p{
 
 
 //RESPONSIVE CSS DESIGN
+
+@media screen and (max-width: 1140px){
+  #steps_others_like_title{
+    font-size:25px;
+  }
+}
+
+@media screen and (max-width: 1040px){
+  #steps_others_like_title{
+    font-size:20px;
+  }
+}
+
+
+
 @media screen and (max-width: 1000px){
   #profile_box{
     font-size:25px;
   }
 }
 
+@media screen and (max-width: 950px){
+  #steps_others_like_title{
+    font-size:17px;
+  }
+}
+
 @media screen and (max-width: 885px){
   #profile_box{
     font-size:20px;
+  }
+
+  #steps_others_like_title{
+    font-size:15px;
+    line-height:15px;
   }
 }
 
@@ -2907,5 +3001,3 @@ p{
     font-size:8px;
   }
 }
-
-

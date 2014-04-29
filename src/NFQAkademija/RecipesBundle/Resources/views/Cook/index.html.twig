@@ -15,12 +15,6 @@
         }
 
         function loader() {
-            $("#search_zone").css('height', 'auto');
-            $(".top_divider").css('margin-bottom', '10px');
-            $(".middle_divider").css('margin-left', '10px');
-            //$("#filters_zone").css('bottom','10px');
-            //$("#config_zone").remove();
-            $("#search_zone").attr('class', 'cook_ingredients_zone');
             sidebar_manipulation();
             initialize_scrollbar();
             //get steps amount
@@ -36,11 +30,11 @@
             });
 
             $("#content_wrapper").scroll(function () {
-                var content_height = parseInt(($("#content_wrapper").css('height').replace('px', '')));
+                var content_height = parseInt(($("#content_wrapper").css('height').replace('px', ''))) - 1;
                 var all = $("#content_wrapper")[0].scrollHeight;
-                var current = $("#content_wrapper").scrollTop();
+                var current = $("#content_wrapper").scrollTop() - 1;
 
-                var percentage = current / all;
+                var percentage = (current + content_height) / all ;
                 var pointer_height = parseInt(content_height * percentage) ;
                 $("#steps_sidebar_pointer").css('height', pointer_height + 'px');
             });
@@ -61,46 +55,56 @@
     </script>
 {% endblock %}
 {% block search_zone %}
-    <div id="cook_ingredients">
-        <div id="divider" class="top_divider" onclick="full_sidebar()"></div>
-        <div class="sidebar_right_info_item" id="sidebar_right_time">25 min</div>
-        <div class="sidebar_right_info_item" id="sidebar_right_country">Lenkija</div>
-        <div class="sidebar_right_info_item" id="sidebar_right_main_cooking_method">Virimas</div>
-        <div class="sidebar_right_info_item" id="sidebar_right_type">Antrieji patiekalai</div>
-        <div class="sidebar_right_info_item" id="sidebar_right_characteristics">Aštru, sūru</div>
+    <div id="search_zone" class='cook_ingredients_zone' style="height:auto;" onclick="full_sidebar()">
+        <div id="cook_ingredients">
+            <div id="divider" class="top_divider" style='margin-bottom:10px;' onclick="full_sidebar()"></div>
+            <div class="sidebar_right_info_item" id="sidebar_right_time">25 min</div>
+            <div class="sidebar_right_info_item" id="sidebar_right_country">Lenkija</div>
+            <div class="sidebar_right_info_item" id="sidebar_right_main_cooking_method">Virimas</div>
+            <div class="sidebar_right_info_item" id="sidebar_right_type">Antrieji patiekalai</div>
+            <div class="sidebar_right_info_item" id="sidebar_right_characteristics">Aštru, sūru</div>
+        </div>
     </div>
-
 {% endblock %}
-{% block filters_zone %}
 
-    <div class="ingredient untouchable" id="ingredient-2" >
-        <div class="ingredient_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
-        <div class="ingredient_text">Bananas</div>
-        <div class="ingredient_size">5 vnt</div>
-        <div class="ingredient_indicator ingredient_indicator_undefined" id="ingredient_indicator-2"></div>
+ {% block divider %}
+     <div id="divider" class="middle_divider" style='margin-left:10px;' onclick="full_sidebar()"></div>
+ {% endblock %}
+
+{% block filters_zone %}
+    <div id='filters_zone' class="contains_scrollbar" onclick="full_sidebar()">
+        <div class="ingredient untouchable" id="ingredient-2" >
+            <div class="ingredient_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
+            <div class="ingredient_text">Bananas</div>
+            <div class="ingredient_size">5 vnt</div>
+            <div class="ingredient_indicator ingredient_indicator_undefined" id="ingredient_indicator-2"></div>
+        </div>
+        <div class="ingredient untouchable" id="ingredient-3" >
+            <div class="ingredient_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
+            <div class="ingredient_text">Jautiena</div>
+            <div class="ingredient_size">250 g</div>
+            <div class="ingredient_indicator ingredient_indicator_undefined" id="ingredient_indicator-3"></div>
+        </div>
+        <div class="ingredient untouchable" id="ingredient-4" >
+            <div class="ingredient_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
+            <div class="ingredient_text">Cukinija</div>
+            <div class="ingredient_size">500 g</div>
+            <div class="ingredient_indicator ingredient_indicator_undefined" id="ingredient_indicator-4"></div>
+        </div>
+        <div class="ingredient untouchable" id="ingredient-5" >
+            <div class="ingredient_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
+            <div class="ingredient_text">Ananasas</div>
+            <div class="ingredient_size">100 g</div>
+            <div class="ingredient_indicator ingredient_indicator_undefined" id="ingredient_indicator-5"></div>
+        </div>
     </div>
-    <div class="ingredient untouchable" id="ingredient-3" >
-        <div class="ingredient_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
-        <div class="ingredient_text">Jautiena</div>
-        <div class="ingredient_size">250 g</div>
-        <div class="ingredient_indicator ingredient_indicator_undefined" id="ingredient_indicator-3"></div>
-    </div>
-    <div class="ingredient untouchable" id="ingredient-4" >
-        <div class="ingredient_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
-        <div class="ingredient_text">Cukinija</div>
-        <div class="ingredient_size">500 g</div>
-        <div class="ingredient_indicator ingredient_indicator_undefined" id="ingredient_indicator-4"></div>
-    </div>
-    <div class="ingredient untouchable" id="ingredient-5" >
-        <div class="ingredient_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
-        <div class="ingredient_text">Ananasas</div>
-        <div class="ingredient_size">100 g</div>
-        <div class="ingredient_indicator ingredient_indicator_undefined" id="ingredient_indicator-5"></div>
-    </div>
+
 {% endblock %}
 
 {% block config_zone %}
-    <div id="sidebar_right_cook_button" class="untouchable next_step" onclick="next_step()">Sekantis</div>
+    <div id='config_zone'>
+        <div id="sidebar_right_cook_button" class="untouchable next_step" onclick="next_step()">Sekantis</div>
+    </div>
 {% endblock %}
 
 {% block content %}
@@ -132,7 +136,16 @@
         <div class="step" id="step_last">
             <div class="step_go step_up" onclick="previous_step()"></div>
             <div class="step_id">Skanaus</div>
-            <div class="step_info">Sharinti pagaminta maista, spausti patinka, parasyti pastebejimu</div>
+            <div class="step_info">
+                <div id="step_buttons_box">
+                    <div class="step_button" id="step_like"></div>
+                    <div class="step_button" id="step_share"></div>
+                    <div class="step_button" id="step_comment"></div>
+                </div>
+                <div id="step_comment_box">
+                    <textarea id="step_comment_box_area">Jūsų pastebėjimai, patarimai, alternatyvos ...</textarea>
+                </div>
+            </div>
         </div>
     </div>
 

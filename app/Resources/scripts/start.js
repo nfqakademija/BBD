@@ -12,6 +12,7 @@ var toast_show_time = 3000;
 var minimum_recipe_size = 90;
 var recipe_size = minimum_recipe_size;
 var mobile_state = false;
+var mobile_width_size = 400;
 var user_is_loged = check_if_user_is_loged();
 var steps_amount = 2;
 var current_step = 0;
@@ -783,47 +784,63 @@ function filter_selected(ID){
     full_sidebar();
     var classes = ($("#" + ID).attr('class')).split(" ");
     var selected = classes[2];
+
+    var symbols_amount = $("#" + ID + " .filter_element_text").html();
+    var symbols_amount = symbols_amount.length;
+
     if(selected == "selected"){
         $("#" + ID).removeClass('selected');
+        $("#" + ID + " .filter_element_text").css('line-height','43px');
     }else{
         $("#" + ID).addClass('selected');
+        if(symbols_amount > 17){
+            $("#" + ID + " .filter_element_text").css('line-height','21px');
+        }
     }
 }
 
-function shoppinglist_item_selected(ID){
+function shoppinglist_item_selected(ID) {
     full_sidebar();
     var classes = ($("#" + ID).attr('class')).split(" ");
-    var product_name = $("#" + ID + " .filter_element_text").html();
     var selected = classes[2];
 
-    $(".filter_element").removeClass('selected');
     if(selected != "selected"){
+        $(".filter_element").removeClass('selected');
         $("#" + ID).addClass('selected');
-        show_prices(product_name);
+        show_prices(ID);
     }else{
+        $("#" + ID).removeClass('selected');
         close_prices();
     }
 }
 
-function show_prices(product_name){
-    alert(product_name)
+function show_prices(ID){
     //pagal id parodo kainas kur kokios parduotuveje ir artmiausias vietas
     //pagal pavadnima title bando atspeti produkta  parodo kainas kur kokios parduotuveje ir artmiausias vietas
+
+    var product_name = $("#" + ID + " .filter_element_text").html();
+    $("#sidebar_right").removeClass('right_squeeze').addClass('right_full');
+    var height_from_top = $(".ingredients_divider").offset().top + 10;
+    $("#sidebar_right_ingredients_zone").css('top', height_from_top + 'px');
+
+    if(mobile_state){
+        empty_sidebar();
+    }
 }
 
 function close_prices(){
-
+    $("#sidebar_right").removeClass('right_full').addClass('right_squeeze');
 }
 
 function shoppinglist_search(){
     var value = ($('#search_input').val()).trim();
     value = value.replace(/[-\/\\^$*+?.,()|[\]{}]/g, ' ');
     if(value == ""){
-        $('#search_container').css('display','none');
         $('#search_container_inside').html('');
+        $('#search_container').css('display','none');
     }else{
-        $('#search_container').html('');
-        $('#search_container_inside').css('display','block');
+        $('#search_container_inside').html('');
+        $('#search_container').css('display','block');
 
         //get data with ajax from search_value
         var data = [];
@@ -969,7 +986,7 @@ function cook(recipe_ID){
 
 //tracks down mouse click
 $(document).mousedown(function(event){
-    if($(event.target).attr("id") == "search_container" || (($(event.target).attr("class")).split(" "))[0] == "s_e"){
+    if($(event.target).attr("id") == "search_container" || ( typeof $(event.target).attr("class") !== "undefined" && (($(event.target).attr("class")).split(" "))[0] == "s_e" ) ){
         //alert($(event.target).attr("id"));
         //$('#search_input').focus();
         //event.stopImmediatePropagation();
@@ -1112,7 +1129,7 @@ function recalculate_width(){
 
 function sidebar_manipulation(){
     var screen_width = $(window).width();
-    if(screen_width <= 360){
+    if(screen_width <= mobile_width_size){
         mobile_state = true;
         $('#header').css('display','block');
         $('#content_wrapper').css('top','41px');
@@ -1157,7 +1174,6 @@ function empty_sidebar_slide(){
         $("#filters_zone").css('top', height_from_top + 'px');
     }
     hide_recipe();
-
 }
 
 
@@ -1235,6 +1251,14 @@ function steps_sidebar_initialize(){
     var real_steps_amount = steps_amount + 2;
     var step_height = screen_height / real_steps_amount - 1;
     var step;
+
+    var content_height = parseInt(($("#content_wrapper").css('height').replace('px', '')));
+    var all = $("#content_wrapper")[0].scrollHeight;
+    var current = 0;
+
+    var percentage = (current + content_height) / all ;
+    var pointer_height = parseInt(content_height * percentage) ;
+    $("#steps_sidebar_pointer").css('height', pointer_height + 'px');
 
     //pradinis
     step = "<div class='step_indicator' style=\"height:" + step_height + "px;line-height:" + step_height + "px;\" onclick=\"step_go('0')\">0</div>";
@@ -1334,25 +1358,31 @@ function logout(){
 
 function show_scrollbar(HTMLObejct){
    var ID = HTMLObejct.id;
-   var scrollbar =
-       "<div class='scrollbar_box' id='scrollbar_box-" + ID + "'>" +
-           "<div class='scrollbar' id='scrollbar-" + ID + "'></div>" +
-       "</div>";
-   $("#" + ID).append(scrollbar);
 
    var top = $("#" + ID).offset().top;
    var left = $("#" + ID).offset().left + $("#" + ID).outerWidth() - content_right_margin - scrollbar_width - 1;
    var height = parseInt(($("#" + ID).css('height')).replace("px", ""));
-   $("#scrollbar_box-" + ID).css('top', top + 'px');
-   $("#scrollbar_box-" + ID).css('left',left + 'px');
-   $("#scrollbar_box-" + ID).css('height',height + 'px');
+   var scrolled = $("#" + ID).scrollTop();
+   var all_height = $("#" + ID)[0].scrollHeight;
+   var scrollbar_height = height / all_height * height;
+   var scrollbar_top = scrolled / all_height * (height);
+    if(height != scrollbar_height){
+        var scrollbar =
+            "<div class='scrollbar_box' id='scrollbar_box-" + ID + "'>" +
+            "<div class='scrollbar' id='scrollbar-" + ID + "'></div>" +
+            "</div>";
+        $("#" + ID).append(scrollbar);
+    }else{
+        return true;
+    }
 
-    var scrolled = $("#" + ID).scrollTop();
-    var all_height = $("#" + ID)[0].scrollHeight;
-    var scrollbar_height = height / all_height * height;
-    var scrollbar_top = scrolled / all_height * (height);
+    $("#scrollbar_box-" + ID).css('top', top + 'px');
+    $("#scrollbar_box-" + ID).css('left',left + 'px');
+    $("#scrollbar_box-" + ID).css('height',height + 'px');
     $("#scrollbar-" + ID).css('height',scrollbar_height + 'px');
     $("#scrollbar-" + ID).css('top',scrollbar_top + 'px');
+
+
 
     $("#" + ID).scroll(function(){
         var scrolled = $("#" + ID).scrollTop();
@@ -1368,7 +1398,7 @@ function show_scrollbar(HTMLObejct){
         $('#' + ID).mousemove(function(e){
             var new_scrollbar_position = e.pageY - position_in_element;
             if(new_scrollbar_position >= 0 && (new_scrollbar_position + scrollbar_height) <= height){
-                //$('#scrollbar-' + ID).css('top', new_scrollbar_position + "px");
+                $('#scrollbar-' + ID).css('top', new_scrollbar_position + "px");
                 var distance_to_top = new_scrollbar_position - $('#scrollbar_box-' + ID).offset().top;
                 var scrolling_height = distance_to_top / height * all_height;
                 $("#" + ID).scrollTop(scrolling_height);
@@ -1398,5 +1428,5 @@ function initialize_scrollbar(){
     }, function() {
         // Hover out
         hide_scrollbar(this);
-    });
+    })
 }

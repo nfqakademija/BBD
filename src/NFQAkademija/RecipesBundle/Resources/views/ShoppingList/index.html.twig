@@ -12,11 +12,7 @@
         function loader(){
             //initialize maps and other stuff related to maps
             getLocation();
-            $('#config_zone').remove();
-            //frontend things
-            $('#filters_zone').css('bottom','10px');
             sidebar_manipulation();
-            $('#config_zone').css('display','none');
             $( window ).resize(function() {
                 sidebar_manipulation();
             });
@@ -102,14 +98,14 @@
             add_center_controller();
 
             show_on_map('Kebabinė', false);
-            show_on_map('Picerija', false);
-            show_on_map('Palink', false);
-            show_on_map('Maxima', false);
-            show_on_map('greito maisto restoranas', false);
-        }
+            //show_on_map('Picerija', false);
+            //show_on_map('Palink', false);
+            //show_on_map('Maxima', false);
+            //show_on_map('greito maisto restoranas', false);
 
-        var start = document.getElementById("start").value;
-        var end = document.getElementById("end").value;
+            //traukti is DB vietu lat, long image_url, title ir sukti cikla ir atvaizduoti
+            //add_custom_marker('54.909933', '23.983622999999966' , '/images/add.png', 'NFQ');
+        }
 
         function calcRoute(end, type){
             var start = my_location;
@@ -246,13 +242,52 @@
             }
         }
 
-        function getNewPosition(){
+        function getNewPosition(position){
             your_X = position.coords.latitude;
             your_Y = position.coords.longitude;
             my_location = new google.maps.LatLng(your_X, your_Y);
             your_position.setPosition(my_location);
         }
 
+        function show_marker(ID){
+            //show marker when looking for prices. nearest shop with that name pvz IKI
+            map.panTo(my_location);
+        }
+
+    function add_custom_marker(lat, long, icon, placeName){
+        var placeLocation = new google.maps.LatLng(lat, long);
+        var placeImage = {
+            url: icon,
+            size: new google.maps.Size(25, 25),
+            origin: new google.maps.Point(0, 0),
+            anchor: new google.maps.Point(17, 34),
+            scaledSize: new google.maps.Size(25, 25)
+        };
+
+        var marker = new google.maps.Marker({
+            position: placeLocation,
+            map: map,
+            icon: placeImage,
+            animation: google.maps.Animation.DROP,
+            title: placeName
+        });
+        markersArray.push(marker);
+
+        google.maps.event.addListener(marker, 'click', function() {
+            var distance = google.maps.geometry.spherical.computeDistanceBetween (my_location, marker.position);
+            distance = distanceConverter(distance.toFixed(0));
+            var placeContent =
+                "<image class='google_map_tooltip_image' src='" + icon + "' />" +
+                "<div class='google_map_tooltip_title'>" + placeName + "</div>" +
+                "<div style='clear:both;'></div>" +
+                "<div id='walk_button' class='google_map_tooltip_button' onclick=\"calcRoute('" + marker.position + "','walk')\">Eiti</div>" +
+                "<div id='drive_button' class='google_map_tooltip_button' onclick=\"calcRoute('" + marker.position + "','drive')\">Važiuoti</div>" +
+                "<div class='google_map_tooltip_text'>Atstumas ~" + distance + "</div>";
+
+            infowindow.setContent(placeContent);
+            infowindow.open(map, this);
+        });
+    }
 
     </script>
 {% endblock %}
@@ -267,10 +302,12 @@
 {% endblock %}
 
 {% block search_zone %}
-    <div id='search_index' onclick="focus_input('search_input')" ></div>
-    <input id='search_input' placeholder='Pridėti prekių' onkeyup="shoppinglist_search()" onfocus="shoppinglist_input_focus()" onblur="shoppinglist_input_blur()"/>
-    <div id='search_container'>
-        <div id='search_container_inside'></div>
+    <div id="search_zone" onclick="full_sidebar()">
+        <div id='search_index' onclick="focus_input('search_input')" ></div>
+        <input id='search_input' placeholder='Pridėti prekių' onkeyup="shoppinglist_search()" onfocus="shoppinglist_input_focus()" onblur="shoppinglist_input_blur()"/>
+        <div id='search_container'>
+            <div id='search_container_inside' class='contains_scrollbar'></div>
+        </div>
     </div>
 {% endblock %}
 
@@ -278,13 +315,46 @@
      <div id="divider" class="middle_divider" style="margin-left:10px;margin-top:0px;" onclick="full_sidebar()"></div>
  {% endblock %}
 
-{% block filters_zone %}{% endblock %}
+{% block filters_zone %}
+    <div id='filters_zone' class="contains_scrollbar" style="bottom:10px;"></div>
+{% endblock %}
 
-{% block config_zone %}{% endblock %}
+{% block config_zone %}
+{% endblock %}
 
 {% block content %}
     <div id="content_wrapper" style="right:0px;background-image:url('{{ asset('images/content_background.jpg') }}')">
         <div id="map_canvas"></div>
+    </div>
+
+
+    <div id="sidebar_right" class="right_squeeze" >
+        <div id="sidebar_right_image" style="background-image:url('{{ asset('images/food (5).jpg') }}')"></div>
+        <div id="sidebar_right_title">Shoppinglisto prekė</div>
+        <div id="sidebar_right_ingredients">
+            <div id="sidebar_right_ingredients_text">Kainos</div>
+        </div>
+        <div id="divider" class="ingredients_divider"></div>
+        <div id="sidebar_right_ingredients_zone" style="bottom:10px;" class="contains_scrollbar">
+            <div class="ingredient untouchable" id="ingredient-2" onclick="show_marker('2')">
+                <div class="ingredient_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
+                <div class="ingredient_text">22.99 Lt</div>
+                <div class="ingredient_size">Iki</div>
+                <div class="ingredient_indicator ingredient_indicator_have" id="ingredient_indicator-2"></div>
+            </div>
+            <div class="ingredient untouchable" id="ingredient-3" onclick="show_marker('2')">
+                <div class="ingredient_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
+                <div class="ingredient_text">25.89</div>
+                <div class="ingredient_size">Norfa</div>
+                <div class="ingredient_indicator ingredient_indicator_undefined" id="ingredient_indicator-3"></div>
+            </div>
+            <div class="ingredient untouchable" id="ingredient-4" onclick="show_marker('2')">
+                <div class="ingredient_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
+                <div class="ingredient_text">27.99</div>
+                <div class="ingredient_size">Maxima</div>
+                <div class="ingredient_indicator ingredient_indicator_undefined" id="ingredient_indicator-4"></div>
+            </div>
+        </div>
     </div>
 
 {% endblock %}

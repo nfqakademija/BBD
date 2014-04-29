@@ -62,27 +62,28 @@
                    <div class="nav_zone_element untouchable" id="random" onclick="content_navigation('random')"></div>
                {% endblock %}
             </div>
-            <div id="search_zone" onclick="full_sidebar()">
-                {% block search_zone %}
+
+            {% block search_zone %}
+                <div id="search_zone" onclick="full_sidebar()">
                     <div id='search_index' onclick="focus_input('search_input')" ></div>
                     <input id='search_input' placeholder='Ieškoti' onkeyup="search()" onfocus="search_input_focus()" onblur="search_input_blur()"/>
                     <div id='search_container'>
                         <div class="contains_scrollbar" id='search_container_inside'></div>
                     </div>
-                {% endblock %}
-            </div>
+                </div>
+            {% endblock %}
             {% block divider %}
                 <div id="divider" class="middle_divider" onclick="full_sidebar()"></div>
             {% endblock %}
 
-            <div id='filters_zone' class="contains_scrollbar" onclick="full_sidebar()">
-                {% block filters_zone %}{% endblock %}
+            {% block filters_zone %}
+                <div id='filters_zone' class="contains_scrollbar" onclick="full_sidebar()"></div>
+            {% endblock %}
 
-            </div>
 
-            <div id='config_zone'>
-                {% block config_zone %}{% endblock %}
-            </div>
+            {% block config_zone %}
+                <div id='config_zone'></div>
+            {% endblock %}
         </div>
 
 

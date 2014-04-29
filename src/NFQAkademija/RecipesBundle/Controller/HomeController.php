@@ -11,3 +11,4 @@ class HomeController extends Controller
         return $this->render('NFQAkademijaRecipesBundle:Home:index.html.twig', array());
     }
 }
+

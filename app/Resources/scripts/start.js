@@ -335,7 +335,7 @@ function filter_category(category){
         case "types":
             filters[0] = "<div class='filter_element untouchable' id='types_1' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/drinks.png');\"></div><div class='filter_element_text'>Gėrimai</div><div class='filter_element_indicator' id='indicator_types_1'></div></div>";
             filters[1] = "<div class='filter_element untouchable' id='types_2' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/pastries.png');\"></div><div class='filter_element_text'>Kepiniai</div><div class='filter_element_indicator' id='indicator_types_2'></div></div>";
-            filters[2] = "<div class='filter_element untouchable' id='types_3' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/deserts.png');\"></div><div class='filter_element_text'>Desertai</div><div class='filter_element_indicator' id='indicator_types_3'></div></div>";
+            filters[2] = "<div class='filter_element untouchable' id='types_3' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/desserts.png');\"></div><div class='filter_element_text'>Desertai</div><div class='filter_element_indicator' id='indicator_types_3'></div></div>";
             filters[3] = "<div class='filter_element untouchable' id='types_4' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/second_dishes.png');\"></div><div class='filter_element_text'>Antrieji patiekalai</div><div class='filter_element_indicator' id='indicator_types_4'></div></div>";
             filters[4] = "<div class='filter_element untouchable' id='types_5' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/canned_meals.png');\"></div><div class='filter_element_text'>Konservuoti patiekalai</div><div class='filter_element_indicator' id='indicator_types_5'></div></div>";
             filters[5] = "<div class='filter_element untouchable' id='types_6' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/porridges.png');\"></div><div class='filter_element_text'>Košės</div><div class='filter_element_indicator' id='indicator_types_6'></div></div>";
@@ -930,7 +930,7 @@ function show_recipe(recipe_ID){
         $("#sidebar_right_ingredients_zone").css('top', height_from_top + 'px');
         $('.recipe_box').removeClass('recipe_active');
         $("#recipe_" + recipe_ID).addClass('recipe_active');
-        //$("#content_wrapper").css('right','231px');
+
 
 
         //from ajax with recipe ID get
@@ -944,6 +944,9 @@ function show_recipe(recipe_ID){
         var characteristics; //array of them
         var celebration; //array of them or empty
         var ingredients; //array of them
+
+
+
     }
 
     recalculate_width();
@@ -1077,14 +1080,13 @@ function steps_manipulation(){
     if(mobile_state){
         //$("#content_wrapper").css('height', step_height - 41 + "px");
         //step_height = step_height - 41;
-        $('.step').addClass('squeezed_step')
+        $('.step').addClass('squeezed_step');
     }else{
         $('.step').removeClass('squeezed_step');
     }
 
     $(".step").css('height', step_height + "px");
     $(".step").css('width', step_width + "px");
-
 }
 
 function calculate_recipe_size(){

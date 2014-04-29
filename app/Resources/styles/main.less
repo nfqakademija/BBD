@@ -845,11 +845,20 @@ textarea{
   background-color:rgba(255, 255, 255, 0.2);
   border:1px solid black;
   box-shadow:0px 0px 2px black;
+  height:auto;
 }
 
 .filter_element > .filter_element_delete{
   display:none;
 }
+
+.selected .filter_element_text{
+  white-space:initial;
+  overflow:visible;
+  text-overflow:initial;
+  height:auto;
+}
+
 
 .selected > .filter_element_delete{
   display:block;
@@ -881,15 +890,17 @@ textarea{
 }
 
 .filter_element_text{
-  width:155px;
+  width:145px;
   height:43px;
   float:left;
   line-height:43px;
   font-size:17px;
   text-overflow: ellipsis;
   overflow: hidden;
+  padding-right:10px;
   white-space: nowrap;
 }
+
 
 #config_zone{
   height: 43px;
@@ -2604,9 +2615,59 @@ p{
   position:absolute;
 }
 
+#step_buttons_box{
+  margin:0 auto;
+  width:320px;
+  height:100px;
+}
+
+.step_button{
+  width:98px;
+  height:98px;
+
+  box-shadow:0px 0px 2px black;
+  float:left;
+  border:1px solid transparent;
+  background-size:100% 100%;
+  background-repeat:no-repeat;
+  background-position:50% 50%;
+  &:hover{
+    border:1px solid black;
+    box-shadow:0px 0px 2px black;
+    background-color:@grey_background;
+  }
+}
+
+#step_comment_box{
+  margin:0 auto;
+  width:320px;
+  height:100px;
+  margin-top:10px;
+}
+
+#step_comment_box_area{
+  width: 310px;
+  margin: 0px;
+  padding: 5px;
+  height: 90px;
+}
+
+#step_like{
+  background-image:url('/images/like.png');
+  margin-right:10px;
+}
+
+#step_share{
+  background-image:url('/images/facebook.png');
+  margin-right:10px;
+}
+
+#step_comment{
+  background-image:url('/images/facebook_login.png');
+}
+
 
 //RESPONSIVE CSS DESIGN
-//for "Profile" page
 @media screen and (max-width: 1000px){
   #profile_box{
     font-size:25px;
@@ -2628,6 +2689,95 @@ p{
 @media screen and (max-width: 650px){
   #profile_box{
     font-size:13px;
+  }
+}
+
+@media screen and (max-width: 490px){
+  #top_box{
+    width:400px;
+    margin-left:-200px;
+  }
+
+  #top_box_content{
+    width:370px;
+  }
+}
+
+@media screen and (max-width: 410px){
+  #top_box{
+    width:360px;
+    margin-left:-180px;
+    height:220px;
+    margin-top:-110px;
+  }
+
+  #top_box_content{
+    width:330px;
+    height:139px;
+    line-height:139px;
+  }
+}
+
+@media screen and (max-width: 375px){
+  #top_box{
+    width:300px;
+    margin-left:-150px;
+    height:180px;
+    margin-top:-90px;
+  }
+
+  #top_box_content{
+    width:270px;
+    height:99px;
+    line-height:99px;
+  }
+}
+
+@media screen and (max-width: 320px){
+  #top_box{
+    width:260px;
+    margin-left:-130px;
+    height:140px;
+    margin-top:-70px;
+  }
+
+  #top_box_title{
+    font-size:16px;
+  }
+
+  #top_box_content{
+    width:230px;
+    height:59px;
+    line-height:59px;
+    font-size:12px;
+  }
+
+  .profile_button{
+    width:120px;
+  }
+}
+
+@media screen and (max-width: 280px){
+  #top_box{
+    width:240px;
+    margin-left:-120px;
+    height:130px;
+    margin-top:-65px;
+  }
+
+  #top_box_title{
+    font-size:15px;
+  }
+
+  #top_box_content{
+    width:210px;
+    height:49px;
+    line-height:49px;
+    font-size:11px;
+  }
+
+  .profile_button{
+    width:100px;
   }
 }
 

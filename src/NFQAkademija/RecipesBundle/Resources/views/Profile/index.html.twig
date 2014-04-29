@@ -32,7 +32,6 @@
 
  {% block filters_zone %}
      <div id='filters_zone' class="contains_scrollbar" onclick="full_sidebar()">
-         Asmeniniai filtrai
          <div class="filter_element untouchable" id="universities-2" onclick="filter_selected(this.id)">
              <div class="filter_element_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
              <div class="filter_element_text">VU</div>
@@ -42,7 +41,7 @@
  {% endblock %}
  {% block config_zone %}
      <div id='config_zone'>
-         <div class='filter_element untouchable' onclick="filter_start()">
+         <div class='filter_element untouchable' onclick="filter_start();show_config_zone(1);">
              <div class='filter_element_image' id='add'></div>
              <div class='filter_element_text'>Asmeninis filtras</div>
          </div>
@@ -57,75 +56,21 @@
             <div id="profile_name">Ignas Lekas</div>
             <div id="profile_email">ignas.lekas@gmail.com</div>
             <div id="profile_statististics_box">
-                <div class="profile_statististics_box_item" id="psbi_cooked">14</div>
-                <div class="profile_statististics_box_item" id="psbi_liked">63</div>
-                <div class="profile_statististics_box_item" id="psbi_created">3</div>
-                <div class="profile_statististics_box_item" id="psbi_watched">698</div>
+                <div class="profile_statististics_box_item" id="psbi_cooked" onclick="profile_navigation('cooked')">14</div>
+                <div class="profile_statististics_box_item" id="psbi_liked" onclick="profile_navigation('liked')">63</div>
+                <div class="profile_statististics_box_item" id="psbi_created" onclick="profile_navigation('created')">3</div>
+                <div class="profile_statististics_box_item" id="psbi_watched" onclick="profile_navigation('watched')">698</div>
             </div>
             <div id="profile_buttons_box">
+                <div class="profile_button" onclick="go_to_new_recipe()">Kurti</div>
                 <div class="profile_button" onclick="show_top_layer('options')">Nustatymai</div>
                 <div class="profile_button" style="margin-bottom:0px;" onclick="logout()">Atsijungti</div>
             </div>
         </div>
 
     </div>
-    <div id="profile_divider" class="untouchable">Receptų istorija</div>
+    <div id="profile_divider" class="untouchable">Istorija</div>
     <div id="profile_recipes"></div>
 </div>
-
-    <div id="sidebar_right" class="right_squeeze" id="sidebar_for_recipe_1">
-        <div id="sidebar_right_image" style="background-image:url('{{ asset('images/food (5).jpg') }}')"></div>
-        <div id="sidebar_right_title">Kepnys "Omledufe"</div>
-        <div id="sidebar_right_info">
-            <div class="sidebar_right_info_item" id="sidebar_right_time">25 min</div>
-            <div class="sidebar_right_info_item" id="sidebar_right_country">Lenkija</div>
-            <div class="sidebar_right_info_item" id="sidebar_right_main_cooking_method">Virimas</div>
-            <div class="sidebar_right_info_item" id="sidebar_right_type">Antrieji patiekalai</div>
-            <div class="sidebar_right_info_item" id="sidebar_right_characteristics">#Aštru #Sūru</div>
-        </div>
-        <div id="sidebar_right_ingredients">
-            <div id="sidebar_right_ingredients_text">Ingredientai</div>
-            <div class="sidebar_right_ingredients_button" id="sidebar_right_ingredients_coop" onclick="coop('1')"></div>
-            <div class="sidebar_right_ingredients_button" id="sidebar_right_ingredients_shoppinglist" onclick="add_to_shopping_list('1')"></div>
-        </div>
-        <div id="divider" class="ingredients_divider"></div>
-        <div id="sidebar_right_ingredients_zone">
-            <div class="ingredient untouchable" id="ingredient-2" onclick="ingredient_selected('2')">
-                <div class="ingredient_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
-                <div class="ingredient_text">Bananas</div>
-                <div class="ingredient_size">5 vnt</div>
-                <div class="ingredient_indicator ingredient_indicator_have" id="ingredient_indicator-2"></div>
-            </div>
-            <div class="ingredient untouchable" id="ingredient-3" onclick="ingredient_selected('3')">
-                <div class="ingredient_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
-                <div class="ingredient_text">Jautiena</div>
-                <div class="ingredient_size">250 g</div>
-                <div class="ingredient_indicator ingredient_indicator_undefined" id="ingredient_indicator-3"></div>
-            </div>
-            <div class="ingredient untouchable" id="ingredient-4" onclick="ingredient_selected('4')">
-                <div class="ingredient_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
-                <div class="ingredient_text">Cukinija</div>
-                <div class="ingredient_size">500 g</div>
-                <div class="ingredient_indicator ingredient_indicator_undefined" id="ingredient_indicator-4"></div>
-            </div>
-            <div class="ingredient untouchable" id="ingredient-5" onclick="ingredient_selected('5')">
-                <div class="ingredient_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
-                <div class="ingredient_text">Ananasas</div>
-                <div class="ingredient_size">100 g</div>
-                <div class="ingredient_indicator ingredient_indicator_undefined" id="ingredient_indicator-5"></div>
-            </div>
-            <div class="ingredient untouchable" id="ingredient-6" onclick="ingredient_selected('6')">
-                <div class="ingredient_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
-                <div class="ingredient_text">Pomidoras</div>
-                <div class="ingredient_size">6 vnt</div>
-                <div class="ingredient_indicator ingredient_indicator_undefined" id="ingredient_indicator-6"></div>
-            </div>
-        </div>
-
-
-        <div id="sidebar_right_bottom_zone">
-            <div id="sidebar_right_cook_button" onclick="cook('1')">Gaminti</div>
-        </div>
-
-    </div>
 {% endblock %}
+

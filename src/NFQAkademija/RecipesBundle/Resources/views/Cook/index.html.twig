@@ -24,7 +24,7 @@
             $(window).resize(function () {
                 sidebar_manipulation();
                 steps_sidebar_manipulation();
-                $(window).bind('resizeEnd', function() {
+                $(window).bind('resizeEnd', function () {
                     step_go(current_step);
                 });
             });
@@ -34,30 +34,48 @@
                 var all = $("#content_wrapper")[0].scrollHeight;
                 var current = $("#content_wrapper").scrollTop() - 1;
 
-                var percentage = (current + content_height) / all ;
-                var pointer_height = parseInt(content_height * percentage) ;
+                var percentage = (current + content_height) / all;
+                var pointer_height = parseInt(content_height * percentage);
                 $("#steps_sidebar_pointer").css('height', pointer_height + 'px');
             });
 
-            $("#content_wrapper").bind('mousewheel DOMMouseScroll', function(event){
+            $("#content_wrapper").bind('mousewheel DOMMouseScroll', function (event) {
                 event.preventDefault();
                 if (event.originalEvent.wheelDelta > 0 || event.originalEvent.detail < 0) {
                     // scroll up
                     previous_step();
-                }else {
+                } else {
                     // scroll down
                     next_step();
                 }
             });
 
-        }
+            $("#steps_others_like_box").mouseenter(function () {
+                $("#content_wrapper").unbind('mousewheel');
+                $("#content_wrapper").unbind('DOMMouseScroll');
+                $("#content_wrapper").css('overflow-y','hidden');
+            });
 
+            $("#steps_others_like_box").mouseleave(function () {
+                $("#content_wrapper").css('overflow-y','scroll');
+                $("#content_wrapper").bind('mousewheel DOMMouseScroll', function (event) {
+                    event.preventDefault();
+                    if (event.originalEvent.wheelDelta > 0 || event.originalEvent.detail < 0) {
+                        previous_step();
+                    } else {
+                        next_step();
+                    }
+                });
+            });
+
+        }
     </script>
 {% endblock %}
 {% block search_zone %}
     <div id="search_zone" class='cook_ingredients_zone' style="height:auto;" onclick="full_sidebar()">
         <div id="cook_ingredients">
             <div id="divider" class="top_divider" style='margin-bottom:10px;' onclick="full_sidebar()"></div>
+            <div class="sidebar_right_info_item" id="sidebar_right_like" onclick="recipe_like('1')">59</div>
             <div class="sidebar_right_info_item" id="sidebar_right_time">25 min</div>
             <div class="sidebar_right_info_item" id="sidebar_right_country">Lenkija</div>
             <div class="sidebar_right_info_item" id="sidebar_right_main_cooking_method">Virimas</div>
@@ -135,15 +153,21 @@
 
         <div class="step" id="step_last">
             <div class="step_go step_up" onclick="previous_step()"></div>
-            <div class="step_id">Skanaus</div>
-            <div class="step_info">
-                <div id="step_buttons_box">
-                    <div class="step_button" id="step_like"></div>
-                    <div class="step_button" id="step_share"></div>
-                    <div class="step_button" id="step_comment"></div>
-                </div>
-                <div id="step_comment_box">
-                    <textarea id="step_comment_box_area">Jūsų pastebėjimai, patarimai, alternatyvos ...</textarea>
+            <div class="step_id last_id" >Skanaus</div>
+            <div class="step_button" id="step_like" onclick="recipe_like('1')">Patiko?</div>
+            <div class="step_button" id="step_share" onclick="share_food('1')">Pasidalink</div>
+
+            <div id="step_comment_box">
+                <div id="step_comment_title" >Atsiliepimas</div>
+                <textarea id="step_comment_box_area" placeholder="Jūsų pastebėjimai, patarimai, alternatyvos ..."></textarea>
+                <div id="step_comment" onclick="add_comment('1')">Skelbti</div>
+            </div>
+
+            <div id="step_others_like">
+                <div id="steps_others_like_title">Kuriem patiko šis patiekalas taip pat patiko:</div>
+                <div id="steps_others_like_box" class="contains_scrollbar">
+                    <div class='recipe_box' id='recipe_1' style="background-image: url('/images/food (5).jpg');width:100px;height:100px;" onclick="show_recipe('1')"></div>
+                    <div class='recipe_box' id='recipe_2' style="background-image: url('/images/food (9).jpg');width:100px;height:100px;" onclick="show_recipe('2')"></div>
                 </div>
             </div>
         </div>

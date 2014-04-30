@@ -85,7 +85,9 @@
                     }
                 });
             });
-
+            if(browser == 'firefox'){
+                $("#search_container").css('box-shadow','none');
+            }
             hide_loading_screen();
         }
     </script>
@@ -110,29 +112,25 @@
 
 {% block filters_zone %}
     <div id='filters_zone' style="top: 246px;" class="contains_scrollbar" onclick="full_sidebar()">
-        <div class="ingredient untouchable" id="ingredient-2" >
+        <div class="ingredient untouchable">
             <div class="ingredient_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
             <div class="ingredient_text">Bananas</div>
             <div class="ingredient_size">5 vnt</div>
-            <div class="ingredient_indicator ingredient_indicator_undefined" id="ingredient_indicator-2"></div>
         </div>
-        <div class="ingredient untouchable" id="ingredient-3" >
+        <div class="ingredient untouchable">
             <div class="ingredient_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
             <div class="ingredient_text">Jautiena</div>
             <div class="ingredient_size">250 g</div>
-            <div class="ingredient_indicator ingredient_indicator_undefined" id="ingredient_indicator-3"></div>
         </div>
-        <div class="ingredient untouchable" id="ingredient-4" >
+        <div class="ingredient untouchable">
             <div class="ingredient_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
             <div class="ingredient_text">Cukinija</div>
             <div class="ingredient_size">500 g</div>
-            <div class="ingredient_indicator ingredient_indicator_undefined" id="ingredient_indicator-4"></div>
         </div>
-        <div class="ingredient untouchable" id="ingredient-5" >
+        <div class="ingredient untouchable">
             <div class="ingredient_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
             <div class="ingredient_text">Ananasas</div>
             <div class="ingredient_size">100 g</div>
-            <div class="ingredient_indicator ingredient_indicator_undefined" id="ingredient_indicator-5"></div>
         </div>
     </div>
 
@@ -145,8 +143,8 @@
 {% endblock %}
 
 {% block content %}
-    <div id="content_wrapper" style="background-image:url('/images/food (19).jpg');right:31px;" >
-        <div class="step" id="step_0" style="background-image:url('/images/food (19).jpg')">
+    <div id="content_wrapper" style="background-image:url('/images/food (19).jpg');right:-30px;" >
+        <div class="step" id="step_0" style="background-image:url('/images/food (19).jpg');">
             <div class="step_title">Šiškebabas</div>
 
             <div id="step_about_box">

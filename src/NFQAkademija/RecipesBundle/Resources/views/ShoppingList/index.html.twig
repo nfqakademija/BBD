@@ -23,6 +23,13 @@
                 show_center();
             });
 
+            if(browser == 'firefox'){
+                $("#content_wrapper").css('margin-right','-17px');
+                $("#search_container").css('box-shadow','none');
+            }
+            if(browser == 'ie'){
+                $("#content_wrapper").css('margin-right','-17px');
+            }
             hide_loading_screen();
         }
 

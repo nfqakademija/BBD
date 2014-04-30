@@ -258,6 +258,11 @@ textarea{
     box-shadow:0px 0px 2px black;
     background-color:@grey_background;
   }
+  &:active{
+    border:1px solid black;
+    box-shadow:0px 0px 2px black;
+    background-color:black;
+  }
 }
 
 #sidebar_right_ingredients_shoppinglist{
@@ -2173,8 +2178,8 @@ p{
 
 #profile_statististics_box{
   width:auto;
-  clear:both;
   height:auto;
+  float:left;
 }
 
 #profile_buttons_box{
@@ -2413,6 +2418,25 @@ p{
   font-size:15px;
   line-height:177px;
   text-align:center;
+}
+
+#facebook_login_button{
+  line-height: 40px;
+  top:50%;
+  left:50%;
+  height:40px;
+  position:absolute;
+  margin-top:0px;
+  margin-left:-63px;
+  width:126px;
+  background-image:url('/images/fb_login_button.png');
+  background-position:50% 50%;
+  backround-size:100% 100%;
+  background-repeat:no-repeat;
+  opacity:0.9;
+  &:hover{
+    opacity:1;
+  }
 }
 
 #top_box_title{
@@ -2937,6 +2961,7 @@ p{
   margin: 0;
   border: 1px solid black;
   box-shadow: 0px 0px 2px black;
+  word-break: break-word;
 }
 
 #step_comment{
@@ -3003,10 +3028,6 @@ p{
   overflow-y:scroll;
   padding-right:40px;
 }
-
-
-
-
 
 
 

@@ -53,7 +53,9 @@
                      load_more();
                  }
              });
-
+             if(browser == 'firefox'){
+                 $("#search_container").css('box-shadow','none');
+             }
              hide_loading_screen();
          }
 

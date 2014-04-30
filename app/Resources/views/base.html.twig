@@ -7,7 +7,7 @@
         <meta name="description" content="recipes"/>
         <meta name="keywords" content="recipes"/>
         <meta name="author" content="Kieto Koto Standartas">
-
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
         <link href="/css/style.css" rel="stylesheet">
         <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
         <link href='http://fonts.googleapis.com/css?family=Ubuntu&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
@@ -17,6 +17,9 @@
             <script type="text/javascript">
                 function loader(){
                     initialize_scrollbar();
+                    if(browser == 'firefox'){
+                        $("#search_container").css('box-shadow','none');
+                    }
                     hide_loading_screen();
                 }
 
@@ -33,6 +36,25 @@
         -->
     </head>
     <body onload="loader()" onkeyup="key_check(event)">
+        <div id="fb-root"></div>
+        <script>
+            window.fbAsyncInit = function() {
+                FB.init({
+                    appId      : '1411099562488324',
+                    xfbml      : true,
+                    version    : 'v2.0'
+                });
+            };
+
+            (function(d, s, id) {
+                var js, fjs = d.getElementsByTagName(s)[0];
+                if (d.getElementById(id)) return;
+                js = d.createElement(s); js.id = id;
+                js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&appId=1411099562488324&version=v2.0";
+                fjs.parentNode.insertBefore(js, fjs);
+            }(document, 'script', 'facebook-jssdk'));
+        </script>
+
         <div class="transition untouchable" id="toast_wrapper"><div id="toast"></div></div>
         <div id="toast_top" class="untouchable" onclick='to_very_top()'></div>
         <div id="toast_loading" class="untouchable"></div>

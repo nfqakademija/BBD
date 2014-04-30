@@ -13,7 +13,6 @@ var minimum_recipe_size = 90;
 var recipe_size = minimum_recipe_size;
 var mobile_state = false;
 var mobile_width_size = 400;
-var user_is_loged = check_if_user_is_loged();
 var steps_amount = 2;
 var current_step = 0;
 var filter_level = 0;
@@ -232,7 +231,7 @@ function check_browser(){
         agent = 'chrome';
     }
     if(isIE){
-        agent = 'IE';
+        agent = 'ie';
     }
 
     return agent;
@@ -475,8 +474,27 @@ function filter_ingredients_category(ingredients_category){
 
 
 function check_if_user_is_loged(){
-    //ajax to check if user is logged in
-    return false;
+    var status = false;
+    FB.getLoginStatus(function(response) {
+        if (response.status == 'connected') {
+            // the user is logged in and has authenticated your
+            // app, and response.authResponse supplies
+            // the user's ID, a valid access token, a signed
+            // request, and the time the access token
+            // and signed request each expire
+            //var uid = response.authResponse.userID;
+            //var accessToken = response.authResponse.accessToken;
+            status = true;
+        } else if (response.status == 'not_authorized') {
+            // the user is logged in to Facebook,
+            // but has not authenticated your app
+            status = false;
+        } else {
+            // the user isn't logged in to Facebook.
+            status = false;
+        }
+    });
+    return status;
 }
 
 function content_navigation(type){
@@ -489,7 +507,7 @@ function content_navigation(type){
             location.href = "/";
             break;
         case "profile":
-            if(user_is_loged){
+            if(check_if_user_is_loged()){
                 $('.nav_zone_element').removeClass('nav_element_active');
                 $("#" + type).addClass('nav_element_active');
                 show_loading_screen();
@@ -501,7 +519,7 @@ function content_navigation(type){
             break;
 
         case "shoppinglist":
-            if(user_is_loged){
+            if(check_if_user_is_loged()){
                 $('.nav_zone_element').removeClass('nav_element_active');
                 $("#" + type).addClass('nav_element_active');
                 show_loading_screen();
@@ -533,23 +551,29 @@ function show_top_layer(type){
         case "account":
             data =
                 "<div id='top_box_up'>" +
-                    "<div id='top_box_title' class='untouchale'>Prisijungti</div>" +
-                    "<div class='top_box_social_box untouchale' id='top_box_social_facebook' onclick='facebook_login()'></div>" +
+                    "<div id='top_box_title' class='untouchable'>Prisijungti</div>" +
+                    "<div class='top_box_social_box untouchable' id='top_box_social_facebook' onclick='facebook_login()'></div>" +
                 "</div>" +
-                "<div id='top_box_content' class='untouchale'>Prisijunkite prie Foodex bendruomenės</div>";
+                //"<div id='top_box_content' class='untouchale'>Prisijunkite prie Foodex bendruomenės</div>";
+                "<div id='top_box_content' class='untouchable'>" +
+                    "<div id='facebook_login_button' onclick='facebook_login()'>" +
+                    "</div>" +
+                "</div>";
+                $("#top_box").html(data);
+                FB.XFBML.parse(document.getElementById('top_box_content_centered_box'));
             break;
         case "options":
             data =
                 "<div id='top_box_up'>" +
-                    "<div id='top_box_title' class='untouchale'>Nustatymai</div>" +
-                    "<div class='top_box_social_box untouchale' id='top_box_social_delete_account' onclick='show_top_layer_new_content(\"delete_account\")''></div>" +
-                    "<div class='top_box_social_box untouchale' id='top_box_social_change_pass' onclick='show_top_layer_new_content(\"change_pass\")'></div>" +
+                    "<div id='top_box_title' class='untouchable'>Nustatymai</div>" +
+                    "<div class='top_box_social_box untouchable' id='top_box_social_delete_account' onclick='show_top_layer_new_content(\"delete_account\")''></div>" +
+                    "<div class='top_box_social_box untouchable' id='top_box_social_change_pass' onclick='show_top_layer_new_content(\"change_pass\")'></div>" +
                 "</div>" +
-                "<div id='top_box_content' class='untouchale'>Profilio nustatymai</div>";
+                "<div id='top_box_content' class='untouchable'>Profilio nustatymai</div>";
+                $("#top_box").html(data);
             break;
     }
 
-    $("#top_box").html(data);
     if(type == "options"){
         show_top_layer_new_content('change_pass');
     }
@@ -751,6 +775,7 @@ function shoppinglist_delete(ID){
 function filter_search_add(ID){
     var id = ID.replace('search-','');
     var image = $('#' + ID + " .search_item_image").css('background-image');
+    image = image.replace('"', "'");
     var title = $('#' + ID + " .search_item_title").html();
     $("#search_input").val('');
     search_input_blur();
@@ -1055,7 +1080,7 @@ function shoppinglist_input_blur(){
 
 
 function ingredient_selected(ingredient_ID){
-    if(user_is_loged){
+    if(check_if_user_is_loged()){
         var classes = ($("#ingredient_indicator-" + ingredient_ID).attr('class')).split(" ");
         var indicator = classes[1];
         if(indicator == "ingredient_indicator_undefined"){
@@ -1073,7 +1098,7 @@ function ingredient_selected(ingredient_ID){
 }
 
 function add_to_shopping_list(recipe_ID){
-    if(user_is_loged){
+    if(check_if_user_is_loged()){
         $('.ingredient_indicator').removeClass('ingredient_indicator_have').removeClass('ingredient_indicator_undefined').removeClass('ingredient_indicator_shoppinglist').addClass('ingredient_indicator_shoppinglist');
         //ajax add all products of recipe to shopping list
     }else{
@@ -1086,8 +1111,59 @@ function add_to_shopping_list(recipe_ID){
 
 
 function coop(recipe_ID){
-    if(user_is_loged){
+    if(check_if_user_is_loged()){
+        var have = [];
+        var need = [];
+
+        //get title, foto, cook link
+        var title = "Šiškebabas";
+        var image = "http://www.foodex.lt/images/food (5).jpg";
+        var link = "http://www.foodex.lt/cook/1/";
+
         //use facebook API to share on wall to cook together with missing ingredients
+        $(".ingredient").each(function(){
+            var id = "#" + this.id;
+            var classes = $(id + " .ingredient_indicator").attr('class').split(" ");
+            var indicator = classes[1];
+            var title = $(id + " .ingredient_text").html();
+            var size = $(id + " .ingredient_size").html();
+            var element = [title, size];
+
+            if(indicator == "ingredient_indicator_have"){
+                have.push(element);
+            }else{
+                need.push(element);
+            }
+        });
+
+        var message = "Kas norit kartu pasigaminti '" + title + "'\n";
+        message += "\n";
+        message += "Turiu:\n";
+        for(i = 0; i < have.length; i++){
+            message += "+ " + have[i][0] + " " + have[i][1] + "\n";
+        }
+        message += "\n";
+        message += "Trūksta:\n";
+        for(i = 0; i < need.length; i++) {
+            message += "- " + need[i][0] + " " + need[i][1] + "\n";
+        }
+
+
+        FB.api('/me/feed', 'post', {
+            message: message,
+            name: 'Foodex',
+            caption: 'Gaminkite kartu su Foodex',
+            description: 'Maistas svarbiausia',
+            link: link,
+            picture: image
+        }, function(response) {
+            if (!response || response.error) {
+                toast('Jūs nesuteikėte privilegijos rašyti ant jūsų laiko juostos','bad');
+            } else {
+                toast('Žinutė Jūsų draugams pasiųsta sėkmingai','good');
+            }
+        });
+
     }else{
         show_top_layer('account');
     }
@@ -1104,7 +1180,7 @@ function random_next(){
 
 function steps_manipulation(){
     var step_height = parseInt(($("#content_wrapper").css('height')).replace("px", "")) - 1;
-    var step_width = parseInt(($("#content_wrapper").css('width')).replace("px", ""));
+    var step_width = parseInt(($("#content_wrapper").css('width')).replace("px", "")) - content_right_margin * 2;
     if(mobile_state){
         //$("#content_wrapper").css('height', step_height - 41 + "px");
         //step_height = step_height - 41;
@@ -1317,7 +1393,14 @@ function steps_sidebar_manipulation(){
 }
 
 function facebook_login(){
-
+    FB.login(function(response) {
+        if (response.authResponse) {
+            show_loading_screen();
+            location.href = location.href;
+        } else {
+            toast('Įvyko klaida. Bandykite dar kartą','bad');
+        }
+    }, {scope: 'publish_actions, email, public_profile, user_friends'});
 }
 
 var step_going = false;
@@ -1370,7 +1453,7 @@ function previous_step(){
 //likinti = patinka ir ysiminti
 function recipe_like(recipe_ID){
 
-    if(user_is_loged){
+    if(check_if_user_is_loged()){
         //ajax to check if you already liked it and unlike or send like
 
     }else{
@@ -1379,7 +1462,7 @@ function recipe_like(recipe_ID){
 }
 
 function share_food(recipe_ID){
-    if(user_is_loged){
+    if(check_if_user_is_loged()){
         //take picture of food and upload to facebook
     }else{
         show_top_layer('account');
@@ -1387,7 +1470,7 @@ function share_food(recipe_ID){
 }
 
 function add_comment(recipe_ID){
-    if(user_is_loged){
+    if(check_if_user_is_loged()){
         //ajax to add comment
     }else{
         show_top_layer('account');
@@ -1395,8 +1478,9 @@ function add_comment(recipe_ID){
 }
 
 function logout(){
-    //ajax to logout
-    location.href = "/";
+    FB.logout(function(response) {
+        location.href = "/";
+    });
 }
 
 

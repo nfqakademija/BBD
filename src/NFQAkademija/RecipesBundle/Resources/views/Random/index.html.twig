@@ -6,6 +6,9 @@
     <script type="text/javascript">
         function loader(){
             initialize_scrollbar();
+            if(browser == 'firefox'){
+                $("#search_container").css('box-shadow','none');
+            }
             hide_loading_screen();
         }
 

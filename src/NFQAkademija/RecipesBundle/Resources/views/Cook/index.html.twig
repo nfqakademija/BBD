@@ -167,26 +167,29 @@
         </div>
         <div class="step" id="step_1">
             <div class="step_go step_up" onclick="previous_step()"></div>
-            <div class="step_id">Žingsnis 1</div>
+            <div class="step_id">Žingsnis</div>
+            <div class="step_timer untouchable" id="step_1_timer" onclick="cook_timer(this.id)">00:00:00</div>
             <div class="step_info">Supjaustyti agurkus</div>
             <div class="step_go step_down" onclick="next_step()"></div>
         </div>
         <div class="step" id="step_2">
             <div class="step_go step_up" onclick="previous_step()"></div>
-            <div class="step_id">Žingsnis 2</div>
+            <div class="step_id">Žingsnis</div>
+            <div class="step_timer untouchable" id="step_2_timer" onclick="cook_timer(this.id)">00:00:00</div>
             <div class="step_info">Išvirti agurkus</div>
             <div class="step_go step_down" onclick="next_step()"></div>
         </div>
         <div class="step" id="step_3">
             <div class="step_go step_up" onclick="previous_step()"></div>
-            <div class="step_id">Žingsnis 3</div>
+            <div class="step_id">Žingsnis</div>
+            <div class="step_timer untouchable" id="step_3_timer" onclick="cook_timer(this.id)">00:00:00</div>
             <div class="step_info">Agurkus sudėti į lėkštę</div>
             <div class="step_go step_down" onclick="next_step()"></div>
         </div>
 
         <div class="step" id="step_last">
             <div class="step_go step_up" onclick="previous_step()"></div>
-            <div class="step_id last_id" >Skanaus</div>
+            <div class="step_id last_id">Skanaus</div>
             <div class="step_button" id="step_like" onclick="recipe_like('1')">Patiko?</div>
             <div class="step_button" id="step_share" onclick="share_food('1')">Pasidalink</div>
 

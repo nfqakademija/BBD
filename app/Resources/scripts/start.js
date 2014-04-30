@@ -587,11 +587,20 @@ function hide_top_layer(){
 }
 
 function hide_loading_screen(){
-    $("#loading_screen").fadeOut(transition_time * 2);
+    //var left = screen.width;
+    //var left = $(window).width();
+    //$("#loading_screen_title").animate({left: -left},transition_time * 2);
+    //$("#loading_screen_info").css('width',left - 40 + "px");
+    //$("#loading_screen_info").animate({left: left},transition_time * 2,function(){
+        $("#loading_screen").fadeOut(transition_time * 2);
+   // });
 }
 
 function show_loading_screen(){
     $("#loading_screen").fadeIn(transition_time * 2);
+    //$("#loading_screen_title").css('left','50%');
+    //$("#loading_screen_info").css('left','0px');
+    //$("#loading_screen_info").css('width','auto');
 }
 
 function go_to_new_recipe(){
@@ -814,13 +823,20 @@ function shoppinglist_item_selected(ID) {
     var classes = ($("#" + ID).attr('class')).split(" ");
     var selected = classes[2];
 
+    var title = $("#" + ID + " .filter_element_text").html();
+    var symbols_amount = title.length;
+
     if(selected != "selected"){
         $(".filter_element").removeClass('selected');
         $("#" + ID).addClass('selected');
-        show_prices(ID);
+        if(symbols_amount > 17){
+            $("#" + ID + " .filter_element_text").css('line-height','21px');
+        }
+        //show_prices(ID);
     }else{
         $("#" + ID).removeClass('selected');
-        close_prices();
+        $("#" + ID + " .filter_element_text").css('line-height','43px');
+        //close_prices();
     }
 }
 
@@ -1461,4 +1477,43 @@ function initialize_scrollbar(){
 
 function profile_navigation(type){
     $("#content_wrapper").animate({scrollTop: $("#box_" + type).offset().top + $("#content_wrapper").scrollTop()}, scroll_animation_time);
+}
+
+var clock;
+var chronometer_time = 0;
+function cook_timer(ID){
+    var classes = ($("#" + ID).attr('class')).split(" ");
+    var selected = classes[2];
+    if(selected == "step_timer_running"){
+        $("#" + ID).removeClass('step_timer_running');
+        $("#" + ID).html('00:00:00');
+        chronometer_time = 0;
+        clearInterval(clock);
+    }else{
+        $(".step_timer").removeClass('step_timer_running');
+        chronometer_time = 0;
+        clearInterval(clock);
+        $(".step_timer").html('00:00:00');
+
+        $("#" + ID).addClass('step_timer_running');
+        clock = setInterval(function(){timer(ID)},1000);
+    }
+}
+
+String.prototype.toHHMMSS = function () {
+    var sec_num = parseInt(this, 10);
+    var hours   = Math.floor(sec_num / 3600);
+    var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+    var seconds = sec_num - (hours * 3600) - (minutes * 60);
+
+    if (hours   < 10) {hours   = "0" + hours;}
+    if (minutes < 10) {minutes = "0" + minutes;}
+    if (seconds < 10) {seconds = "0" + seconds;}
+    var time = hours + ':' + minutes + ':' + seconds;
+    return time;
+}
+
+function timer(ID){
+    chronometer_time++;
+    $("#" + ID).html(chronometer_time.toString().toHHMMSS());
 }

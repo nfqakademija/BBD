@@ -518,7 +518,7 @@ textarea{
   height: 0px;
   float: left;
   width:210px;
-  background-image:url("/images/divider.png");
+  //background-image:url("/images/divider.png");
   background-position:50% 50%;
   background-size: 100% 100%;
   background-repeat:no-repeat;
@@ -899,6 +899,7 @@ textarea{
   overflow: hidden;
   padding-right:10px;
   white-space: nowrap;
+  word-break: break-word;
 }
 
 
@@ -1424,7 +1425,7 @@ div ::-webkit-scrollbar {
   left:50%;
   top:50%;
   margin-left:-125px;
-  margin-top:-75px;
+  margin-top:-130px;
 }
 
 #loading_screen_circle{
@@ -1439,7 +1440,22 @@ div ::-webkit-scrollbar {
   left:50%;
   top:50%;
   margin-left:-50px;
-  margin-top:0px;
+  margin-top:-55px;
+}
+
+#loading_screen_info{
+  min-height: 25px;
+  font-size:25px;
+  text-align:center;
+  line-height:25px;
+  position:absolute;
+  left:0px;
+  right:0px;
+  color:@black;
+  padding-left:20px;
+  padding-right:20px;
+  top:50%;
+  margin-top:70px;
 }
 
 #top_layer_window{
@@ -2427,6 +2443,22 @@ p{
   display:none;
 }
 
+.squeezed_step .step_timer{
+  padding: 5px;
+  top: auto;
+  bottom:5px;
+  right: 5px;
+  font-size: 15px;
+  line-height: 15px;
+  height: 15px;
+}
+
+.squeezed_step .step_timer:after{
+  margin-right:5px;
+  width:15px;
+  height:15px;
+}
+
 .step{
   width:100%;
   height:100%;
@@ -2505,6 +2537,86 @@ p{
   height:30px;
   position:absolute;
   font-weight:bold;
+}
+#step_last .step_id:after{
+  width:0px;
+  height:0px;
+  border:0;
+  box-shadow:0;
+  margin:0;
+  content:"";
+}
+
+.step_id:after{
+  width: 40px;
+  float: left;
+  height: 40px;
+  margin-right: 10px;
+  color: #201f1d;
+  font-size: 30px;
+  content:"X";
+  text-align: center;
+  font-weight: bold;
+  line-height: 40px;
+  margin-top: -6px;
+  border-radius: 100%;
+  background-color: white;
+  border: 1px solid black;
+  box-shadow: 0px 0px 2px black;
+}
+
+#step_1 .step_id:after{content:"1"};
+#step_2 .step_id:after{content:"2"};
+#step_3 .step_id:after{content:"3"};
+#step_4 .step_id:after{content:"4"};
+#step_5 .step_id:after{content:"5"};
+#step_6 .step_id:after{content:"6"};
+#step_7 .step_id:after{content:"7"};
+#step_8 .step_id:after{content:"8"};
+#step_9 .step_id:after{content:"9"};
+#step_10 .step_id:after{content:"10"};
+#step_11 .step_id:after{content:"11"};
+#step_12 .step_id:after{content:"12"};
+#step_13 .step_id:after{content:"13"};
+#step_14 .step_id:after{content:"14"};
+
+.step_timer{
+  padding:10px;
+  top:20px;
+  right:20px;
+  text-align:center;
+  background-color: @black;
+  border: 1px solid black;
+  box-shadow: 0px 0px 2px black;
+  color: @white;
+  font-size: 30px;
+  line-height:30px;
+  height:30px;
+  position:absolute;
+  font-weight:bold;
+  opacity:0.5;
+  &:hover{
+    opacity:0.7;
+  }
+  &:active{
+    opacity:0.9;
+  }
+}
+
+.step_timer_running{
+  opacity:1 !important;
+}
+
+.step_timer:after{
+  width:30px;
+  float:left;
+  height:30px;
+  margin-right:10px;
+  content:"";
+  background-position:50% 50%;
+  background-size:100% 100%;
+  background-repeat:no-repeat;
+  background-image:url('/images/times.png');
 }
 
 .step_info{

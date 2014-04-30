@@ -485,12 +485,14 @@ function content_navigation(type){
         case "home":
             $('.nav_zone_element').removeClass('nav_element_active');
             $("#" + type).addClass('nav_element_active');
+            show_loading_screen();
             location.href = "/";
             break;
         case "profile":
             if(user_is_loged){
                 $('.nav_zone_element').removeClass('nav_element_active');
                 $("#" + type).addClass('nav_element_active');
+                show_loading_screen();
                 location.href = "/profile";
             }else{
                 show_top_layer('account');
@@ -499,11 +501,10 @@ function content_navigation(type){
             break;
 
         case "shoppinglist":
-
-
             if(user_is_loged){
                 $('.nav_zone_element').removeClass('nav_element_active');
                 $("#" + type).addClass('nav_element_active');
+                show_loading_screen();
                 location.href = "/shoppinglist";
             }else{
                 show_top_layer('account');
@@ -513,12 +514,14 @@ function content_navigation(type){
         case "random":
             $('.nav_zone_element').removeClass('nav_element_active');
             $("#" + type).addClass('nav_element_active');
+            show_loading_screen();
             location.href = "/random";
             break;
 
         default:
             $('.nav_zone_element').removeClass('nav_element_active');
             $("#" + type).addClass('nav_element_active');
+            show_loading_screen();
             location.href = "/";
             break;
     }
@@ -581,6 +584,14 @@ function show_top_layer_new_content(type){
 
 function hide_top_layer(){
     $("#top_layer").fadeOut(transition_time * 2);
+}
+
+function hide_loading_screen(){
+    $("#loading_screen").fadeOut(transition_time * 2);
+}
+
+function show_loading_screen(){
+    $("#loading_screen").fadeIn(transition_time * 2);
 }
 
 function go_to_new_recipe(){
@@ -979,6 +990,7 @@ function hide_recipe(){
 
 
 function cook(recipe_ID){
+    show_loading_screen();
     location.href = "/cook/" + recipe_ID;
 
     //send ajax can keep track of time spent on cooking. starting time

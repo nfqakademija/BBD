@@ -2,6 +2,17 @@
 
 {% block title %}Išsirink | Foodex{% endblock %}
 
+{% block specific_scripts %}
+    <script type="text/javascript">
+        function loader(){
+            initialize_scrollbar();
+            hide_loading_screen();
+        }
+
+        function key_check(event){}
+    </script>
+{% endblock %}
+
 {% block nav_zone %}
     <div class="nav_zone_element untouchable " id="home" onclick="content_navigation('home')"></div>
     <div class="nav_zone_element untouchable" id="profile" onclick="content_navigation('profile')"></div>

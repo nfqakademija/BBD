@@ -68,6 +68,25 @@
                 });
             });
 
+            $("#step_comment_answers_box").mouseenter(function () {
+                $("#content_wrapper").unbind('mousewheel');
+                $("#content_wrapper").unbind('DOMMouseScroll');
+                $("#content_wrapper").css('overflow-y','hidden');
+            });
+
+            $("#step_comment_answers_box").mouseleave(function () {
+                $("#content_wrapper").css('overflow-y','scroll');
+                $("#content_wrapper").bind('mousewheel DOMMouseScroll', function (event) {
+                    event.preventDefault();
+                    if (event.originalEvent.wheelDelta > 0 || event.originalEvent.detail < 0) {
+                        previous_step();
+                    } else {
+                        next_step();
+                    }
+                });
+            });
+
+            hide_loading_screen();
         }
     </script>
 {% endblock %}
@@ -90,7 +109,7 @@
  {% endblock %}
 
 {% block filters_zone %}
-    <div id='filters_zone' class="contains_scrollbar" onclick="full_sidebar()">
+    <div id='filters_zone' style="top: 246px;" class="contains_scrollbar" onclick="full_sidebar()">
         <div class="ingredient untouchable" id="ingredient-2" >
             <div class="ingredient_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
             <div class="ingredient_text">Bananas</div>
@@ -136,11 +155,12 @@
             </div>
 
             <div id="step_comment_box" class="step_answers_box">
-                <div id="step_comment_title">Atsiliepimai</div>
-                <div id="step_comment_answers_box">
+                <div id="step_comment_title" class="step_answers_title">Atsiliepimai</div>
+                <div id="step_comment_answers_box" class="contains_scrollbar">
                     <div class="step_answer">Nuostabus šiškebabas</div>
                     <div class="step_answer">Šūdų krūva ne maistas</div>
                     <div class="step_answer">Labai skanu. Patiko visai šeimai</div>
+                    <div class="step_answer">Rekomenduoju vietoj agurko naudoti išvirtą agurką</div>
                 </div>
             </div>
             <div class="step_go step_down" onclick="next_step()"></div>

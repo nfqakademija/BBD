@@ -1403,7 +1403,44 @@ div ::-webkit-scrollbar {
   color:white;
 }
 
+#loading_screen{
+  width: 100%;
+  float: left;
+  height: 100%;
+  position: fixed;
+  z-index:99999999;
+  background-color:white;
+  display:block;
+}
 
+#loading_screen_title{
+  width: 250px;
+  height: 50px;
+  background-image: url('/images/logo_text.png');
+  background-size:100% 100%;
+  background-position:50% 50%;
+  background-repeat:no-repeat;
+  position:absolute;
+  left:50%;
+  top:50%;
+  margin-left:-125px;
+  margin-top:-75px;
+}
+
+#loading_screen_circle{
+  width: 100px;
+  height: 100px;
+  background-size:cover;
+  background-repeat:no-repeat;
+  background-position:50% 50%;
+  background-size: 400%;
+  background-image:url('/images/loading.gif');
+  position:absolute;
+  left:50%;
+  top:50%;
+  margin-left:-50px;
+  margin-top:0px;
+}
 
 #top_layer_window{
   width: 100%;
@@ -2392,7 +2429,7 @@ p{
 
 .step{
   width:100%;
-  height:auto;
+  height:100%;
   float:left;
   background-size:cover;
   background-position:50% 50%;
@@ -2721,22 +2758,45 @@ p{
   top:20px;
   right: 20px;
   position: absolute;
+  overflow:hidden;
 }
 
 .squeezed_step .step_answers_box{
   display:none;
 }
 
+.step_answer{
+  width: 202px;
+  padding:10px;
+  color:@black;
+  float:left;
+  border-bottom: 1px solid #ECECEC;
+  &:hover{
+    background-color:rgb(214, 214, 214);
+  }
+}
+
+.step_answers_box{
+  border:1px solid black;
+  box-shadow:0px 0px2px black;
+}
+
 #step_comment_answers_box{
-  width: 200px;
+  width: 222px;
   top: 50px;
   position: absolute;
   bottom: 0px;
-  padding: 10px;
   margin: 0;
-  border: 1px solid black;
   background-color:white;
-  box-shadow: 0px 0px 2px black;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  padding-right:30px;
+}
+
+.step_answers_title{
+  border:0 !important;
+  box-shadow:0 !important;
+  width:202px !important;
 }
 
 #step_comment_title{

@@ -88,15 +88,16 @@
             if(browser == 'firefox'){
                 $("#search_container").css('box-shadow','none');
             }
+
             hide_loading_screen();
         }
     </script>
 {% endblock %}
 {% block search_zone %}
-    <div id="search_zone" class='cook_ingredients_zone' style="height:auto;" onclick="full_sidebar()">
+    <div id="search_zone" class='cook_ingredients_zone' style="background:transparent !important; border:1px solid transparent !important;box-shadow:0px 0px 0px transparent !important; height:auto;" onclick="full_sidebar()">
         <div id="cook_ingredients">
             <div id="divider" class="top_divider" style='margin-bottom:10px;' onclick="full_sidebar()"></div>
-            <div class="sidebar_right_info_item" id="sidebar_right_like" onclick="recipe_like('1')">59</div>
+            <div class="sidebar_right_info_item untouchable not_liked" id="sidebar_right_like" onclick="recipe_like('1', this.id)">59</div>
             <div class="sidebar_right_info_item" id="sidebar_right_time">25 min</div>
             <div class="sidebar_right_info_item" id="sidebar_right_country">Lenkija</div>
             <div class="sidebar_right_info_item" id="sidebar_right_main_cooking_method">Virimas</div>
@@ -188,7 +189,7 @@
         <div class="step" id="step_last">
             <div class="step_go step_up" onclick="previous_step()"></div>
             <div class="step_id last_id">Skanaus</div>
-            <div class="step_button" id="step_like" onclick="recipe_like('1')">Patiko?</div>
+            <div class="step_button not_liked" id="step_like" onclick="recipe_like('1', this.id)">Patiko?</div>
             <div class="step_button" id="step_share" onclick="share_food('1')">Pasidalink</div>
 
             <div id="step_comment_box">

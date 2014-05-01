@@ -76,16 +76,26 @@
         </div>
 
         <div id="sidebar" class="full">
+            {% block nav_zone %}
+                <div id="nav_zone">
+                    <div class="nav_zone_element untouchable" id="home" onclick="content_navigation('home')">
+                        <div class="nav_zone_element_image" style="margin-right:5px;background-size:90% 90%; background-image:url('/images/logo.png')"></div>
+                        <div id="nav_zone_element_logo_text"></div>
+                    </div>
+                    <div class="nav_zone_element untouchable" id="profile" onclick="content_navigation('profile')">
+                        <div class="nav_zone_element_image" style="background-image:url('/images/profile.png')"></div>
+                        <div class="nav_zone_element_text">Profilis</div>
+                    </div>
+                    <div class="nav_zone_element untouchable" style="margin-bottom:0px;" id="shoppinglist" onclick="content_navigation('shoppinglist')">
+                        <div class="nav_zone_element_image" style="background-image:url('/images/shoppinglist.png')"></div>
+                        <div class="nav_zone_element_text">Pirkiniai</div>
+                    </div>
+                </div>
+            {% endblock %}
+
+            <!--
             <div id="sidebar_slider" onclick="sidebar_slide()"></div>
-            <div id="logo_zone" class="untouchable" onclick="content_navigation('home')"></div>
-            <div id="nav_zone">
-               {% block nav_zone %}
-                   <div class="nav_zone_element untouchable" id="home" onclick="content_navigation('home')"></div>
-                   <div class="nav_zone_element untouchable" id="profile" onclick="content_navigation('profile')"></div>
-                   <div class="nav_zone_element untouchable" id="shoppinglist" onclick="content_navigation('shoppinglist')"></div>
-                   <div class="nav_zone_element untouchable" id="random" onclick="content_navigation('random')"></div>
-               {% endblock %}
-            </div>
+            -->
 
             {% block search_zone %}
                 <div id="search_zone" onclick="full_sidebar()">
@@ -117,7 +127,7 @@
                 <div id="sidebar_right_image" style="background-image:url('{{ asset('images/food (5).jpg') }}')"></div>
                 <div id="sidebar_right_title">Kepnys "Omledufe"</div>
                 <div id="sidebar_right_info">
-                    <div class="sidebar_right_info_item" id="sidebar_right_like" onclick="recipe_like('1')">59</div>
+                    <div class="sidebar_right_info_item untouchable not_liked" id="sidebar_right_like" onclick="recipe_like('1', this.id)">59</div>
                     <div class="sidebar_right_info_item" id="sidebar_right_time">25 min</div>
                     <div class="sidebar_right_info_item" id="sidebar_right_country">Lenkija</div>
                     <div class="sidebar_right_info_item" id="sidebar_right_main_cooking_method">Virimas</div>
@@ -126,7 +136,7 @@
                 </div>
                 <div id="sidebar_right_ingredients">
                     <div id="sidebar_right_ingredients_text">Ingredientai</div>
-                    <div class="sidebar_right_ingredients_button" id="sidebar_right_ingredients_coop" onclick="coop('1')"></div>
+                    <div class="sidebar_right_ingredients_button" id="sidebar_right_ingredients_coop" onclick="show_top_layer('coop','1')"></div>
                     <div class="sidebar_right_ingredients_button" id="sidebar_right_ingredients_shoppinglist" onclick="add_to_shopping_list('1')"></div>
                 </div>
                 <div id="divider" class="ingredients_divider"></div>

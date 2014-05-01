@@ -501,15 +501,15 @@ function content_navigation(type){
 
     switch(type){
         case "home":
-            $('.nav_zone_element').removeClass('nav_element_active');
-            $("#" + type).addClass('nav_element_active');
+            //$('.nav_zone_element').removeClass('nav_element_active');
+            //$("#" + type).addClass('nav_element_active');
             show_loading_screen();
             location.href = "/";
             break;
         case "profile":
             if(check_if_user_is_loged()){
-                $('.nav_zone_element').removeClass('nav_element_active');
-                $("#" + type).addClass('nav_element_active');
+                //$('.nav_zone_element').removeClass('nav_element_active');
+                //$("#" + type).addClass('nav_element_active');
                 show_loading_screen();
                 location.href = "/profile";
             }else{
@@ -520,8 +520,8 @@ function content_navigation(type){
 
         case "shoppinglist":
             if(check_if_user_is_loged()){
-                $('.nav_zone_element').removeClass('nav_element_active');
-                $("#" + type).addClass('nav_element_active');
+                //$('.nav_zone_element').removeClass('nav_element_active');
+                //$("#" + type).addClass('nav_element_active');
                 show_loading_screen();
                 location.href = "/shoppinglist";
             }else{
@@ -530,22 +530,23 @@ function content_navigation(type){
             break;
 
         case "random":
-            $('.nav_zone_element').removeClass('nav_element_active');
-            $("#" + type).addClass('nav_element_active');
+            //$('.nav_zone_element').removeClass('nav_element_active');
+            //$("#" + type).addClass('nav_element_active');
             show_loading_screen();
             location.href = "/random";
             break;
 
         default:
-            $('.nav_zone_element').removeClass('nav_element_active');
-            $("#" + type).addClass('nav_element_active');
+            //$('.nav_zone_element').removeClass('nav_element_active');
+            //$("#" + type).addClass('nav_element_active');
             show_loading_screen();
             location.href = "/";
             break;
     }
 }
 
-function show_top_layer(type){
+function show_top_layer(type, ID){
+    ID = ID || '0';
     var data;
     switch(type){
         case "account":
@@ -571,6 +572,21 @@ function show_top_layer(type){
                 "</div>" +
                 "<div id='top_box_content' class='untouchable'>Profilio nustatymai</div>";
                 $("#top_box").html(data);
+            break;
+        case "coop":
+            data =
+                "<div id='top_box_up'>" +
+                    "<div id='top_box_title' class='untouchable'>Gaminti kartu su draigais</div>" +
+                    "<div class='top_box_social_box untouchable' id='top_box_coop_icon'></div>" +
+                "</div>" +
+                    "<div id='top_box_content' class='untouchable'>" +
+                        "<div id='top_box_info_text'>Foodex paskelbs išsamų kvietimą gaminti Jūsų Facebook profilyje</div>" +
+                        "<div id='top_box_button_zone'>" +
+                            "<div class='top_box_button' onclick=\"coop(" + ID + ");hide_top_layer()\">OK</div>" +
+                            "<div class='top_box_button' onclick='hide_top_layer()'>Atšaukti</div>" +
+                        "</div>" +
+                "</div>";
+            $("#top_box").html(data);
             break;
     }
 
@@ -701,10 +717,20 @@ function manipulate_filter(ID){
     full_sidebar();
     var classes = ($("#indicator_" + ID).attr('class')).split(" ");
     var selected = classes[1];
+
+    var symbols_amount = $("#" + ID + " .filter_element_text").html();
+    var symbols_amount = symbols_amount.length;
+
     if(selected == "added"){
+        $("#" + ID).removeClass('selected');
         $("#indicator_" + ID).removeClass('added');
+        $("#" + ID + " .filter_element_text").css('line-height','43px');
     }else{
+        $("#" + ID).addClass('selected');
         $("#indicator_" + ID).addClass('added');
+        if(symbols_amount > 17){
+            $("#" + ID + " .filter_element_text").css('line-height','21px');
+        }
     }
     /*
     $.ajax({
@@ -1054,6 +1080,10 @@ function search_input_focus(){
     $("#search_zone").removeClass('unactive_search_zone');
     $("#search_zone").addClass('active_search_zone');
     full_sidebar();
+    //manipulate max-height search_container
+    var max_height = parseInt(($('#filters_zone').css('height')).replace('px',''));
+    $("#search_container").css('max-height', max_height + "px");
+    $("#search_container_inside").css('max-height', max_height + "px");
     search();
 }
 
@@ -1068,6 +1098,10 @@ function shoppinglist_input_focus(){
     $("#search_zone").removeClass('unactive_search_zone');
     $("#search_zone").addClass('active_search_zone');
     full_sidebar();
+    //manipulate max-height search_container
+    var max_height = parseInt(($('#filters_zone').css('height')).replace('px',''));
+    $("#search_container").css('max-height', max_height + "px");
+    $("#search_container_inside").css('max-height', max_height + "px");
     shoppinglist_search();
 }
 
@@ -1101,6 +1135,7 @@ function add_to_shopping_list(recipe_ID){
     if(check_if_user_is_loged()){
         $('.ingredient_indicator').removeClass('ingredient_indicator_have').removeClass('ingredient_indicator_undefined').removeClass('ingredient_indicator_shoppinglist').addClass('ingredient_indicator_shoppinglist');
         //ajax add all products of recipe to shopping list
+        toast('Produktai sudėti į pirkinių krepšį','good');
     }else{
         show_top_layer('account');
     }
@@ -1451,11 +1486,34 @@ function previous_step(){
 }
 
 //likinti = patinka ir ysiminti
-function recipe_like(recipe_ID){
+function recipe_like(recipe_ID, box_ID){
 
     if(check_if_user_is_loged()){
-        //ajax to check if you already liked it and unlike or send like
+        //ajax to change status and get new status
+        var like_status = true;
 
+        if(like_status){
+            //make liked
+            $("#" + box_ID).removeClass('not_liked').addClass('liked');
+            if(box_ID == "sidebar_right_like"){
+                var current_likes = parseInt($("#sidebar_right_like").html()) + 1
+                $("#sidebar_right_like").html(current_likes);
+            }else if(box_ID == "step_like"){
+                $("#" + box_ID).html("Patinka");
+            }
+
+            toast('Receptas pridėtas prie mėgstamiausių','good');
+        }else{
+            //make not liked
+            $("#" + box_ID).removeClass('liked').addClass('not_liked');
+            if(box_ID == "sidebar_right_like") {
+                var current_likes = parseInt($("#sidebar_right_like").html()) - 1;
+                $("#sidebar_right_like").html(current_likes);
+            }else if(box_ID == "step_like"){
+                $("#" + box_ID).html("Patinka");
+            }
+            toast('Receptas pašalintas iš mėgstamiausių','bad');
+        }
     }else{
         show_top_layer('account');
     }

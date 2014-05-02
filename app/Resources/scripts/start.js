@@ -680,9 +680,9 @@ function filter_show_selected(){
     filter_level = 0;
     var filters = [];
 
-    filters[0] = "<div class='filter_element untouchable' id='universities-1' onclick='filter_selected(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/types.png');\"></div><div class='filter_element_text'>Selected 1</div><div class='filter_element_delete' id='delete_universities-1' onclick='filter_delete(this.id)'></div></div>";
-    filters[1] = "<div class='filter_element untouchable' id='universities-2' onclick='filter_selected(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/times.png');\"></div><div class='filter_element_text'>Selected 2</div><div class='filter_element_delete' id='delete_universities-2' onclick='filter_delete(this.id)'></div></div>";
-    filters[2] = "<div class='filter_element untouchable' id='universities-3' onclick='filter_selected(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/celebrations.png');\"></div><div class='filter_element_text'>Selected 3</div><div class='filter_element_delete' id='delete_universities-3' onclick='filter_delete(this.id)'></div></div>";
+    filters[0] = "<div class='filter_element untouchable filter_element_indicator_not_want' id='universities-1' onclick='filter_selected(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/types.png');\"></div><div class='filter_element_text'>Selected 1</div><div class='filter_element_delete' id='delete_universities-1' onclick='filter_delete(this.id)'></div><div class='filter_element_indicator_change' id='indicator_change_universities-1' onclick='filter_indicator_change(this.id)'></div><div class='filter_element_indicator_small'></div></div>";
+    filters[1] = "<div class='filter_element untouchable filter_element_indicator_want' id='universities-2' onclick='filter_selected(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/times.png');\"></div><div class='filter_element_text'>Selected want</div><div class='filter_element_delete' id='delete_universities-2' onclick='filter_delete(this.id)'></div><div class='filter_element_indicator_change' id='indicator_change_universities-2' onclick='filter_indicator_change(this.id)'></div><div class='filter_element_indicator_small'></div></div>";
+    filters[2] = "<div class='filter_element untouchable filter_element_indicator_not_want' id='universities-3' onclick='filter_selected(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/celebrations.png');\"></div><div class='filter_element_text'>Selected 3</div><div class='filter_element_delete' id='delete_universities-3' onclick='filter_delete(this.id)'></div><div class='filter_element_indicator_change' id='indicator_change_universities-3' onclick='filter_indicator_change(this.id)'></div><div class='filter_element_indicator_small'></div></div>";
 
     $("#scroller_filters").fadeOut(transition_time, function(){
         $("#scroller_filters").html('');
@@ -691,25 +691,43 @@ function filter_show_selected(){
     });
 }
 
+function filter_indicator_change(ID){
+    var ID = ID.replace('indicator_change_','');
+
+    if($("#" + ID).hasClass('filter_element_indicator_not_want')){
+        $('#' + ID).removeClass('filter_element_indicator_not_want').addClass('filter_element_indicator_want');
+    }else if($("#" + ID).hasClass('filter_element_indicator_want')){
+        $('#' + ID).removeClass('filter_element_indicator_want').addClass('filter_element_indicator_not_want');
+    }
+}
+
 function manipulate_filter(ID){
     full_sidebar();
-    var classes = ($("#indicator_" + ID).attr('class')).split(" ");
-    var selected = classes[1];
-
+    var new_indicator_status;
     var symbols_amount = $("#" + ID + " .filter_element_text").html();
     var symbols_amount = symbols_amount.length;
 
-    if(selected == "added"){
+    if($("#indicator_" + ID).hasClass('want')){
+        $("#indicator_" + ID).removeClass('want').addClass('not_want');
+        if (symbols_amount > 19) {
+            $("#" + ID + " .filter_element_text").css('line-height', '21px');
+        }
+        new_indicator_status = "not_want";
+    }else if($("#indicator_" + ID).hasClass('not_want')){
         $("#" + ID).removeClass('selected');
-        $("#indicator_" + ID).removeClass('added');
+        $("#indicator_" + ID).removeClass('not_want');
         $("#" + ID + " .filter_element_text").css('line-height','43px');
+        new_indicator_status = "none";
     }else{
         $("#" + ID).addClass('selected');
-        $("#indicator_" + ID).addClass('added');
-        if(symbols_amount > 17){
+        $("#indicator_" + ID).addClass('want');
+        if(symbols_amount > 19){
             $("#" + ID + " .filter_element_text").css('line-height','21px');
         }
+        new_indicator_status = "want";
     }
+
+    //send new_indicator_status and filter_ID
     /*
     $.ajax({
         type: 'POST',
@@ -792,7 +810,7 @@ function shoppinglist_delete(ID){
      */
 }
 
-function filter_search_add(ID){
+function filter_search_add(ID, type){
     var id = ID.replace('search-','');
     var image = $('#' + ID + " .search_item_image").css('background-image');
     image = image.replace('"', "'");
@@ -800,10 +818,15 @@ function filter_search_add(ID){
     $("#search_input").val('');
     search_input_blur();
     search_input_focus();
-    var filters = [];
-    var data = "<div class='filter_element untouchable' id='" + id + "' onclick='filter_selected(this.id)'><div class='filter_element_image' style=\"background-image:" + image + ";\"></div><div class='filter_element_text'>" + title + "</div><div class='filter_element_delete' id='delete_" + id + "' onclick='filter_delete(this.id)'></div></div>";
-    filters[0] = data;
-    show_filters(filters, 0);
+
+    //send with ajax to filters
+    //see which filters level, if = 0, add to panel
+    if(filter_level == 0){
+        var filters = [];
+        var data = "<div class='filter_element untouchable filter_element_indicator_" + type + "' id='" + id + "' onclick='filter_selected(this.id)'><div class='filter_element_image' style=\"background-image:" + image + ";\"></div><div class='filter_element_text'>" + title + "</div><div class='filter_element_delete' id='delete_" + id + "' onclick='filter_delete(this.id)'></div><div class='filter_element_indicator_change' id='indicator_change_" + id + "' onclick='filter_indicator_change(this.id)'></div><div class='filter_element_indicator_small'></div></div>";
+        filters[0] = data;
+        show_filters(filters, 0);
+    }
 
     /*
     $.ajax({
@@ -849,18 +872,16 @@ function filter_delete(ID){
 
 function filter_selected(ID){
     full_sidebar();
-    var classes = ($("#" + ID).attr('class')).split(" ");
-    var selected = classes[2];
 
     var symbols_amount = $("#" + ID + " .filter_element_text").html();
     var symbols_amount = symbols_amount.length;
 
-    if(selected == "selected"){
+    if($("#" + ID).hasClass('selected')){
         $("#" + ID).removeClass('selected');
         $("#" + ID + " .filter_element_text").css('line-height','43px');
     }else{
         $("#" + ID).addClass('selected');
-        if(symbols_amount > 17){
+        if(symbols_amount > 19){
             $("#" + ID + " .filter_element_text").css('line-height','21px');
         }
     }
@@ -877,7 +898,7 @@ function shoppinglist_item_selected(ID) {
     if(selected != "selected"){
         $(".filter_element").removeClass('selected');
         $("#" + ID).addClass('selected');
-        if(symbols_amount > 17){
+        if(symbols_amount > 19){
             $("#" + ID + " .filter_element_text").css('line-height','21px');
         }
         //show_prices(ID);
@@ -919,10 +940,11 @@ function shoppinglist_search(){
         //get data with ajax from search_value
         var data = [];
         for(i = 0; i < 7; i++){
-            data[i] = "<div class='s_e search_item untouchable' id='shoppinglist-ingredient-95' onclick='shoppinglist_add(this.id)'>"+
-            "<div class='s_e search_item_image' style=\"background-image:url('images/food (2).jpg')\"></div>"+
-            "<div class='s_e search_item_title'>Ananasas</div>"+
-            "<div class='s_e search_item_bottom_info'>Ingredientas</div>"+
+            data[i] =
+            "<div class='s_e search_item untouchable' id='shoppinglist-ingredient-95' onclick='shoppinglist_add(this.id)'>"+
+                "<div class='s_e search_item_image' style=\"background-image:url('images/food (2).jpg')\"></div>"+
+                "<div class='s_e search_item_title'>Ananasas</div>"+
+                "<div class='s_e search_item_bottom_info'>Ingredientas</div>"+
             "</div>";
         }
 
@@ -945,10 +967,13 @@ function search(){
         //get data with ajax from search_value
         var data = [];
         for(i = 0; i < 7; i++){
-            data[i] = "<div class='s_e search_item untouchable' id='search-ingredient-95' onclick='filter_search_add(this.id)'>"+
-            "<div class='s_e search_item_image' style=\"background-image:url('images/food (2).jpg')\"></div>"+
-            "<div class='s_e search_item_title'>Ananasas</div>"+
-            "<div class='s_e search_item_bottom_info'>Ingredientas</div>"+
+            data[i] =
+            "<div class='s_e search_item untouchable' id='search-ingredient-95'>" +
+                "<div class='s_e search_item_image' style=\"background-image:url('images/food (2).jpg')\"></div>" +
+                "<div class='s_e search_item_title'>Ananasasadasdasdasdasdasd asdasds</div>" +
+                "<div class='s_e search_item_bottom_info'>Ingredientas</div>" +
+                "<div class='s_e filter_element_indicator indicator_search want' style='right: 25px;' onclick=\"filter_search_add('search-ingredient-95','want')\"></div>" +
+                "<div class='s_e filter_element_indicator indicator_search not_want' style='right: 3px;' onclick=\"filter_search_add('search-ingredient-95','not_want')\"></div>" +
             "</div>";
         }
 

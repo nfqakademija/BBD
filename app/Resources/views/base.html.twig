@@ -95,17 +95,12 @@
                     </div>
                 </div>
             {% endblock %}
-
-            <!--
-            <div id="sidebar_slider" onclick="sidebar_slide()"></div>
-            -->
-
             {% block search_zone %}
                 <div id="search_zone" onclick="full_sidebar()">
                     <div id='search_index' onclick="focus_input('search_input')" ></div>
                     <input id='search_input' placeholder='Ieškoti' onkeyup="search()" onfocus="search_input_focus()" onblur="search_input_blur()"/>
                     <div id='search_container'>
-                        <div class="contains_scrollbar" id='search_container_inside'></div>
+                        <div id='search_container_inside'></div>
                     </div>
                 </div>
             {% endblock %}
@@ -114,7 +109,7 @@
             {% endblock %}
 
             {% block filters_zone %}
-                <div id='filters_zone' class="contains_scrollbar" onclick="full_sidebar()"></div>
+                <div id='filters_zone' onclick="full_sidebar()"></div>
             {% endblock %}
 
 
@@ -133,6 +128,7 @@
                         <div id="sidebar_right_title">Kepnys "Omledufe"</div>
                         <div id="sidebar_right_info">
                             <div class="sidebar_right_info_item untouchable not_liked" id="sidebar_right_like" onclick="recipe_like('1', this.id)">59</div>
+                            <div class="sidebar_right_info_item" id="sidebar_right_author">Autorius</div>
                             <div class="sidebar_right_info_item" id="sidebar_right_time">25 min</div>
                             <div class="sidebar_right_info_item" id="sidebar_right_country">Lenkija</div>
                             <div class="sidebar_right_info_item" id="sidebar_right_main_cooking_method">Virimas</div>

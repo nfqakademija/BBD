@@ -2,18 +2,13 @@
 
 {% block title %}Foodex{% endblock %}
 
-{% block nav_zone %}
-    <div class="nav_zone_element untouchable nav_element_active" id="home" onclick="content_navigation('home')"></div>
-    <div class="nav_zone_element untouchable" id="profile" onclick="content_navigation('profile')"></div>
-    <div class="nav_zone_element  untouchable" id="shoppinglist" onclick="content_navigation('shoppinglist')"></div>
-    <div class="nav_zone_element untouchable" id="random" onclick="content_navigation('random')"></div>
-{% endblock %}
-
  {% block divider %}
      <div id="divider" class="middle_divider" style="margin-left:10px;margin-top:0px;" onclick="full_sidebar()"></div>
  {% endblock %}
  {% block filters_zone %}
-    <div id='filters_zone' class="contains_scrollbar" onclick="full_sidebar()"></div>
+    <div id='filters_zone' style="top:230px;" onclick="full_sidebar()">
+        <div class="scroller" id="scroller_filters"></div>
+    </div>
  {% endblock %}
 
 {% block config_zone %}
@@ -27,8 +22,9 @@
 
  {% block specific_scripts %}
      <script type="text/javascript">
-         function loader(){
 
+
+         function loader(){
              recipe_size = calculate_recipe_size();
              append_recipes();
              sidebar_manipulation();
@@ -36,7 +32,10 @@
                  recalculate_width();
                  sidebar_manipulation()
              });
-             initialize_scrollbar();
+
+
+             /*
+              initialize_scrollbar();
              $("#content_wrapper").scroll(function(){
                  scrolled = $("#content_wrapper").scrollTop();
                  if(scrolled > 400)
@@ -53,6 +52,44 @@
                      load_more();
                  }
              });
+             */
+
+             if(browser == 'firefox'){
+                 $("#search_container").css('box-shadow','none');
+             }
+
+             scroll_content = new IScroll('#content_wrapper', {
+                 scrollbars: true,
+                 mouseWheel: true,
+                 interactiveScrollbars: true,
+                 shrinkScrollbars: 'scale',
+                 fadeScrollbars: true,
+                 probeType: 2
+             });
+
+             scroll_content.on('scroll', function(){
+                 if (this.y + 200 >= this.maxScrollY)
+                     load_more();
+             });
+
+             scroll_filters = new IScroll('#filters_zone', {
+                 scrollbars: true,
+                 mouseWheel: true,
+                 interactiveScrollbars: true,
+                 shrinkScrollbars: 'scale',
+                 fadeScrollbars: true
+             });
+
+
+             scroll_sidebar_right = new IScroll('#sidebar_right_wrapper', {
+                 scrollbars: true,
+                 mouseWheel: true,
+                 interactiveScrollbars: true,
+                 shrinkScrollbars: 'scale',
+                 fadeScrollbars: true
+             });
+
+             hide_loading_screen();
          }
 
          var load_more_end = false;
@@ -76,6 +113,9 @@
 
                  loading_more_status = false;
                  load_more_end = true;
+                 setTimeout(function(){
+                     scroll_content.refresh();
+                 },0);
                  /*
                  $.ajax({
                      type: 'POST',
@@ -109,5 +149,7 @@
 
 
 {% block content %}
-    <div class="contains_scrollbar" id="content_wrapper" style="background-color:black;padding-bottom:10px;"></div>
+    <div id="content_wrapper" style="background-color:black;padding-bottom:10px;">
+        <div class="scroller" id="scroller_content" style="padding-bottom:10px;"></div>
+    </div>
 {% endblock %}

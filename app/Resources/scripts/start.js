@@ -13,13 +13,18 @@ var minimum_recipe_size = 90;
 var recipe_size = minimum_recipe_size;
 var mobile_state = false;
 var mobile_width_size = 400;
-var user_is_loged = check_if_user_is_loged();
 var steps_amount = 2;
 var current_step = 0;
 var filter_level = 0;
 var recipe_box_margin_size = 10;
 var content_right_margin = 30;
 var scrollbar_width = 5;
+var scroll_content;
+var scroll_filters;
+var scroll_sidebar_right;
+var scroll_sidebar_left;
+
+document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
 
 function toast(text, status){
     clearTimeout(toast_timer);
@@ -103,8 +108,7 @@ function append_recipes_to_profile(){
 }
 
 function append_recipes(){
-    $("#content_wrapper").html('');
-
+    $("#scroller_content").html('');
     //later need from ajax with filters
     var recipes = [];
     recipes[0] = ["0","/images/food (0).jpg", "title0"];
@@ -152,7 +156,7 @@ function append_recipe(data){
     var title = data[2];
 
     var appendable_data = "<div class='recipe_box' id='recipe_" + id + "' style=\"background-image: url('" + image + "');width:" + recipe_size + "px;height:" + recipe_size +  "px;\" onclick=\"show_recipe('" + id + "')\"></div>";
-    $("#content_wrapper").append(appendable_data);
+    $("#scroller_content").append(appendable_data);
 }
 
 function to_very_top(){
@@ -232,7 +236,7 @@ function check_browser(){
         agent = 'chrome';
     }
     if(isIE){
-        agent = 'IE';
+        agent = 'ie';
     }
 
     return agent;
@@ -273,9 +277,9 @@ function check(type, amount){
             break;
     }
 }
-
+var current_filters_scroll;
 function show_filters(array_of_filters, index){
-    $("#filters_zone").append('<div style="display:block;margin-left:210px;" id="container_appender">' + array_of_filters[index] + '</div>');
+    $("#scroller_filters").append('<div style="display:block;margin-left:210px;" id="container_appender">' + array_of_filters[index] + '</div>');
     $("#container_appender").animate({marginLeft: 0}, transition_time);
     $("#container_appender").fadeIn(transition_time);
     $("#container_appender").attr('id','container_appender_out');
@@ -284,6 +288,12 @@ function show_filters(array_of_filters, index){
         setTimeout(function(){
             show_filters(array_of_filters, index);
         },transition_time / 100);
+    }else{
+        setTimeout(function(){
+            current_filters_scroll = scroll_filters.y;
+            scroll_filters.refresh();
+            scroll_filters.scrollTo(0, 0);
+        },0)
     }
 }
 
@@ -299,9 +309,9 @@ function filter_start(){
     filters[5] = "<div class='filter_element untouchable' id='celebrations' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/celebrations.png');\"></div><div class='filter_element_text'>Šventės</div></div>";
     filters[6] = "<div class='filter_element untouchable' id='cooking_methods' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/cooking_methods.png');\"></div><div class='filter_element_text'>Gaminimo būdai</div></div>";
 
-    $("#filters_zone").fadeOut(transition_time, function(){
-        $("#filters_zone").html('');
-        $("#filters_zone").fadeIn(1);
+    $("#scroller_filters").fadeOut(transition_time, function(){
+        $("#scroller_filters").html('');
+        $("#scroller_filters").fadeIn(1);
         show_filters(filters, 0);
     });
 
@@ -425,9 +435,9 @@ function filter_category(category){
             break;
     }
 
-    $("#filters_zone").fadeOut(transition_time, function(){
-        $("#filters_zone").html('');
-        $("#filters_zone").fadeIn(1);
+    $("#scroller_filters").fadeOut(transition_time, function(){
+        $("#scroller_filters").html('');
+        $("#scroller_filters").fadeIn(1);
         show_filters(filters, 0);
     });
 
@@ -466,31 +476,52 @@ function filter_ingredients_category(ingredients_category){
         break;
     }
 
-    $("#filters_zone").fadeOut(transition_time, function(){
-        $("#filters_zone").html('');
-        $("#filters_zone").fadeIn(1);
+    $("#scroller_filters").fadeOut(transition_time, function(){
+        $("#scroller_filters").html('');
+        $("#scroller_filters").fadeIn(1);
         show_filters(filters, 0);
     });
 }
 
 
 function check_if_user_is_loged(){
-    //ajax to check if user is logged in
-    return false;
+    var status = false;
+    FB.getLoginStatus(function(response) {
+        if (response.status == 'connected') {
+            // the user is logged in and has authenticated your
+            // app, and response.authResponse supplies
+            // the user's ID, a valid access token, a signed
+            // request, and the time the access token
+            // and signed request each expire
+            //var uid = response.authResponse.userID;
+            //var accessToken = response.authResponse.accessToken;
+            status = true;
+        } else if (response.status == 'not_authorized') {
+            // the user is logged in to Facebook,
+            // but has not authenticated your app
+            status = false;
+        } else {
+            // the user isn't logged in to Facebook.
+            status = false;
+        }
+    });
+    return status;
 }
 
 function content_navigation(type){
 
     switch(type){
         case "home":
-            $('.nav_zone_element').removeClass('nav_element_active');
-            $("#" + type).addClass('nav_element_active');
+            //$('.nav_zone_element').removeClass('nav_element_active');
+            //$("#" + type).addClass('nav_element_active');
+            show_loading_screen();
             location.href = "/";
             break;
         case "profile":
-            if(user_is_loged){
-                $('.nav_zone_element').removeClass('nav_element_active');
-                $("#" + type).addClass('nav_element_active');
+            if(check_if_user_is_loged()){
+                //$('.nav_zone_element').removeClass('nav_element_active');
+                //$("#" + type).addClass('nav_element_active');
+                show_loading_screen();
                 location.href = "/profile";
             }else{
                 show_top_layer('account');
@@ -499,11 +530,10 @@ function content_navigation(type){
             break;
 
         case "shoppinglist":
-
-
-            if(user_is_loged){
-                $('.nav_zone_element').removeClass('nav_element_active');
-                $("#" + type).addClass('nav_element_active');
+            if(check_if_user_is_loged()){
+                //$('.nav_zone_element').removeClass('nav_element_active');
+                //$("#" + type).addClass('nav_element_active');
+                show_loading_screen();
                 location.href = "/shoppinglist";
             }else{
                 show_top_layer('account');
@@ -511,42 +541,66 @@ function content_navigation(type){
             break;
 
         case "random":
-            $('.nav_zone_element').removeClass('nav_element_active');
-            $("#" + type).addClass('nav_element_active');
+            //$('.nav_zone_element').removeClass('nav_element_active');
+            //$("#" + type).addClass('nav_element_active');
+            show_loading_screen();
             location.href = "/random";
             break;
 
         default:
-            $('.nav_zone_element').removeClass('nav_element_active');
-            $("#" + type).addClass('nav_element_active');
+            //$('.nav_zone_element').removeClass('nav_element_active');
+            //$("#" + type).addClass('nav_element_active');
+            show_loading_screen();
             location.href = "/";
             break;
     }
 }
 
-function show_top_layer(type){
+function show_top_layer(type, ID){
+    ID = ID || '0';
     var data;
     switch(type){
         case "account":
             data =
                 "<div id='top_box_up'>" +
-                    "<div id='top_box_title' class='untouchale'>Prisijungti</div>" +
-                    "<div class='top_box_social_box untouchale' id='top_box_social_facebook' onclick='facebook_login()'></div>" +
+                    "<div id='top_box_title' class='untouchable'>Prisijungti</div>" +
+                    "<div class='top_box_social_box untouchable' id='top_box_social_facebook' onclick='facebook_login()'></div>" +
                 "</div>" +
-                "<div id='top_box_content' class='untouchale'>Prisijunkite prie Foodex bendruomenės</div>";
+                //"<div id='top_box_content' class='untouchale'>Prisijunkite prie Foodex bendruomenės</div>";
+                "<div id='top_box_content' class='untouchable'>" +
+                    "<div id='facebook_login_button' onclick='facebook_login()'>" +
+                    "</div>" +
+                "</div>";
+                $("#top_box").html(data);
+                FB.XFBML.parse(document.getElementById('top_box_content_centered_box'));
             break;
         case "options":
             data =
                 "<div id='top_box_up'>" +
-                    "<div id='top_box_title' class='untouchale'>Nustatymai</div>" +
-                    "<div class='top_box_social_box untouchale' id='top_box_social_delete_account' onclick='show_top_layer_new_content(\"delete_account\")''></div>" +
-                    "<div class='top_box_social_box untouchale' id='top_box_social_change_pass' onclick='show_top_layer_new_content(\"change_pass\")'></div>" +
+                    "<div id='top_box_title' class='untouchable'>Nustatymai</div>" +
+                    "<div class='top_box_social_box untouchable' id='top_box_social_delete_account' onclick='show_top_layer_new_content(\"delete_account\")''></div>" +
+                    "<div class='top_box_social_box untouchable' id='top_box_social_change_pass' onclick='show_top_layer_new_content(\"change_pass\")'></div>" +
                 "</div>" +
-                "<div id='top_box_content' class='untouchale'>Profilio nustatymai</div>";
+                "<div id='top_box_content' class='untouchable'>Profilio nustatymai</div>";
+                $("#top_box").html(data);
+            break;
+        case "coop":
+            data =
+                "<div id='top_box_up'>" +
+                    "<div id='top_box_title' class='untouchable'>Gaminti kartu su draugais</div>" +
+                    "<div class='top_box_social_box untouchable' id='top_box_coop_icon'></div>" +
+                "</div>" +
+                    "<div id='top_box_content' class='untouchable'>" +
+                        "<div id='top_box_info_text'>Foodex paskelbs išsamų kvietimą gaminti Jūsų Facebook profilyje</div>" +
+                        "<div id='top_box_button_zone'>" +
+                            "<div class='top_box_button' onclick=\"coop(" + ID + ");hide_top_layer()\">OK</div>" +
+                            "<div class='top_box_button' onclick='hide_top_layer()'>Atšaukti</div>" +
+                        "</div>" +
+                "</div>";
+            $("#top_box").html(data);
             break;
     }
 
-    $("#top_box").html(data);
     if(type == "options"){
         show_top_layer_new_content('change_pass');
     }
@@ -581,6 +635,23 @@ function show_top_layer_new_content(type){
 
 function hide_top_layer(){
     $("#top_layer").fadeOut(transition_time * 2);
+}
+
+function hide_loading_screen(){
+    //var left = screen.width;
+    //var left = $(window).width();
+    //$("#loading_screen_title").animate({left: -left},transition_time * 2);
+    //$("#loading_screen_info").css('width',left - 40 + "px");
+    //$("#loading_screen_info").animate({left: left},transition_time * 2,function(){
+        $("#loading_screen").fadeOut(transition_time * 2);
+   // });
+}
+
+function show_loading_screen(){
+    $("#loading_screen").fadeIn(transition_time * 2);
+    //$("#loading_screen_title").css('left','50%');
+    //$("#loading_screen_info").css('left','0px');
+    //$("#loading_screen_info").css('width','auto');
 }
 
 function go_to_new_recipe(){
@@ -646,9 +717,9 @@ function filter_show_selected(){
     filters[1] = "<div class='filter_element untouchable' id='universities-2' onclick='filter_selected(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/times.png');\"></div><div class='filter_element_text'>Selected 2</div><div class='filter_element_delete' id='delete_universities-2' onclick='filter_delete(this.id)'></div></div>";
     filters[2] = "<div class='filter_element untouchable' id='universities-3' onclick='filter_selected(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/celebrations.png');\"></div><div class='filter_element_text'>Selected 3</div><div class='filter_element_delete' id='delete_universities-3' onclick='filter_delete(this.id)'></div></div>";
 
-    $("#filters_zone").fadeOut(transition_time, function(){
-        $("#filters_zone").html('');
-        $("#filters_zone").fadeIn(1);
+    $("#scroller_filters").fadeOut(transition_time, function(){
+        $("#scroller_filters").html('');
+        $("#scroller_filters").fadeIn(1);
         show_filters(filters, 0);
     });
 }
@@ -657,10 +728,20 @@ function manipulate_filter(ID){
     full_sidebar();
     var classes = ($("#indicator_" + ID).attr('class')).split(" ");
     var selected = classes[1];
+
+    var symbols_amount = $("#" + ID + " .filter_element_text").html();
+    var symbols_amount = symbols_amount.length;
+
     if(selected == "added"){
+        $("#" + ID).removeClass('selected');
         $("#indicator_" + ID).removeClass('added');
+        $("#" + ID + " .filter_element_text").css('line-height','43px');
     }else{
+        $("#" + ID).addClass('selected');
         $("#indicator_" + ID).addClass('added');
+        if(symbols_amount > 17){
+            $("#" + ID + " .filter_element_text").css('line-height','21px');
+        }
     }
     /*
     $.ajax({
@@ -691,6 +772,13 @@ function shoppinglist_add(ID){
     var data = "<div class='filter_element untouchable' id='" + id + "' onclick='shoppinglist_item_selected(this.id)'><div class='filter_element_image' style=\"background-image:" + image + ";\"></div><div class='filter_element_text'>" + title + "</div><div class='filter_element_delete' id='delete_" + id + "' onclick='shoppinglist_delete(this.id)'></div></div>";
     shopping_items[0] = data;
     show_filters(shopping_items, 0);
+    setTimeout(function(){
+        scroll_filters.refresh();
+        //scroll_filters.scrollTo(0, current_filters_scroll);
+        //var scroll_amount =  scroll_filters.maxScrollY - current_filters_scroll;
+        scroll_filters.scrollBy(0, scroll_filters.maxScrollY, 600, IScroll.utils.ease.bounce);
+    },100)
+
     //ajax to add to shoopinglist
 }
 
@@ -706,6 +794,11 @@ function shoppinglist_add_enter(){
     var data = "<div class='filter_element untouchable' id='" + id + "' onclick='shoppinglist_item_selected(this.id)'><div class='filter_element_image' style=\"background-image:" + image + ";\"></div><div class='filter_element_text'>" + title + "</div><div class='filter_element_delete' id='delete_" + id + "' onclick='shoppinglist_delete(this.id)'></div></div>";
     shopping_items[0] = data;
     show_filters(shopping_items, 0);
+    setTimeout(function(){
+        scroll_filters.refresh();
+        //var scroll_amount =  scroll_filters.maxScrollY - scroll_filters.y;
+        scroll_filters.scrollBy(0, scroll_filters.maxScrollY, 600, IScroll.utils.ease.bounce);
+    },100)
     //ajax to add to shoopinglist
 }
 
@@ -713,6 +806,10 @@ function shoppinglist_add_enter(){
 function shoppinglist_delete(ID){
     ID = ID.replace('delete_','');
     $('#' + ID).remove();
+    setTimeout(function(){
+        scroll_filters.refresh();
+    }, 100);
+
     /*
      $.ajax({
      type: 'POST',
@@ -731,6 +828,7 @@ function shoppinglist_delete(ID){
 function filter_search_add(ID){
     var id = ID.replace('search-','');
     var image = $('#' + ID + " .search_item_image").css('background-image');
+    image = image.replace('"', "'");
     var title = $('#' + ID + " .search_item_title").html();
     $("#search_input").val('');
     search_input_blur();
@@ -752,7 +850,7 @@ function filter_search_add(ID){
             $("#search_container").html('');
             $("#search_container").css('display','none');
             if(data.filter_level == 0)
-                $("#filters_zone").append(data.filter);
+                $("#scroller_filters").append(data.filter);
         }
     });
 
@@ -764,6 +862,9 @@ function filter_search_add(ID){
 function filter_delete(ID){
     ID = ID.replace('delete_','');
     $('#' + ID).remove();
+    setTimeout(function(){
+        scroll_filters.refresh();
+    }, 100);
     /*
     $.ajax({
         type: 'POST',
@@ -803,13 +904,20 @@ function shoppinglist_item_selected(ID) {
     var classes = ($("#" + ID).attr('class')).split(" ");
     var selected = classes[2];
 
+    var title = $("#" + ID + " .filter_element_text").html();
+    var symbols_amount = title.length;
+
     if(selected != "selected"){
         $(".filter_element").removeClass('selected');
         $("#" + ID).addClass('selected');
-        show_prices(ID);
+        if(symbols_amount > 17){
+            $("#" + ID + " .filter_element_text").css('line-height','21px');
+        }
+        //show_prices(ID);
     }else{
         $("#" + ID).removeClass('selected');
-        close_prices();
+        $("#" + ID + " .filter_element_text").css('line-height','43px');
+        //close_prices();
     }
 }
 
@@ -946,7 +1054,8 @@ function show_recipe(recipe_ID){
         var ingredients; //array of them
 
 
-
+        scroll_sidebar_right.refresh();
+        scroll_sidebar_right.scrollTo(0,0);
     }
 
     recalculate_width();
@@ -979,6 +1088,7 @@ function hide_recipe(){
 
 
 function cook(recipe_ID){
+    show_loading_screen();
     location.href = "/cook/" + recipe_ID;
 
     //send ajax can keep track of time spent on cooking. starting time
@@ -1001,6 +1111,10 @@ function search_input_focus(){
     $("#search_zone").removeClass('unactive_search_zone');
     $("#search_zone").addClass('active_search_zone');
     full_sidebar();
+    //manipulate max-height search_container
+    var max_height = parseInt(($('#filters_zone').css('height')).replace('px',''));
+    $("#search_container").css('max-height', max_height + "px");
+    $("#search_container_inside").css('max-height', max_height + "px");
     search();
 }
 
@@ -1015,6 +1129,10 @@ function shoppinglist_input_focus(){
     $("#search_zone").removeClass('unactive_search_zone');
     $("#search_zone").addClass('active_search_zone');
     full_sidebar();
+    //manipulate max-height search_container
+    var max_height = parseInt(($('#filters_zone').css('height')).replace('px',''));
+    $("#search_container").css('max-height', max_height + "px");
+    $("#search_container_inside").css('max-height', max_height + "px");
     shoppinglist_search();
 }
 
@@ -1027,7 +1145,7 @@ function shoppinglist_input_blur(){
 
 
 function ingredient_selected(ingredient_ID){
-    if(user_is_loged){
+    if(check_if_user_is_loged()){
         var classes = ($("#ingredient_indicator-" + ingredient_ID).attr('class')).split(" ");
         var indicator = classes[1];
         if(indicator == "ingredient_indicator_undefined"){
@@ -1045,9 +1163,10 @@ function ingredient_selected(ingredient_ID){
 }
 
 function add_to_shopping_list(recipe_ID){
-    if(user_is_loged){
+    if(check_if_user_is_loged()){
         $('.ingredient_indicator').removeClass('ingredient_indicator_have').removeClass('ingredient_indicator_undefined').removeClass('ingredient_indicator_shoppinglist').addClass('ingredient_indicator_shoppinglist');
         //ajax add all products of recipe to shopping list
+        toast('Produktai sudėti į pirkinių krepšį','good');
     }else{
         show_top_layer('account');
     }
@@ -1058,8 +1177,59 @@ function add_to_shopping_list(recipe_ID){
 
 
 function coop(recipe_ID){
-    if(user_is_loged){
+    if(check_if_user_is_loged()){
+        var have = [];
+        var need = [];
+
+        //get title, foto, cook link
+        var title = "Šiškebabas";
+        var image = "http://www.foodex.lt/images/food (5).jpg";
+        var link = "http://www.foodex.lt/cook/1/";
+
         //use facebook API to share on wall to cook together with missing ingredients
+        $(".ingredient").each(function(){
+            var id = "#" + this.id;
+            var classes = $(id + " .ingredient_indicator").attr('class').split(" ");
+            var indicator = classes[1];
+            var title = $(id + " .ingredient_text").html();
+            var size = $(id + " .ingredient_size").html();
+            var element = [title, size];
+
+            if(indicator == "ingredient_indicator_have"){
+                have.push(element);
+            }else{
+                need.push(element);
+            }
+        });
+
+        var message = "Kas norit kartu pasigaminti '" + title + "'\n";
+        message += "\n";
+        message += "Turiu:\n";
+        for(i = 0; i < have.length; i++){
+            message += "+ " + have[i][0] + " " + have[i][1] + "\n";
+        }
+        message += "\n";
+        message += "Trūksta:\n";
+        for(i = 0; i < need.length; i++) {
+            message += "- " + need[i][0] + " " + need[i][1] + "\n";
+        }
+
+
+        FB.api('/me/feed', 'post', {
+            message: message,
+            name: 'Foodex',
+            caption: 'Gaminkite kartu su Foodex',
+            description: 'Maistas svarbiausia',
+            link: link,
+            picture: image
+        }, function(response) {
+            if (!response || response.error) {
+                toast('Jūs nesuteikėte privilegijos rašyti ant jūsų laiko juostos','bad');
+            } else {
+                toast('Žinutė Jūsų draugams pasiųsta sėkmingai','good');
+            }
+        });
+
     }else{
         show_top_layer('account');
     }
@@ -1076,7 +1246,7 @@ function random_next(){
 
 function steps_manipulation(){
     var step_height = parseInt(($("#content_wrapper").css('height')).replace("px", "")) - 1;
-    var step_width = parseInt(($("#content_wrapper").css('width')).replace("px", ""));
+    var step_width = parseInt(($("#content_wrapper").css('width')).replace("px", "")) - content_right_margin * 2;
     if(mobile_state){
         //$("#content_wrapper").css('height', step_height - 41 + "px");
         //step_height = step_height - 41;
@@ -1159,8 +1329,8 @@ function empty_sidebar_slide(){
         $("#config_zone").css('display','none');
         $("#cook_ingredients").css('display','none');
         $(".next_step").html(">>");
-        var height_from_top = $(".middle_divider").offset().top;
-        $("#filters_zone").css('top', height_from_top + 'px');
+        //var height_from_top = $(".middle_divider").offset().top;
+        //$("#filters_zone").css('top', height_from_top + 'px');
 
     }else if(sidebar_class == "empty"){
         $("#sidebar").removeClass('full').removeClass('empty').removeClass('squeeze').addClass('full');
@@ -1171,8 +1341,8 @@ function empty_sidebar_slide(){
         $("#config_zone").css('display','block');
         $("#cook_ingredients").css('display','block');
         $(".next_step").html("Sekantis");
-        var height_from_top = $(".middle_divider").offset().top;
-        $("#filters_zone").css('top', height_from_top + 'px');
+        //var height_from_top = $(".middle_divider").offset().top;
+        //$("#filters_zone").css('top', height_from_top + 'px');
     }
     hide_recipe();
 }
@@ -1195,8 +1365,8 @@ function full_sidebar(){
     $("#cook_ingredients").css('display','block');
     $(".next_step").html("Sekantis");
     //calculate top px for filters zone
-    var height_from_top = $(".middle_divider").offset().top;
-    $("#filters_zone").css('top', height_from_top + 'px');
+    //var height_from_top = $(".middle_divider").offset().top;
+    //$("#filters_zone").css('top', height_from_top + 'px');
     if(!mobile_state){
         $("#sidebar_slider").css('display','block');
         recalculate_width();
@@ -1216,8 +1386,8 @@ function squeeze_sidebar(){
     $("#cook_ingredients").css('display','none');
     $(".next_step").html(">>");
     //calculate top px for filters zone
-    var height_from_top = $(".middle_divider").offset().top;
-    $("#filters_zone").css('top', height_from_top + 'px');
+    //var height_from_top = $(".middle_divider").offset().top;
+    //$("#filters_zone").css('top', height_from_top + 'px');
     if(!mobile_state){
         recalculate_width();
     }
@@ -1227,8 +1397,8 @@ function squeeze_sidebar(){
 
 function empty_sidebar(){
     $("#sidebar").removeClass('full').removeClass('squeeze').addClass('empty');
-    $("#content_wrapper").css('left','1px');
-    $("#header").css('left','1px');
+    $("#content_wrapper").css('left','0px');
+    $("#header").css('left','0px');
     $("#header_logo").css('display','block');
     $("#sidebar_slider").css('display','none');
     $("#config_zone").css('display','none');
@@ -1289,7 +1459,14 @@ function steps_sidebar_manipulation(){
 }
 
 function facebook_login(){
-
+    FB.login(function(response) {
+        if (response.authResponse) {
+            show_loading_screen();
+            location.href = location.href;
+        } else {
+            toast('Įvyko klaida. Bandykite dar kartą','bad');
+        }
+    }, {scope: 'publish_actions, email, public_profile, user_friends'});
 }
 
 var step_going = false;
@@ -1340,18 +1517,41 @@ function previous_step(){
 }
 
 //likinti = patinka ir ysiminti
-function recipe_like(recipe_ID){
+function recipe_like(recipe_ID, box_ID){
 
-    if(user_is_loged){
-        //ajax to check if you already liked it and unlike or send like
+    if(check_if_user_is_loged()){
+        //ajax to change status and get new status
+        var like_status = true;
 
+        if(like_status){
+            //make liked
+            $("#" + box_ID).removeClass('not_liked').addClass('liked');
+            if(box_ID == "sidebar_right_like"){
+                var current_likes = parseInt($("#sidebar_right_like").html()) + 1
+                $("#sidebar_right_like").html(current_likes);
+            }else if(box_ID == "step_like"){
+                $("#" + box_ID).html("Patinka");
+            }
+
+            toast('Receptas pridėtas prie mėgstamiausių','good');
+        }else{
+            //make not liked
+            $("#" + box_ID).removeClass('liked').addClass('not_liked');
+            if(box_ID == "sidebar_right_like") {
+                var current_likes = parseInt($("#sidebar_right_like").html()) - 1;
+                $("#sidebar_right_like").html(current_likes);
+            }else if(box_ID == "step_like"){
+                $("#" + box_ID).html("Patinka");
+            }
+            toast('Receptas pašalintas iš mėgstamiausių','bad');
+        }
     }else{
         show_top_layer('account');
     }
 }
 
 function share_food(recipe_ID){
-    if(user_is_loged){
+    if(check_if_user_is_loged()){
         //take picture of food and upload to facebook
     }else{
         show_top_layer('account');
@@ -1359,7 +1559,7 @@ function share_food(recipe_ID){
 }
 
 function add_comment(recipe_ID){
-    if(user_is_loged){
+    if(check_if_user_is_loged()){
         //ajax to add comment
     }else{
         show_top_layer('account');
@@ -1367,8 +1567,9 @@ function add_comment(recipe_ID){
 }
 
 function logout(){
-    //ajax to logout
-    location.href = "/";
+    FB.logout(function(response) {
+        location.href = "/";
+    });
 }
 
 
@@ -1449,4 +1650,43 @@ function initialize_scrollbar(){
 
 function profile_navigation(type){
     $("#content_wrapper").animate({scrollTop: $("#box_" + type).offset().top + $("#content_wrapper").scrollTop()}, scroll_animation_time);
+}
+
+var clock;
+var chronometer_time = 0;
+function cook_timer(ID){
+    var classes = ($("#" + ID).attr('class')).split(" ");
+    var selected = classes[2];
+    if(selected == "step_timer_running"){
+        $("#" + ID).removeClass('step_timer_running');
+        $("#" + ID).html('00:00:00');
+        chronometer_time = 0;
+        clearInterval(clock);
+    }else{
+        $(".step_timer").removeClass('step_timer_running');
+        chronometer_time = 0;
+        clearInterval(clock);
+        $(".step_timer").html('00:00:00');
+
+        $("#" + ID).addClass('step_timer_running');
+        clock = setInterval(function(){timer(ID)},1000);
+    }
+}
+
+String.prototype.toHHMMSS = function () {
+    var sec_num = parseInt(this, 10);
+    var hours   = Math.floor(sec_num / 3600);
+    var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+    var seconds = sec_num - (hours * 3600) - (minutes * 60);
+
+    if (hours   < 10) {hours   = "0" + hours;}
+    if (minutes < 10) {minutes = "0" + minutes;}
+    if (seconds < 10) {seconds = "0" + seconds;}
+    var time = hours + ':' + minutes + ':' + seconds;
+    return time;
+}
+
+function timer(ID){
+    chronometer_time++;
+    $("#" + ID).html(chronometer_time.toString().toHHMMSS());
 }

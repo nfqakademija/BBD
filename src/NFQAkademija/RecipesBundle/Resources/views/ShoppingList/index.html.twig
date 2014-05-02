@@ -22,6 +22,25 @@
                 refresh_location();
                 show_center();
             });
+
+            if(browser == 'firefox'){
+                $("#content_wrapper").css('margin-right','-17px');
+                $("#search_container").css('box-shadow','none');
+            }
+            if(browser == 'ie'){
+                $("#content_wrapper").css('margin-right','-17px');
+            }
+
+            scroll_filters = new IScroll('#filters_zone', {
+                scrollbars: true,
+                mouseWheel: true,
+                interactiveScrollbars: true,
+                shrinkScrollbars: 'scale',
+                fadeScrollbars: true
+            });
+
+
+            hide_loading_screen();
         }
 
         //NFQ coordinates will be used if your location is unavailable
@@ -294,13 +313,6 @@
 
 {% block title %}Pirkiniai | Foodex{% endblock %}
 
-{% block nav_zone %}
-    <div class="nav_zone_element untouchable " id="home" onclick="content_navigation('home')"></div>
-    <div class="nav_zone_element untouchable" id="profile" onclick="content_navigation('profile')"></div>
-    <div class="nav_zone_element nav_element_active untouchable" id="shoppinglist" onclick="content_navigation('shoppinglist')"></div>
-    <div class="nav_zone_element untouchable" id="random" onclick="content_navigation('random')"></div>
-{% endblock %}
-
 {% block search_zone %}
     <div id="search_zone" onclick="full_sidebar()">
         <div id='search_index' onclick="focus_input('search_input')" ></div>
@@ -316,7 +328,10 @@
  {% endblock %}
 
 {% block filters_zone %}
-    <div id='filters_zone' class="contains_scrollbar" style="bottom:10px;"></div>
+<div id='filters_zone' style="top:230px;bottom:10px;" onclick="full_sidebar()">
+    <div class="scroller" id="scroller_filters"></div>
+</div>
+
 {% endblock %}
 
 {% block config_zone %}

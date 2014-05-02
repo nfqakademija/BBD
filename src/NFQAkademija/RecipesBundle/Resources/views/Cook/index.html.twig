@@ -68,55 +68,92 @@
                 });
             });
 
+            $("#step_comment_answers_box").mouseenter(function () {
+                $("#content_wrapper").unbind('mousewheel');
+                $("#content_wrapper").unbind('DOMMouseScroll');
+                $("#content_wrapper").css('overflow-y','hidden');
+            });
+
+            $("#step_comment_answers_box").mouseleave(function () {
+                $("#content_wrapper").css('overflow-y','scroll');
+                $("#content_wrapper").bind('mousewheel DOMMouseScroll', function (event) {
+                    event.preventDefault();
+                    if (event.originalEvent.wheelDelta > 0 || event.originalEvent.detail < 0) {
+                        previous_step();
+                    } else {
+                        next_step();
+                    }
+                });
+            });
+            if(browser == 'firefox'){
+                $("#search_container").css('box-shadow','none');
+            }
+
+            scroll_sidebar_right = new IScroll('#sidebar_right_wrapper', {
+                scrollbars: true,
+                mouseWheel: true,
+                interactiveScrollbars: true,
+                shrinkScrollbars: 'scale',
+                fadeScrollbars: true
+            });
+
+            scroll_sidebar_left = new IScroll('#cook_left_sidebar_wrapper', {
+                scrollbars: true,
+                mouseWheel: true,
+                interactiveScrollbars: true,
+                shrinkScrollbars: 'scale',
+                fadeScrollbars: true
+            });
+
+            hide_loading_screen();
         }
     </script>
 {% endblock %}
 {% block search_zone %}
-    <div id="search_zone" class='cook_ingredients_zone' style="height:auto;" onclick="full_sidebar()">
-        <div id="cook_ingredients">
-            <div id="divider" class="top_divider" style='margin-bottom:10px;' onclick="full_sidebar()"></div>
-            <div class="sidebar_right_info_item" id="sidebar_right_like" onclick="recipe_like('1')">59</div>
-            <div class="sidebar_right_info_item" id="sidebar_right_time">25 min</div>
-            <div class="sidebar_right_info_item" id="sidebar_right_country">Lenkija</div>
-            <div class="sidebar_right_info_item" id="sidebar_right_main_cooking_method">Virimas</div>
-            <div class="sidebar_right_info_item" id="sidebar_right_type">Antrieji patiekalai</div>
-            <div class="sidebar_right_info_item" id="sidebar_right_characteristics">Aštru, sūru</div>
-        </div>
-    </div>
+    <div id="divider" class="top_divider" style='margin-top:10px;margin-left:10px;' onclick="full_sidebar()"></div>
+    <div id="cook_left_sidebar_wrapper">
+        <div class="scroller" id="cook_left_sidebar_wrapper_scroller">
+            <div id="search_zone" class='cook_ingredients_zone' style="background:transparent !important; border:1px solid transparent !important;box-shadow:0px 0px 0px transparent !important; height:auto;" onclick="full_sidebar()">
+                <div id="cook_ingredients">
+                    <div class="sidebar_right_info_item untouchable not_liked" id="sidebar_right_like" onclick="recipe_like('1', this.id)">59</div>
+                    <div class="sidebar_right_info_item" id="sidebar_right_time">25 min</div>
+                    <div class="sidebar_right_info_item" id="sidebar_right_country">Lenkija</div>
+                    <div class="sidebar_right_info_item" id="sidebar_right_main_cooking_method">Virimas</div>
+                    <div class="sidebar_right_info_item" id="sidebar_right_type">Antrieji patiekalai</div>
+                    <div class="sidebar_right_info_item" id="sidebar_right_characteristics">Aštru, sūru</div>
+                </div>
+            </div>
 {% endblock %}
 
  {% block divider %}
-     <div id="divider" class="middle_divider" style='margin-left:10px;' onclick="full_sidebar()"></div>
+        <div id="divider" class="middle_divider" style='margin-left:10px;' onclick="full_sidebar()"></div>
  {% endblock %}
 
 {% block filters_zone %}
-    <div id='filters_zone' class="contains_scrollbar" onclick="full_sidebar()">
-        <div class="ingredient untouchable" id="ingredient-2" >
-            <div class="ingredient_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
-            <div class="ingredient_text">Bananas</div>
-            <div class="ingredient_size">5 vnt</div>
-            <div class="ingredient_indicator ingredient_indicator_undefined" id="ingredient_indicator-2"></div>
-        </div>
-        <div class="ingredient untouchable" id="ingredient-3" >
-            <div class="ingredient_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
-            <div class="ingredient_text">Jautiena</div>
-            <div class="ingredient_size">250 g</div>
-            <div class="ingredient_indicator ingredient_indicator_undefined" id="ingredient_indicator-3"></div>
-        </div>
-        <div class="ingredient untouchable" id="ingredient-4" >
-            <div class="ingredient_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
-            <div class="ingredient_text">Cukinija</div>
-            <div class="ingredient_size">500 g</div>
-            <div class="ingredient_indicator ingredient_indicator_undefined" id="ingredient_indicator-4"></div>
-        </div>
-        <div class="ingredient untouchable" id="ingredient-5" >
-            <div class="ingredient_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
-            <div class="ingredient_text">Ananasas</div>
-            <div class="ingredient_size">100 g</div>
-            <div class="ingredient_indicator ingredient_indicator_undefined" id="ingredient_indicator-5"></div>
+            <div id='filters_zone' style="position:relative !important;top:0px !important;bottom:0px !important;height:auto !important;float:left;" onclick="full_sidebar()">
+                <div class="ingredient untouchable">
+                    <div class="ingredient_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
+                    <div class="ingredient_text">Bananas</div>
+                    <div class="ingredient_size">5 vnt</div>
+                </div>
+                <div class="ingredient untouchable">
+                    <div class="ingredient_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
+                    <div class="ingredient_text">Jautiena</div>
+                    <div class="ingredient_size">250 g</div>
+                </div>
+                <div class="ingredient untouchable">
+                    <div class="ingredient_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
+                    <div class="ingredient_text">Cukinija</div>
+                    <div class="ingredient_size">500 g</div>
+                </div>
+                <div class="ingredient untouchable">
+                    <div class="ingredient_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
+                    <div class="ingredient_text">Ananasas</div>
+                    <div class="ingredient_size">100 g</div>
+                </div>
+            </div>
         </div>
     </div>
-
 {% endblock %}
 
 {% block config_zone %}
@@ -126,8 +163,8 @@
 {% endblock %}
 
 {% block content %}
-    <div id="content_wrapper" style="background-image:url('/images/food (19).jpg');right:31px;" >
-        <div class="step" id="step_0" style="background-image:url('/images/food (19).jpg')">
+    <div id="content_wrapper" style="background-image:url('/images/food (19).jpg');right:-30px;" >
+        <div class="step" id="step_0" style="background-image:url('/images/food (19).jpg');">
             <div class="step_title">Šiškebabas</div>
 
             <div id="step_about_box">
@@ -136,38 +173,42 @@
             </div>
 
             <div id="step_comment_box" class="step_answers_box">
-                <div id="step_comment_title">Atsiliepimai</div>
-                <div id="step_comment_answers_box">
+                <div id="step_comment_title" class="step_answers_title">Atsiliepimai</div>
+                <div id="step_comment_answers_box" class="contains_scrollbar">
                     <div class="step_answer">Nuostabus šiškebabas</div>
                     <div class="step_answer">Šūdų krūva ne maistas</div>
                     <div class="step_answer">Labai skanu. Patiko visai šeimai</div>
+                    <div class="step_answer">Rekomenduoju vietoj agurko naudoti išvirtą agurką</div>
                 </div>
             </div>
             <div class="step_go step_down" onclick="next_step()"></div>
         </div>
         <div class="step" id="step_1">
             <div class="step_go step_up" onclick="previous_step()"></div>
-            <div class="step_id">Žingsnis 1</div>
+            <div class="step_id">Žingsnis</div>
+            <div class="step_timer untouchable" id="step_1_timer" onclick="cook_timer(this.id)">00:00:00</div>
             <div class="step_info">Supjaustyti agurkus</div>
             <div class="step_go step_down" onclick="next_step()"></div>
         </div>
         <div class="step" id="step_2">
             <div class="step_go step_up" onclick="previous_step()"></div>
-            <div class="step_id">Žingsnis 2</div>
+            <div class="step_id">Žingsnis</div>
+            <div class="step_timer untouchable" id="step_2_timer" onclick="cook_timer(this.id)">00:00:00</div>
             <div class="step_info">Išvirti agurkus</div>
             <div class="step_go step_down" onclick="next_step()"></div>
         </div>
         <div class="step" id="step_3">
             <div class="step_go step_up" onclick="previous_step()"></div>
-            <div class="step_id">Žingsnis 3</div>
+            <div class="step_id">Žingsnis</div>
+            <div class="step_timer untouchable" id="step_3_timer" onclick="cook_timer(this.id)">00:00:00</div>
             <div class="step_info">Agurkus sudėti į lėkštę</div>
             <div class="step_go step_down" onclick="next_step()"></div>
         </div>
 
         <div class="step" id="step_last">
             <div class="step_go step_up" onclick="previous_step()"></div>
-            <div class="step_id last_id" >Skanaus</div>
-            <div class="step_button" id="step_like" onclick="recipe_like('1')">Patiko?</div>
+            <div class="step_id last_id">Skanaus</div>
+            <div class="step_button not_liked" id="step_like" onclick="recipe_like('1', this.id)">Patiko?</div>
             <div class="step_button" id="step_share" onclick="share_food('1')">Pasidalink</div>
 
             <div id="step_comment_box">

@@ -23,23 +23,35 @@ var scroll_content;
 var scroll_filters;
 var scroll_sidebar_right;
 var scroll_sidebar_left;
+var clickable = true;
 
 document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
 
-function toast(text, status){
+function toast(text, status, type){
     clearTimeout(toast_timer);
-    $("#toast").html(text);
-    $("#toast_wrapper").css('height','50px');
+    $("#toast_inside").html(text);
 
+    $("#toast_inside").removeClass().addClass('toast_inside_' + type);
     if(status == "good")
         $("#toast_wrapper").css('background-color','rgba(43, 190, 43, 0.95)');
     else if(status == "bad")
         $("#toast_wrapper").css('background-color','rgba(175, 25, 25, 0.95)');
 
+    $("#toast_wrapper").fadeIn(transition_time, function(){
+        var width = 550;
+        if(mobile_state){
+            width = parseInt(($("#content_wrapper").css('width')).replace("px", "")) - content_right_margin - 2;
+        }
+        $("#toast_wrapper").animate({width: width}, transition_time);
+    });
+
     toast_timer = setTimeout(function(){
-        $("#toast_wrapper").css('height','0px');
+        $("#toast_wrapper").animate({width: 50}, transition_time, function(){
+            $("#toast_wrapper").fadeOut(transition_time);
+        });
     },toast_show_time);
 }
+
 
 function append_recipes_to_profile(){
     var recipes = [];
@@ -155,43 +167,8 @@ function append_recipe(data){
     var image = data[1];
     var title = data[2];
 
-    var appendable_data = "<div class='recipe_box' id='recipe_" + id + "' style=\"background-image: url('" + image + "');width:" + recipe_size + "px;height:" + recipe_size +  "px;\" onclick=\"show_recipe('" + id + "')\"></div>";
+    var appendable_data = "<div class='recipe_box' id='recipe_" + id + "' style=\"background-image: url('" + image + "');width:" + recipe_size + "px;height:" + recipe_size +  "px;\" onclick=\"show_recipe('" + id + "')\"><div class='recipe_box_info'>" + title + "</div></div>";
     $("#scroller_content").append(appendable_data);
-}
-
-function to_very_top(){
-    $("#content_wrapper").animate({scrollTop: 0}, scroll_animation_time);
-}
-
-function to_very_bottom(){
-    $("#content_wrapper").animate({scrollTop: $(document).height()}, scroll_animation_time);
-}
-
-function getDocHeight(){
-    return Math.max(
-        Math.max(document.body.scrollHeight, document.documentElement.scrollHeight),
-        Math.max(document.body.offsetHeight, document.documentElement.offsetHeight),
-        Math.max(document.body.clientHeight, document.documentElement.clientHeight)
-    );
-}
-
-function toast_top(display){
-    if(mobile_state){
-        $("#toast_top").fadeOut(transition_time * 2);
-        return true;
-    }
-    if(display == "show")
-        $("#toast_top").fadeIn(transition_time * 2);
-    else if(display == "hide")
-        $("#toast_top").fadeOut(transition_time * 2);
-}
-
-function show_loading(){
-    $("#toast_loading").fadeIn(transition_time * 2);
-}
-
-function hide_loading(){
-    $("#toast_loading").fadeOut(transition_time * 2);
 }
 
 function show_loading_more(){
@@ -512,15 +489,11 @@ function content_navigation(type){
 
     switch(type){
         case "home":
-            //$('.nav_zone_element').removeClass('nav_element_active');
-            //$("#" + type).addClass('nav_element_active');
             show_loading_screen();
             location.href = "/";
             break;
         case "profile":
             if(check_if_user_is_loged()){
-                //$('.nav_zone_element').removeClass('nav_element_active');
-                //$("#" + type).addClass('nav_element_active');
                 show_loading_screen();
                 location.href = "/profile";
             }else{
@@ -531,8 +504,6 @@ function content_navigation(type){
 
         case "shoppinglist":
             if(check_if_user_is_loged()){
-                //$('.nav_zone_element').removeClass('nav_element_active');
-                //$("#" + type).addClass('nav_element_active');
                 show_loading_screen();
                 location.href = "/shoppinglist";
             }else{
@@ -541,15 +512,11 @@ function content_navigation(type){
             break;
 
         case "random":
-            //$('.nav_zone_element').removeClass('nav_element_active');
-            //$("#" + type).addClass('nav_element_active');
             show_loading_screen();
             location.href = "/random";
             break;
 
         default:
-            //$('.nav_zone_element').removeClass('nav_element_active');
-            //$("#" + type).addClass('nav_element_active');
             show_loading_screen();
             location.href = "/";
             break;
@@ -713,9 +680,9 @@ function filter_show_selected(){
     filter_level = 0;
     var filters = [];
 
-    filters[0] = "<div class='filter_element untouchable' id='universities-1' onclick='filter_selected(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/types.png');\"></div><div class='filter_element_text'>Selected 1</div><div class='filter_element_delete' id='delete_universities-1' onclick='filter_delete(this.id)'></div></div>";
-    filters[1] = "<div class='filter_element untouchable' id='universities-2' onclick='filter_selected(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/times.png');\"></div><div class='filter_element_text'>Selected 2</div><div class='filter_element_delete' id='delete_universities-2' onclick='filter_delete(this.id)'></div></div>";
-    filters[2] = "<div class='filter_element untouchable' id='universities-3' onclick='filter_selected(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/celebrations.png');\"></div><div class='filter_element_text'>Selected 3</div><div class='filter_element_delete' id='delete_universities-3' onclick='filter_delete(this.id)'></div></div>";
+    filters[0] = "<div class='filter_element untouchable filter_element_indicator_not_want' id='universities-1' onclick='filter_selected(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/types.png');\"></div><div class='filter_element_text'>Selected 1</div><div class='filter_element_delete' id='delete_universities-1' onclick='filter_delete(this.id)'></div><div class='filter_element_indicator_change' id='indicator_change_universities-1' onclick='filter_indicator_change(this.id)'></div><div class='filter_element_indicator_small'></div></div>";
+    filters[1] = "<div class='filter_element untouchable filter_element_indicator_want' id='universities-2' onclick='filter_selected(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/times.png');\"></div><div class='filter_element_text'>Selected want</div><div class='filter_element_delete' id='delete_universities-2' onclick='filter_delete(this.id)'></div><div class='filter_element_indicator_change' id='indicator_change_universities-2' onclick='filter_indicator_change(this.id)'></div><div class='filter_element_indicator_small'></div></div>";
+    filters[2] = "<div class='filter_element untouchable filter_element_indicator_not_want' id='universities-3' onclick='filter_selected(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/celebrations.png');\"></div><div class='filter_element_text'>Selected 3</div><div class='filter_element_delete' id='delete_universities-3' onclick='filter_delete(this.id)'></div><div class='filter_element_indicator_change' id='indicator_change_universities-3' onclick='filter_indicator_change(this.id)'></div><div class='filter_element_indicator_small'></div></div>";
 
     $("#scroller_filters").fadeOut(transition_time, function(){
         $("#scroller_filters").html('');
@@ -724,25 +691,43 @@ function filter_show_selected(){
     });
 }
 
+function filter_indicator_change(ID){
+    var ID = ID.replace('indicator_change_','');
+
+    if($("#" + ID).hasClass('filter_element_indicator_not_want')){
+        $('#' + ID).removeClass('filter_element_indicator_not_want').addClass('filter_element_indicator_want');
+    }else if($("#" + ID).hasClass('filter_element_indicator_want')){
+        $('#' + ID).removeClass('filter_element_indicator_want').addClass('filter_element_indicator_not_want');
+    }
+}
+
 function manipulate_filter(ID){
     full_sidebar();
-    var classes = ($("#indicator_" + ID).attr('class')).split(" ");
-    var selected = classes[1];
-
+    var new_indicator_status;
     var symbols_amount = $("#" + ID + " .filter_element_text").html();
     var symbols_amount = symbols_amount.length;
 
-    if(selected == "added"){
+    if($("#indicator_" + ID).hasClass('want')){
+        $("#indicator_" + ID).removeClass('want').addClass('not_want');
+        if (symbols_amount > 19) {
+            $("#" + ID + " .filter_element_text").css('line-height', '21px');
+        }
+        new_indicator_status = "not_want";
+    }else if($("#indicator_" + ID).hasClass('not_want')){
         $("#" + ID).removeClass('selected');
-        $("#indicator_" + ID).removeClass('added');
+        $("#indicator_" + ID).removeClass('not_want');
         $("#" + ID + " .filter_element_text").css('line-height','43px');
+        new_indicator_status = "none";
     }else{
         $("#" + ID).addClass('selected');
-        $("#indicator_" + ID).addClass('added');
-        if(symbols_amount > 17){
+        $("#indicator_" + ID).addClass('want');
+        if(symbols_amount > 19){
             $("#" + ID + " .filter_element_text").css('line-height','21px');
         }
+        new_indicator_status = "want";
     }
+
+    //send new_indicator_status and filter_ID
     /*
     $.ajax({
         type: 'POST',
@@ -825,7 +810,7 @@ function shoppinglist_delete(ID){
      */
 }
 
-function filter_search_add(ID){
+function filter_search_add(ID, type){
     var id = ID.replace('search-','');
     var image = $('#' + ID + " .search_item_image").css('background-image');
     image = image.replace('"', "'");
@@ -833,10 +818,15 @@ function filter_search_add(ID){
     $("#search_input").val('');
     search_input_blur();
     search_input_focus();
-    var filters = [];
-    var data = "<div class='filter_element untouchable' id='" + id + "' onclick='filter_selected(this.id)'><div class='filter_element_image' style=\"background-image:" + image + ";\"></div><div class='filter_element_text'>" + title + "</div><div class='filter_element_delete' id='delete_" + id + "' onclick='filter_delete(this.id)'></div></div>";
-    filters[0] = data;
-    show_filters(filters, 0);
+
+    //send with ajax to filters
+    //see which filters level, if = 0, add to panel
+    if(filter_level == 0){
+        var filters = [];
+        var data = "<div class='filter_element untouchable filter_element_indicator_" + type + "' id='" + id + "' onclick='filter_selected(this.id)'><div class='filter_element_image' style=\"background-image:" + image + ";\"></div><div class='filter_element_text'>" + title + "</div><div class='filter_element_delete' id='delete_" + id + "' onclick='filter_delete(this.id)'></div><div class='filter_element_indicator_change' id='indicator_change_" + id + "' onclick='filter_indicator_change(this.id)'></div><div class='filter_element_indicator_small'></div></div>";
+        filters[0] = data;
+        show_filters(filters, 0);
+    }
 
     /*
     $.ajax({
@@ -882,18 +872,16 @@ function filter_delete(ID){
 
 function filter_selected(ID){
     full_sidebar();
-    var classes = ($("#" + ID).attr('class')).split(" ");
-    var selected = classes[2];
 
     var symbols_amount = $("#" + ID + " .filter_element_text").html();
     var symbols_amount = symbols_amount.length;
 
-    if(selected == "selected"){
+    if($("#" + ID).hasClass('selected')){
         $("#" + ID).removeClass('selected');
         $("#" + ID + " .filter_element_text").css('line-height','43px');
     }else{
         $("#" + ID).addClass('selected');
-        if(symbols_amount > 17){
+        if(symbols_amount > 19){
             $("#" + ID + " .filter_element_text").css('line-height','21px');
         }
     }
@@ -910,7 +898,7 @@ function shoppinglist_item_selected(ID) {
     if(selected != "selected"){
         $(".filter_element").removeClass('selected');
         $("#" + ID).addClass('selected');
-        if(symbols_amount > 17){
+        if(symbols_amount > 19){
             $("#" + ID + " .filter_element_text").css('line-height','21px');
         }
         //show_prices(ID);
@@ -952,10 +940,11 @@ function shoppinglist_search(){
         //get data with ajax from search_value
         var data = [];
         for(i = 0; i < 7; i++){
-            data[i] = "<div class='s_e search_item untouchable' id='shoppinglist-ingredient-95' onclick='shoppinglist_add(this.id)'>"+
-            "<div class='s_e search_item_image' style=\"background-image:url('images/food (2).jpg')\"></div>"+
-            "<div class='s_e search_item_title'>Ananasas</div>"+
-            "<div class='s_e search_item_bottom_info'>Ingredientas</div>"+
+            data[i] =
+            "<div class='s_e search_item untouchable' id='shoppinglist-ingredient-95' onclick='shoppinglist_add(this.id)'>"+
+                "<div class='s_e search_item_image' style=\"background-image:url('images/food (2).jpg')\"></div>"+
+                "<div class='s_e search_item_title'>Ananasas</div>"+
+                "<div class='s_e search_item_bottom_info'>Ingredientas</div>"+
             "</div>";
         }
 
@@ -978,10 +967,13 @@ function search(){
         //get data with ajax from search_value
         var data = [];
         for(i = 0; i < 7; i++){
-            data[i] = "<div class='s_e search_item untouchable' id='search-ingredient-95' onclick='filter_search_add(this.id)'>"+
-            "<div class='s_e search_item_image' style=\"background-image:url('images/food (2).jpg')\"></div>"+
-            "<div class='s_e search_item_title'>Ananasas</div>"+
-            "<div class='s_e search_item_bottom_info'>Ingredientas</div>"+
+            data[i] =
+            "<div class='s_e search_item untouchable' id='search-ingredient-95'>" +
+                "<div class='s_e search_item_image' style=\"background-image:url('images/food (2).jpg')\"></div>" +
+                "<div class='s_e search_item_title'>Ananasasadasdasdasdasdasd asdasds</div>" +
+                "<div class='s_e search_item_bottom_info'>Ingredientas</div>" +
+                "<div class='s_e filter_element_indicator indicator_search want' style='right: 25px;' onclick=\"filter_search_add('search-ingredient-95','want')\"></div>" +
+                "<div class='s_e filter_element_indicator indicator_search not_want' style='right: 3px;' onclick=\"filter_search_add('search-ingredient-95','not_want')\"></div>" +
             "</div>";
         }
 
@@ -1027,6 +1019,8 @@ function last_index(){
 }
 
 function show_recipe(recipe_ID){
+    if(!clickable) return;
+
     var classes = ($("#recipe_" + recipe_ID).attr('class')).split(" ");
     var selected = classes[1];
     if(selected == "recipe_active"){
@@ -1034,8 +1028,8 @@ function show_recipe(recipe_ID){
     }else{
         $("#sidebar_right").removeClass('right_squeeze').addClass('right_full');
         //calculate top px for ingredients zone
-        var height_from_top = $(".ingredients_divider").offset().top + 10;
-        $("#sidebar_right_ingredients_zone").css('top', height_from_top + 'px');
+        //var height_from_top = $(".ingredients_divider").offset().top + 10;
+        //$("#sidebar_right_ingredients_zone").css('top', height_from_top + 'px');
         $('.recipe_box').removeClass('recipe_active');
         $("#recipe_" + recipe_ID).addClass('recipe_active');
 
@@ -1065,24 +1059,9 @@ function show_recipe(recipe_ID){
 
 }
 
-function show_random_recipe_info(recipe_ID){
-    var classes = ($("#sidebar_right").attr('class')).split(" ");
-    var selected = classes[0];
-    if(selected == "right_full"){
-        hide_random_recipe_info();
-    }else{
-        $("#sidebar_right").removeClass('right_squeeze').addClass('right_full');
-    }
-}
-
-function hide_random_recipe_info(){
-    $("#sidebar_right").removeClass('right_full').addClass('right_squeeze');
-}
-
 function hide_recipe(){
     $("#sidebar_right").removeClass('right_full').addClass('right_squeeze');
     $('.recipe_box').removeClass('recipe_active');
-    //$("#content_wrapper").css('right','0px');
 }
 
 
@@ -1166,7 +1145,7 @@ function add_to_shopping_list(recipe_ID){
     if(check_if_user_is_loged()){
         $('.ingredient_indicator').removeClass('ingredient_indicator_have').removeClass('ingredient_indicator_undefined').removeClass('ingredient_indicator_shoppinglist').addClass('ingredient_indicator_shoppinglist');
         //ajax add all products of recipe to shopping list
-        toast('Produktai sudėti į pirkinių krepšį','good');
+        toast('Produktai sudėti į pirkinių krepšį','good', 'shoppinglist');
     }else{
         show_top_layer('account');
     }
@@ -1224,9 +1203,9 @@ function coop(recipe_ID){
             picture: image
         }, function(response) {
             if (!response || response.error) {
-                toast('Jūs nesuteikėte privilegijos rašyti ant jūsų laiko juostos','bad');
+                toast('Jūs nesuteikėte privilegijos rašyti ant jūsų laiko juostos','bad', 'coop');
             } else {
-                toast('Žinutė Jūsų draugams pasiųsta sėkmingai','good');
+                toast('Žinutė Jūsų draugams pasiųsta sėkmingai','good', 'coop');
             }
         });
 
@@ -1235,14 +1214,6 @@ function coop(recipe_ID){
     }
 
 }
-
-function random_next(){
-    location.href = "/random";
-}
-
-
-
-//RESPONSIVE JAVASCRIPT
 
 function steps_manipulation(){
     var step_height = parseInt(($("#content_wrapper").css('height')).replace("px", "")) - 1;
@@ -1464,7 +1435,7 @@ function facebook_login(){
             show_loading_screen();
             location.href = location.href;
         } else {
-            toast('Įvyko klaida. Bandykite dar kartą','bad');
+            toast('Įvyko klaida. Bandykite dar kartą','bad', 'login');
         }
     }, {scope: 'publish_actions, email, public_profile, user_friends'});
 }
@@ -1533,7 +1504,7 @@ function recipe_like(recipe_ID, box_ID){
                 $("#" + box_ID).html("Patinka");
             }
 
-            toast('Receptas pridėtas prie mėgstamiausių','good');
+            toast('Receptas pridėtas prie mėgstamiausių','good', 'liked');
         }else{
             //make not liked
             $("#" + box_ID).removeClass('liked').addClass('not_liked');
@@ -1543,7 +1514,7 @@ function recipe_like(recipe_ID, box_ID){
             }else if(box_ID == "step_like"){
                 $("#" + box_ID).html("Patinka");
             }
-            toast('Receptas pašalintas iš mėgstamiausių','bad');
+            toast('Receptas pašalintas iš mėgstamiausių','bad', 'not_liked');
         }
     }else{
         show_top_layer('account');
@@ -1572,84 +1543,9 @@ function logout(){
     });
 }
 
-
-
-function show_scrollbar(HTMLObejct){
-   var ID = HTMLObejct.id;
-   var top = $("#" + ID).offset().top;
-   var left = $("#" + ID).offset().left + $("#" + ID).outerWidth() - content_right_margin - scrollbar_width - 1;
-   var height = parseInt(($("#" + ID).css('height')).replace("px", ""));
-   var scrolled = $("#" + ID).scrollTop();
-   var all_height = $("#" + ID)[0].scrollHeight;
-   var scrollbar_height = height / all_height * height;
-   var scrollbar_top = scrolled / all_height * (height);
-    if(height != scrollbar_height){
-        var scrollbar =
-            "<div class='scrollbar_box' id='scrollbar_box-" + ID + "'>" +
-            "<div class='scrollbar' id='scrollbar-" + ID + "'></div>" +
-            "</div>";
-        $("#" + ID).append(scrollbar);
-    }else{
-        return true;
-    }
-
-    $("#scrollbar_box-" + ID).css('top', top + 'px');
-    $("#scrollbar_box-" + ID).css('left',left + 'px');
-    $("#scrollbar_box-" + ID).css('height',height + 'px');
-    $("#scrollbar-" + ID).css('height',scrollbar_height + 'px');
-    $("#scrollbar-" + ID).css('top',scrollbar_top + 'px');
-
-
-
-    $("#" + ID).scroll(function(){
-        var scrolled = $("#" + ID).scrollTop();
-        var all_height = $("#" + ID)[0].scrollHeight;
-        var scrollbar_height = height / all_height * height;
-        var scrollbar_top = scrolled / all_height * (height);
-        $("#scrollbar-" + ID).css('height',scrollbar_height + 'px');
-        $("#scrollbar-" + ID).css('top',scrollbar_top + 'px');
-    });
-
-    $('#scrollbar-' + ID).mousedown(function(e) {
-        var position_in_element = e.pageY - $('#scrollbar-' + ID).offset().top;
-        $('#' + ID).mousemove(function(e){
-            var new_scrollbar_position = e.pageY - position_in_element;
-            if(new_scrollbar_position >= 0 && (new_scrollbar_position + scrollbar_height) <= height){
-                $('#scrollbar-' + ID).css('top', new_scrollbar_position + "px");
-                var distance_to_top = new_scrollbar_position - $('#scrollbar_box-' + ID).offset().top;
-                var scrolling_height = distance_to_top / height * all_height;
-                $("#" + ID).scrollTop(scrolling_height);
-            }
-        });
-    }).mouseup(function(e) {
-        $('#' + ID).unbind('mousemove');
-    });
-    $('#' + ID).mouseup(function(e) {
-        $('#' + ID).unbind('mousemove');
-    });
-}
-
-
-
-function hide_scrollbar(HTMLObejct){
-    var ID = HTMLObejct.id;
-    //$("#scrollbar_box-" + ID).fadeOut(transition_time * 2, function(){
-        $("#scrollbar_box-" + ID).remove();
-    //});
-}
-
-function initialize_scrollbar(){
-    $('.contains_scrollbar').hover(function(){
-        // Hover in
-        show_scrollbar(this);
-    }, function() {
-        // Hover out
-        hide_scrollbar(this);
-    })
-}
-
 function profile_navigation(type){
-    $("#content_wrapper").animate({scrollTop: $("#box_" + type).offset().top + $("#content_wrapper").scrollTop()}, scroll_animation_time);
+    scroll_content.scrollToElement("#box_" + type, 600, 0, -50, IScroll.utils.ease.back);
+    //$("#content_wrapper").animate({scrollTop: $("#box_" + type).offset().top + $("#content_wrapper").scrollTop()}, scroll_animation_time);
 }
 
 var clock;

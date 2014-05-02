@@ -67,6 +67,9 @@
                  probeType: 2
              });
 
+             scroll_content.on('scrollStart', function(){ clickable = false; });
+             scroll_content.on('scrollEnd', function(){ clickable = true; });
+
              scroll_content.on('scroll', function(){
                  if (this.y + 200 >= this.maxScrollY)
                      load_more();

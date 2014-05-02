@@ -43,6 +43,9 @@
                 fadeScrollbars: true,
             });
 
+            scroll_content.on('scrollStart', function(){ clickable = false; });
+            scroll_content.on('scrollEnd', function(){ clickable = true; });
+
             hide_loading_screen();
         }
 
@@ -54,7 +57,7 @@
 
  {% block filters_zone %}
      <div id='filters_zone' style="top:230px;" onclick="full_sidebar()">
-         <div class="scroller" id="scroller_filters">
+         <div class="scroller" id="scroller_filters" >
              <div class="filter_element untouchable" id="universities-2" onclick="filter_selected(this.id)">
                  <div class="filter_element_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
                  <div class="filter_element_text">VU</div>
@@ -74,7 +77,7 @@
 
 {% block content %}
 <div id="content_wrapper" style="padding-bottom:10px;background-image:url('/images/content_background.jpg')">
-    <div class="scroller" id="scroller_content">
+    <div class="scroller" id="scroller_content" style="padding-bottom:10px;">
         <div id="profile_info">
             <div class="recipe_box" id="profile_image" style="background-image: url('/images/food (5).jpg')"></div>
             <div id="profile_info_box">

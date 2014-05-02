@@ -1050,11 +1050,14 @@ IScroll.prototype = {
 		this.wheelTimeout = setTimeout(function () {
 			that._execEvent('scrollEnd');
 			that.wheelTimeout = undefined;
-		}, 400);
+		}, 200);
 
 		if ( 'deltaX' in e ) {
-			wheelDeltaX = -e.deltaX;
-			wheelDeltaY = -e.deltaY;
+            var multiply = ( e.deltaMode === 1 ) ? this.options.mouseWheelSpeed : 1;
+            wheelDeltaX = -e.deltaX * multiply;
+            wheelDeltaY = -e.deltaY * multiply;
+			//wheelDeltaX = -e.deltaX;
+			//wheelDeltaY = -e.deltaY;
 		} else if ( 'wheelDeltaX' in e ) {
 			wheelDeltaX = e.wheelDeltaX / 120 * this.options.mouseWheelSpeed;
 			wheelDeltaY = e.wheelDeltaY / 120 * this.options.mouseWheelSpeed;

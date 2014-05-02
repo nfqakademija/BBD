@@ -18,6 +18,7 @@ body{
   font-size:16px;
   cursor:default;
   font-family:Ubuntu;
+  overflow: hidden;
   //background-color:@black;
   overflow-y:scroll;
   overflow-x:hidden;
@@ -25,6 +26,30 @@ body{
   background-repeat:no-repeat;
   background-position:50% 50%;
   //background-image:url("files/images/background.jpg");
+
+  -ms-touch-action: none;
+
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+
+  -webkit-text-size-adjust: none;
+  -moz-text-size-adjust: none;
+  -ms-text-size-adjust: none;
+  -o-text-size-adjust: none;
+  text-size-adjust: none;
+}
+
+
+.scroller{
+  position: absolute;
+  -webkit-transform: translateZ(0);
+  -moz-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  -o-transform: translateZ(0);
+  transform: translateZ(0);
 }
 
 a{
@@ -125,6 +150,24 @@ textarea{
   color:@white;
 }
 
+#sidebar_right_wrapper{
+  width: 220px;
+  overflow: hidden;
+  position: fixed;
+  top: 10px;
+  padding-right: 30px;
+  bottom: 65px;
+}
+
+#cook_left_sidebar_wrapper{
+  width: 230px;
+  overflow: hidden;
+  position: fixed;
+  top: 175px;
+  padding-right: 30px;
+  bottom: 65px;
+}
+
 .right_full{
   width:210px;
   padding:10px;
@@ -183,10 +226,15 @@ textarea{
   margin-bottom: 1px;
   padding-left: 3px;
   padding-right: 3px;
-  &:hover {
-    border: 1px solid black;
-    box-shadow: 0px 0px 2px black;
-    background-color: @grey_background;
+  &:hover{
+    border:1px solid black;
+    box-shadow:0px 0px 2px black;
+    background-color:@grey_background;
+  }
+  &:active{
+    background-color:rgba(255, 255, 255, 0.2);
+    border:1px solid black;
+    box-shadow:0px 0px 2px black;
   }
 }
 
@@ -262,10 +310,11 @@ textarea{
     box-shadow:0px 0px 2px black;
     background-color:@grey_background;
   }
+
   &:active{
+    background-color:rgba(255, 255, 255, 0.2);
     border:1px solid black;
     box-shadow:0px 0px 2px black;
-    background-color:black;
   }
 }
 
@@ -279,22 +328,8 @@ textarea{
 }
 
 #sidebar_right_ingredients_zone{
-  position: absolute;
-  bottom: 65px;
-  top: 391px;
-  overflow-y: scroll;
-  padding-right:30px;
-  overflow-x: hidden;
-  width: 210px;
-}
-
-#sidebar_right_random_ingredients_zone{
-  position: absolute;
-  bottom: 65px;
-  top: 176px;
-  padding-right:30px;
-  overflow-y: scroll;
-  overflow-x: hidden;
+  float:left;
+  height:auto;
   width: 210px;
 }
 
@@ -687,7 +722,6 @@ textarea{
 
 
 #filters_zone{
-  float: left;
   color: white;
   padding: 10px;
   padding-bottom:0px;
@@ -697,8 +731,9 @@ textarea{
   position: absolute;
   bottom: 65px;
   top: 175px;
-  overflow-y: scroll;
-  overflow-x: hidden;
+  //overflow-y: scroll;
+  //overflow-x: hidden;
+  overflow: hidden;
 }
 
 .full #filters_zone{
@@ -823,21 +858,18 @@ textarea{
   position:relative;
   border:1px solid transparent;
   width:208px;
+  &:hover{
+    background-color:rgba(255, 255, 255, 0.12);
+    border:1px solid black;
+    box-shadow:0px 0px 2px black;
+  }
+  &:active{
+    background-color:rgba(255, 255, 255, 0.2);
+    border:1px solid black;
+    box-shadow:0px 0px 2px black;
+  }
 }
 
-
-
-.filter_element:hover{
-  background-color:rgba(255, 255, 255, 0.12);
-  border:1px solid black;
-  box-shadow:0px 0px 2px black;
-}
-
-.filter_element:active{
-  background-color:rgba(255, 255, 255, 0.2);
-  border:1px solid black;
-  box-shadow:0px 0px 2px black;
-}
 
 .selected{
   background-color:rgba(255, 255, 255, 0.2);
@@ -953,8 +985,9 @@ textarea{
   right:-30px;
   bottom:0px;
   top:0px;
-  overflow-x:hidden;
-  overflow-y:scroll;
+  overflow: hidden;
+ // overflow-x:hidden;
+  //overflow-y:scroll;
   background-repeat:no-repeat;
   background-size:cover;
   background-position:50% 50%;
@@ -1614,24 +1647,27 @@ p{
 
 #toast_wrapper{
   height:0px;
-  width:100%;
-  float:left;
-  font-size:20px;
-  color:white;
-  position:fixed;
-  bottom:0px;
-  z-index:200;
-  line-height:50px;
-  background:#262829;
-  opacity:0.95;
-  overflow:hidden;
-  pointer-events:none;
+  font-size: 20px;
+  color: white;
+  position: fixed;
+  bottom: 0px;
+  z-index: 200;
+  left: 0px;
+  right: 0px;
+  padding-left: 20px;
+  padding-right: 20px;
+  line-height: 50px;
+  opacity: 0.95;
+  overflow: hidden;
+  pointer-events: none;
 }
 
 #toast{
-  width:960px;
-  height:50px;
-  margin:0 auto;
+  width: auto;
+  height: 34px;
+  padding-top: 16px;
+  line-height: 17px;
+  float: left;
 }
 
 .tooltip_box{
@@ -1661,71 +1697,8 @@ p{
   color: white;
 }
 
-#toast_top{
-  position: fixed;
-  z-index: 5;
-  bottom: 50px;
-  right: 70px;
-  color: #FFF;
-  width:50px;
-  height:50px;
-  cursor: default;
-  display: none;
-  background-repeat:no-repeat;
-  background-image:url("/images/to_top.png");
-  background-size:100%;
-  background-position:50% 50%;
-  opacity:0.2;
-  box-shadow:0px 0px 2px @black;
-  background-color:@black;
-}
-
-#toast_top:hover{
-  opacity:1;
-}
-
-#toast_loading{
-  position: fixed;
-  width: 80px;
-  height: 80px;
-  bottom: 60px;
-  right: 60px;
-  z-index: 301;
-  background: #FFF;
-  box-shadow: 0px 0px 2px #FFF;
-  cursor: default;
-  display: none;
-  background-image: url("/images/loading.gif");
-  background-size: 200% 147%;
-  background-position: 50% 50%;
-  background-repeat: no-repeat;
-  border-radius: 50px;
-}
-
 p{
   margin:0;
-}
-
-#toast_wrapper{
-  height:0px;
-  width:100%;
-  float:left;
-  font-size:20px;
-  color:white;
-  position:fixed;
-  bottom:0px;
-  z-index:200;
-  line-height:50px;
-  background:#262829;
-  opacity:0.95;
-  overflow:hidden;
-  pointer-events:none;
-}
-
-#toast{
-  width:960px;
-  height:50px;
-  margin:0 auto;
 }
 
 #map_canvas {

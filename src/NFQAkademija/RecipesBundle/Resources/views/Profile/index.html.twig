@@ -13,10 +13,36 @@
                 recalculate_width();
                 sidebar_manipulation();
             });
-            initialize_scrollbar();
+
+
             if(browser == 'firefox'){
                 $("#search_container").css('box-shadow','none');
             }
+
+            scroll_filters = new IScroll('#filters_zone', {
+                scrollbars: true,
+                mouseWheel: true,
+                interactiveScrollbars: true,
+                shrinkScrollbars: 'scale',
+                fadeScrollbars: true
+            });
+
+            scroll_sidebar_right = new IScroll('#sidebar_right_wrapper', {
+                scrollbars: true,
+                mouseWheel: true,
+                interactiveScrollbars: true,
+                shrinkScrollbars: 'scale',
+                fadeScrollbars: true
+            });
+
+            scroll_content = new IScroll('#content_wrapper', {
+                scrollbars: true,
+                mouseWheel: true,
+                interactiveScrollbars: true,
+                shrinkScrollbars: 'scale',
+                fadeScrollbars: true,
+            });
+
             hide_loading_screen();
         }
 
@@ -27,11 +53,13 @@
 {% endblock %}
 
  {% block filters_zone %}
-     <div id='filters_zone' class="contains_scrollbar" onclick="full_sidebar()">
-         <div class="filter_element untouchable" id="universities-2" onclick="filter_selected(this.id)">
-             <div class="filter_element_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
-             <div class="filter_element_text">VU</div>
-             <div class="filter_element_delete" id="delete_universities-2" onclick="filter_delete(this.id)"></div>
+     <div id='filters_zone' style="top:230px;" onclick="full_sidebar()">
+         <div class="scroller" id="scroller_filters">
+             <div class="filter_element untouchable" id="universities-2" onclick="filter_selected(this.id)">
+                 <div class="filter_element_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
+                 <div class="filter_element_text">VU</div>
+                 <div class="filter_element_delete" id="delete_universities-2" onclick="filter_delete(this.id)"></div>
+             </div>
          </div>
      </div>
  {% endblock %}
@@ -45,31 +73,33 @@
  {% endblock %}
 
 {% block content %}
-<div id="content_wrapper" class="contains_scrollbar" style="padding-bottom:10px;background-image:url('{{ asset('images/content_background.jpg') }}')">
-    <div id="profile_info">
-        <div class="recipe_box" id="profile_image" style="background-image: url('/images/food (5).jpg')"></div>
-        <div id="profile_info_box">
-            <div id="profile_name">Ignas Lekas</div>
-            <div id="profile_email">ignas.lekas@gmail.com</div>
-            <div id="profile_statististics_box">
-                <div class="profile_statististics_box_item" id="psbi_cooked" onclick="profile_navigation('cooked')">14</div>
-                <div class="profile_statististics_box_item" id="psbi_liked" onclick="profile_navigation('liked')">63</div>
-                <div class="profile_statististics_box_item" id="psbi_created" onclick="profile_navigation('created')">3</div>
-                <div class="profile_statististics_box_item" id="psbi_watched" onclick="profile_navigation('watched')">698</div>
+<div id="content_wrapper" style="padding-bottom:10px;background-image:url('/images/content_background.jpg')">
+    <div class="scroller" id="scroller_content">
+        <div id="profile_info">
+            <div class="recipe_box" id="profile_image" style="background-image: url('/images/food (5).jpg')"></div>
+            <div id="profile_info_box">
+                <div id="profile_name">Ignas Lekas</div>
+                <div id="profile_email">ignas.lekas@gmail.com</div>
+                <div id="profile_statististics_box">
+                    <div class="profile_statististics_box_item" id="psbi_cooked" onclick="profile_navigation('cooked')">14</div>
+                    <div class="profile_statististics_box_item" id="psbi_liked" onclick="profile_navigation('liked')">63</div>
+                    <div class="profile_statististics_box_item" id="psbi_created" onclick="profile_navigation('created')">3</div>
+                    <div class="profile_statististics_box_item" id="psbi_watched" onclick="profile_navigation('watched')">698</div>
+                </div>
+                <div style="clear:both;"></div>
+                <div id="profile_buttons_box">
+                    <div class="profile_button" onclick="go_to_new_recipe()">Kurti</div>
+                    <!-- Not neede for facebook login
+                    <div class="profile_button" onclick="show_top_layer('options')">Nustatymai</div>
+                    -->
+                    <div class="profile_button" style="margin-bottom:0px;" onclick="logout()">Atsijungti</div>
+                </div>
             </div>
-            <div style="clear:both;"></div>
-            <div id="profile_buttons_box">
-                <div class="profile_button" onclick="go_to_new_recipe()">Kurti</div>
-                <!-- Not neede for facebook login
-                <div class="profile_button" onclick="show_top_layer('options')">Nustatymai</div>
-                -->
-                <div class="profile_button" style="margin-bottom:0px;" onclick="logout()">Atsijungti</div>
-            </div>
-        </div>
 
+        </div>
+        <div id="profile_divider" class="untouchable">Istorija</div>
+        <div id="profile_recipes"></div>
     </div>
-    <div id="profile_divider" class="untouchable">Istorija</div>
-    <div id="profile_recipes"></div>
 </div>
 {% endblock %}
 

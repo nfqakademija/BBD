@@ -19,6 +19,12 @@ var filter_level = 0;
 var recipe_box_margin_size = 10;
 var content_right_margin = 30;
 var scrollbar_width = 5;
+var scroll_content;
+var scroll_filters;
+var scroll_sidebar_right;
+var scroll_sidebar_left;
+
+document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
 
 function toast(text, status){
     clearTimeout(toast_timer);
@@ -102,8 +108,7 @@ function append_recipes_to_profile(){
 }
 
 function append_recipes(){
-    $("#content_wrapper").html('');
-
+    $("#scroller_content").html('');
     //later need from ajax with filters
     var recipes = [];
     recipes[0] = ["0","/images/food (0).jpg", "title0"];
@@ -151,7 +156,7 @@ function append_recipe(data){
     var title = data[2];
 
     var appendable_data = "<div class='recipe_box' id='recipe_" + id + "' style=\"background-image: url('" + image + "');width:" + recipe_size + "px;height:" + recipe_size +  "px;\" onclick=\"show_recipe('" + id + "')\"></div>";
-    $("#content_wrapper").append(appendable_data);
+    $("#scroller_content").append(appendable_data);
 }
 
 function to_very_top(){
@@ -272,9 +277,9 @@ function check(type, amount){
             break;
     }
 }
-
+var current_filters_scroll;
 function show_filters(array_of_filters, index){
-    $("#filters_zone").append('<div style="display:block;margin-left:210px;" id="container_appender">' + array_of_filters[index] + '</div>');
+    $("#scroller_filters").append('<div style="display:block;margin-left:210px;" id="container_appender">' + array_of_filters[index] + '</div>');
     $("#container_appender").animate({marginLeft: 0}, transition_time);
     $("#container_appender").fadeIn(transition_time);
     $("#container_appender").attr('id','container_appender_out');
@@ -283,6 +288,12 @@ function show_filters(array_of_filters, index){
         setTimeout(function(){
             show_filters(array_of_filters, index);
         },transition_time / 100);
+    }else{
+        setTimeout(function(){
+            current_filters_scroll = scroll_filters.y;
+            scroll_filters.refresh();
+            scroll_filters.scrollTo(0, 0);
+        },0)
     }
 }
 
@@ -298,9 +309,9 @@ function filter_start(){
     filters[5] = "<div class='filter_element untouchable' id='celebrations' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/celebrations.png');\"></div><div class='filter_element_text'>Šventės</div></div>";
     filters[6] = "<div class='filter_element untouchable' id='cooking_methods' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/cooking_methods.png');\"></div><div class='filter_element_text'>Gaminimo būdai</div></div>";
 
-    $("#filters_zone").fadeOut(transition_time, function(){
-        $("#filters_zone").html('');
-        $("#filters_zone").fadeIn(1);
+    $("#scroller_filters").fadeOut(transition_time, function(){
+        $("#scroller_filters").html('');
+        $("#scroller_filters").fadeIn(1);
         show_filters(filters, 0);
     });
 
@@ -424,9 +435,9 @@ function filter_category(category){
             break;
     }
 
-    $("#filters_zone").fadeOut(transition_time, function(){
-        $("#filters_zone").html('');
-        $("#filters_zone").fadeIn(1);
+    $("#scroller_filters").fadeOut(transition_time, function(){
+        $("#scroller_filters").html('');
+        $("#scroller_filters").fadeIn(1);
         show_filters(filters, 0);
     });
 
@@ -465,9 +476,9 @@ function filter_ingredients_category(ingredients_category){
         break;
     }
 
-    $("#filters_zone").fadeOut(transition_time, function(){
-        $("#filters_zone").html('');
-        $("#filters_zone").fadeIn(1);
+    $("#scroller_filters").fadeOut(transition_time, function(){
+        $("#scroller_filters").html('');
+        $("#scroller_filters").fadeIn(1);
         show_filters(filters, 0);
     });
 }
@@ -576,7 +587,7 @@ function show_top_layer(type, ID){
         case "coop":
             data =
                 "<div id='top_box_up'>" +
-                    "<div id='top_box_title' class='untouchable'>Gaminti kartu su draigais</div>" +
+                    "<div id='top_box_title' class='untouchable'>Gaminti kartu su draugais</div>" +
                     "<div class='top_box_social_box untouchable' id='top_box_coop_icon'></div>" +
                 "</div>" +
                     "<div id='top_box_content' class='untouchable'>" +
@@ -706,9 +717,9 @@ function filter_show_selected(){
     filters[1] = "<div class='filter_element untouchable' id='universities-2' onclick='filter_selected(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/times.png');\"></div><div class='filter_element_text'>Selected 2</div><div class='filter_element_delete' id='delete_universities-2' onclick='filter_delete(this.id)'></div></div>";
     filters[2] = "<div class='filter_element untouchable' id='universities-3' onclick='filter_selected(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/celebrations.png');\"></div><div class='filter_element_text'>Selected 3</div><div class='filter_element_delete' id='delete_universities-3' onclick='filter_delete(this.id)'></div></div>";
 
-    $("#filters_zone").fadeOut(transition_time, function(){
-        $("#filters_zone").html('');
-        $("#filters_zone").fadeIn(1);
+    $("#scroller_filters").fadeOut(transition_time, function(){
+        $("#scroller_filters").html('');
+        $("#scroller_filters").fadeIn(1);
         show_filters(filters, 0);
     });
 }
@@ -761,6 +772,13 @@ function shoppinglist_add(ID){
     var data = "<div class='filter_element untouchable' id='" + id + "' onclick='shoppinglist_item_selected(this.id)'><div class='filter_element_image' style=\"background-image:" + image + ";\"></div><div class='filter_element_text'>" + title + "</div><div class='filter_element_delete' id='delete_" + id + "' onclick='shoppinglist_delete(this.id)'></div></div>";
     shopping_items[0] = data;
     show_filters(shopping_items, 0);
+    setTimeout(function(){
+        scroll_filters.refresh();
+        //scroll_filters.scrollTo(0, current_filters_scroll);
+        //var scroll_amount =  scroll_filters.maxScrollY - current_filters_scroll;
+        scroll_filters.scrollBy(0, scroll_filters.maxScrollY, 600, IScroll.utils.ease.bounce);
+    },100)
+
     //ajax to add to shoopinglist
 }
 
@@ -776,6 +794,11 @@ function shoppinglist_add_enter(){
     var data = "<div class='filter_element untouchable' id='" + id + "' onclick='shoppinglist_item_selected(this.id)'><div class='filter_element_image' style=\"background-image:" + image + ";\"></div><div class='filter_element_text'>" + title + "</div><div class='filter_element_delete' id='delete_" + id + "' onclick='shoppinglist_delete(this.id)'></div></div>";
     shopping_items[0] = data;
     show_filters(shopping_items, 0);
+    setTimeout(function(){
+        scroll_filters.refresh();
+        var scroll_amount =  scroll_filters.maxScrollY - scroll_filters.y;
+        scroll_filters.scrollBy(0, scroll_amount, 600, IScroll.utils.ease.bounce);
+    },100)
     //ajax to add to shoopinglist
 }
 
@@ -783,6 +806,10 @@ function shoppinglist_add_enter(){
 function shoppinglist_delete(ID){
     ID = ID.replace('delete_','');
     $('#' + ID).remove();
+    setTimeout(function(){
+        scroll_filters.refresh();
+    }, 100);
+
     /*
      $.ajax({
      type: 'POST',
@@ -823,7 +850,7 @@ function filter_search_add(ID){
             $("#search_container").html('');
             $("#search_container").css('display','none');
             if(data.filter_level == 0)
-                $("#filters_zone").append(data.filter);
+                $("#scroller_filters").append(data.filter);
         }
     });
 
@@ -835,6 +862,9 @@ function filter_search_add(ID){
 function filter_delete(ID){
     ID = ID.replace('delete_','');
     $('#' + ID).remove();
+    setTimeout(function(){
+        scroll_filters.refresh();
+    }, 100);
     /*
     $.ajax({
         type: 'POST',
@@ -1024,7 +1054,8 @@ function show_recipe(recipe_ID){
         var ingredients; //array of them
 
 
-
+        scroll_sidebar_right.refresh();
+        scroll_sidebar_right.scrollTo(0,0);
     }
 
     recalculate_width();
@@ -1298,8 +1329,8 @@ function empty_sidebar_slide(){
         $("#config_zone").css('display','none');
         $("#cook_ingredients").css('display','none');
         $(".next_step").html(">>");
-        var height_from_top = $(".middle_divider").offset().top;
-        $("#filters_zone").css('top', height_from_top + 'px');
+        //var height_from_top = $(".middle_divider").offset().top;
+        //$("#filters_zone").css('top', height_from_top + 'px');
 
     }else if(sidebar_class == "empty"){
         $("#sidebar").removeClass('full').removeClass('empty').removeClass('squeeze').addClass('full');
@@ -1310,8 +1341,8 @@ function empty_sidebar_slide(){
         $("#config_zone").css('display','block');
         $("#cook_ingredients").css('display','block');
         $(".next_step").html("Sekantis");
-        var height_from_top = $(".middle_divider").offset().top;
-        $("#filters_zone").css('top', height_from_top + 'px');
+        //var height_from_top = $(".middle_divider").offset().top;
+        //$("#filters_zone").css('top', height_from_top + 'px');
     }
     hide_recipe();
 }
@@ -1334,8 +1365,8 @@ function full_sidebar(){
     $("#cook_ingredients").css('display','block');
     $(".next_step").html("Sekantis");
     //calculate top px for filters zone
-    var height_from_top = $(".middle_divider").offset().top;
-    $("#filters_zone").css('top', height_from_top + 'px');
+    //var height_from_top = $(".middle_divider").offset().top;
+    //$("#filters_zone").css('top', height_from_top + 'px');
     if(!mobile_state){
         $("#sidebar_slider").css('display','block');
         recalculate_width();
@@ -1355,8 +1386,8 @@ function squeeze_sidebar(){
     $("#cook_ingredients").css('display','none');
     $(".next_step").html(">>");
     //calculate top px for filters zone
-    var height_from_top = $(".middle_divider").offset().top;
-    $("#filters_zone").css('top', height_from_top + 'px');
+    //var height_from_top = $(".middle_divider").offset().top;
+    //$("#filters_zone").css('top', height_from_top + 'px');
     if(!mobile_state){
         recalculate_width();
     }
@@ -1366,8 +1397,8 @@ function squeeze_sidebar(){
 
 function empty_sidebar(){
     $("#sidebar").removeClass('full').removeClass('squeeze').addClass('empty');
-    $("#content_wrapper").css('left','1px');
-    $("#header").css('left','1px');
+    $("#content_wrapper").css('left','0px');
+    $("#header").css('left','0px');
     $("#header_logo").css('display','block');
     $("#sidebar_slider").css('display','none');
     $("#config_zone").css('display','none');

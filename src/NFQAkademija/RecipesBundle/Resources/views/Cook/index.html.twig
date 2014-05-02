@@ -89,52 +89,71 @@
                 $("#search_container").css('box-shadow','none');
             }
 
+            scroll_sidebar_right = new IScroll('#sidebar_right_wrapper', {
+                scrollbars: true,
+                mouseWheel: true,
+                interactiveScrollbars: true,
+                shrinkScrollbars: 'scale',
+                fadeScrollbars: true
+            });
+
+            scroll_sidebar_left = new IScroll('#cook_left_sidebar_wrapper', {
+                scrollbars: true,
+                mouseWheel: true,
+                interactiveScrollbars: true,
+                shrinkScrollbars: 'scale',
+                fadeScrollbars: true
+            });
+
             hide_loading_screen();
         }
     </script>
 {% endblock %}
 {% block search_zone %}
-    <div id="search_zone" class='cook_ingredients_zone' style="background:transparent !important; border:1px solid transparent !important;box-shadow:0px 0px 0px transparent !important; height:auto;" onclick="full_sidebar()">
-        <div id="cook_ingredients">
-            <div id="divider" class="top_divider" style='margin-bottom:10px;' onclick="full_sidebar()"></div>
-            <div class="sidebar_right_info_item untouchable not_liked" id="sidebar_right_like" onclick="recipe_like('1', this.id)">59</div>
-            <div class="sidebar_right_info_item" id="sidebar_right_time">25 min</div>
-            <div class="sidebar_right_info_item" id="sidebar_right_country">Lenkija</div>
-            <div class="sidebar_right_info_item" id="sidebar_right_main_cooking_method">Virimas</div>
-            <div class="sidebar_right_info_item" id="sidebar_right_type">Antrieji patiekalai</div>
-            <div class="sidebar_right_info_item" id="sidebar_right_characteristics">Aštru, sūru</div>
-        </div>
-    </div>
+    <div id="divider" class="top_divider" style='margin-top:10px;margin-left:10px;' onclick="full_sidebar()"></div>
+    <div id="cook_left_sidebar_wrapper">
+        <div class="scroller" id="cook_left_sidebar_wrapper_scroller">
+            <div id="search_zone" class='cook_ingredients_zone' style="background:transparent !important; border:1px solid transparent !important;box-shadow:0px 0px 0px transparent !important; height:auto;" onclick="full_sidebar()">
+                <div id="cook_ingredients">
+                    <div class="sidebar_right_info_item untouchable not_liked" id="sidebar_right_like" onclick="recipe_like('1', this.id)">59</div>
+                    <div class="sidebar_right_info_item" id="sidebar_right_time">25 min</div>
+                    <div class="sidebar_right_info_item" id="sidebar_right_country">Lenkija</div>
+                    <div class="sidebar_right_info_item" id="sidebar_right_main_cooking_method">Virimas</div>
+                    <div class="sidebar_right_info_item" id="sidebar_right_type">Antrieji patiekalai</div>
+                    <div class="sidebar_right_info_item" id="sidebar_right_characteristics">Aštru, sūru</div>
+                </div>
+            </div>
 {% endblock %}
 
  {% block divider %}
-     <div id="divider" class="middle_divider" style='margin-left:10px;' onclick="full_sidebar()"></div>
+        <div id="divider" class="middle_divider" style='margin-left:10px;' onclick="full_sidebar()"></div>
  {% endblock %}
 
 {% block filters_zone %}
-    <div id='filters_zone' style="top: 246px;" class="contains_scrollbar" onclick="full_sidebar()">
-        <div class="ingredient untouchable">
-            <div class="ingredient_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
-            <div class="ingredient_text">Bananas</div>
-            <div class="ingredient_size">5 vnt</div>
-        </div>
-        <div class="ingredient untouchable">
-            <div class="ingredient_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
-            <div class="ingredient_text">Jautiena</div>
-            <div class="ingredient_size">250 g</div>
-        </div>
-        <div class="ingredient untouchable">
-            <div class="ingredient_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
-            <div class="ingredient_text">Cukinija</div>
-            <div class="ingredient_size">500 g</div>
-        </div>
-        <div class="ingredient untouchable">
-            <div class="ingredient_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
-            <div class="ingredient_text">Ananasas</div>
-            <div class="ingredient_size">100 g</div>
+            <div id='filters_zone' style="position:relative !important;top:0px !important;bottom:0px !important;height:auto !important;float:left;" onclick="full_sidebar()">
+                <div class="ingredient untouchable">
+                    <div class="ingredient_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
+                    <div class="ingredient_text">Bananas</div>
+                    <div class="ingredient_size">5 vnt</div>
+                </div>
+                <div class="ingredient untouchable">
+                    <div class="ingredient_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
+                    <div class="ingredient_text">Jautiena</div>
+                    <div class="ingredient_size">250 g</div>
+                </div>
+                <div class="ingredient untouchable">
+                    <div class="ingredient_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
+                    <div class="ingredient_text">Cukinija</div>
+                    <div class="ingredient_size">500 g</div>
+                </div>
+                <div class="ingredient untouchable">
+                    <div class="ingredient_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
+                    <div class="ingredient_text">Ananasas</div>
+                    <div class="ingredient_size">100 g</div>
+                </div>
+            </div>
         </div>
     </div>
-
 {% endblock %}
 
 {% block config_zone %}

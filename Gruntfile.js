@@ -66,6 +66,8 @@ module.exports = function (grunt) {
                 src: [
                     'bower_components/jquery/dist/jquery.min.js',
                     'bower_components/bootstrap/dist/js/bootstrap.min.js',
+                    'app/Resources/scripts/iscroll.js',
+                    'app/Resources/scripts/iscroll-probe.js',
                     'app/Resources/scripts/start.js'
 
                 ],

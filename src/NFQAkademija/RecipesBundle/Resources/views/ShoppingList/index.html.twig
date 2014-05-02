@@ -30,6 +30,16 @@
             if(browser == 'ie'){
                 $("#content_wrapper").css('margin-right','-17px');
             }
+
+            scroll_filters = new IScroll('#filters_zone', {
+                scrollbars: true,
+                mouseWheel: true,
+                interactiveScrollbars: true,
+                shrinkScrollbars: 'scale',
+                fadeScrollbars: true
+            });
+
+
             hide_loading_screen();
         }
 
@@ -318,7 +328,10 @@
  {% endblock %}
 
 {% block filters_zone %}
-    <div id='filters_zone' class="contains_scrollbar" style="bottom:10px;"></div>
+<div id='filters_zone' style="top:230px;bottom:10px;" onclick="full_sidebar()">
+    <div class="scroller" id="scroller_filters"></div>
+</div>
+
 {% endblock %}
 
 {% block config_zone %}

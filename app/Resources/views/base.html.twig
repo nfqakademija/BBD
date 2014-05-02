@@ -9,6 +9,8 @@
         <meta name="author" content="Kieto Koto Standartas">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
         <link href="/css/style.css" rel="stylesheet">
+        <link rel="apple-touch-icon" href="/images/logo.png" />
+        <link rel="apple-touch-icon-precomposed" href="/images/logo.png" />
         <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
         <link href='http://fonts.googleapis.com/css?family=Ubuntu&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
         <script src="/js/script.js" type="text/javascript"></script>
@@ -123,62 +125,63 @@
 
         {% block content %}{% endblock %}
         {% block sidebar_right %}
-            <div id="sidebar_right" class="right_squeeze" id="sidebar_for_recipe_1">
-                <div id="sidebar_right_image" style="background-image:url('{{ asset('images/food (5).jpg') }}')"></div>
-                <div id="sidebar_right_title">Kepnys "Omledufe"</div>
-                <div id="sidebar_right_info">
-                    <div class="sidebar_right_info_item untouchable not_liked" id="sidebar_right_like" onclick="recipe_like('1', this.id)">59</div>
-                    <div class="sidebar_right_info_item" id="sidebar_right_time">25 min</div>
-                    <div class="sidebar_right_info_item" id="sidebar_right_country">Lenkija</div>
-                    <div class="sidebar_right_info_item" id="sidebar_right_main_cooking_method">Virimas</div>
-                    <div class="sidebar_right_info_item" id="sidebar_right_type">Antrieji patiekalai</div>
-                    <div class="sidebar_right_info_item" id="sidebar_right_characteristics">Aštru, sūru</div>
-                </div>
-                <div id="sidebar_right_ingredients">
-                    <div id="sidebar_right_ingredients_text">Ingredientai</div>
-                    <div class="sidebar_right_ingredients_button" id="sidebar_right_ingredients_coop" onclick="show_top_layer('coop','1')"></div>
-                    <div class="sidebar_right_ingredients_button" id="sidebar_right_ingredients_shoppinglist" onclick="add_to_shopping_list('1')"></div>
-                </div>
-                <div id="divider" class="ingredients_divider"></div>
-                <div id="sidebar_right_ingredients_zone" class="contains_scrollbar">
-                    <div class="ingredient untouchable" id="ingredient-2" onclick="ingredient_selected('2')">
-                        <div class="ingredient_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
-                        <div class="ingredient_text">Bananas</div>
-                        <div class="ingredient_size">5 vnt</div>
-                        <div class="ingredient_indicator ingredient_indicator_have" id="ingredient_indicator-2"></div>
-                    </div>
-                    <div class="ingredient untouchable" id="ingredient-3" onclick="ingredient_selected('3')">
-                        <div class="ingredient_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
-                        <div class="ingredient_text">Jautiena</div>
-                        <div class="ingredient_size">250 g</div>
-                        <div class="ingredient_indicator ingredient_indicator_undefined" id="ingredient_indicator-3"></div>
-                    </div>
-                    <div class="ingredient untouchable" id="ingredient-4" onclick="ingredient_selected('4')">
-                        <div class="ingredient_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
-                        <div class="ingredient_text">Cukinija</div>
-                        <div class="ingredient_size">500 g</div>
-                        <div class="ingredient_indicator ingredient_indicator_undefined" id="ingredient_indicator-4"></div>
-                    </div>
-                    <div class="ingredient untouchable" id="ingredient-5" onclick="ingredient_selected('5')">
-                        <div class="ingredient_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
-                        <div class="ingredient_text">Ananasas</div>
-                        <div class="ingredient_size">100 g</div>
-                        <div class="ingredient_indicator ingredient_indicator_undefined" id="ingredient_indicator-5"></div>
-                    </div>
-                    <div class="ingredient untouchable" id="ingredient-6" onclick="ingredient_selected('6')">
-                        <div class="ingredient_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
-                        <div class="ingredient_text">Pomidoras</div>
-                        <div class="ingredient_size">6 vnt</div>
-                        <div class="ingredient_indicator ingredient_indicator_undefined" id="ingredient_indicator-6"></div>
-                    </div>
+            <div id="sidebar_right" class="right_squeeze sidebar_recipe_1">
+                <div id="sidebar_right_wrapper">
+                    <div class="scroller" id="scroll_sidebar_right">
+                        <div id="sidebar_right_image" style="background-image:url('{{ asset('images/food (5).jpg') }}')"></div>
+                        <div id="sidebar_right_title">Kepnys "Omledufe"</div>
+                        <div id="sidebar_right_info">
+                            <div class="sidebar_right_info_item untouchable not_liked" id="sidebar_right_like" onclick="recipe_like('1', this.id)">59</div>
+                            <div class="sidebar_right_info_item" id="sidebar_right_time">25 min</div>
+                            <div class="sidebar_right_info_item" id="sidebar_right_country">Lenkija</div>
+                            <div class="sidebar_right_info_item" id="sidebar_right_main_cooking_method">Virimas</div>
+                            <div class="sidebar_right_info_item" id="sidebar_right_type">Antrieji patiekalai</div>
+                            <div class="sidebar_right_info_item" id="sidebar_right_characteristics">Aštru, sūru</div>
+                        </div>
+                        <div id="sidebar_right_ingredients">
+                            <div id="sidebar_right_ingredients_text">Ingredientai</div>
+                            <div class="sidebar_right_ingredients_button" id="sidebar_right_ingredients_coop" onclick="show_top_layer('coop','1')"></div>
+                            <div class="sidebar_right_ingredients_button" id="sidebar_right_ingredients_shoppinglist" onclick="add_to_shopping_list('1')"></div>
+                        </div>
+                        <div id="divider" class="ingredients_divider"></div>
+                        <div id="sidebar_right_ingredients_zone" class="contains_scrollbar">
+                            <div class="ingredient untouchable" id="ingredient-2" onclick="ingredient_selected('2')">
+                                <div class="ingredient_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
+                                <div class="ingredient_text">Bananas</div>
+                                <div class="ingredient_size">5 vnt</div>
+                                <div class="ingredient_indicator ingredient_indicator_have" id="ingredient_indicator-2"></div>
+                            </div>
+                            <div class="ingredient untouchable" id="ingredient-3" onclick="ingredient_selected('3')">
+                                <div class="ingredient_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
+                                <div class="ingredient_text">Jautiena</div>
+                                <div class="ingredient_size">250 g</div>
+                                <div class="ingredient_indicator ingredient_indicator_undefined" id="ingredient_indicator-3"></div>
+                            </div>
+                            <div class="ingredient untouchable" id="ingredient-4" onclick="ingredient_selected('4')">
+                                <div class="ingredient_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
+                                <div class="ingredient_text">Cukinija</div>
+                                <div class="ingredient_size">500 g</div>
+                                <div class="ingredient_indicator ingredient_indicator_undefined" id="ingredient_indicator-4"></div>
+                            </div>
+                            <div class="ingredient untouchable" id="ingredient-5" onclick="ingredient_selected('5')">
+                                <div class="ingredient_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
+                                <div class="ingredient_text">Ananasas</div>
+                                <div class="ingredient_size">100 g</div>
+                                <div class="ingredient_indicator ingredient_indicator_undefined" id="ingredient_indicator-5"></div>
+                            </div>
+                            <div class="ingredient untouchable" id="ingredient-6" onclick="ingredient_selected('6')">
+                                <div class="ingredient_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
+                                <div class="ingredient_text">Pomidoras</div>
+                                <div class="ingredient_size">6 vnt</div>
+                                <div class="ingredient_indicator ingredient_indicator_undefined" id="ingredient_indicator-6"></div>
+                            </div>
 
+                        </div>
+                    </div>
                 </div>
-
-
                 <div id="sidebar_right_bottom_zone">
                     <div id="sidebar_right_cook_button" onclick="cook('1')">Gaminti</div>
                 </div>
-
             </div>
         {% endblock %}
         </div>

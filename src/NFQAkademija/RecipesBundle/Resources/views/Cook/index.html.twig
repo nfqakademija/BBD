@@ -16,7 +16,6 @@
 
         function loader() {
             sidebar_manipulation();
-            initialize_scrollbar();
             //get steps amount
             steps_amount = 3;
 
@@ -88,6 +87,11 @@
             if(browser == 'firefox'){
                 $("#search_container").css('box-shadow','none');
             }
+            if(browser == 'safari'){
+                $("#step_comment_box_area").attr("placeholder", "Palikite atsiliepimą");
+            }
+
+
 
             scroll_sidebar_right = new IScroll('#sidebar_right_wrapper', {
                 scrollbars: true,

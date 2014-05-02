@@ -18,7 +18,6 @@
         {% block specific_scripts %}
             <script type="text/javascript">
                 function loader(){
-                    initialize_scrollbar();
                     if(browser == 'firefox'){
                         $("#search_container").css('box-shadow','none');
                     }
@@ -57,9 +56,11 @@
             }(document, 'script', 'facebook-jssdk'));
         </script>
 
-        <div class="transition untouchable" id="toast_wrapper"><div id="toast"></div></div>
-        <div id="toast_top" class="untouchable" onclick='to_very_top()'></div>
-        <div id="toast_loading" class="untouchable"></div>
+        <div class="untouchable" id="toast_wrapper">
+            <div id="toast">
+                <div id="toast_inside"></div>
+            </div>
+        </div>
 
         <div id="loading_screen" class="untouchable">
             <div id="loading_screen_title"></div>
@@ -144,7 +145,7 @@
                             <div class="sidebar_right_ingredients_button" id="sidebar_right_ingredients_shoppinglist" onclick="add_to_shopping_list('1')"></div>
                         </div>
                         <div id="divider" class="ingredients_divider"></div>
-                        <div id="sidebar_right_ingredients_zone" class="contains_scrollbar">
+                        <div id="sidebar_right_ingredients_zone">
                             <div class="ingredient untouchable" id="ingredient-2" onclick="ingredient_selected('2')">
                                 <div class="ingredient_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
                                 <div class="ingredient_text">Bananas</div>

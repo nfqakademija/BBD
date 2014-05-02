@@ -796,8 +796,8 @@ function shoppinglist_add_enter(){
     show_filters(shopping_items, 0);
     setTimeout(function(){
         scroll_filters.refresh();
-        var scroll_amount =  scroll_filters.maxScrollY - scroll_filters.y;
-        scroll_filters.scrollBy(0, scroll_amount, 600, IScroll.utils.ease.bounce);
+        //var scroll_amount =  scroll_filters.maxScrollY - scroll_filters.y;
+        scroll_filters.scrollBy(0, scroll_filters.maxScrollY, 600, IScroll.utils.ease.bounce);
     },100)
     //ajax to add to shoopinglist
 }

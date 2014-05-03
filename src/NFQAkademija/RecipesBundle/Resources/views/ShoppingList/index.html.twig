@@ -38,6 +38,14 @@
                 fadeScrollbars: true
             });
 
+            scroll_map_buttons = new IScroll('#map_buttons_zone_bottom', {
+                scrollbars: true,
+                mouseWheel: true,
+                interactiveScrollbars: true,
+                shrinkScrollbars: 'scale',
+                fadeScrollbars: true
+            });
+
 
             hide_loading_screen();
         }
@@ -104,7 +112,9 @@
                 icon: "/images/here.png",
                 title: "Tu esi čia"
             });
+
             infowindow = new google.maps.InfoWindow();
+
             google.maps.event.addListener(your_position, 'click', function () {
                 infowindow.setContent("Tu esi čia");
                 infowindow.open(map, this);
@@ -113,17 +123,80 @@
             directionsDisplay = new google.maps.DirectionsRenderer();
             directionsDisplay.setMap(map);
 
-            add_center_controller();
+            add_controllers();
+            show_places('all', 2000);
+        }
 
-            show_on_map('Kebabinė', false);
+        function add_controllers(){
+            add_center_controller();
+        }
+
+        function show_places(type, radius){
+            //from google API
+            //show_on_map('Kebabinė', false);
             //show_on_map('Picerija', false);
             //show_on_map('Palink', false);
             //show_on_map('Maxima', false);
             //show_on_map('greito maisto restoranas', false);
 
+
+            //from local DB
             //traukti is DB vietu lat, long image_url, title ir sukti cikla ir atvaizduoti
-            //add_custom_marker('54.909933', '23.983622999999966' , '/images/add.png', 'NFQ');
+            //title, type, lat, long, image_url
+
+            //add_custom_place('Title', 'tipas', '54.909933', '23.983622' , '/images/add.png');
+
+            //kebabinė, picerija(pizza express, pica pica, charlie pica, can can), načnykas, greito maisto, hesburger, mcdonalds,
+            //restoranus, kavines, užkandinės, bandelinės, prekybos centrai (Savas, Molas, Urmas, Mega, Akropolis), maxima, norfa, iki, samsonas, fresh market
+            //aibė, express market, krautuvės
+
+            var places = get_places(type, radius);
+
+            var title, type, lat, long, icon;
+            for(i = 0; i < places.length; i++){
+                title = places[i][0];
+                type = places[i][1];
+                lat = places[i][2];
+                long = places[i][3];
+                icon = places[i][4];
+                add_custom_place(title, type, lat, long , icon);
+            }
         }
+
+        function get_places(type, radius){
+            var places = [];
+            //ajax call to get from type: all
+            places[0] = ['Maxima','tipas0','54.909933', '23.983622', '/images/maxima.png'];
+            places[1] = ['Norfa','tipas0','54.910833', '23.976841', '/images/norfa.png'];
+            places[2] = ['Iki','tipas0','54.907780', '23.983622', '/images/iki.png'];
+            places[3] = ['Hesburger','tipas0','54.906690', '23.983640', '/images/hesburger.png'];
+            places[4] = ['McDonalds','tipas0','54.907000', '23.983648', '/images/mcdonalds.png'];
+            places[5] = ['Rimi','tipas0','54.909933', '23.983670', '/images/rimi.png'];
+
+
+            //-----------
+            var center_lat = your_X;
+            var center_long = your_Y;
+            var center_location = new google.maps.LatLng(center_lat, center_long);
+            var distance;
+            var place_location;
+            var shownable_places = [];
+
+            //select places to be shown in radius
+            for(i = 0; i < places.length; i++){
+                place_location = new google.maps.LatLng(places[i][2], places[i][3]);
+                distance = google.maps.geometry.spherical.computeDistanceBetween (center_location, place_location);
+                distance = distance.toFixed(0);
+                if(distance <= radius){
+                    shownable_places.push(places[i]);
+                }
+            }
+
+            return shownable_places;
+        }
+
+
+
 
         function calcRoute(end, type){
             var start = my_location;
@@ -269,13 +342,14 @@
 
         function show_marker(ID){
             //show marker when looking for prices. nearest shop with that name pvz IKI
-            map.panTo(my_location);
+            var marker_location = my_location;
+            map.panTo(marker_location);
         }
 
-    function add_custom_marker(lat, long, icon, placeName){
+    function add_custom_place(placeName, placeType, lat, long, placeIcon){
         var placeLocation = new google.maps.LatLng(lat, long);
         var placeImage = {
-            url: icon,
+            url: placeIcon,
             size: new google.maps.Size(25, 25),
             origin: new google.maps.Point(0, 0),
             anchor: new google.maps.Point(17, 34),
@@ -295,7 +369,7 @@
             var distance = google.maps.geometry.spherical.computeDistanceBetween (my_location, marker.position);
             distance = distanceConverter(distance.toFixed(0));
             var placeContent =
-                "<image class='google_map_tooltip_image' src='" + icon + "' />" +
+                "<image class='google_map_tooltip_image' src='" + placeIcon + "' />" +
                 "<div class='google_map_tooltip_title'>" + placeName + "</div>" +
                 "<div style='clear:both;'></div>" +
                 "<div id='walk_button' class='google_map_tooltip_button' onclick=\"calcRoute('" + marker.position + "','walk')\">Eiti</div>" +
@@ -317,7 +391,7 @@
         <div id='search_index' onclick="focus_input('search_input')" ></div>
         <input id='search_input' placeholder='Pridėti prekių' onkeyup="shoppinglist_search()" onfocus="shoppinglist_input_focus()" onblur="shoppinglist_input_blur()"/>
         <div id='search_container'>
-            <div id='search_container_inside' class='contains_scrollbar'></div>
+            <div id='search_container_inside'></div>
         </div>
     </div>
 {% endblock %}
@@ -333,42 +407,29 @@
 
 {% endblock %}
 
-{% block config_zone %}
-{% endblock %}
+{% block config_zone %}{% endblock %}
 
 {% block content %}
-    <div id="content_wrapper" style="right:0px;background-image:url('{{ asset('images/content_background.jpg') }}')">
+    <div id="content_wrapper" style="right:66px;background-color:rgb(229, 227, 223);">
         <div id="map_canvas"></div>
+    </div>
+    <div id="map_buttons_zone">
+        <div id="map_buttons_zone_top">
+            <div class="map_button" id="map_button_center"></div>
+            <div class="map_button" id="map_button_random"></div>
+        </div>
+        <div id="divider" style=";margin-top:0px;width:45px;"></div>
+        <div id="map_buttons_zone_bottom">
+            <div class="scroller" id="map_buttons_zone_box_scroller">
+                <div class="map_button" id="map_button_maxima"></div>
+                <div class="map_button" id="map_button_norfa"></div>
+                <div class="map_button" id="map_button_iki"></div>
+                <div class="map_button" id="map_button_hesburger"></div>
+                <div class="map_button" id="map_button_kebab"></div>
+            </div>
+        </div>
+
     </div>
 {% endblock %}
 
-{% block sidebar_right %}
-    <div id="sidebar_right" class="right_squeeze" >
-        <div id="sidebar_right_image" style="background-image:url('{{ asset('images/food (5).jpg') }}')"></div>
-        <div id="sidebar_right_title">Shoppinglisto prekė</div>
-        <div id="sidebar_right_ingredients">
-            <div id="sidebar_right_ingredients_text">Kainos</div>
-        </div>
-        <div id="divider" class="ingredients_divider"></div>
-        <div id="sidebar_right_ingredients_zone" style="bottom:10px;" class="contains_scrollbar">
-            <div class="ingredient untouchable" id="ingredient-2" onclick="show_marker('2')">
-                <div class="ingredient_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
-                <div class="ingredient_text">22.99 Lt</div>
-                <div class="ingredient_size">Iki</div>
-                <div class="ingredient_indicator ingredient_indicator_have" id="ingredient_indicator-2"></div>
-            </div>
-            <div class="ingredient untouchable" id="ingredient-3" onclick="show_marker('2')">
-                <div class="ingredient_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
-                <div class="ingredient_text">25.89</div>
-                <div class="ingredient_size">Norfa</div>
-                <div class="ingredient_indicator ingredient_indicator_undefined" id="ingredient_indicator-3"></div>
-            </div>
-            <div class="ingredient untouchable" id="ingredient-4" onclick="show_marker('2')">
-                <div class="ingredient_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
-                <div class="ingredient_text">27.99</div>
-                <div class="ingredient_size">Maxima</div>
-                <div class="ingredient_indicator ingredient_indicator_undefined" id="ingredient_indicator-4"></div>
-            </div>
-        </div>
-    </div>
-{% endblock %}
+{% block sidebar_right %}{% endblock %}

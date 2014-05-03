@@ -23,7 +23,11 @@ var scroll_content;
 var scroll_filters;
 var scroll_sidebar_right;
 var scroll_sidebar_left;
+var scroll_map_buttons;
+var scroll_steps_others_like_box;
+var scroll_step_comment_answers_box;
 var clickable = true;
+var user_login_status = false;
 
 document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
 
@@ -252,6 +256,14 @@ function check(type, amount){
                 return true;
             }
             break;
+        case "not_empty":
+            amount = amount.trim();
+            if(amount == ""){
+                return false;
+            }else{
+                return true;
+            }
+            break;
     }
 }
 var current_filters_scroll;
@@ -462,7 +474,6 @@ function filter_ingredients_category(ingredients_category){
 
 
 function check_if_user_is_loged(){
-    var status = false;
     FB.getLoginStatus(function(response) {
         if (response.status == 'connected') {
             // the user is logged in and has authenticated your
@@ -472,21 +483,20 @@ function check_if_user_is_loged(){
             // and signed request each expire
             //var uid = response.authResponse.userID;
             //var accessToken = response.authResponse.accessToken;
-            status = true;
+            user_login_status = true;
         } else if (response.status == 'not_authorized') {
             // the user is logged in to Facebook,
             // but has not authenticated your app
-            status = false;
+            user_login_status = false;
         } else {
             // the user isn't logged in to Facebook.
-            status = false;
+            user_login_status = false;
         }
     });
-    return status;
+    return user_login_status;
 }
 
 function content_navigation(type){
-
     switch(type){
         case "home":
             show_loading_screen();
@@ -563,6 +573,21 @@ function show_top_layer(type, ID){
                             "<div class='top_box_button' onclick=\"coop(" + ID + ");hide_top_layer()\">OK</div>" +
                             "<div class='top_box_button' onclick='hide_top_layer()'>Atšaukti</div>" +
                         "</div>" +
+                "</div>";
+            $("#top_box").html(data);
+            break;
+        case "share":
+            data =
+                "<div id='top_box_up'>" +
+                "<div id='top_box_title' class='untouchable'>Pasidalink su draugais</div>" +
+                    "<div class='top_box_social_box untouchable' id='top_box_social_facebook'></div>" +
+                "</div>" +
+                "<div id='top_box_content' class='untouchable'>" +
+                    "<div id='top_box_info_text'>Foodex paskelbs informaciją apie patiekalą Jūsų Facebook profilyje</div>" +
+                    "<div id='top_box_button_zone'>" +
+                    "<div class='top_box_button' onclick=\"share_food(" + ID + ");hide_top_layer()\">OK</div>" +
+                    "<div class='top_box_button' onclick='hide_top_layer()'>Atšaukti</div>" +
+                "</div>" +
                 "</div>";
             $("#top_box").html(data);
             break;
@@ -1524,6 +1549,32 @@ function recipe_like(recipe_ID, box_ID){
 function share_food(recipe_ID){
     if(check_if_user_is_loged()){
         //take picture of food and upload to facebook
+
+        var link = location.href;
+        var image = "http://bbd.dev/images/food (5).jpg";
+        var title = "Šiškebabas";
+        var about = "Šiškebabas labai skanus ir geras patiekalas";
+
+        FB.api('/me/feed', 'post', {
+            message: title,
+            name: 'Foodex',
+            caption: 'Gaminkite kartu su Foodex',
+            description: about,
+            link: link,
+            picture: image
+        }, function(response) {
+            if (!response || response.error) {
+                toast('Jūs nesuteikėte privilegijos rašyti ant jūsų laiko juostos','bad', 'login');
+            } else {
+                toast('Pasidalinta','good', 'login');
+            }
+        });
+        /*
+         FB.ui({
+         method: 'share',
+         href: 'https://developers.facebook.com/docs/dialogs/',
+         }, function(response){});
+         */
     }else{
         show_top_layer('account');
     }
@@ -1531,10 +1582,26 @@ function share_food(recipe_ID){
 
 function add_comment(recipe_ID){
     if(check_if_user_is_loged()){
-        //ajax to add comment
+
+        var comment = $('#step_comment_box_area').val();
+        if(check('not_empty', comment)){
+            //ajax to add comment
+            squzee_comment_box();
+            toast('Atsiliepimas įrašytas','good','write');
+        }else{
+            toast('Įrašykite ką nors','bad','write');
+        }
+
     }else{
         show_top_layer('account');
     }
+}
+
+function squzee_comment_box(){
+    $('.step_comment_box_comments').animate({bottom: "50%", top: "50%"}, transition_time * 2,function(){
+        $(".step_comment_box_comments").html("<div id='step_comment_title'>Ačiū</div>");
+        $('.step_comment_box_comments').animate({height: "52px", marginTop: "-26px"}, transition_time);
+    });
 }
 
 function logout(){

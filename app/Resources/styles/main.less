@@ -20,8 +20,7 @@ body{
   font-family:Ubuntu;
   overflow: hidden;
   //background-color:@black;
-  overflow-y:scroll;
-  overflow-x:hidden;
+  overflow:hidden;
   background-size:cover;
   background-repeat:no-repeat;
   background-position:50% 50%;
@@ -135,6 +134,58 @@ textarea{
 .empty{
   width:0px;
 }
+
+#map_buttons_zone{
+  position:fixed;
+  right:0px;
+  top:0px;
+  bottom:0px;
+  width:45px;
+  background-color:@black;
+  overflow:hidden;
+  box-shadow:0px 0px 2px @black;
+  z-index:10;
+  padding:10px;
+  border-left:1px solid black;
+  color:@white;
+}
+
+#map_buttons_zone_top{
+  float:left;
+  width:45px;
+  height:110px;
+}
+
+#map_buttons_zone_bottom{
+  width:55px;
+  overflow:hidden;
+  padding-right:30px;
+  float:left;
+  position:fixed;
+  bottom:10px;
+  top:130px;
+}
+
+
+.map_button{
+  .filter_element;
+  width:43px;
+  background-repeat:no-repeat;
+  background-size:100% 100%;
+  background-position:50% 50%;
+}
+
+#map_button_maxima{ background-image:url('/images/maxima.png');}
+#map_button_norfa{ background-image:url('/images/norfa.png');}
+#map_button_iki{ background-image:url('/images/iki.png');}
+#map_button_hesburger{ background-image:url('/images/hesburger.png');}
+#map_button_kebab{ background-image:url('/images/kebab.png');}
+#map_button_mcdonalds{ background-image:url('/images/mcdonalds.png');}
+#map_button_pizza{ background-image:url('/images/pizza.png');}
+#map_button_rimi{ background-image:url('/images/rimi.png');}
+
+
+
 
 
 #sidebar_right{
@@ -1379,6 +1430,9 @@ p{
 .toast_inside_not_liked:after{
   background-image:url('/images/not_liked.png');
 }
+.toast_inside_write:after{
+  background-image:url('/images/write.png');
+}
 
 .tooltip_box{
   display:none;
@@ -2129,14 +2183,30 @@ p{
 }
 
 .step_answer{
-  width: 202px;
-  padding:10px;
-  color:@black;
+  width: 222px;
+  min-height:30px;
   float:left;
   border-bottom: 1px solid #ECECEC;
   &:hover{
     background-color:rgb(214, 214, 214);
   }
+}
+
+.step_answer_image{
+  width:38px;
+  height:38px;
+  background-repeat:no-repeat;
+  background-size:cover;
+  background-position:50% 50%;
+  float:left;
+}
+
+.step_answer_text{
+  width:164px;
+  min-height:18px;
+  padding:10px;
+  color:@black;
+  float:left;
 }
 
 .step_answers_box{
@@ -2151,8 +2221,7 @@ p{
   bottom: 0px;
   margin: 0;
   background-color:white;
-  overflow-x: hidden;
-  overflow-y: scroll;
+  overflow:hidden;
   padding-right:30px;
 }
 
@@ -2251,9 +2320,8 @@ p{
   bottom:0px;
   top:41px;
   //margin-left:-10px;
-  overflow-x:hidden;
-  overflow-y:scroll;
-  padding-right:40px;
+  overflow:hidden;
+  padding-right:30px;
 }
 
 

@@ -56,8 +56,11 @@ function toast(text, status, type){
     },toast_show_time);
 }
 
-
-function append_recipes_to_profile(){
+function profile_recipes(type){
+    $(".profile_line_box").removeClass().addClass('profile_line_box');
+    $("#profile_line_box_" + type).addClass('profile_line_box_' + type + '_active');
+    recipe_size = calculate_recipe_size();
+    //ajax to get recipes
     var recipes = [];
     recipes[0] = ["0","/images/food (0).jpg", "title0"];
     recipes[1] = ["1","/images/food (1).png", "title0"];
@@ -81,46 +84,31 @@ function append_recipes_to_profile(){
     recipes[19] = ["19","/images/food (19).jpg", "title0"];
     recipes[20] = ["20","/images/food (20).jpg", "title0"];
 
-    //info about profile recipes
-    $("#profile_recipes").append("<div class='recipe_box untouchable profile_box' id='box_cooked' style=\"line-height:" + recipe_size + "px;width:" + recipe_size + "px;height:" + recipe_size + "px;\" onclick=\"profile_navigation('cooked')\">Gaminta</div>");
-    for(i = 5; i < 9; i++){
-        var data = recipes[i];
-        var id = data[0];
-        var image = data[1];
-        var title = data[2];
-        var appendable_data = "<div class='recipe_box' id='recipe_" + id + "' style=\"background-image: url('" + image + "');width:" + recipe_size + "px;height:" + recipe_size +  "px;\" onclick=\"show_recipe('" + id + "')\"></div>";
-        $("#profile_recipes").append(appendable_data);
-    }
 
-    $("#profile_recipes").append("<div class='recipe_box untouchable profile_box' id='box_liked' style=\"line-height:" + recipe_size + "px;width:" + recipe_size + "px;height:" + recipe_size + "px;\" onclick=\"profile_navigation('liked')\">Patinka</div>");
-    for(i = 9; i < 13; i++){
-        var data = recipes[i];
-        var id = data[0];
-        var image = data[1];
-        var title = data[2];
-        var appendable_data = "<div class='recipe_box' id='recipe_" + id + "' style=\"background-image: url('" + image + "');width:" + recipe_size + "px;height:" + recipe_size +  "px;\" onclick=\"show_recipe('" + id + "')\"></div>";
-        $("#profile_recipes").append(appendable_data);
-    }
+    $('#profile_recipes').fadeOut(transition_time,function(){
+        $('#profile_recipes').html('');
 
-    $("#profile_recipes").append("<div class='recipe_box untouchable profile_box' id='box_created' style=\"line-height:" + recipe_size + "px;width:" + recipe_size + "px;height:" + recipe_size + "px;\" onclick=\"profile_navigation('created')\">Sukurta</div>");
-    for(i = 17; i < 20; i++){
-        var data = recipes[i];
-        var id = data[0];
-        var image = data[1];
-        var title = data[2];
-        var appendable_data = "<div class='recipe_box' id='recipe_" + id + "' style=\"background-image: url('" + image + "');width:" + recipe_size + "px;height:" + recipe_size +  "px;\" onclick=\"show_recipe('" + id + "')\"></div>";
-        $("#profile_recipes").append(appendable_data);
-    }
+        if(type == "created"){
+            var appendable_data = "<div class='recipe_box' style=\"background-color:white;background-size:70% 70%;background-image: url('/images/new_recipe.png');width:" + recipe_size + "px;height:" + recipe_size +  "px;\" onclick='go_to_new_recipe()'><div class='recipe_box_info'>Sukurti naują receptą</div></div>";
+            $("#profile_recipes").append(appendable_data);
+        }
 
-    $("#profile_recipes").append("<div class='recipe_box untouchable profile_box' id='box_watched' style=\"line-height:" + recipe_size + "px;width:" + recipe_size + "px;height:" + recipe_size + "px;\" onclick=\"profile_navigation('watched')\">Peržiūrėta</div>");
-    for(i = 14; i < 17; i++){
-        var data = recipes[i];
-        var id = data[0];
-        var image = data[1];
-        var title = data[2];
-        var appendable_data = "<div class='recipe_box' id='recipe_" + id + "' style=\"background-image: url('" + image + "');width:" + recipe_size + "px;height:" + recipe_size +  "px;\" onclick=\"show_recipe('" + id + "')\"></div>";
-        $("#profile_recipes").append(appendable_data);
-    }
+        for(i = 0; i < recipes.length; i++){
+            var data = recipes[i];
+            var id = data[0];
+            var image = data[1];
+            var title = data[2];
+            var appendable_data = "<div class='recipe_box' id='recipe_" + id + "' style=\"background-image: url('" + image + "');width:" + recipe_size + "px;height:" + recipe_size +  "px;\" onclick=\"show_recipe('" + id + "')\"><div class='recipe_box_info'>" + title + "</div></div>";
+            $("#profile_recipes").append(appendable_data);
+        }
+
+        $('#profile_recipes').fadeIn(transition_time);
+        setTimeout(function(){scroll_content.refresh();},0);
+    });
+
+
+
+
 }
 
 function append_recipes(){
@@ -1045,43 +1033,39 @@ function last_index(){
 
 function show_recipe(recipe_ID){
     if(!clickable) return;
-
-    var classes = ($("#recipe_" + recipe_ID).attr('class')).split(" ");
-    var selected = classes[1];
-    if(selected == "recipe_active"){
-        hide_recipe();
-    }else{
-        $("#sidebar_right").removeClass('right_squeeze').addClass('right_full');
-        //calculate top px for ingredients zone
-        //var height_from_top = $(".ingredients_divider").offset().top + 10;
-        //$("#sidebar_right_ingredients_zone").css('top', height_from_top + 'px');
-        $('.recipe_box').removeClass('recipe_active');
-        $("#recipe_" + recipe_ID).addClass('recipe_active');
-
-
-
-        //from ajax with recipe ID get
-        var image;
-        var title;
-        var country;
-        var time;
-        var rating;
-        var main_cooking_method;
-        var type;
-        var characteristics; //array of them
-        var celebration; //array of them or empty
-        var ingredients; //array of them
-
-
-        scroll_sidebar_right.refresh();
-        scroll_sidebar_right.scrollTo(0,0);
-    }
-
-    recalculate_width();
     if(mobile_state){
         empty_sidebar();
     }
 
+    if($("#recipe_" + recipe_ID).hasClass('recipe_active')){
+        hide_recipe();
+    }else{
+        if($('.recipe_active').length == 0){
+            $("#sidebar_right").removeClass('right_squeeze').addClass('right_full');
+            $('.recipe_box').removeClass('recipe_active');
+            $("#recipe_" + recipe_ID).addClass('recipe_active');
+            scroll_sidebar_right.refresh();
+            scroll_sidebar_right.scrollTo(0,0);
+
+            //from ajax with recipe ID get
+            var image;
+            var title;
+            var country;
+            var time;
+            var rating;
+            var main_cooking_method;
+            var type;
+            var characteristics; //array of them
+            var celebration; //array of them or empty
+            var ingredients; //array of them
+
+        }else{
+            hide_recipe();
+            setTimeout(function(){
+                show_recipe(recipe_ID);
+            },transition_time)
+        }
+    }
 }
 
 function hide_recipe(){
@@ -1277,12 +1261,8 @@ function recalculate_width(){
     if(size_per_item < minimum_recipe_size){
         size_per_item = content_width - recipe_box_margin_size;
         $(".recipe_box").css("font-size","30px");
-        $("#profile_divider").css("font-size","16px");
-        $("#profile_image").css("margin-bottom","0px");
     }else{
         $(".recipe_box").css("font-size","");
-        $("#profile_divider").css("font-size","");
-        $("#profile_image").css("margin-bottom","10px");
     }
 
     $(".recipe_box").css('width', size_per_item + "px");
@@ -1314,26 +1294,57 @@ function sidebar_manipulation(){
     }
 }
 
+function manipulate_map_buttons_zone(){
+    if(mobile_state){
+        $('#map_buttons_zone_locker').css('display','block');
+        $('#map_buttons_zone').css('top','41px');
+        $('#map_buttons_zone_bottom').css('top','171px');
+        $('#map_buttons_zone').addClass('squeezed_buttons');
+        $('#content_wrapper').css('right','0px');
+    }else{
+        $('#map_buttons_zone_locker').css('display','none');
+        $('#map_buttons_zone').css('top','0px');
+        $('#map_buttons_zone_bottom').css('top','131px');
+        $('#map_buttons_zone').removeClass('squeezed_buttons');
+        $('#content_wrapper').css('right','66px');
+        setTimeout(function(){scroll_map_buttons.refresh()},0);
+    }
+}
+
+function show_hide_map_buttons_zone(){
+    if($('#map_buttons_zone').hasClass('squeezed_buttons')){
+        $('#map_buttons_zone').removeClass('squeezed_buttons');
+        setTimeout(function(){scroll_map_buttons.refresh()},0);
+        $('#content_wrapper').css('right','66px');
+    }else{
+        $('#map_buttons_zone').addClass('squeezed_buttons');
+        $('#content_wrapper').css('right','0px');
+    }
+}
+
 function empty_sidebar_slide(){
-    var sidebar_class = ($("#sidebar").attr('class'));
-    if(sidebar_class == "full"){
+    if($("#sidebar").hasClass('full')){
         $("#sidebar").removeClass('full').removeClass('empty').removeClass('squeeze').addClass('empty');
-        $("#content_wrapper").css('left','1px');
-        $("#header").css('left','1px');
+        $("#content_wrapper").css('left','0px');
+        $("#header").css('left','0px');
         $("#sidebar_slider").css('display','block');
         $("#header_logo").css('display','block');
+        $("#header_map_buttons_zone_locker").css('display','block');
+        $("#header_options").css('display','block');
         $("#config_zone").css('display','none');
         $("#cook_ingredients").css('display','none');
         $(".next_step").html(">>");
         //var height_from_top = $(".middle_divider").offset().top;
         //$("#filters_zone").css('top', height_from_top + 'px');
 
-    }else if(sidebar_class == "empty"){
+    }else if($("#sidebar").hasClass('empty')){
         $("#sidebar").removeClass('full').removeClass('empty').removeClass('squeeze').addClass('full');
         $("#content_wrapper").css('left','231px');
         $("#header").css('left','231px');
         $("#sidebar_slider").css('display','none');
         $("#header_logo").css('display','none');
+        $("#header_map_buttons_zone_locker").css('display','none');
+        $("#header_options").css('display','none');
         $("#config_zone").css('display','block');
         $("#cook_ingredients").css('display','block');
         $(".next_step").html("Sekantis");
@@ -1396,6 +1407,7 @@ function empty_sidebar(){
     $("#content_wrapper").css('left','0px');
     $("#header").css('left','0px');
     $("#header_logo").css('display','block');
+    $("#header_map_buttons_zone_locker").css('display','block');
     $("#sidebar_slider").css('display','none');
     $("#config_zone").css('display','none');
     recalculate_width();
@@ -1608,11 +1620,6 @@ function logout(){
     FB.logout(function(response) {
         location.href = "/";
     });
-}
-
-function profile_navigation(type){
-    scroll_content.scrollToElement("#box_" + type, 600, 0, -50, IScroll.utils.ease.back);
-    //$("#content_wrapper").animate({scrollTop: $("#box_" + type).offset().top + $("#content_wrapper").scrollTop()}, scroll_animation_time);
 }
 
 var clock;

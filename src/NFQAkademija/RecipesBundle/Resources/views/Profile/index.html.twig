@@ -6,14 +6,12 @@
 {% block specific_scripts %}
     <script type="text/javascript">
         function loader(){
-            recipe_size = calculate_recipe_size();
-            append_recipes_to_profile();
             sidebar_manipulation();
             $( window ).resize(function() {
                 recalculate_width();
                 sidebar_manipulation();
             });
-
+            profile_recipes('cooked');
 
             if(browser == 'firefox'){
                 $("#search_container").css('box-shadow','none');
@@ -55,6 +53,10 @@
     </script>
 {% endblock %}
 
+{% block header_lock %}
+    <div id="header_options" onclick="logout()"></div>
+{% endblock %}
+
  {% block filters_zone %}
      <div id='filters_zone' style="top:230px;" onclick="full_sidebar()">
          <div class="scroller" id="scroller_filters" >
@@ -77,30 +79,28 @@
 
 {% block content %}
 <div id="content_wrapper" style="padding-bottom:10px;background-image:url('/images/content_background.jpg')">
-    <div class="scroller" id="scroller_content" style="padding-bottom:10px;">
-        <div id="profile_info">
-            <div class="recipe_box" id="profile_image" style="background-image: url('/images/food (5).jpg')"></div>
-            <div id="profile_info_box">
-                <div id="profile_name">Ignas Lekas</div>
-                <div id="profile_email">ignas.lekas@gmail.com</div>
-                <div id="profile_statististics_box">
-                    <div class="profile_statististics_box_item" id="psbi_cooked" onclick="profile_navigation('cooked')">14</div>
-                    <div class="profile_statististics_box_item" id="psbi_liked" onclick="profile_navigation('liked')">63</div>
-                    <div class="profile_statististics_box_item" id="psbi_created" onclick="profile_navigation('created')">3</div>
-                    <div class="profile_statististics_box_item" id="psbi_watched" onclick="profile_navigation('watched')">698</div>
-                </div>
-                <div style="clear:both;"></div>
-                <div id="profile_buttons_box">
-                    <div class="profile_button" onclick="go_to_new_recipe()">Kurti</div>
-                    <!-- Not neede for facebook login
-                    <div class="profile_button" onclick="show_top_layer('options')">Nustatymai</div>
-                    -->
-                    <div class="profile_button" style="margin-bottom:0px;" onclick="logout()">Atsijungti</div>
-                </div>
+    <div class="scroller" id="scroller_content_profile" style="padding-bottom:10px;right:31px;">
+        <div id="profile_cover">
+            <div id="profile_image" style="background-image:url('/images/profile.png')"></div>
+            <div id="profile_name">Ignas Lekas</div>
+            <div id="profile_mobile_logout"></div>
+        </div>
+        <div id="profile_line">
+            <div class="profile_line_box transition" id="profile_line_box_cooked" onclick="profile_recipes('cooked')">
+                <div class="profile_line_box_top">17</div>
+                <div class="profile_line_box_bottom">Gaminti</div>
+            </div>
+            <div class="profile_line_box transition" id="profile_line_box_liked" onclick="profile_recipes('liked')">
+                <div class="profile_line_box_top">53</div>
+                <div class="profile_line_box_bottom">Mėgstami</div>
+            </div>
+            <div class="profile_line_box transition" id="profile_line_box_created" onclick="profile_recipes('created')">
+                <div class="profile_line_box_top">5</div>
+                <div class="profile_line_box_bottom">Sukurti</div>
             </div>
 
+            <div class="profile_line_box transition" id="profile_line_box_options" onclick="logout()">Atsijungti</div>
         </div>
-        <div id="profile_divider" class="untouchable">Istorija</div>
         <div id="profile_recipes"></div>
     </div>
 </div>

@@ -13,8 +13,10 @@
             //initialize maps and other stuff related to maps
             getLocation();
             sidebar_manipulation();
+            manipulate_map_buttons_zone();
             $( window ).resize(function() {
                 sidebar_manipulation();
+                manipulate_map_buttons_zone();
             });
 
             $(window).bind('resizeEnd', function() {
@@ -124,46 +126,46 @@
             directionsDisplay.setMap(map);
 
             add_controllers();
-            show_places('all', 2000);
+            show_places('custom','all', 2000);
         }
 
         function add_controllers(){
-            add_center_controller();
+            //add_center_controller();
         }
 
-        function show_places(type, radius){
-            //from google API
-            //show_on_map('Kebabinė', false);
-            //show_on_map('Picerija', false);
-            //show_on_map('Palink', false);
-            //show_on_map('Maxima', false);
-            //show_on_map('greito maisto restoranas', false);
+        function show_places(operator, type, radius){
+            if(operator == "google"){
+                //from google API
+                //show_on_map('Kebabinė', false);
+                //show_on_map('Picerija', false);
+                //show_on_map('Palink', false);
+                //show_on_map('Maxima', false);
+                //show_on_map('greito maisto restoranas', false);
+            }else if(operator == "custom"){
+                //from local DB
+                //traukti is DB vietu lat, long image_url, title ir sukti cikla ir atvaizduoti
+                //title, type, lat, long, image_url
 
+                //add_custom_place('Title', 'tipas', '54.909933', '23.983622' , '/images/add.png');
 
-            //from local DB
-            //traukti is DB vietu lat, long image_url, title ir sukti cikla ir atvaizduoti
-            //title, type, lat, long, image_url
+                //kebabinė, picerija(pizza express, pica pica, charlie pica, can can), načnykas, greito maisto, hesburger, mcdonalds,
+                //restoranus, kavines, užkandinės, bandelinės, prekybos centrai (Savas, Molas, Urmas, Mega, Akropolis), maxima, norfa, iki, samsonas, fresh market
+                //aibė, express market, krautuvės
+                var places = get_custom_places(type, radius);
 
-            //add_custom_place('Title', 'tipas', '54.909933', '23.983622' , '/images/add.png');
-
-            //kebabinė, picerija(pizza express, pica pica, charlie pica, can can), načnykas, greito maisto, hesburger, mcdonalds,
-            //restoranus, kavines, užkandinės, bandelinės, prekybos centrai (Savas, Molas, Urmas, Mega, Akropolis), maxima, norfa, iki, samsonas, fresh market
-            //aibė, express market, krautuvės
-
-            var places = get_places(type, radius);
-
-            var title, type, lat, long, icon;
-            for(i = 0; i < places.length; i++){
-                title = places[i][0];
-                type = places[i][1];
-                lat = places[i][2];
-                long = places[i][3];
-                icon = places[i][4];
-                add_custom_place(title, type, lat, long , icon);
+                var title, type, lat, long, icon;
+                for(i = 0; i < places.length; i++){
+                    title = places[i][0];
+                    type = places[i][1];
+                    lat = places[i][2];
+                    long = places[i][3];
+                    icon = places[i][4];
+                    add_custom_place(title, type, lat, long , icon);
+                }
             }
         }
 
-        function get_places(type, radius){
+        function get_custom_places(type, radius){
             var places = [];
             //ajax call to get from type: all
             places[0] = ['Maxima','tipas0','54.909933', '23.983622', '/images/maxima.png'];
@@ -193,6 +195,13 @@
             }
 
             return shownable_places;
+        }
+
+        function get_nearest_place(title){
+            //ajax call to get by title in lower case
+            var place = [title, title,'55.909933', '23.983622', '/images/maxima.png'];
+
+            return place;
         }
 
 
@@ -316,15 +325,43 @@
             controller.index = 1;
 
             google.maps.event.addDomListener(controller, 'click', function() {
-                refresh_location();
                 show_center();
             });
 
             map.controls[google.maps.ControlPosition.TOP_LEFT].push(controller);
         }
 
+
         function show_center(){
+            refresh_location();
             map.panTo(my_location);
+        }
+
+        function show_nearest(title){
+            var place_location = "";
+
+            //checks for nearest in created on map in radius
+            for (i = 0; i < markersArray.length; i++){
+                var marker = markersArray[i];
+                var marker_title = marker.title;
+                if(marker_title.toLowerCase() == title.toLowerCase()){
+                    var marker_location = marker.position;
+                    place_location = marker_location;
+                    google.maps.event.trigger(marker, 'click');
+                    break;
+                }
+            }
+
+            //if the nearest does not exsist so add it to map
+            if(place_location == ""){
+                var nearest_place = get_nearest_place(title.toLowerCase());
+                add_custom_place(nearest_place[0], nearest_place[1], nearest_place[2], nearest_place[3] , nearest_place[4]);
+                place_location = new google.maps.LatLng(nearest_place[2], nearest_place[3]);
+                google.maps.event.trigger(markersArray[markersArray.length - 1], 'click');
+            }
+
+            map.panTo(place_location);
+
         }
 
         function refresh_location(){
@@ -340,7 +377,7 @@
             your_position.setPosition(my_location);
         }
 
-        function show_marker(ID){
+        function show_marker(type){
             //show marker when looking for prices. nearest shop with that name pvz IKI
             var marker_location = my_location;
             map.panTo(marker_location);
@@ -363,6 +400,7 @@
             animation: google.maps.Animation.DROP,
             title: placeName
         });
+
         markersArray.push(marker);
 
         google.maps.event.addListener(marker, 'click', function() {
@@ -409,23 +447,30 @@
 
 {% block config_zone %}{% endblock %}
 
+{% block header_lock %}
+    <div id="header_map_buttons_zone_locker" onclick="show_hide_map_buttons_zone()"></div>
+{% endblock %}
+
 {% block content %}
     <div id="content_wrapper" style="right:66px;background-color:rgb(229, 227, 223);">
         <div id="map_canvas"></div>
     </div>
     <div id="map_buttons_zone">
         <div id="map_buttons_zone_top">
-            <div class="map_button" id="map_button_center"></div>
-            <div class="map_button" id="map_button_random"></div>
+            <div class="map_button" id="map_button_center" onclick="show_center()"></div>
+            <div class="map_button" id="map_button_random" onclick="show_random()"></div>
         </div>
         <div id="divider" style=";margin-top:0px;width:45px;"></div>
         <div id="map_buttons_zone_bottom">
             <div class="scroller" id="map_buttons_zone_box_scroller">
-                <div class="map_button" id="map_button_maxima"></div>
-                <div class="map_button" id="map_button_norfa"></div>
-                <div class="map_button" id="map_button_iki"></div>
-                <div class="map_button" id="map_button_hesburger"></div>
-                <div class="map_button" id="map_button_kebab"></div>
+                <div class="map_button" id="map_button_maxima" onclick="show_nearest('maxima')"></div>
+                <div class="map_button" id="map_button_norfa" onclick="show_nearest('norfa')"></div>
+                <div class="map_button" id="map_button_iki" onclick="show_nearest('iki')"></div>
+                <div class="map_button" id="map_button_hesburger" onclick="show_nearest('hesburger')"></div>
+                <div class="map_button" id="map_button_kebab" onclick="show_nearest('kebab')"></div>
+                <div class="map_button" id="map_button_rimi" onclick="show_nearest('rimi')"></div>
+                <div class="map_button" id="map_button_pizza" onclick="show_nearest('pizza')"></div>
+                <div class="map_button" id="map_button_mcdonalds" onclick="show_nearest('mcdonalds')"></div>
             </div>
         </div>
 

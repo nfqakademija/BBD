@@ -77,6 +77,7 @@
         <div id="header">
             <div id="header_list" onclick="empty_sidebar_slide()"></div>
             <div id="header_logo" onclick="content_navigation('home')"></div>
+            {% block header_lock %}{% endblock %}
         </div>
 
         <div id="sidebar" class="full">
@@ -122,7 +123,7 @@
 
         {% block content %}{% endblock %}
         {% block sidebar_right %}
-            <div id="sidebar_right" class="right_squeeze sidebar_recipe_1">
+            <div id="sidebar_right" class="transition right_squeeze sidebar_recipe_1">
                 <div id="sidebar_right_wrapper">
                     <div class="scroller" id="scroll_sidebar_right">
                         <div id="sidebar_right_image" style="background-image:url('{{ asset('images/food (5).jpg') }}')"></div>
@@ -177,7 +178,7 @@
                         </div>
                     </div>
                 </div>
-                <div id="sidebar_right_bottom_zone">
+                <div id="sidebar_right_bottom_zone" class="transition">
                     <div id="sidebar_right_cook_button" onclick="cook('1')">Gaminti</div>
                 </div>
             </div>

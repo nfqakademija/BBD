@@ -91,16 +91,20 @@
                         <div class="nav_zone_element_image" style="background-image:url('/images/profile.png')"></div>
                         <div class="nav_zone_element_text">Profilis</div>
                     </div>
-                    <div class="nav_zone_element untouchable" style="margin-bottom:0px;" id="shoppinglist" onclick="content_navigation('shoppinglist')">
+                    <div class="nav_zone_element untouchable" id="shoppinglist" onclick="content_navigation('shoppinglist')">
                         <div class="nav_zone_element_image" style="background-image:url('/images/shoppinglist.png')"></div>
                         <div class="nav_zone_element_text">Pirkiniai</div>
+                    </div>
+                    <div class="nav_zone_element untouchable" style="margin-bottom:0px;" id="places" onclick="content_navigation('places')">
+                        <div class="nav_zone_element_image" style="background-image:url('/images/places.png')"></div>
+                        <div class="nav_zone_element_text">Vietos</div>
                     </div>
                 </div>
             {% endblock %}
             {% block search_zone %}
                 <div id="search_zone" onclick="full_sidebar()">
                     <div id='search_index' onclick="focus_input('search_input')" ></div>
-                    <input id='search_input' placeholder='Ieškoti' onkeyup="search()" onfocus="search_input_focus()" onblur="search_input_blur()"/>
+                    <input id='search_input' placeholder='Ieškoti' onkeyup="search('search')" onfocus="input_focus('search')" onblur="input_blur()"/>
                     <div id='search_container'>
                         <div id='search_container_inside'></div>
                     </div>

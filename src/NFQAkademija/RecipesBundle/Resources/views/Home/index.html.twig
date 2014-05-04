@@ -6,7 +6,7 @@
      <div id="divider" class="middle_divider" style="margin-left:10px;margin-top:0px;" onclick="full_sidebar()"></div>
  {% endblock %}
  {% block filters_zone %}
-    <div id='filters_zone' style="top:230px;" onclick="full_sidebar()">
+    <div id='filters_zone' style="top:285px;" onclick="full_sidebar()">
         <div class="scroller" id="scroller_filters"></div>
     </div>
  {% endblock %}
@@ -91,6 +91,10 @@
                  shrinkScrollbars: 'scale',
                  fadeScrollbars: true
              });
+
+             $("#sidebar_right_wrapper").click(function(){ $("#search_input").blur();});
+             $("#filters_zone").click(function(){ $("#search_input").blur();});
+             $("#content_wrapper").click(function(){ $("#search_input").blur();});
 
              hide_loading_screen();
          }

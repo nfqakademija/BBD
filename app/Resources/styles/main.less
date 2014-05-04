@@ -190,16 +190,16 @@ textarea{
   background-position:50% 50%;
 }
 
-#map_button_center{background-image:url('/images/center.png');}
-#map_button_random{background-image:url('/images/random.png');}
-#map_button_maxima{ background-image:url('/images/maxima.png');}
-#map_button_norfa{ background-image:url('/images/norfa.png');}
-#map_button_iki{ background-image:url('/images/iki.png');}
-#map_button_hesburger{ background-image:url('/images/hesburger.png');}
-#map_button_kebab{ background-image:url('/images/kebab.png');}
-#map_button_mcdonalds{ background-image:url('/images/mcdonalds.png');}
-#map_button_pizza{ background-image:url('/images/pizza.png');}
-#map_button_rimi{ background-image:url('/images/rimi.png');}
+#map_button_center .filter_element_image{background-image:url('/images/center.png');}
+#map_button_random .filter_element_image{background-image:url('/images/random.png');}
+#map_button_maxima .filter_element_image{ background-image:url('/images/maxima.png');}
+#map_button_norfa .filter_element_image{ background-image:url('/images/norfa.png');}
+#map_button_iki .filter_element_image{background-image:url('/images/iki.png');}
+#map_button_hesburger .filter_element_image{ background-image:url('/images/hesburger.png');}
+#map_button_kebab .filter_element_image{background-image:url('/images/kebab.png');}
+#map_button_mcdonalds .filter_element_image{background-image:url('/images/mcdonalds.png');}
+#map_button_pizza .filter_element_image{background-image:url('/images/pizza.png');}
+#map_button_rimi .filter_element_image{background-image:url('/images/rimi.png');}
 
 
 
@@ -232,8 +232,8 @@ textarea{
 #cook_left_sidebar_wrapper{
   width: 230px;
   overflow: hidden;
-  position: fixed;
-  top: 175px;
+  position: absolute;
+  top: 230px;
   padding-right: 30px;
   bottom: 65px;
 }
@@ -417,6 +417,7 @@ textarea{
   bottom:10px;
   right:10px;
 }
+
 .right_squeeze #sidebar_right_bottom_zone{
   right: -210px;
 }
@@ -523,16 +524,15 @@ textarea{
   line-height: 43px;
   padding:10px;
   padding-bottom:0px;
+  height: auto;
 }
 
 .full #nav_zone{
   width: 208px;
-  height: 155px;
 }
 
 .squeeze #nav_zone{
   width: 45px;
-  height: 155px;
 }
 
 .nav_zone_element{
@@ -1452,6 +1452,9 @@ p{
 }
 .toast_inside_write:after{
   background-image:url('/images/write.png');
+}
+.toast_inside_places:after{
+  background-image:url('/images/places.png');
 }
 
 .tooltip_box{

@@ -128,6 +128,12 @@
             scroll_steps_others_like_box.on('scrollStart', function(){ clickable = false; });
             scroll_steps_others_like_box.on('scrollEnd', function(){ clickable = true; });
 
+            $("#sidebar_right_wrapper").click(function(){ $("#search_input").blur();});
+            $("#cook_left_sidebar_wrapper").click(function(){ $("#search_input").blur();});
+            $("#steps_others_like_box").click(function(){ $("#search_input").blur();});
+            $("#step_comment_answers_box").click(function(){ $("#search_input").blur();});
+
+
             hide_loading_screen();
         }
     </script>

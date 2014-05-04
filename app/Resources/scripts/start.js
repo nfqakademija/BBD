@@ -163,6 +163,14 @@ function append_recipe(data){
     $("#scroller_content").append(appendable_data);
 }
 
+function append_products(){
+    $("#scroller_shoppinglist").append('Prekes random, pagal asemninius filtrus, akcijos, pasiulymai');
+}
+
+function append_shoppinglist(){
+    //ajax to get all shoppinglist from user and show it
+}
+
 function show_loading_more(){
     var loading_more_box = "<div class='recipe_box' id='loading_more_box' style=\"width:" + recipe_size + "px;height:" + recipe_size +  "px;\"></div>";
     $("#content_wrapper").append(loading_more_box);
@@ -509,9 +517,9 @@ function content_navigation(type){
             }
             break;
 
-        case "random":
+        case "places":
             show_loading_screen();
-            location.href = "/random";
+            location.href = "/places";
             break;
 
         default:
@@ -764,8 +772,8 @@ function shoppinglist_add(ID){
     var image = $('#' + ID + " .search_item_image").css('background-image');
     var title = $('#' + ID + " .search_item_title").html();
     $("#search_input").val('');
-    shoppinglist_input_blur();
-    shoppinglist_input_focus();
+    input_blur();
+    input_focus('shoppinglist');
     var shopping_items = [];
     var data = "<div class='filter_element untouchable' id='" + id + "' onclick='shoppinglist_item_selected(this.id)'><div class='filter_element_image' style=\"background-image:" + image + ";\"></div><div class='filter_element_text'>" + title + "</div><div class='filter_element_delete' id='delete_" + id + "' onclick='shoppinglist_delete(this.id)'></div></div>";
     shopping_items[0] = data;
@@ -786,8 +794,8 @@ function shoppinglist_add_enter(){
     var image = "url('/images/shoppinglist_item.png')";
     var title = $("#search_input").val();
     $("#search_input").val('');
-    shoppinglist_input_blur();
-    shoppinglist_input_focus();
+    input_blur();
+    input_focus('shoppinglist');
     var shopping_items = [];
     var data = "<div class='filter_element untouchable' id='" + id + "' onclick='shoppinglist_item_selected(this.id)'><div class='filter_element_image' style=\"background-image:" + image + ";\"></div><div class='filter_element_text'>" + title + "</div><div class='filter_element_delete' id='delete_" + id + "' onclick='shoppinglist_delete(this.id)'></div></div>";
     shopping_items[0] = data;
@@ -829,8 +837,8 @@ function filter_search_add(ID, type){
     image = image.replace('"', "'");
     var title = $('#' + ID + " .search_item_title").html();
     $("#search_input").val('');
-    search_input_blur();
-    search_input_focus();
+    input_blur();
+    input_focus('search');
 
     //send with ajax to filters
     //see which filters level, if = 0, add to panel
@@ -839,6 +847,8 @@ function filter_search_add(ID, type){
         var data = "<div class='filter_element untouchable filter_element_indicator_" + type + "' id='" + id + "' onclick='filter_selected(this.id)'><div class='filter_element_image' style=\"background-image:" + image + ";\"></div><div class='filter_element_text'>" + title + "</div><div class='filter_element_delete' id='delete_" + id + "' onclick='filter_delete(this.id)'></div><div class='filter_element_indicator_change' id='indicator_change_" + id + "' onclick='filter_indicator_change(this.id)'></div><div class='filter_element_indicator_small'></div></div>";
         filters[0] = data;
         show_filters(filters, 0);
+
+        setTimeout(function(){scroll_filters.refresh()}, 0);
     }
 
     /*
@@ -940,7 +950,7 @@ function close_prices(){
     $("#sidebar_right").removeClass('right_full').addClass('right_squeeze');
 }
 
-function shoppinglist_search(){
+function search(type){
     var value = ($('#search_input').val()).trim();
     value = value.replace(/[-\/\\^$*+?.,()|[\]{}]/g, ' ');
     if(value == ""){
@@ -949,73 +959,76 @@ function shoppinglist_search(){
     }else{
         $('#search_container_inside').html('');
         $('#search_container').css('display','block');
-
-        //get data with ajax from search_value
         var data = [];
-        for(i = 0; i < 7; i++){
-            data[i] =
-            "<div class='s_e search_item untouchable' id='shoppinglist-ingredient-95' onclick='shoppinglist_add(this.id)'>"+
-                "<div class='s_e search_item_image' style=\"background-image:url('images/food (2).jpg')\"></div>"+
-                "<div class='s_e search_item_title'>Ananasas</div>"+
-                "<div class='s_e search_item_bottom_info'>Ingredientas</div>"+
-            "</div>";
+
+        /*
+         $.ajax({
+         type: 'POST',
+         url: 'ajax.php',
+         dataType: 'json',
+         data: { search: value },
+         success:function(data){
+         $("#search_container").html('');
+         if(data.search_results.length > 0){
+         $("#search_container").css('display','block');
+         }else{
+         $("#search_container").css('display','none');
+         }
+
+         for(i = 0; i < data.search_results.length; i++){
+         $("#search_container").append(data.search_results[i]);
+         }
+         }
+         });
+
+         */
+
+        switch(type){
+            case "search":
+                //get data with ajax from search_value
+                for(i = 0; i < 7; i++){
+                    data[i] =
+                    "<div class='s_e search_item untouchable' id='search-ingredient-95'>" +
+                        "<div class='s_e search_item_image' style=\"background-image:url('images/food (2).jpg')\"></div>" +
+                        "<div class='s_e search_item_title'>Ananasas</div>" +
+                        "<div class='s_e search_item_bottom_info'>Ingredientas</div>" +
+                        "<div class='s_e filter_element_indicator indicator_search want' style='right: 25px;' onclick=\"filter_search_add('search-ingredient-95','want')\"></div>" +
+                        "<div class='s_e filter_element_indicator indicator_search not_want' style='right: 3px;' onclick=\"filter_search_add('search-ingredient-95','not_want')\"></div>" +
+                    "</div>";
+                }
+                break;
+
+            case "shoppinglist":
+                //get data with ajax from search_value
+                for(i = 0; i < 7; i++){
+                    data[i] =
+                    "<div class='s_e search_item untouchable' id='shoppinglist-ingredient-95' onclick='shoppinglist_add(this.id)'>"+
+                        "<div class='s_e search_item_image' style=\"background-image:url('images/food (2).jpg')\"></div>"+
+                        "<div class='s_e search_item_title'>Ananasas</div>"+
+                        "<div class='s_e search_item_bottom_info'>Ingredientas</div>"+
+                    "</div>";
+                }
+                break;
+
+            case "places":
+                //get data with ajax from search_value
+                for(i = 0; i < 7; i++){
+                    data[i] =
+                        "<div class='s_e search_item untouchable' id='search-ingredient-95'>" +
+                        "<div class='s_e search_item_image' style=\"background-image:url('images/food (2).jpg')\"></div>" +
+                        "<div class='s_e search_item_title'>Ananasasadasdasdasdasdasd asdasds</div>" +
+                        "<div class='s_e search_item_bottom_info'>Ingredientas</div>" +
+                        "<div class='s_e filter_element_indicator indicator_search want' style='right: 25px;' onclick=\"filter_search_add('search-ingredient-95','want')\"></div>" +
+                        "<div class='s_e filter_element_indicator indicator_search not_want' style='right: 3px;' onclick=\"filter_search_add('search-ingredient-95','not_want')\"></div>" +
+                        "</div>";
+                }
+                break;
         }
 
-        for(i = 0; i < 7; i++){
+        for(i = 0; i < data.length; i++){
             $("#search_container_inside").append(data[i]);
         }
     }
-}
-
-function search(){
-    var value = ($('#search_input').val()).trim();
-    value = value.replace(/[-\/\\^$*+?.,()|[\]{}]/g, ' ');
-    if(value == ""){
-        $('#search_container_inside').html('');
-        $('#search_container').css('display','none');
-    }else{
-        $('#search_container_inside').html('');
-        $('#search_container').css('display','block');
-
-        //get data with ajax from search_value
-        var data = [];
-        for(i = 0; i < 7; i++){
-            data[i] =
-            "<div class='s_e search_item untouchable' id='search-ingredient-95'>" +
-                "<div class='s_e search_item_image' style=\"background-image:url('images/food (2).jpg')\"></div>" +
-                "<div class='s_e search_item_title'>Ananasasadasdasdasdasdasd asdasds</div>" +
-                "<div class='s_e search_item_bottom_info'>Ingredientas</div>" +
-                "<div class='s_e filter_element_indicator indicator_search want' style='right: 25px;' onclick=\"filter_search_add('search-ingredient-95','want')\"></div>" +
-                "<div class='s_e filter_element_indicator indicator_search not_want' style='right: 3px;' onclick=\"filter_search_add('search-ingredient-95','not_want')\"></div>" +
-            "</div>";
-        }
-
-        for(i = 0; i < 7; i++){
-            $("#search_container_inside").append(data[i]);
-        }
-    }
-
-    /*
-    $.ajax({
-        type: 'POST',
-        url: 'ajax.php',
-        dataType: 'json',
-        data: { search: value },
-        success:function(data){
-            $("#search_container").html('');
-            if(data.search_results.length > 0){
-                $("#search_container").css('display','block');
-            }else{
-                $("#search_container").css('display','none');
-            }
-
-            for(i = 0; i < data.search_results.length; i++){
-                $("#search_container").append(data.search_results[i]);
-            }
-        }
-    });
-
-    */
 }
 
 function focus_input(ID){
@@ -1086,7 +1099,7 @@ function cook(recipe_ID){
 
 //tracks down mouse click
 $(document).mousedown(function(event){
-    if($(event.target).attr("id") == "search_container" || ( typeof $(event.target).attr("class") !== "undefined" && (($(event.target).attr("class")).split(" "))[0] == "s_e" ) ){
+    if($(event.target).attr("id") == "search_container" || ( typeof $(event.target).attr("class") !== "undefined" && $(event.target).hasClass('s_e'))){
         //alert($(event.target).attr("id"));
         //$('#search_input').focus();
         //event.stopImmediatePropagation();
@@ -1095,7 +1108,7 @@ $(document).mousedown(function(event){
     }
 });
 
-function search_input_focus(){
+function input_focus(type){
     $("#search_zone").removeClass('unactive_search_zone');
     $("#search_zone").addClass('active_search_zone');
     full_sidebar();
@@ -1103,34 +1116,15 @@ function search_input_focus(){
     var max_height = parseInt(($('#filters_zone').css('height')).replace('px',''));
     $("#search_container").css('max-height', max_height + "px");
     $("#search_container_inside").css('max-height', max_height + "px");
-    search();
+    search(type);
 }
 
-function search_input_blur(){
+function input_blur(){
     $("#search_zone").removeClass('active_search_zone');
     $("#search_zone").addClass('unactive_search_zone');
     $('#search_container_inside').html('');
     $('#search_container').css('display','none');
 }
-
-function shoppinglist_input_focus(){
-    $("#search_zone").removeClass('unactive_search_zone');
-    $("#search_zone").addClass('active_search_zone');
-    full_sidebar();
-    //manipulate max-height search_container
-    var max_height = parseInt(($('#filters_zone').css('height')).replace('px',''));
-    $("#search_container").css('max-height', max_height + "px");
-    $("#search_container_inside").css('max-height', max_height + "px");
-    shoppinglist_search();
-}
-
-function shoppinglist_input_blur(){
-    $("#search_zone").removeClass('active_search_zone');
-    $("#search_zone").addClass('unactive_search_zone');
-    $('#search_container_inside').html('');
-    $('#search_container').css('display','none');
-}
-
 
 function ingredient_selected(ingredient_ID){
     if(check_if_user_is_loged()){

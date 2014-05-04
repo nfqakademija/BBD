@@ -44,6 +44,10 @@
             scroll_content.on('scrollStart', function(){ clickable = false; });
             scroll_content.on('scrollEnd', function(){ clickable = true; });
 
+            $("#sidebar_right_wrapper").click(function(){ $("#search_input").blur();});
+            $("#filters_zone").click(function(){ $("#search_input").blur();});
+            $("#content_wrapper").click(function(){ $("#search_input").blur();});
+
             hide_loading_screen();
         }
 
@@ -58,14 +62,8 @@
 {% endblock %}
 
  {% block filters_zone %}
-     <div id='filters_zone' style="top:230px;" onclick="full_sidebar()">
-         <div class="scroller" id="scroller_filters" >
-             <div class="filter_element untouchable" id="universities-2" onclick="filter_selected(this.id)">
-                 <div class="filter_element_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
-                 <div class="filter_element_text">VU</div>
-                 <div class="filter_element_delete" id="delete_universities-2" onclick="filter_delete(this.id)"></div>
-             </div>
-         </div>
+     <div id='filters_zone' style="top:285px;" onclick="full_sidebar()">
+         <div class="scroller" id="scroller_filters" ></div>
      </div>
  {% endblock %}
  {% block config_zone %}

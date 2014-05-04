@@ -1506,9 +1506,6 @@ function steps_sidebar_initialize(){
     steps_manipulation();
 }
 
-
-
-
 function steps_sidebar_manipulation(){
     var screen_height = $("#steps_sidebar").height();
     var real_steps_amount = steps_amount + 2;

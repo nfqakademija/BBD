@@ -138,6 +138,8 @@ function append_recipes(){
         append_recipe(recipes[i]);
     }
 
+    setTimeout(function(){scroll_content.refresh()},0);
+
     /*
     $.ajax({
         type: 'POST',
@@ -164,7 +166,48 @@ function append_recipe(data){
 }
 
 function append_products(){
-    $("#scroller_shoppinglist").append('Prekes random, pagal asemninius filtrus, akcijos, pasiulymai');
+    $("#scroller_content").html('');
+
+    //ajax to get suggestions shoppinglist
+    var products = [];
+    products[0] = ["0","/images/food (0).jpg", "title0"];
+    products[1] = ["1","/images/food (1).png", "title0"];
+    products[2] = ["2","/images/food (2).jpg", "title0"];
+    products[3] = ["3","/images/food (3).jpg", "title0"];
+    products[4] = ["4","/images/food (4).jpg", "title0"];
+    products[5] = ["5","/images/food (5).jpg", "title0"];
+    products[6] = ["6","/images/food (6).jpg", "title0"];
+    products[7] = ["7","/images/food (7).jpg", "title0"];
+    products[8] = ["8","/images/food (8).jpg", "title0"];
+    products[9] = ["9","/images/food (9).jpg", "title0"];
+    products[10] = ["10","/images/food (10).jpg", "title0"];
+    products[11] = ["11","/images/food (11).jpg", "title0"];
+    products[12] = ["12","/images/food (12).jpg", "title0"];
+    products[13] = ["13","/images/food (13).jpg", "title0"];
+    products[14] = ["14","/images/food (14).jpg", "title0"];
+    products[15] = ["15","/images/food (15).jpg", "title0"];
+    products[16] = ["16","/images/food (16).jpg", "title0"];
+    products[17] = ["17","/images/food (17).jpg", "title0"];
+
+    for(i = 0; i < products.length; i++){
+        append_product(products[i]);
+    }
+
+    setTimeout(function(){scroll_content.refresh()},100);
+}
+
+function append_product(data){
+    var id = data[0];
+    var image = data[1];
+    var title = data[2];
+
+    var appendable_data = "<div class='recipe_box' id='product_" + id + "' style=\"background-image: url('" + image + "');width:" + recipe_size + "px;height:" + recipe_size +  "px;\"><div class='recipe_box_info'>" + title + "</div><div class='recipe_box_button' id='recipe_box_button_add_to_shoppinglist' onclick=\"add_product('" + id + "')\"></div></div>";
+
+    $("#scroller_content").append(appendable_data);
+}
+
+function add_product(ID){
+    $('#product_' + ID).fadeOut(transition_time);
 }
 
 function append_shoppinglist(){
@@ -712,6 +755,22 @@ function filter_show_selected(){
     });
 }
 
+function filter_personal_show_selected(){
+    //show selected filters
+    filter_level = 0;
+    var filters = [];
+
+    filters[0] = "<div class='filter_element untouchable filter_element_indicator_not_want' id='universities-1' onclick='filter_selected(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/types.png');\"></div><div class='filter_element_text'>Selected 1</div><div class='filter_element_delete' id='delete_universities-1' onclick='filter_delete(this.id)'></div><div class='filter_element_indicator_change' id='indicator_change_universities-1' onclick='filter_indicator_change(this.id)'></div><div class='filter_element_indicator_small'></div></div>";
+    filters[1] = "<div class='filter_element untouchable filter_element_indicator_want' id='universities-2' onclick='filter_selected(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/times.png');\"></div><div class='filter_element_text'>Selected want</div><div class='filter_element_delete' id='delete_universities-2' onclick='filter_delete(this.id)'></div><div class='filter_element_indicator_change' id='indicator_change_universities-2' onclick='filter_indicator_change(this.id)'></div><div class='filter_element_indicator_small'></div></div>";
+    filters[2] = "<div class='filter_element untouchable filter_element_indicator_not_want' id='universities-3' onclick='filter_selected(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/celebrations.png');\"></div><div class='filter_element_text'>Selected 3</div><div class='filter_element_delete' id='delete_universities-3' onclick='filter_delete(this.id)'></div><div class='filter_element_indicator_change' id='indicator_change_universities-3' onclick='filter_indicator_change(this.id)'></div><div class='filter_element_indicator_small'></div></div>";
+
+    $("#scroller_filters").fadeOut(transition_time, function(){
+        $("#scroller_filters").html('');
+        $("#scroller_filters").fadeIn(1);
+        show_filters(filters, 0);
+    });
+}
+
 function filter_indicator_change(ID){
     var ID = ID.replace('indicator_change_','');
 
@@ -1012,14 +1071,12 @@ function search(type){
 
             case "places":
                 //get data with ajax from search_value
-                for(i = 0; i < 7; i++){
+               for(i = 0; i < 7; i++){
                     data[i] =
-                        "<div class='s_e search_item untouchable' id='search-ingredient-95'>" +
-                        "<div class='s_e search_item_image' style=\"background-image:url('images/food (2).jpg')\"></div>" +
-                        "<div class='s_e search_item_title'>Ananasasadasdasdasdasdasd asdasds</div>" +
-                        "<div class='s_e search_item_bottom_info'>Ingredientas</div>" +
-                        "<div class='s_e filter_element_indicator indicator_search want' style='right: 25px;' onclick=\"filter_search_add('search-ingredient-95','want')\"></div>" +
-                        "<div class='s_e filter_element_indicator indicator_search not_want' style='right: 3px;' onclick=\"filter_search_add('search-ingredient-95','not_want')\"></div>" +
+                        "<div class='s_e search_item untouchable' id='search-maxima' onclick=\"show_nearest('maxima');\">" +
+                            "<div class='s_e search_item_image' style=\"background-image:url('/images/maxima.png')\"></div>" +
+                            "<div class='s_e search_item_title'>Maxima</div>" +
+                            "<div class='s_e search_item_bottom_info'>Parduotuvė</div>" +
                         "</div>";
                 }
                 break;
@@ -1323,7 +1380,7 @@ function empty_sidebar_slide(){
         $("#header").css('left','0px');
         $("#sidebar_slider").css('display','block');
         $("#header_logo").css('display','block');
-        $("#header_map_buttons_zone_locker").css('display','block');
+        //$("#header_map_buttons_zone_locker").css('display','block');
         $("#header_options").css('display','block');
         $("#config_zone").css('display','none');
         $("#cook_ingredients").css('display','none');
@@ -1337,7 +1394,7 @@ function empty_sidebar_slide(){
         $("#header").css('left','231px');
         $("#sidebar_slider").css('display','none');
         $("#header_logo").css('display','none');
-        $("#header_map_buttons_zone_locker").css('display','none');
+        //$("#header_map_buttons_zone_locker").css('display','none');
         $("#header_options").css('display','none');
         $("#config_zone").css('display','block');
         $("#cook_ingredients").css('display','block');

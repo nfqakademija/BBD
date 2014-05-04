@@ -14,7 +14,6 @@
             });
 
             $(window).bind('resizeEnd', function() {
-                refresh_location();
                 show_center();
             });
 
@@ -322,9 +321,6 @@
         function show_center(){
             refresh_location();
             map.panTo(my_location);
-            if(mobile_state){
-                empty_sidebar_slide();
-            }
         }
 
         function show_nearest(title){
@@ -354,6 +350,8 @@
             if(mobile_state){
                 empty_sidebar_slide();
             }
+            $("#search_input").val('');
+            $('#search_input').blur();
         }
 
         function refresh_location(){

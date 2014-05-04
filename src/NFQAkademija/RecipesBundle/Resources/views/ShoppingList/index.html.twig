@@ -10,8 +10,10 @@
 
         function loader(){
             sidebar_manipulation();
+            recipe_size = calculate_recipe_size();
             $( window ).resize(function() {
                 sidebar_manipulation();
+                recalculate_width();
             });
 
             if(browser == 'firefox'){
@@ -39,7 +41,6 @@
 
             $("#filters_zone").click(function(){ $("#search_input").blur();});
             $("#content_wrapper").click(function(){ $("#search_input").blur();});
-
 
             append_products();
             append_shoppinglist();
@@ -76,7 +77,9 @@
 
 {% block content %}
 <div id="content_wrapper" style="padding-bottom:10px;background-image:url('/images/content_background.jpg')">
-    <div class="scroller" id="scroller_shoppinglist" style="padding-bottom:10px;"></div>
+    <div class="scroller" id="scroller_content" style="padding-bottom:10px;">
+
+    </div>
 </div>
 {% endblock %}
 

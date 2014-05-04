@@ -20,8 +20,7 @@ body{
   font-family:Ubuntu;
   overflow: hidden;
   //background-color:@black;
-  overflow-y:scroll;
-  overflow-x:hidden;
+  overflow:hidden;
   background-size:cover;
   background-repeat:no-repeat;
   background-position:50% 50%;
@@ -136,6 +135,99 @@ textarea{
   width:0px;
 }
 
+#header_map_buttons_zone_locker{
+  height:40px;
+  width:40px;
+  float:right;
+  margin-right:10px;
+  background-image: url('/images/list.png');
+  background-size:60% 60%;
+  background-position:50% 50%;
+  background-repeat:no-repeat;
+}
+
+.squeezed_buttons {
+  display:none;
+}
+
+#map_buttons_zone{
+  position:fixed;
+  right:0px;
+  top:0px;
+  bottom:0px;
+  width:45px;
+  background-color:@black;
+  overflow:hidden;
+  box-shadow:0px 0px 2px @black;
+  z-index:10;
+  padding:10px;
+  border-left:1px solid black;
+  color:@white;
+}
+
+#map_buttons_zone_top{
+  float:left;
+  width:45px;
+  height:110px;
+}
+
+#map_buttons_zone_bottom{
+  width:55px;
+  overflow:hidden;
+  padding-right:30px;
+  float:left;
+  position:fixed;
+  bottom:10px;
+  top:130px;
+}
+
+
+.map_button{
+  .filter_element;
+  width:43px;
+  background-repeat:no-repeat;
+  background-size:80% 80%;
+  background-position:50% 50%;
+}
+
+#map_button_center .filter_element_image{background-image:url('/images/center.png');}
+#map_button_random .filter_element_image{background-image:url('/images/random.png');}
+#map_button_maxima .filter_element_image{ background-image:url('/images/maxima.png');}
+#map_button_norfa .filter_element_image{ background-image:url('/images/norfa.png');}
+#map_button_iki .filter_element_image{background-image:url('/images/iki.png');}
+#map_button_hesburger .filter_element_image{ background-image:url('/images/hesburger.png');}
+#map_button_kebab .filter_element_image{background-image:url('/images/kebab.png');}
+#map_button_mcdonalds .filter_element_image{background-image:url('/images/mcdonalds.png');}
+#map_button_pizza .filter_element_image{background-image:url('/images/pizza.png');}
+#map_button_rimi .filter_element_image{background-image:url('/images/rimi.png');}
+
+
+.recipe_box_button{
+  position:absolute;
+  margin-top:10px;
+  margin-right:10px;
+  right:0px;
+  top:0px;
+  width:43px;
+  height:43px;
+  border:1px solid black;
+  box-shadow:0px 0px 2px black;
+  background-repeat:no-repeat;
+  background-size: 90% 90%;
+  background-position:50% 50%;
+  background-color:@black;
+  &:hover{
+    background-color:#353535;
+  }
+  &:active{
+    background-color:rgb(107, 107, 107);
+  }
+}
+
+#recipe_box_button_add_to_shoppinglist{
+  background-image:url('/images/shoppinglist.png');
+}
+
 
 #sidebar_right{
   position:fixed;
@@ -164,8 +256,8 @@ textarea{
 #cook_left_sidebar_wrapper{
   width: 230px;
   overflow: hidden;
-  position: fixed;
-  top: 175px;
+  position: absolute;
+  top: 230px;
   padding-right: 30px;
   bottom: 65px;
 }
@@ -345,14 +437,18 @@ textarea{
   height: 45px;
   float: left;
   width:210px;
-  position:fixed;
+  position:absolute;
   bottom:10px;
   right:10px;
-  display:block;
 }
 
 .right_squeeze #sidebar_right_bottom_zone{
-  display:none;
+  right: -210px;
+}
+
+.right_squeeze #sidebar_right_wrapper{
+  padding-left:0px;
+  margin-left:0px;
 }
 
 .blue{
@@ -452,16 +548,15 @@ textarea{
   line-height: 43px;
   padding:10px;
   padding-bottom:0px;
+  height: auto;
 }
 
 .full #nav_zone{
   width: 208px;
-  height: 155px;
 }
 
 .squeeze #nav_zone{
   width: 45px;
-  height: 155px;
 }
 
 .nav_zone_element{
@@ -1379,6 +1474,12 @@ p{
 .toast_inside_not_liked:after{
   background-image:url('/images/not_liked.png');
 }
+.toast_inside_write:after{
+  background-image:url('/images/write.png');
+}
+.toast_inside_places:after{
+  background-image:url('/images/places.png');
+}
 
 .tooltip_box{
   display:none;
@@ -1402,137 +1503,153 @@ p{
   bottom:0px;
 }
 
-#profile_recipes{
-  width:100%;
+#profile_cover{
   float:left;
-  height:auto;
-}
-
-#profile_divider{
   width:100%;
-  height:45px;
-  border-top:1px solid black;
-  border-bottom:1px solid black;
-  text-align:center;
-  line-height:45px;
-  color:@white;
-  font-size:30px;
-  background-color:@black;
-  font-weight: bold;
-  float:left;
-}
-
-#profile_info{
-  width:100%;
-  float:left;
-  height:auto;
+  background-size:cover;
+  background-image:url('/images/food (15).jpg');
+  background-position:50% 50%;
+  background-repeat:no-repeat;
+  background-color:white;
+  height:250px;
 }
 
 #profile_image{
-  margin-bottom:10px;
-}
-
-#profile_info_box{
-  width:auto;
   float:left;
-  height:auto;
-  padding: 10px;
+  width:100px;
+  height:100px;
+  margin-top:74px;
+  margin-bottom:74px;
+  margin-left:20px;
+  margin-right:20px;
+  border:1px solid black;
+  box-shadow:0px 0px 2px black;
+  background-size:cover;
+  background-position:50% 50%;
+  background-repeat:no-repeat;
+  background-color:white;
 }
 
 #profile_name{
-  color:@black;
-  font-size:30px;
-  min-height:30px;
-  line-height:30px;
-  float:left;
-  width:100%;
-  padding-bottom:10px;
-
-}
-
-#profile_email{
-  color:@grey;
-  font-size:15px;
-  width:100%;
-  padding-bottom:10px;
-  float:left;
-  font-size:15px;
-  min-height:15px;
-  line-height:15px;
-}
-
-#profile_statististics_box{
-  width:auto;
-  height:auto;
-  float:left;
-}
-
-#profile_buttons_box{
+  height:250px;
   width:auto;
   float:left;
-  height:auto;
-}
-
-.profile_button{
-  #sidebar_right_cook_button;
-  float:left;
-  color:@white;
-  font-size:12px;
-  margin-right:10px;
-  margin-bottom:10px;
-  width:140px;
-  height:30px;
-  line-height:30px;
-}
-
-.profile_statististics_box_item{
-  width:auto;
-  float:left;
-  height:30px;
-  color:@black;
-  font-size:15px;
-  line-height:30px;
-  padding-right: 10px;
-  padding-bottom: 10px;
-}
-
-.profile_statististics_box_item:after{
-  background-size:100% 100%;
-  background-position:50% 50%;
-  background-repeat:no-repeat;
-  width:30px;
-  height:30px;
-  float:left;
-  margin-right:5px;
-  content:"";
-}
-
-#psbi_cooked:after{
-  background-image: url('/images/cook.png');
-}
-
-#psbi_created:after{
-  background-image: url('/images/add.png');
-}
-
-#psbi_liked:after{
-  background-image: url('/images/like.png');
-}
-
-#psbi_watched:after{
-  background-image: url('/images/watch.png');
-}
-
-.profile_box{
-  text-align:center;
+  line-height:250px;
+  color:white;
   font-weight:bold;
-  font-size:30px;
-  background-color:@black;
-  color:@white;
-  box-shadow: 0px 0px 2px black;
-  height:100px;
-  width:100px;
+  font-size:25px;
+  text-align:left;
+  text-shadow: -1px -1px 1px black, 1px -1px 1px black, -1px 1px 1px black, 1px 1px 1px black;
 }
+
+#profile_line{
+  width: 100%;
+  height: 45px;
+  float: left;
+  background: white;
+  box-shadow:0px 0px 2px black;
+  border-bottom:1px solid #e6e6e6;
+}
+
+.profile_line_box{
+  width:150px;
+  height:45px;
+  line-height:45px;
+  float:left;
+  color:@black;
+}
+
+.profile_line_box_top{
+  width: 130px;
+  padding-left: 9px;
+  height: 18px;
+  padding-top: 5px;
+  padding-right: 11px;
+  line-height: 18px;
+  float: left;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.profile_line_box_bottom{
+  width: 130px;
+  height: 16px;
+  line-height: 16px;
+  float: left;
+  font-size: 16px;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-bottom: 6px;
+}
+
+.profile_line_box_cooked_active{
+  background-color:rgba(211, 109, 52, 0.1);
+}
+
+.profile_line_box_cooked_active .profile_line_box_bottom{
+  padding-bottom:2px;
+  border-bottom: 5px solid rgb(224, 98, 27);
+}
+
+.profile_line_box_liked_active{
+  background-color:rgba(241, 81, 81, 0.1);
+}
+
+.profile_line_box_liked_active .profile_line_box_bottom{
+  padding-bottom:2px;
+  border-bottom: 5px solid rgb(216, 27, 27);
+}
+
+.profile_line_box_created_active{
+  background-color:rgba(15, 180, 28, 0.1);
+}
+
+.profile_line_box_created_active .profile_line_box_bottom{
+  padding-bottom:2px;
+  border-bottom: 5px solid rgb(15, 180, 28);
+}
+
+#profile_line_box_cooked:hover {background-color:rgba(211, 109, 52, 0.1);}
+#profile_line_box_cooked:hover .profile_line_box_bottom{ padding-bottom:2px; border-bottom: 5px solid rgb(224, 98, 27); }
+
+#profile_line_box_liked:hover {background-color:rgba(241, 81, 81, 0.1);}
+#profile_line_box_liked:hover .profile_line_box_bottom{ padding-bottom:2px; border-bottom: 5px solid rgb(216, 27, 27); }
+
+#profile_line_box_created:hover {background-color:rgba(15, 180, 28, 0.1);}
+#profile_line_box_created:hover .profile_line_box_bottom{ padding-bottom:2px; border-bottom: 5px solid rgb(15, 180, 28); }
+
+#profile_line_box_cooked{
+  margin-left: 10px;
+  color:rgb(224, 98, 27);
+}
+
+#profile_line_box_liked{
+  color:rgb(216, 27, 27);
+}
+
+#profile_line_box_created{
+  color:rgb(15, 180, 28);
+}
+
+
+#profile_line_box_options{
+  float:right;
+  text-align: center;
+}
+
+#profile_line_box_options:hover {
+  background-color: rgba(238, 238, 238, 1);
+  height: 41px;
+  border-bottom: 5px solid #D5D5D5;
+}
+
+
+#profile_recipes{
+  float:left;
+  height:auto;
+  width:100%;
+}
+
 
 #header{
   position:fixed;
@@ -1551,21 +1668,35 @@ p{
   height:40px;
   width:40px;
   float:left;
-  margin-left:10px;
+  padding-left:10px;
   background-image: url('/images/list.png');
-  background-size:60% 60%;
+  background-size:50% 60%;
   background-position:50% 50%;
   background-repeat:no-repeat;
 }
 
 #header_logo{
-  width:200px;
-  height:40px;
+  width: 150px;
+  height: 40px;
   background-image: url('/images/logo_text.png');
-  background-size:70% 70%;
+  background-size: 100% 70%;
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+  position: absolute;
+  left: 50%;
+  margin-left: -75px;
+  top: 0px;
+}
+
+#header_options{
+  height:40px;
+  width:40px;
+  float:right;
+  padding-right:10px;
+  background-image: url('/images/options.png');
+  background-size:70% 80%;
   background-position:50% 50%;
   background-repeat:no-repeat;
-  margin:0 auto;
 }
 
 #top_layer{
@@ -2005,6 +2136,7 @@ p{
   box-shadow:0px 0px 2px black;
 }
 
+
 .scrollbar_box{
   position:fixed;
   width:5px;
@@ -2129,14 +2261,30 @@ p{
 }
 
 .step_answer{
-  width: 202px;
-  padding:10px;
-  color:@black;
+  width: 222px;
+  min-height:30px;
   float:left;
   border-bottom: 1px solid #ECECEC;
   &:hover{
     background-color:rgb(214, 214, 214);
   }
+}
+
+.step_answer_image{
+  width:38px;
+  height:38px;
+  background-repeat:no-repeat;
+  background-size:cover;
+  background-position:50% 50%;
+  float:left;
+}
+
+.step_answer_text{
+  width:164px;
+  min-height:18px;
+  padding:10px;
+  color:@black;
+  float:left;
 }
 
 .step_answers_box{
@@ -2151,8 +2299,7 @@ p{
   bottom: 0px;
   margin: 0;
   background-color:white;
-  overflow-x: hidden;
-  overflow-y: scroll;
+  overflow:hidden;
   padding-right:30px;
 }
 
@@ -2251,9 +2398,8 @@ p{
   bottom:0px;
   top:41px;
   //margin-left:-10px;
-  overflow-x:hidden;
-  overflow-y:scroll;
-  padding-right:40px;
+  overflow:hidden;
+  padding-right:30px;
 }
 
 
@@ -2277,9 +2423,7 @@ p{
 
 
 @media screen and (max-width: 1000px){
-  #profile_box{
-    font-size:25px;
-  }
+
 }
 
 @media screen and (max-width: 950px){
@@ -2292,20 +2436,41 @@ p{
 }
 
 @media screen and (max-width: 885px){
-  #profile_box{
-    font-size:20px;
-  }
 
   #steps_others_like_title{
     font-size:15px;
     line-height:15px;
   }
+
+  .profile_line_box{
+    width:25%;
+  }
+
+  .profile_line_box_top{
+    padding-right:0px;
+    padding-left:10%;
+    width:90%;
+  }
+
+  .profile_line_box_bottom{
+    padding-right:0px;
+    padding-left:10%;
+    width:90%;
+  }
+
+  #profile_line_box_cooked{
+    margin-left:0px;
+  }
+
+
+
+
+
+
 }
 
 @media screen and (max-width: 765px){
-  #profile_box{
-    font-size:15px;
-  }
+
   .recipe_box_info{
     font-size:15px;
   }
@@ -2316,9 +2481,7 @@ p{
 }
 
 @media screen and (max-width: 650px){
-  #profile_box{
-    font-size:13px;
-  }
+
 
 
 }
@@ -2331,8 +2494,16 @@ p{
 }
 
 @media screen and (max-width: 530px){
-  .profile_button{
-    width:105px;
+  .profile_line_box_top{
+   font-size:15px;
+  }
+
+  .profile_line_box_bottom{
+    font-size:15px;
+  }
+
+  #profile_name{
+    font-size:20px;
   }
 }
 
@@ -2349,6 +2520,24 @@ p{
   .recipe_box_info{
     font-size:18px;
   }
+
+  .profile_line_box_top{
+    font-size:13px;
+  }
+
+  .profile_line_box_bottom{
+    font-size:13px;
+  }
+
+  #profile_name{
+    position: absolute;
+    height: 30px;
+    line-height: 30px;
+    left: 21px;
+    top: 200px;
+    font-size: 23px;
+  }
+
 }
 
 @media screen and (max-width: 410px){
@@ -2368,6 +2557,11 @@ p{
 
 //Mobile state
 @media screen and (max-width: 400px){
+
+  #scroller_content_profile{
+    right:0px;
+  }
+
   .recipe_box_info{
     font-size:20px;
     display:block;
@@ -2388,6 +2582,30 @@ p{
   #toast_inside:after{
     margin-right:10px;
   }
+
+  #profile_line_box_options{
+    display:none;
+  }
+
+  #profile_line_box_cooked{
+    width:33%;
+  }
+
+  #profile_line_box_liked{
+    width:34%;
+  }
+
+  #profile_line_box_created{
+    width:33%;
+  }
+
+  .profile_line_box_top{
+    font-size:13px;
+  }
+
+  .profile_line_box_bottom{
+    font-size:13px;
+  }
 }
 
 @media screen and (max-width: 375px){
@@ -2402,11 +2620,6 @@ p{
     width:270px;
     height:99px;
     line-height:99px;
-  }
-
-  .profile_button{
-    width:100px;
-    font-size:10px;
   }
 
   #top_box_title{
@@ -2439,20 +2652,12 @@ p{
     font-size:14px;
   }
 
-  .profile_button{
-    width:90px;
-    font-size:9px;
-  }
   #toast_inside{
     font-size:13px;
   }
 }
 
 @media screen and (max-width: 310px){
-  .profile_button{
-    width:85px;
-    font-size:9px;
-  }
 }
 
 @media screen and (max-width: 280px){
@@ -2472,11 +2677,6 @@ p{
     height:89px;
     line-height:89px;
     font-size:12px;
-  }
-
-  .profile_button{
-    width:70px;
-    font-size:8px;
   }
 
   .top_box_button{

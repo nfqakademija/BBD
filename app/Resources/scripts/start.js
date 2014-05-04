@@ -23,7 +23,11 @@ var scroll_content;
 var scroll_filters;
 var scroll_sidebar_right;
 var scroll_sidebar_left;
+var scroll_map_buttons;
+var scroll_steps_others_like_box;
+var scroll_step_comment_answers_box;
 var clickable = true;
+var user_login_status = false;
 
 document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
 
@@ -52,8 +56,11 @@ function toast(text, status, type){
     },toast_show_time);
 }
 
-
-function append_recipes_to_profile(){
+function profile_recipes(type){
+    $(".profile_line_box").removeClass().addClass('profile_line_box');
+    $("#profile_line_box_" + type).addClass('profile_line_box_' + type + '_active');
+    recipe_size = calculate_recipe_size();
+    //ajax to get recipes
     var recipes = [];
     recipes[0] = ["0","/images/food (0).jpg", "title0"];
     recipes[1] = ["1","/images/food (1).png", "title0"];
@@ -77,46 +84,31 @@ function append_recipes_to_profile(){
     recipes[19] = ["19","/images/food (19).jpg", "title0"];
     recipes[20] = ["20","/images/food (20).jpg", "title0"];
 
-    //info about profile recipes
-    $("#profile_recipes").append("<div class='recipe_box untouchable profile_box' id='box_cooked' style=\"line-height:" + recipe_size + "px;width:" + recipe_size + "px;height:" + recipe_size + "px;\" onclick=\"profile_navigation('cooked')\">Gaminta</div>");
-    for(i = 5; i < 9; i++){
-        var data = recipes[i];
-        var id = data[0];
-        var image = data[1];
-        var title = data[2];
-        var appendable_data = "<div class='recipe_box' id='recipe_" + id + "' style=\"background-image: url('" + image + "');width:" + recipe_size + "px;height:" + recipe_size +  "px;\" onclick=\"show_recipe('" + id + "')\"></div>";
-        $("#profile_recipes").append(appendable_data);
-    }
 
-    $("#profile_recipes").append("<div class='recipe_box untouchable profile_box' id='box_liked' style=\"line-height:" + recipe_size + "px;width:" + recipe_size + "px;height:" + recipe_size + "px;\" onclick=\"profile_navigation('liked')\">Patinka</div>");
-    for(i = 9; i < 13; i++){
-        var data = recipes[i];
-        var id = data[0];
-        var image = data[1];
-        var title = data[2];
-        var appendable_data = "<div class='recipe_box' id='recipe_" + id + "' style=\"background-image: url('" + image + "');width:" + recipe_size + "px;height:" + recipe_size +  "px;\" onclick=\"show_recipe('" + id + "')\"></div>";
-        $("#profile_recipes").append(appendable_data);
-    }
+    $('#profile_recipes').fadeOut(transition_time,function(){
+        $('#profile_recipes').html('');
 
-    $("#profile_recipes").append("<div class='recipe_box untouchable profile_box' id='box_created' style=\"line-height:" + recipe_size + "px;width:" + recipe_size + "px;height:" + recipe_size + "px;\" onclick=\"profile_navigation('created')\">Sukurta</div>");
-    for(i = 17; i < 20; i++){
-        var data = recipes[i];
-        var id = data[0];
-        var image = data[1];
-        var title = data[2];
-        var appendable_data = "<div class='recipe_box' id='recipe_" + id + "' style=\"background-image: url('" + image + "');width:" + recipe_size + "px;height:" + recipe_size +  "px;\" onclick=\"show_recipe('" + id + "')\"></div>";
-        $("#profile_recipes").append(appendable_data);
-    }
+        if(type == "created"){
+            var appendable_data = "<div class='recipe_box' style=\"background-color:white;background-size:70% 70%;background-image: url('/images/new_recipe.png');width:" + recipe_size + "px;height:" + recipe_size +  "px;\" onclick='go_to_new_recipe()'><div class='recipe_box_info'>Sukurti naują receptą</div></div>";
+            $("#profile_recipes").append(appendable_data);
+        }
 
-    $("#profile_recipes").append("<div class='recipe_box untouchable profile_box' id='box_watched' style=\"line-height:" + recipe_size + "px;width:" + recipe_size + "px;height:" + recipe_size + "px;\" onclick=\"profile_navigation('watched')\">Peržiūrėta</div>");
-    for(i = 14; i < 17; i++){
-        var data = recipes[i];
-        var id = data[0];
-        var image = data[1];
-        var title = data[2];
-        var appendable_data = "<div class='recipe_box' id='recipe_" + id + "' style=\"background-image: url('" + image + "');width:" + recipe_size + "px;height:" + recipe_size +  "px;\" onclick=\"show_recipe('" + id + "')\"></div>";
-        $("#profile_recipes").append(appendable_data);
-    }
+        for(i = 0; i < recipes.length; i++){
+            var data = recipes[i];
+            var id = data[0];
+            var image = data[1];
+            var title = data[2];
+            var appendable_data = "<div class='recipe_box' id='recipe_" + id + "' style=\"background-image: url('" + image + "');width:" + recipe_size + "px;height:" + recipe_size +  "px;\" onclick=\"show_recipe('" + id + "')\"><div class='recipe_box_info'>" + title + "</div></div>";
+            $("#profile_recipes").append(appendable_data);
+        }
+
+        $('#profile_recipes').fadeIn(transition_time);
+        setTimeout(function(){scroll_content.refresh();},0);
+    });
+
+
+
+
 }
 
 function append_recipes(){
@@ -146,6 +138,8 @@ function append_recipes(){
         append_recipe(recipes[i]);
     }
 
+    setTimeout(function(){scroll_content.refresh()},0);
+
     /*
     $.ajax({
         type: 'POST',
@@ -169,6 +163,55 @@ function append_recipe(data){
 
     var appendable_data = "<div class='recipe_box' id='recipe_" + id + "' style=\"background-image: url('" + image + "');width:" + recipe_size + "px;height:" + recipe_size +  "px;\" onclick=\"show_recipe('" + id + "')\"><div class='recipe_box_info'>" + title + "</div></div>";
     $("#scroller_content").append(appendable_data);
+}
+
+function append_products(){
+    $("#scroller_content").html('');
+
+    //ajax to get suggestions shoppinglist
+    var products = [];
+    products[0] = ["0","/images/food (0).jpg", "title0"];
+    products[1] = ["1","/images/food (1).png", "title0"];
+    products[2] = ["2","/images/food (2).jpg", "title0"];
+    products[3] = ["3","/images/food (3).jpg", "title0"];
+    products[4] = ["4","/images/food (4).jpg", "title0"];
+    products[5] = ["5","/images/food (5).jpg", "title0"];
+    products[6] = ["6","/images/food (6).jpg", "title0"];
+    products[7] = ["7","/images/food (7).jpg", "title0"];
+    products[8] = ["8","/images/food (8).jpg", "title0"];
+    products[9] = ["9","/images/food (9).jpg", "title0"];
+    products[10] = ["10","/images/food (10).jpg", "title0"];
+    products[11] = ["11","/images/food (11).jpg", "title0"];
+    products[12] = ["12","/images/food (12).jpg", "title0"];
+    products[13] = ["13","/images/food (13).jpg", "title0"];
+    products[14] = ["14","/images/food (14).jpg", "title0"];
+    products[15] = ["15","/images/food (15).jpg", "title0"];
+    products[16] = ["16","/images/food (16).jpg", "title0"];
+    products[17] = ["17","/images/food (17).jpg", "title0"];
+
+    for(i = 0; i < products.length; i++){
+        append_product(products[i]);
+    }
+
+    setTimeout(function(){scroll_content.refresh()},100);
+}
+
+function append_product(data){
+    var id = data[0];
+    var image = data[1];
+    var title = data[2];
+
+    var appendable_data = "<div class='recipe_box' id='product_" + id + "' style=\"background-image: url('" + image + "');width:" + recipe_size + "px;height:" + recipe_size +  "px;\"><div class='recipe_box_info'>" + title + "</div><div class='recipe_box_button' id='recipe_box_button_add_to_shoppinglist' onclick=\"add_product('" + id + "')\"></div></div>";
+
+    $("#scroller_content").append(appendable_data);
+}
+
+function add_product(ID){
+    $('#product_' + ID).fadeOut(transition_time);
+}
+
+function append_shoppinglist(){
+    //ajax to get all shoppinglist from user and show it
 }
 
 function show_loading_more(){
@@ -247,6 +290,14 @@ function check(type, amount){
         case "username":
             var username_length = amount.length;
             if (username_length > username_max_size || username_length < username_min_size){
+                return false;
+            }else{
+                return true;
+            }
+            break;
+        case "not_empty":
+            amount = amount.trim();
+            if(amount == ""){
                 return false;
             }else{
                 return true;
@@ -462,7 +513,6 @@ function filter_ingredients_category(ingredients_category){
 
 
 function check_if_user_is_loged(){
-    var status = false;
     FB.getLoginStatus(function(response) {
         if (response.status == 'connected') {
             // the user is logged in and has authenticated your
@@ -472,21 +522,20 @@ function check_if_user_is_loged(){
             // and signed request each expire
             //var uid = response.authResponse.userID;
             //var accessToken = response.authResponse.accessToken;
-            status = true;
+            user_login_status = true;
         } else if (response.status == 'not_authorized') {
             // the user is logged in to Facebook,
             // but has not authenticated your app
-            status = false;
+            user_login_status = false;
         } else {
             // the user isn't logged in to Facebook.
-            status = false;
+            user_login_status = false;
         }
     });
-    return status;
+    return user_login_status;
 }
 
 function content_navigation(type){
-
     switch(type){
         case "home":
             show_loading_screen();
@@ -511,9 +560,9 @@ function content_navigation(type){
             }
             break;
 
-        case "random":
+        case "places":
             show_loading_screen();
-            location.href = "/random";
+            location.href = "/places";
             break;
 
         default:
@@ -563,6 +612,21 @@ function show_top_layer(type, ID){
                             "<div class='top_box_button' onclick=\"coop(" + ID + ");hide_top_layer()\">OK</div>" +
                             "<div class='top_box_button' onclick='hide_top_layer()'>Atšaukti</div>" +
                         "</div>" +
+                "</div>";
+            $("#top_box").html(data);
+            break;
+        case "share":
+            data =
+                "<div id='top_box_up'>" +
+                "<div id='top_box_title' class='untouchable'>Pasidalink su draugais</div>" +
+                    "<div class='top_box_social_box untouchable' id='top_box_social_facebook'></div>" +
+                "</div>" +
+                "<div id='top_box_content' class='untouchable'>" +
+                    "<div id='top_box_info_text'>Foodex paskelbs informaciją apie patiekalą Jūsų Facebook profilyje</div>" +
+                    "<div id='top_box_button_zone'>" +
+                    "<div class='top_box_button' onclick=\"share_food(" + ID + ");hide_top_layer()\">OK</div>" +
+                    "<div class='top_box_button' onclick='hide_top_layer()'>Atšaukti</div>" +
+                "</div>" +
                 "</div>";
             $("#top_box").html(data);
             break;
@@ -691,6 +755,22 @@ function filter_show_selected(){
     });
 }
 
+function filter_personal_show_selected(){
+    //show selected filters
+    filter_level = 0;
+    var filters = [];
+
+    filters[0] = "<div class='filter_element untouchable filter_element_indicator_not_want' id='universities-1' onclick='filter_selected(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/types.png');\"></div><div class='filter_element_text'>Selected 1</div><div class='filter_element_delete' id='delete_universities-1' onclick='filter_delete(this.id)'></div><div class='filter_element_indicator_change' id='indicator_change_universities-1' onclick='filter_indicator_change(this.id)'></div><div class='filter_element_indicator_small'></div></div>";
+    filters[1] = "<div class='filter_element untouchable filter_element_indicator_want' id='universities-2' onclick='filter_selected(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/times.png');\"></div><div class='filter_element_text'>Selected want</div><div class='filter_element_delete' id='delete_universities-2' onclick='filter_delete(this.id)'></div><div class='filter_element_indicator_change' id='indicator_change_universities-2' onclick='filter_indicator_change(this.id)'></div><div class='filter_element_indicator_small'></div></div>";
+    filters[2] = "<div class='filter_element untouchable filter_element_indicator_not_want' id='universities-3' onclick='filter_selected(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/celebrations.png');\"></div><div class='filter_element_text'>Selected 3</div><div class='filter_element_delete' id='delete_universities-3' onclick='filter_delete(this.id)'></div><div class='filter_element_indicator_change' id='indicator_change_universities-3' onclick='filter_indicator_change(this.id)'></div><div class='filter_element_indicator_small'></div></div>";
+
+    $("#scroller_filters").fadeOut(transition_time, function(){
+        $("#scroller_filters").html('');
+        $("#scroller_filters").fadeIn(1);
+        show_filters(filters, 0);
+    });
+}
+
 function filter_indicator_change(ID){
     var ID = ID.replace('indicator_change_','');
 
@@ -751,8 +831,8 @@ function shoppinglist_add(ID){
     var image = $('#' + ID + " .search_item_image").css('background-image');
     var title = $('#' + ID + " .search_item_title").html();
     $("#search_input").val('');
-    shoppinglist_input_blur();
-    shoppinglist_input_focus();
+    input_blur();
+    input_focus('shoppinglist');
     var shopping_items = [];
     var data = "<div class='filter_element untouchable' id='" + id + "' onclick='shoppinglist_item_selected(this.id)'><div class='filter_element_image' style=\"background-image:" + image + ";\"></div><div class='filter_element_text'>" + title + "</div><div class='filter_element_delete' id='delete_" + id + "' onclick='shoppinglist_delete(this.id)'></div></div>";
     shopping_items[0] = data;
@@ -773,8 +853,8 @@ function shoppinglist_add_enter(){
     var image = "url('/images/shoppinglist_item.png')";
     var title = $("#search_input").val();
     $("#search_input").val('');
-    shoppinglist_input_blur();
-    shoppinglist_input_focus();
+    input_blur();
+    input_focus('shoppinglist');
     var shopping_items = [];
     var data = "<div class='filter_element untouchable' id='" + id + "' onclick='shoppinglist_item_selected(this.id)'><div class='filter_element_image' style=\"background-image:" + image + ";\"></div><div class='filter_element_text'>" + title + "</div><div class='filter_element_delete' id='delete_" + id + "' onclick='shoppinglist_delete(this.id)'></div></div>";
     shopping_items[0] = data;
@@ -816,8 +896,8 @@ function filter_search_add(ID, type){
     image = image.replace('"', "'");
     var title = $('#' + ID + " .search_item_title").html();
     $("#search_input").val('');
-    search_input_blur();
-    search_input_focus();
+    input_blur();
+    input_focus('search');
 
     //send with ajax to filters
     //see which filters level, if = 0, add to panel
@@ -826,6 +906,8 @@ function filter_search_add(ID, type){
         var data = "<div class='filter_element untouchable filter_element_indicator_" + type + "' id='" + id + "' onclick='filter_selected(this.id)'><div class='filter_element_image' style=\"background-image:" + image + ";\"></div><div class='filter_element_text'>" + title + "</div><div class='filter_element_delete' id='delete_" + id + "' onclick='filter_delete(this.id)'></div><div class='filter_element_indicator_change' id='indicator_change_" + id + "' onclick='filter_indicator_change(this.id)'></div><div class='filter_element_indicator_small'></div></div>";
         filters[0] = data;
         show_filters(filters, 0);
+
+        setTimeout(function(){scroll_filters.refresh()}, 0);
     }
 
     /*
@@ -927,7 +1009,7 @@ function close_prices(){
     $("#sidebar_right").removeClass('right_full').addClass('right_squeeze');
 }
 
-function shoppinglist_search(){
+function search(type){
     var value = ($('#search_input').val()).trim();
     value = value.replace(/[-\/\\^$*+?.,()|[\]{}]/g, ' ');
     if(value == ""){
@@ -936,73 +1018,74 @@ function shoppinglist_search(){
     }else{
         $('#search_container_inside').html('');
         $('#search_container').css('display','block');
-
-        //get data with ajax from search_value
         var data = [];
-        for(i = 0; i < 7; i++){
-            data[i] =
-            "<div class='s_e search_item untouchable' id='shoppinglist-ingredient-95' onclick='shoppinglist_add(this.id)'>"+
-                "<div class='s_e search_item_image' style=\"background-image:url('images/food (2).jpg')\"></div>"+
-                "<div class='s_e search_item_title'>Ananasas</div>"+
-                "<div class='s_e search_item_bottom_info'>Ingredientas</div>"+
-            "</div>";
+
+        /*
+         $.ajax({
+         type: 'POST',
+         url: 'ajax.php',
+         dataType: 'json',
+         data: { search: value },
+         success:function(data){
+         $("#search_container").html('');
+         if(data.search_results.length > 0){
+         $("#search_container").css('display','block');
+         }else{
+         $("#search_container").css('display','none');
+         }
+
+         for(i = 0; i < data.search_results.length; i++){
+         $("#search_container").append(data.search_results[i]);
+         }
+         }
+         });
+
+         */
+
+        switch(type){
+            case "search":
+                //get data with ajax from search_value
+                for(i = 0; i < 7; i++){
+                    data[i] =
+                    "<div class='s_e search_item untouchable' id='search-ingredient-95'>" +
+                        "<div class='s_e search_item_image' style=\"background-image:url('images/food (2).jpg')\"></div>" +
+                        "<div class='s_e search_item_title'>Ananasas</div>" +
+                        "<div class='s_e search_item_bottom_info'>Ingredientas</div>" +
+                        "<div class='s_e filter_element_indicator indicator_search want' style='right: 25px;' onclick=\"filter_search_add('search-ingredient-95','want')\"></div>" +
+                        "<div class='s_e filter_element_indicator indicator_search not_want' style='right: 3px;' onclick=\"filter_search_add('search-ingredient-95','not_want')\"></div>" +
+                    "</div>";
+                }
+                break;
+
+            case "shoppinglist":
+                //get data with ajax from search_value
+                for(i = 0; i < 7; i++){
+                    data[i] =
+                    "<div class='s_e search_item untouchable' id='shoppinglist-ingredient-95' onclick='shoppinglist_add(this.id)'>"+
+                        "<div class='s_e search_item_image' style=\"background-image:url('images/food (2).jpg')\"></div>"+
+                        "<div class='s_e search_item_title'>Ananasas</div>"+
+                        "<div class='s_e search_item_bottom_info'>Ingredientas</div>"+
+                    "</div>";
+                }
+                break;
+
+            case "places":
+                //get data with ajax from search_value
+               for(i = 0; i < 7; i++){
+                    data[i] =
+                        "<div class='s_e search_item untouchable' id='search-maxima' onclick=\"show_nearest('maxima');\">" +
+                            "<div class='s_e search_item_image' style=\"background-image:url('/images/maxima.png')\"></div>" +
+                            "<div class='s_e search_item_title'>Maxima</div>" +
+                            "<div class='s_e search_item_bottom_info'>Parduotuvė</div>" +
+                        "</div>";
+                }
+                break;
         }
 
-        for(i = 0; i < 7; i++){
+        for(i = 0; i < data.length; i++){
             $("#search_container_inside").append(data[i]);
         }
     }
-}
-
-function search(){
-    var value = ($('#search_input').val()).trim();
-    value = value.replace(/[-\/\\^$*+?.,()|[\]{}]/g, ' ');
-    if(value == ""){
-        $('#search_container_inside').html('');
-        $('#search_container').css('display','none');
-    }else{
-        $('#search_container_inside').html('');
-        $('#search_container').css('display','block');
-
-        //get data with ajax from search_value
-        var data = [];
-        for(i = 0; i < 7; i++){
-            data[i] =
-            "<div class='s_e search_item untouchable' id='search-ingredient-95'>" +
-                "<div class='s_e search_item_image' style=\"background-image:url('images/food (2).jpg')\"></div>" +
-                "<div class='s_e search_item_title'>Ananasasadasdasdasdasdasd asdasds</div>" +
-                "<div class='s_e search_item_bottom_info'>Ingredientas</div>" +
-                "<div class='s_e filter_element_indicator indicator_search want' style='right: 25px;' onclick=\"filter_search_add('search-ingredient-95','want')\"></div>" +
-                "<div class='s_e filter_element_indicator indicator_search not_want' style='right: 3px;' onclick=\"filter_search_add('search-ingredient-95','not_want')\"></div>" +
-            "</div>";
-        }
-
-        for(i = 0; i < 7; i++){
-            $("#search_container_inside").append(data[i]);
-        }
-    }
-
-    /*
-    $.ajax({
-        type: 'POST',
-        url: 'ajax.php',
-        dataType: 'json',
-        data: { search: value },
-        success:function(data){
-            $("#search_container").html('');
-            if(data.search_results.length > 0){
-                $("#search_container").css('display','block');
-            }else{
-                $("#search_container").css('display','none');
-            }
-
-            for(i = 0; i < data.search_results.length; i++){
-                $("#search_container").append(data.search_results[i]);
-            }
-        }
-    });
-
-    */
 }
 
 function focus_input(ID){
@@ -1020,43 +1103,39 @@ function last_index(){
 
 function show_recipe(recipe_ID){
     if(!clickable) return;
-
-    var classes = ($("#recipe_" + recipe_ID).attr('class')).split(" ");
-    var selected = classes[1];
-    if(selected == "recipe_active"){
-        hide_recipe();
-    }else{
-        $("#sidebar_right").removeClass('right_squeeze').addClass('right_full');
-        //calculate top px for ingredients zone
-        //var height_from_top = $(".ingredients_divider").offset().top + 10;
-        //$("#sidebar_right_ingredients_zone").css('top', height_from_top + 'px');
-        $('.recipe_box').removeClass('recipe_active');
-        $("#recipe_" + recipe_ID).addClass('recipe_active');
-
-
-
-        //from ajax with recipe ID get
-        var image;
-        var title;
-        var country;
-        var time;
-        var rating;
-        var main_cooking_method;
-        var type;
-        var characteristics; //array of them
-        var celebration; //array of them or empty
-        var ingredients; //array of them
-
-
-        scroll_sidebar_right.refresh();
-        scroll_sidebar_right.scrollTo(0,0);
-    }
-
-    recalculate_width();
     if(mobile_state){
         empty_sidebar();
     }
 
+    if($("#recipe_" + recipe_ID).hasClass('recipe_active')){
+        hide_recipe();
+    }else{
+        if($('.recipe_active').length == 0){
+            $("#sidebar_right").removeClass('right_squeeze').addClass('right_full');
+            $('.recipe_box').removeClass('recipe_active');
+            $("#recipe_" + recipe_ID).addClass('recipe_active');
+            scroll_sidebar_right.refresh();
+            scroll_sidebar_right.scrollTo(0,0);
+
+            //from ajax with recipe ID get
+            var image;
+            var title;
+            var country;
+            var time;
+            var rating;
+            var main_cooking_method;
+            var type;
+            var characteristics; //array of them
+            var celebration; //array of them or empty
+            var ingredients; //array of them
+
+        }else{
+            hide_recipe();
+            setTimeout(function(){
+                show_recipe(recipe_ID);
+            },transition_time)
+        }
+    }
 }
 
 function hide_recipe(){
@@ -1077,7 +1156,7 @@ function cook(recipe_ID){
 
 //tracks down mouse click
 $(document).mousedown(function(event){
-    if($(event.target).attr("id") == "search_container" || ( typeof $(event.target).attr("class") !== "undefined" && (($(event.target).attr("class")).split(" "))[0] == "s_e" ) ){
+    if($(event.target).attr("id") == "search_container" || ( typeof $(event.target).attr("class") !== "undefined" && $(event.target).hasClass('s_e'))){
         //alert($(event.target).attr("id"));
         //$('#search_input').focus();
         //event.stopImmediatePropagation();
@@ -1086,7 +1165,7 @@ $(document).mousedown(function(event){
     }
 });
 
-function search_input_focus(){
+function input_focus(type){
     $("#search_zone").removeClass('unactive_search_zone');
     $("#search_zone").addClass('active_search_zone');
     full_sidebar();
@@ -1094,34 +1173,15 @@ function search_input_focus(){
     var max_height = parseInt(($('#filters_zone').css('height')).replace('px',''));
     $("#search_container").css('max-height', max_height + "px");
     $("#search_container_inside").css('max-height', max_height + "px");
-    search();
+    search(type);
 }
 
-function search_input_blur(){
+function input_blur(){
     $("#search_zone").removeClass('active_search_zone');
     $("#search_zone").addClass('unactive_search_zone');
     $('#search_container_inside').html('');
     $('#search_container').css('display','none');
 }
-
-function shoppinglist_input_focus(){
-    $("#search_zone").removeClass('unactive_search_zone');
-    $("#search_zone").addClass('active_search_zone');
-    full_sidebar();
-    //manipulate max-height search_container
-    var max_height = parseInt(($('#filters_zone').css('height')).replace('px',''));
-    $("#search_container").css('max-height', max_height + "px");
-    $("#search_container_inside").css('max-height', max_height + "px");
-    shoppinglist_search();
-}
-
-function shoppinglist_input_blur(){
-    $("#search_zone").removeClass('active_search_zone');
-    $("#search_zone").addClass('unactive_search_zone');
-    $('#search_container_inside').html('');
-    $('#search_container').css('display','none');
-}
-
 
 function ingredient_selected(ingredient_ID){
     if(check_if_user_is_loged()){
@@ -1252,12 +1312,8 @@ function recalculate_width(){
     if(size_per_item < minimum_recipe_size){
         size_per_item = content_width - recipe_box_margin_size;
         $(".recipe_box").css("font-size","30px");
-        $("#profile_divider").css("font-size","16px");
-        $("#profile_image").css("margin-bottom","0px");
     }else{
         $(".recipe_box").css("font-size","");
-        $("#profile_divider").css("font-size","");
-        $("#profile_image").css("margin-bottom","10px");
     }
 
     $(".recipe_box").css('width', size_per_item + "px");
@@ -1289,26 +1345,57 @@ function sidebar_manipulation(){
     }
 }
 
+function manipulate_map_buttons_zone(){
+    if(mobile_state){
+        $('#map_buttons_zone_locker').css('display','block');
+        $('#map_buttons_zone').css('top','41px');
+        $('#map_buttons_zone_bottom').css('top','171px');
+        $('#map_buttons_zone').addClass('squeezed_buttons');
+        $('#content_wrapper').css('right','0px');
+    }else{
+        $('#map_buttons_zone_locker').css('display','none');
+        $('#map_buttons_zone').css('top','0px');
+        $('#map_buttons_zone_bottom').css('top','131px');
+        $('#map_buttons_zone').removeClass('squeezed_buttons');
+        $('#content_wrapper').css('right','66px');
+        setTimeout(function(){scroll_map_buttons.refresh()},0);
+    }
+}
+
+function show_hide_map_buttons_zone(){
+    if($('#map_buttons_zone').hasClass('squeezed_buttons')){
+        $('#map_buttons_zone').removeClass('squeezed_buttons');
+        setTimeout(function(){scroll_map_buttons.refresh()},0);
+        $('#content_wrapper').css('right','66px');
+    }else{
+        $('#map_buttons_zone').addClass('squeezed_buttons');
+        $('#content_wrapper').css('right','0px');
+    }
+}
+
 function empty_sidebar_slide(){
-    var sidebar_class = ($("#sidebar").attr('class'));
-    if(sidebar_class == "full"){
+    if($("#sidebar").hasClass('full')){
         $("#sidebar").removeClass('full').removeClass('empty').removeClass('squeeze').addClass('empty');
-        $("#content_wrapper").css('left','1px');
-        $("#header").css('left','1px');
+        $("#content_wrapper").css('left','0px');
+        $("#header").css('left','0px');
         $("#sidebar_slider").css('display','block');
         $("#header_logo").css('display','block');
+        //$("#header_map_buttons_zone_locker").css('display','block');
+        $("#header_options").css('display','block');
         $("#config_zone").css('display','none');
         $("#cook_ingredients").css('display','none');
         $(".next_step").html(">>");
         //var height_from_top = $(".middle_divider").offset().top;
         //$("#filters_zone").css('top', height_from_top + 'px');
 
-    }else if(sidebar_class == "empty"){
+    }else if($("#sidebar").hasClass('empty')){
         $("#sidebar").removeClass('full').removeClass('empty').removeClass('squeeze').addClass('full');
         $("#content_wrapper").css('left','231px');
         $("#header").css('left','231px');
         $("#sidebar_slider").css('display','none');
         $("#header_logo").css('display','none');
+        //$("#header_map_buttons_zone_locker").css('display','none');
+        $("#header_options").css('display','none');
         $("#config_zone").css('display','block');
         $("#cook_ingredients").css('display','block');
         $(".next_step").html("Sekantis");
@@ -1371,6 +1458,7 @@ function empty_sidebar(){
     $("#content_wrapper").css('left','0px');
     $("#header").css('left','0px');
     $("#header_logo").css('display','block');
+    $("#header_map_buttons_zone_locker").css('display','block');
     $("#sidebar_slider").css('display','none');
     $("#config_zone").css('display','none');
     recalculate_width();
@@ -1524,6 +1612,32 @@ function recipe_like(recipe_ID, box_ID){
 function share_food(recipe_ID){
     if(check_if_user_is_loged()){
         //take picture of food and upload to facebook
+
+        var link = location.href;
+        var image = "http://bbd.dev/images/food (5).jpg";
+        var title = "Šiškebabas";
+        var about = "Šiškebabas labai skanus ir geras patiekalas";
+
+        FB.api('/me/feed', 'post', {
+            message: title,
+            name: 'Foodex',
+            caption: 'Gaminkite kartu su Foodex',
+            description: about,
+            link: link,
+            picture: image
+        }, function(response) {
+            if (!response || response.error) {
+                toast('Jūs nesuteikėte privilegijos rašyti ant jūsų laiko juostos','bad', 'login');
+            } else {
+                toast('Pasidalinta','good', 'login');
+            }
+        });
+        /*
+         FB.ui({
+         method: 'share',
+         href: 'https://developers.facebook.com/docs/dialogs/',
+         }, function(response){});
+         */
     }else{
         show_top_layer('account');
     }
@@ -1531,21 +1645,32 @@ function share_food(recipe_ID){
 
 function add_comment(recipe_ID){
     if(check_if_user_is_loged()){
-        //ajax to add comment
+
+        var comment = $('#step_comment_box_area').val();
+        if(check('not_empty', comment)){
+            //ajax to add comment
+            squzee_comment_box();
+            toast('Atsiliepimas įrašytas','good','write');
+        }else{
+            toast('Įrašykite ką nors','bad','write');
+        }
+
     }else{
         show_top_layer('account');
     }
+}
+
+function squzee_comment_box(){
+    $('.step_comment_box_comments').animate({bottom: "50%", top: "50%"}, transition_time * 2,function(){
+        $(".step_comment_box_comments").html("<div id='step_comment_title'>Ačiū</div>");
+        $('.step_comment_box_comments').animate({height: "52px", marginTop: "-26px"}, transition_time);
+    });
 }
 
 function logout(){
     FB.logout(function(response) {
         location.href = "/";
     });
-}
-
-function profile_navigation(type){
-    scroll_content.scrollToElement("#box_" + type, 600, 0, -50, IScroll.utils.ease.back);
-    //$("#content_wrapper").animate({scrollTop: $("#box_" + type).offset().top + $("#content_wrapper").scrollTop()}, scroll_animation_time);
 }
 
 var clock;

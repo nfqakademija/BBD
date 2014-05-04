@@ -1,7 +1,6 @@
 {% extends "::base.html.twig" %}
 
 {% block specific_scripts %}
-    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?v=3&libraries=places,geometry&sensor=true"></script>
     <script>
         function key_check(event){
             if(event.keyCode == 13 && $('#search_input').val() != "" && $("#search_input").is(":focus")){
@@ -10,24 +9,15 @@
         }
 
         function loader(){
-            //initialize maps and other stuff related to maps
-            getLocation();
             sidebar_manipulation();
+            recipe_size = calculate_recipe_size();
             $( window ).resize(function() {
                 sidebar_manipulation();
-            });
-
-            $(window).bind('resizeEnd', function() {
-                refresh_location();
-                show_center();
+                recalculate_width();
             });
 
             if(browser == 'firefox'){
-                $("#content_wrapper").css('margin-right','-17px');
                 $("#search_container").css('box-shadow','none');
-            }
-            if(browser == 'ie'){
-                $("#content_wrapper").css('margin-right','-17px');
             }
 
             scroll_filters = new IScroll('#filters_zone', {
@@ -38,275 +28,25 @@
                 fadeScrollbars: true
             });
 
+            scroll_content = new IScroll('#content_wrapper', {
+                scrollbars: true,
+                mouseWheel: true,
+                interactiveScrollbars: true,
+                shrinkScrollbars: 'scale',
+                fadeScrollbars: true,
+            });
+
+            scroll_content.on('scrollStart', function(){ clickable = false; });
+            scroll_content.on('scrollEnd', function(){ clickable = true; });
+
+            $("#filters_zone").click(function(){ $("#search_input").blur();});
+            $("#content_wrapper").click(function(){ $("#search_input").blur();});
+
+            append_products();
+            append_shoppinglist();
 
             hide_loading_screen();
         }
-
-        //NFQ coordinates will be used if your location is unavailable
-        var your_X = 54.903431;
-        var your_Y = 23.88197;
-        var my_location = new google.maps.LatLng(your_X, your_Y);
-        var markersArray = [];
-        var infowindow;
-        var map;
-        var your_position;
-        var directionsDisplay;
-        var directionsService = new google.maps.DirectionsService();
-
-        function getLocation(){
-            if (navigator.geolocation){
-                navigator.geolocation.getCurrentPosition(showPosition, showError);
-            }else{
-               //Geolocation is not supported by this browser.
-                maps_initialize();
-            }
-        }
-
-        function showPosition(position){
-            your_X = position.coords.latitude;
-            your_Y = position.coords.longitude;
-            my_location = new google.maps.LatLng(your_X, your_Y);
-            maps_initialize();
-        }
-
-        function showError(error){
-            switch(error.code){
-                case error.PERMISSION_DENIED:
-                    //User denied the request for Geolocation."
-                    break;
-                case error.POSITION_UNAVAILABLE:
-                   //Location information is unavailable."
-                    break;
-                case error.TIMEOUT:
-                    //The request to get user location timed out."
-                    break;
-                case error.UNKNOWN_ERROR:
-                    //An unknown error occurred."
-                    break;
-            }
-            maps_initialize();
-        }
-
-        function maps_initialize() {
-            var map_canvas = document.getElementById('map_canvas');
-            var map_options = {
-                center: my_location,
-                zoom: 16,
-                mapTypeId: google.maps.MapTypeId.ROADMAP,
-                disableDefaultUI: true
-            }
-
-            map = new google.maps.Map(map_canvas, map_options);
-
-            your_position = new google.maps.Marker({
-                position: my_location,
-                map: map,
-                icon: "/images/here.png",
-                title: "Tu esi čia"
-            });
-            infowindow = new google.maps.InfoWindow();
-            google.maps.event.addListener(your_position, 'click', function () {
-                infowindow.setContent("Tu esi čia");
-                infowindow.open(map, this);
-            });
-
-            directionsDisplay = new google.maps.DirectionsRenderer();
-            directionsDisplay.setMap(map);
-
-            add_center_controller();
-
-            show_on_map('Kebabinė', false);
-            //show_on_map('Picerija', false);
-            //show_on_map('Palink', false);
-            //show_on_map('Maxima', false);
-            //show_on_map('greito maisto restoranas', false);
-
-            //traukti is DB vietu lat, long image_url, title ir sukti cikla ir atvaizduoti
-            //add_custom_marker('54.909933', '23.983622999999966' , '/images/add.png', 'NFQ');
-        }
-
-        function calcRoute(end, type){
-            var start = my_location;
-            var travel_mode;
-            switch(type){
-                case "walk": travel_mode = google.maps.TravelMode.WALKING;break;
-                case "drive": travel_mode = google.maps.TravelMode.DRIVING;break;
-                default: travel_mode = google.maps.TravelMode.DRIVING;break;
-            }
-            var request = {
-                origin:start,
-                destination:end,
-                travelMode: travel_mode
-            };
-            directionsService.route(request, function(result, status) {
-                if (status == google.maps.DirectionsStatus.OK) {
-                    directionsDisplay.setDirections(result);
-                    infowindow.close();
-                }
-            });
-        }
-
-        function initializeMarkers(results, status, pagination){
-            if (status == google.maps.places.PlacesServiceStatus.OK) {
-                for (var i = 0; i < results.length; i++) {
-                    createMarker(results[i]);
-                }
-                if (pagination.hasNextPage) {
-                    pagination.nextPage();
-                }
-            }
-        }
-
-        function createMarker(place) {
-            var placeLocation = place.geometry.location;
-            var placeName = place.name;
-            var placeReference = place.reference;
-            var placePhoto = place.photos;
-            if(placePhoto){
-                placePhoto = placePhoto[0].getUrl({'maxWidth': 25, 'maxHeight': 25});
-            }else{
-                placePhoto = place.icon;
-            }
-
-            var placeImage = {
-                url: place.icon,
-                size: new google.maps.Size(25, 25),
-                origin: new google.maps.Point(0, 0),
-                anchor: new google.maps.Point(17, 34),
-                scaledSize: new google.maps.Size(25, 25)
-            };
-
-            var marker = new google.maps.Marker({
-                position: placeLocation,
-                map: map,
-                icon: placeImage,
-                animation: google.maps.Animation.DROP,
-                title: placeName
-            });
-            markersArray.push(marker);
-
-            google.maps.event.addListener(marker, 'click', function() {
-                //this.setAnimation(google.maps.Animation.BOUNCE);
-                //var distance = my_location.distanceTo(marker.position);
-                var distance = google.maps.geometry.spherical.computeDistanceBetween (my_location, marker.position);
-                distance = distanceConverter(distance.toFixed(0));
-                var placeContent =
-                "<image class='google_map_tooltip_image' src='" + placePhoto + "' />" +
-                "<div class='google_map_tooltip_title'>" + placeName + "</div>" +
-                "<div style='clear:both;'></div>" +
-                "<div id='walk_button' class='google_map_tooltip_button' onclick=\"calcRoute('" + marker.position + "','walk')\">Eiti</div>" +
-                "<div id='drive_button' class='google_map_tooltip_button' onclick=\"calcRoute('" + marker.position + "','drive')\">Važiuoti</div>" +
-                "<div class='google_map_tooltip_text'>Atstumas ~" + distance + "</div>";
-
-                infowindow.setContent(placeContent);
-                infowindow.open(map, this);
-            });
-        }
-
-        function distanceConverter(distance){
-            if (distance < 0){
-                distance = 0 + " m";
-            }else if (distance < 1000){
-                distance = distance + " m";
-            }else if (distance >= 1000){
-                distance = distance / 1000 + " km";
-            }
-            return distance;
-        }
-
-
-        function show_on_map(type, delete_index){
-            if(delete_index){
-                //prevuos markers delete
-                for(i = 0; i < markersArray.length; i++){
-                    markersArray[i].setMap(null);
-                }
-                markersArray = [];
-            }
-
-
-            var request = {
-                location: my_location,
-                rankBy: google.maps.places.RankBy.DISTANCE,
-                keyword: type,
-                //types: ['bar', 'restaurant', 'cafe', 'grocery_or_supermarket', 'shopping_mall', 'food']
-            };
-
-            var service = new google.maps.places.PlacesService(map);
-            service.nearbySearch(request, initializeMarkers);
-        }
-
-
-        function add_center_controller(){
-            var controller = document.createElement('div');
-            controller.id = "map_center_controller";
-            controller.index = 1;
-
-            google.maps.event.addDomListener(controller, 'click', function() {
-                refresh_location();
-                show_center();
-            });
-
-            map.controls[google.maps.ControlPosition.TOP_LEFT].push(controller);
-        }
-
-        function show_center(){
-            map.panTo(my_location);
-        }
-
-        function refresh_location(){
-            if (navigator.geolocation){
-                navigator.geolocation.getCurrentPosition(getNewPosition, showError);
-            }
-        }
-
-        function getNewPosition(position){
-            your_X = position.coords.latitude;
-            your_Y = position.coords.longitude;
-            my_location = new google.maps.LatLng(your_X, your_Y);
-            your_position.setPosition(my_location);
-        }
-
-        function show_marker(ID){
-            //show marker when looking for prices. nearest shop with that name pvz IKI
-            map.panTo(my_location);
-        }
-
-    function add_custom_marker(lat, long, icon, placeName){
-        var placeLocation = new google.maps.LatLng(lat, long);
-        var placeImage = {
-            url: icon,
-            size: new google.maps.Size(25, 25),
-            origin: new google.maps.Point(0, 0),
-            anchor: new google.maps.Point(17, 34),
-            scaledSize: new google.maps.Size(25, 25)
-        };
-
-        var marker = new google.maps.Marker({
-            position: placeLocation,
-            map: map,
-            icon: placeImage,
-            animation: google.maps.Animation.DROP,
-            title: placeName
-        });
-        markersArray.push(marker);
-
-        google.maps.event.addListener(marker, 'click', function() {
-            var distance = google.maps.geometry.spherical.computeDistanceBetween (my_location, marker.position);
-            distance = distanceConverter(distance.toFixed(0));
-            var placeContent =
-                "<image class='google_map_tooltip_image' src='" + icon + "' />" +
-                "<div class='google_map_tooltip_title'>" + placeName + "</div>" +
-                "<div style='clear:both;'></div>" +
-                "<div id='walk_button' class='google_map_tooltip_button' onclick=\"calcRoute('" + marker.position + "','walk')\">Eiti</div>" +
-                "<div id='drive_button' class='google_map_tooltip_button' onclick=\"calcRoute('" + marker.position + "','drive')\">Važiuoti</div>" +
-                "<div class='google_map_tooltip_text'>Atstumas ~" + distance + "</div>";
-
-            infowindow.setContent(placeContent);
-            infowindow.open(map, this);
-        });
-    }
-
     </script>
 {% endblock %}
 
@@ -315,9 +55,9 @@
 {% block search_zone %}
     <div id="search_zone" onclick="full_sidebar()">
         <div id='search_index' onclick="focus_input('search_input')" ></div>
-        <input id='search_input' placeholder='Pridėti prekių' onkeyup="shoppinglist_search()" onfocus="shoppinglist_input_focus()" onblur="shoppinglist_input_blur()"/>
+        <input id='search_input' placeholder='Pridėti prekių' onkeyup="search('shoppinglist')" onfocus="input_focus('shoppinglist')" onblur="input_blur()"/>
         <div id='search_container'>
-            <div id='search_container_inside' class='contains_scrollbar'></div>
+            <div id='search_container_inside'></div>
         </div>
     </div>
 {% endblock %}
@@ -327,48 +67,20 @@
  {% endblock %}
 
 {% block filters_zone %}
-<div id='filters_zone' style="top:230px;bottom:10px;" onclick="full_sidebar()">
+<div id='filters_zone' style="top:285px;bottom:10px;" onclick="full_sidebar()">
     <div class="scroller" id="scroller_filters"></div>
 </div>
 
 {% endblock %}
 
-{% block config_zone %}
-{% endblock %}
+{% block config_zone %}{% endblock %}
 
 {% block content %}
-    <div id="content_wrapper" style="right:0px;background-image:url('{{ asset('images/content_background.jpg') }}')">
-        <div id="map_canvas"></div>
+<div id="content_wrapper" style="padding-bottom:10px;background-image:url('/images/content_background.jpg')">
+    <div class="scroller" id="scroller_content" style="padding-bottom:10px;">
+
     </div>
+</div>
 {% endblock %}
 
-{% block sidebar_right %}
-    <div id="sidebar_right" class="right_squeeze" >
-        <div id="sidebar_right_image" style="background-image:url('{{ asset('images/food (5).jpg') }}')"></div>
-        <div id="sidebar_right_title">Shoppinglisto prekė</div>
-        <div id="sidebar_right_ingredients">
-            <div id="sidebar_right_ingredients_text">Kainos</div>
-        </div>
-        <div id="divider" class="ingredients_divider"></div>
-        <div id="sidebar_right_ingredients_zone" style="bottom:10px;" class="contains_scrollbar">
-            <div class="ingredient untouchable" id="ingredient-2" onclick="show_marker('2')">
-                <div class="ingredient_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
-                <div class="ingredient_text">22.99 Lt</div>
-                <div class="ingredient_size">Iki</div>
-                <div class="ingredient_indicator ingredient_indicator_have" id="ingredient_indicator-2"></div>
-            </div>
-            <div class="ingredient untouchable" id="ingredient-3" onclick="show_marker('2')">
-                <div class="ingredient_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
-                <div class="ingredient_text">25.89</div>
-                <div class="ingredient_size">Norfa</div>
-                <div class="ingredient_indicator ingredient_indicator_undefined" id="ingredient_indicator-3"></div>
-            </div>
-            <div class="ingredient untouchable" id="ingredient-4" onclick="show_marker('2')">
-                <div class="ingredient_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
-                <div class="ingredient_text">27.99</div>
-                <div class="ingredient_size">Maxima</div>
-                <div class="ingredient_indicator ingredient_indicator_undefined" id="ingredient_indicator-4"></div>
-            </div>
-        </div>
-    </div>
-{% endblock %}
+{% block sidebar_right %}{% endblock %}

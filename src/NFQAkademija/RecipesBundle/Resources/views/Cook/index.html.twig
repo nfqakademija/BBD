@@ -109,6 +109,30 @@
                 fadeScrollbars: true
             });
 
+            scroll_steps_others_like_box = new IScroll('#steps_others_like_box', {
+                scrollbars: true,
+                mouseWheel: true,
+                interactiveScrollbars: true,
+                shrinkScrollbars: 'scale',
+                fadeScrollbars: true
+            });
+
+            scroll_step_comment_answers_box = new IScroll('#step_comment_answers_box', {
+                scrollbars: true,
+                mouseWheel: true,
+                interactiveScrollbars: true,
+                shrinkScrollbars: 'scale',
+                fadeScrollbars: true
+            });
+
+            scroll_steps_others_like_box.on('scrollStart', function(){ clickable = false; });
+            scroll_steps_others_like_box.on('scrollEnd', function(){ clickable = true; });
+
+            $("#sidebar_right_wrapper").click(function(){ $("#search_input").blur();});
+            $("#cook_left_sidebar_wrapper").click(function(){ $("#search_input").blur();});
+            $("#steps_others_like_box").click(function(){ $("#search_input").blur();});
+            $("#step_comment_answers_box").click(function(){ $("#search_input").blur();});
+
             hide_loading_screen();
         }
     </script>
@@ -179,11 +203,13 @@
 
             <div id="step_comment_box" class="step_answers_box">
                 <div id="step_comment_title" class="step_answers_title">Atsiliepimai</div>
-                <div id="step_comment_answers_box" class="contains_scrollbar">
-                    <div class="step_answer">Nuostabus šiškebabas</div>
-                    <div class="step_answer">Šūdų krūva ne maistas</div>
-                    <div class="step_answer">Labai skanu. Patiko visai šeimai</div>
-                    <div class="step_answer">Rekomenduoju vietoj agurko naudoti išvirtą agurką</div>
+                <div id="step_comment_answers_box">
+                    <div class="scroller" id="step_comment_answers_box_scroller">
+                        <div class="step_answer"><div class="step_answer_image" style="background-image:url('/images/profile.png')"></div><div class="step_answer_text">Nuostabus šiškebabas</div></div>
+                        <div class="step_answer"><div class="step_answer_image" style="background-image:url('/images/profile.png')"></div><div class="step_answer_text">Šūdų krūva ne maistas</div></div>
+                        <div class="step_answer"><div class="step_answer_image" style="background-image:url('/images/profile.png')"></div><div class="step_answer_text">Labai skanu. Patiko visai šeimai</div></div>
+                        <div class="step_answer"><div class="step_answer_image" style="background-image:url('/images/profile.png')"></div><div class="step_answer_text">Rekomenduoju vietoj agurko naudoti išvirtą agurką</div></div>
+                    </div>
                 </div>
             </div>
             <div class="step_go step_down" onclick="next_step()"></div>
@@ -214,9 +240,9 @@
             <div class="step_go step_up" onclick="previous_step()"></div>
             <div class="step_id last_id">Skanaus</div>
             <div class="step_button not_liked" id="step_like" onclick="recipe_like('1', this.id)">Patiko?</div>
-            <div class="step_button" id="step_share" onclick="share_food('1')">Pasidalink</div>
+            <div class="step_button" id="step_share" onclick="show_top_layer('share','1')">Pasidalink</div>
 
-            <div id="step_comment_box">
+            <div id="step_comment_box" class="step_comment_box_comments">
                 <div id="step_comment_title" >Atsiliepimas</div>
                 <textarea id="step_comment_box_area" placeholder="Jūsų pastebėjimai, patarimai, alternatyvos ..."></textarea>
                 <div id="step_comment" onclick="add_comment('1')">Skelbti</div>
@@ -224,9 +250,11 @@
 
             <div id="step_others_like">
                 <div id="steps_others_like_title">Kuriem patiko šis patiekalas taip pat patiko:</div>
-                <div id="steps_others_like_box" class="contains_scrollbar">
-                    <div class='recipe_box' id='recipe_1' style="background-image: url('/images/food (5).jpg');width:100px;height:100px;" onclick="show_recipe('1')"></div>
-                    <div class='recipe_box' id='recipe_2' style="background-image: url('/images/food (9).jpg');width:100px;height:100px;" onclick="show_recipe('2')"></div>
+                <div id="steps_others_like_box">
+                    <div class="scroller" id="steps_others_like_box_scroller">
+                        <div class='recipe_box' id='recipe_1' style="background-image: url('/images/food (5).jpg');width:100px;height:100px;" onclick="show_recipe('1')"></div>
+                        <div class='recipe_box' id='recipe_2' style="background-image: url('/images/food (9).jpg');width:100px;height:100px;" onclick="show_recipe('2')"></div>
+                    </div>
                 </div>
             </div>
         </div>

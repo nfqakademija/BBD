@@ -13,3 +13,7 @@ nfq_akademija_shoppinglist:
 nfq_akademija_cook:
     pattern:  /cook/{recipe_ID}
     defaults: { _controller: NFQAkademijaRecipesBundle:Cook:index }
+
+nfq_akademija_places:
+    pattern:  /places
+    defaults: { _controller: NFQAkademijaRecipesBundle:Places:index }

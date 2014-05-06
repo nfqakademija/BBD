@@ -17,3 +17,7 @@ nfq_akademija_cook:
 nfq_akademija_places:
     pattern:  /places
     defaults: { _controller: NFQAkademijaRecipesBundle:Places:index }
+
+nfq_akademija_new:
+    pattern:  /new
+    defaults: { _controller: NFQAkademijaRecipesBundle:New:index }

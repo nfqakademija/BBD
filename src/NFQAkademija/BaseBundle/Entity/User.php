@@ -49,12 +49,24 @@ class User extends BaseUser
      */
     protected $surname;
 
-
     /**
      * @var \NFQAkademija\BaseBundle\Entity\ShoppingList
      * @ORM\OneToMany(targetEntity="\NFQAkademija\BaseBundle\Entity\ShoppingList", mappedBy="user")
      */
+
     protected $shoppingList;
+    /**
+     * @ORM\OneToMany(targetEntity="\NFQAkademija\BaseBundle\Entity\Step", mappedBy="user")
+     */
+    protected $recipe;
+    /**
+     * @ORM\OneToMany(targetEntity="\NFQAkademija\BaseBundle\Entity\Comment", mappedBy="user")
+     */
+    protected $comment;
+    /**
+     * @ORM\OneToMany(targetEntity="\NFQAkademija\BaseBundle\Entity\ProducedRecipe", mappedBy="user")
+     */
+    protected $producedRecipes;
 
     /**
      * Constructor
@@ -251,5 +263,104 @@ class User extends BaseUser
     public function getGoogleAccessToken()
     {
         return $this->google_access_token;
+    }
+
+    /**
+     * Add recipe
+     *
+     * @param \NFQAkademija\BaseBundle\Entity\Step $recipe
+     * @return User
+     */
+    public function addRecipe(\NFQAkademija\BaseBundle\Entity\Step $recipe)
+    {
+        $this->recipe[] = $recipe;
+
+        return $this;
+    }
+
+    /**
+     * Remove recipe
+     *
+     * @param \NFQAkademija\BaseBundle\Entity\Step $recipe
+     */
+    public function removeRecipe(\NFQAkademija\BaseBundle\Entity\Step $recipe)
+    {
+        $this->recipe->removeElement($recipe);
+    }
+
+    /**
+     * Get recipe
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getRecipe()
+    {
+        return $this->recipe;
+    }
+
+    /**
+     * Add comment
+     *
+     * @param \NFQAkademija\BaseBundle\Entity\Comment $comment
+     * @return User
+     */
+    public function addComment(\NFQAkademija\BaseBundle\Entity\Comment $comment)
+    {
+        $this->comment[] = $comment;
+
+        return $this;
+    }
+
+    /**
+     * Remove comment
+     *
+     * @param \NFQAkademija\BaseBundle\Entity\Comment $comment
+     */
+    public function removeComment(\NFQAkademija\BaseBundle\Entity\Comment $comment)
+    {
+        $this->comment->removeElement($comment);
+    }
+
+    /**
+     * Get comment
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getComment()
+    {
+        return $this->comment;
+    }
+
+    /**
+     * Add producedRecipes
+     *
+     * @param \NFQAkademija\BaseBundle\Entity\ProducedRecipe $producedRecipes
+     * @return User
+     */
+    public function addProducedRecipe(\NFQAkademija\BaseBundle\Entity\ProducedRecipe $producedRecipes)
+    {
+        $this->producedRecipes[] = $producedRecipes;
+
+        return $this;
+    }
+
+    /**
+     * Remove producedRecipes
+     *
+     * @param \NFQAkademija\BaseBundle\Entity\ProducedRecipe $producedRecipes
+     */
+    public function removeProducedRecipe(\NFQAkademija\BaseBundle\Entity\ProducedRecipe $producedRecipes)
+    {
+        $this->producedRecipes->removeElement($producedRecipes);
+    }
+
+    /**
+     * Get producedRecipes
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getProducedRecipes()
+    {
+        return $this->producedRecipes;
     }
 }

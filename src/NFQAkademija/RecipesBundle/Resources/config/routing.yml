@@ -35,8 +35,6 @@ nfq_akademija_new_property:
     pattern: /newproperty
     defaults: { _controller: NFQAkademijaRecipesBundle:Property:new }
 
-    defaults: { _controller: NFQAkademijaRecipesBundle:Cook:index }
-
 nfq_akademija_places:
     pattern:  /places
     defaults: { _controller: NFQAkademijaRecipesBundle:Places:index }

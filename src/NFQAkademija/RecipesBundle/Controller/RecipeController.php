@@ -23,11 +23,6 @@ class RecipeController extends Controller
                 'label' => 'Ypatybės:',
                 'expanded' => true,
                 'multiple' => true))
-            ->add('cookingDuration', 'time', array(
-                'input' => 'datetime',
-                'required' => true,
-                'label' => 'Gaminimo trukmė',
-                'trim' => true))
             ->add('description', 'textarea', array(
                 'required' => true,
                 'label' => 'Gaminimo aprašymas',

@@ -40,32 +40,11 @@ class Recipe
     private $description;
 
     /**
-     * @var float
-     *
-     * @ORM\Column(name="rating", type="float")
-     */
-    private $rating;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="raters", type="integer")
-     */
-    private $raters;
-
-    /**
      * @var string
      *
      * @ORM\Column(name="photo", type="string", length=255)
      */
     private $photo;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="cooking_duration", type="time")
-     */
-    private $cookingDuration;
 
     /**
      * @ORM\ManyToMany(targetEntity="\NFQAkademija\BaseBundle\Entity\Property", inversedBy="recipes")
@@ -77,7 +56,38 @@ class Recipe
      * @ORM\ManyToOne(targetEntity="\NFQAkademija\BaseBundle\Entity\Country")
      */
     private $country;
-
+    /**
+     * @ORM\ManyToOne(targetEntity="\NFQAkademija\BaseBundle\Entity\Celebration")
+     */
+    private $celebration;
+    /**
+     * @ORM\ManyToOne(targetEntity="\NFQAkademija\BaseBundle\Entity\CookingTime")
+     */
+    protected $cookingTime;
+    /**
+     * @ORM\ManyToOne(targetEntity="\NFQAkademija\BaseBundle\Entity\MainCookingMethod")
+     */
+    protected $mainCookingMethod;
+    /**
+     * @ORM\ManyToOne(targetEntity="\NFQAkademija\BaseBundle\Entity\Type")
+     */
+    protected $types;
+    /**
+     * @ORM\ManyToOne(targetEntity="\NFQAkademija\BaseBundle\Entity\User")
+     */
+    protected $user;
+    /**
+     * @ORM\OneToMany(targetEntity="\NFQAkademija\BaseBundle\Entity\Step", mappedBy="recipe")
+     */
+    protected $steps;
+    /**
+     * @ORM\OneToMany(targetEntity="\NFQAkademija\BaseBundle\Entity\Like", mappedBy="recipe")
+     */
+    protected $likes;
+    /**
+     * @ORM\OneToMany(targetEntity="\NFQAkademija\BaseBundle\Entity\ProducedRecipe", mappedBy="recipe")
+     */
+    protected $producedRecipes;
     /**
      * Creates a Doctrine Collection for members.
      */
@@ -142,51 +152,7 @@ class Recipe
         return $this->description;
     }
 
-    /**
-     * Set rating
-     *
-     * @param float $rating
-     * @return Recipe
-     */
-    public function setRating($rating)
-    {
-        $this->rating = $rating;
 
-        return $this;
-    }
-
-    /**
-     * Get rating
-     *
-     * @return float 
-     */
-    public function getRating()
-    {
-        return $this->rating;
-    }
-
-    /**
-     * Set raters
-     *
-     * @param integer $raters
-     * @return Recipe
-     */
-    public function setRaters($raters)
-    {
-        $this->raters = $raters;
-
-        return $this;
-    }
-
-    /**
-     * Get raters
-     *
-     * @return integer 
-     */
-    public function getRaters()
-    {
-        return $this->raters;
-    }
 
     /**
      * Set photo
@@ -288,5 +254,265 @@ class Recipe
     public function getCountry()
     {
         return $this->country;
+    }
+
+    /**
+     * Set celebration
+     *
+     * @param \NFQAkademija\BaseBundle\Entity\Celebration $celebration
+     * @return Recipe
+     */
+    public function setCelebration(\NFQAkademija\BaseBundle\Entity\Celebration $celebration = null)
+    {
+        $this->celebration = $celebration;
+
+        return $this;
+    }
+
+    /**
+     * Get celebration
+     *
+     * @return \NFQAkademija\BaseBundle\Entity\Celebration 
+     */
+    public function getCelebration()
+    {
+        return $this->celebration;
+    }
+
+    /**
+     * Set cookingTime
+     *
+     * @param \NFQAkademija\BaseBundle\Entity\CookingTime $cookingTime
+     * @return Recipe
+     */
+    public function setCookingTime(\NFQAkademija\BaseBundle\Entity\CookingTime $cookingTime = null)
+    {
+        $this->cookingTime = $cookingTime;
+
+        return $this;
+    }
+
+    /**
+     * Get cookingTime
+     *
+     * @return \NFQAkademija\BaseBundle\Entity\CookingTime 
+     */
+    public function getCookingTime()
+    {
+        return $this->cookingTime;
+    }
+
+    /**
+     * Set mainCookingMethod
+     *
+     * @param \NFQAkademija\BaseBundle\Entity\MainCookingMethod $mainCookingMethod
+     * @return Recipe
+     */
+    public function setMainCookingMethod(\NFQAkademija\BaseBundle\Entity\MainCookingMethod $mainCookingMethod = null)
+    {
+        $this->mainCookingMethod = $mainCookingMethod;
+
+        return $this;
+    }
+
+    /**
+     * Get mainCookingMethod
+     *
+     * @return \NFQAkademija\BaseBundle\Entity\MainCookingMethod 
+     */
+    public function getMainCookingMethod()
+    {
+        return $this->mainCookingMethod;
+    }
+
+    /**
+     * Set type
+     *
+     * @param \NFQAkademija\BaseBundle\Entity\Type $type
+     * @return Recipe
+     */
+    public function setType(\NFQAkademija\BaseBundle\Entity\Type $type = null)
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * Get type
+     *
+     * @return \NFQAkademija\BaseBundle\Entity\Type 
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * Set tuser
+     *
+     * @param \NFQAkademija\BaseBundle\Entity\User $tuser
+     * @return Recipe
+     */
+    public function setTuser(\NFQAkademija\BaseBundle\Entity\User $tuser = null)
+    {
+        $this->tuser = $tuser;
+
+        return $this;
+    }
+
+    /**
+     * Get tuser
+     *
+     * @return \NFQAkademija\BaseBundle\Entity\User 
+     */
+    public function getTuser()
+    {
+        return $this->tuser;
+    }
+
+    /**
+     * Add steps
+     *
+     * @param \NFQAkademija\BaseBundle\Entity\Step $steps
+     * @return Recipe
+     */
+    public function addStep(\NFQAkademija\BaseBundle\Entity\Step $steps)
+    {
+        $this->steps[] = $steps;
+
+        return $this;
+    }
+
+    /**
+     * Remove steps
+     *
+     * @param \NFQAkademija\BaseBundle\Entity\Step $steps
+     */
+    public function removeStep(\NFQAkademija\BaseBundle\Entity\Step $steps)
+    {
+        $this->steps->removeElement($steps);
+    }
+
+    /**
+     * Get steps
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getSteps()
+    {
+        return $this->steps;
+    }
+
+    /**
+     * Add likes
+     *
+     * @param \NFQAkademija\BaseBundle\Entity\Like $likes
+     * @return Recipe
+     */
+    public function addLike(\NFQAkademija\BaseBundle\Entity\Like $likes)
+    {
+        $this->likes[] = $likes;
+
+        return $this;
+    }
+
+    /**
+     * Remove likes
+     *
+     * @param \NFQAkademija\BaseBundle\Entity\Like $likes
+     */
+    public function removeLike(\NFQAkademija\BaseBundle\Entity\Like $likes)
+    {
+        $this->likes->removeElement($likes);
+    }
+
+    /**
+     * Get likes
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getLikes()
+    {
+        return $this->likes;
+    }
+
+    /**
+     * Add producedRecipes
+     *
+     * @param \NFQAkademija\BaseBundle\Entity\ProducedRecipe $producedRecipes
+     * @return Recipe
+     */
+    public function addProducedRecipe(\NFQAkademija\BaseBundle\Entity\ProducedRecipe $producedRecipes)
+    {
+        $this->producedRecipes[] = $producedRecipes;
+
+        return $this;
+    }
+
+    /**
+     * Remove producedRecipes
+     *
+     * @param \NFQAkademija\BaseBundle\Entity\ProducedRecipe $producedRecipes
+     */
+    public function removeProducedRecipe(\NFQAkademija\BaseBundle\Entity\ProducedRecipe $producedRecipes)
+    {
+        $this->producedRecipes->removeElement($producedRecipes);
+    }
+
+    /**
+     * Get producedRecipes
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getProducedRecipes()
+    {
+        return $this->producedRecipes;
+    }
+
+    /**
+     * Set types
+     *
+     * @param \NFQAkademija\BaseBundle\Entity\Type $types
+     * @return Recipe
+     */
+    public function setTypes(\NFQAkademija\BaseBundle\Entity\Type $types = null)
+    {
+        $this->types = $types;
+
+        return $this;
+    }
+
+    /**
+     * Get types
+     *
+     * @return \NFQAkademija\BaseBundle\Entity\Type 
+     */
+    public function getTypes()
+    {
+        return $this->types;
+    }
+
+    /**
+     * Set user
+     *
+     * @param \NFQAkademija\BaseBundle\Entity\User $user
+     * @return Recipe
+     */
+    public function setUser(\NFQAkademija\BaseBundle\Entity\User $user = null)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get user
+     *
+     * @return \NFQAkademija\BaseBundle\Entity\User 
+     */
+    public function getUser()
+    {
+        return $this->user;
     }
 }

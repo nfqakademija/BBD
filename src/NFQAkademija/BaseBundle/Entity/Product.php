@@ -28,20 +28,24 @@ class Product
     /**
      * @var string
      *
-     * @ORM\Column(name="Name", type="string", length=255)
+     * @ORM\Column(name="name", type="string", length=255)
      */
     private $name;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="Photo", type="string", length=255)
+     * @ORM\Column(name="photo", type="string", length=255)
      */
     private $photo;
     /**
      * @ORM\ManyToOne(targetEntity="\NFQAkademija\BaseBundle\Entity\Category")
      */
     private $category;
+    /**
+     * @ORM\ManyToOne(targetEntity="\NFQAkademija\BaseBundle\Entity\Unit")
+     */
+    private $unit;
     /**
      * Constructor
      */
@@ -162,5 +166,28 @@ class Product
     public function getCategory()
     {
         return $this->category;
+    }
+
+    /**
+     * Set unit
+     *
+     * @param \NFQAkademija\BaseBundle\Entity\Unit $unit
+     * @return Product
+     */
+    public function setUnit(\NFQAkademija\BaseBundle\Entity\Unit $unit = null)
+    {
+        $this->unit = $unit;
+
+        return $this;
+    }
+
+    /**
+     * Get unit
+     *
+     * @return \NFQAkademija\BaseBundle\Entity\Unit 
+     */
+    public function getUnit()
+    {
+        return $this->unit;
     }
 }

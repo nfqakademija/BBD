@@ -193,10 +193,10 @@ class Location
     /**
      * Set latitude
      *
-     * @param \double $latitude
+     * @param $latitude
      * @return Location
      */
-    public function setLatitude(\double $latitude)
+    public function setLatitude($latitude)
     {
         $this->latitude = $latitude;
 
@@ -206,7 +206,7 @@ class Location
     /**
      * Get latitude
      *
-     * @return \double 
+     * @return float
      */
     public function getLatitude()
     {
@@ -216,10 +216,10 @@ class Location
     /**
      * Set longitude
      *
-     * @param \double $longitude
+     * @param $longitude
      * @return Location
      */
-    public function setLongitude(\double $longitude)
+    public function setLongitude($longitude)
     {
         $this->longitude = $longitude;
 
@@ -229,7 +229,7 @@ class Location
     /**
      * Get longitude
      *
-     * @return \double 
+     * @return float
      */
     public function getLongitude()
     {

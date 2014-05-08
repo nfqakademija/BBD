@@ -46,6 +46,11 @@ class CookingTime
         $this->recipes = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
+    public function __toString(){
+
+        $result = $this->getTime()->format("s\:i");
+        return $result;
+    }
     /**
      * Get id
      *

@@ -45,6 +45,9 @@ class MainCookingMethod
     {
         $this->recipes = new \Doctrine\Common\Collections\ArrayCollection();
     }
+    public function __toString(){
+        return $this->getName();
+    }
 
     /**
      * Get id

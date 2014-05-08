@@ -25,14 +25,14 @@
         {% for entity in entities %}
             <tr>
                 <td>{{ entity.id }}</td>
-                <td>{{ form_row(form.title) }}</td>
-                <td>{{ form_row(form.type) }}</td>
-                <td>{{ form_row(form.latitude) }}</td>
-                <td>{{ form_row(form.longitude) }}</td>
-                <td>{{ form_row(form.icon) }}</td>
-                <td>{{ form_row(form.about) }}</td>
-                <td>{{ form_row(form.photo) }}</td>
+                <td>{{ entity.title }}</td>
+                <td>{{ entity.type }}</td>
+                <td>{{ entity.latitude }}</td>
+                <td>{{ entity.longitude }}</td>
+                <td>{{ entity.icon }}</td>
+                <td>{{ entity.about }}</td>
+                <td>{{ entity.photo }}</td>
             </tr>
-            {% endfor %}
+        {% endfor %}    
     </table>
 {% endblock %}

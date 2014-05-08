@@ -1,0 +1,38 @@
+{#{% extends '::base.html.twig' %}#}
+{% block content %}
+    {{ form_start(form) }}
+    {{ form_row(form.title) }}
+    {{ form_row(form.type) }}
+    {{ form_row(form.latitude) }}
+    {{ form_row(form.longitude) }}
+    {{ form_row(form.icon) }}
+    {{ form_row(form.about) }}
+    {{ form_row(form.photo) }}
+    {{ form_row(form.save) }}
+    {{ form_end(form) }}
+    <hr>
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>Vieta</th>
+            <th>Tipas</th>
+            <th>Platuma</th>
+            <th>Ilguma</th>
+            <th>Ikona</th>
+            <th>Apie</th>
+            <th>Nuotrauka</th>
+        </tr>
+        {% for entity in entities %}
+            <tr>
+                <td>{{ entity.id }}</td>
+                <td>{{ form_row(form.title) }}</td>
+                <td>{{ form_row(form.type) }}</td>
+                <td>{{ form_row(form.latitude) }}</td>
+                <td>{{ form_row(form.longitude) }}</td>
+                <td>{{ form_row(form.icon) }}</td>
+                <td>{{ form_row(form.about) }}</td>
+                <td>{{ form_row(form.photo) }}</td>
+            </tr>
+            {% endfor %}
+    </table>
+{% endblock %}

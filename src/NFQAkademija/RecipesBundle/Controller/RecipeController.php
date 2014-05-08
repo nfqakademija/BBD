@@ -23,7 +23,7 @@ class RecipeController extends Controller
                 'label' => 'Ypatybės:',
                 'expanded' => true,
                 'multiple' => true))
-            ->add('description', 'textarea', array(
+            ->add('description', 'text', array(
                 'required' => true,
                 'label' => 'Gaminimo aprašymas',
                 'trim' => true))
@@ -36,6 +36,26 @@ class RecipeController extends Controller
                 'class' => 'NFQAkademijaBaseBundle:Country',
                 'required' => false,
                 'label' => 'Recepto kilmė'))
+            ->add('mainCookingMethod', 'entity', array(
+                'mapped' => true,
+                'class' => 'NFQAkademijaBaseBundle:MainCookingMethod',
+                'required' => false,
+                'label' => 'Gaminimo būdas'))
+            ->add('type', 'entity', array(
+                'mapped' => true,
+                'class' => 'NFQAkademijaBaseBundle:Type',
+                'required' => false,
+                'label' => 'Tipas'))
+            ->add('celebration', 'entity', array(
+                'mapped' => true,
+                'class' => 'NFQAkademijaBaseBundle:Celebration',
+                'required' => false,
+                'label' => 'Šventė'))
+            ->add('cookingTime', 'entity', array(
+                'mapped' => true,
+                'class' => 'NFQAkademijaBaseBundle:CookingTime',
+                'required' => false,
+                'label' => 'Gaminimo laikas'))
             ->add('save', 'submit', array(
                 'label' => "Išsaugoti"))
             ->getForm();

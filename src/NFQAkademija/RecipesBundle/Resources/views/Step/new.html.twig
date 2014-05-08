@@ -1,0 +1,23 @@
+{#{% extends '::base.html.twig' %}#}
+{% block content %}
+    {{ form_start(form) }}
+    {{ form_row(form.recipe) }}
+    {{ form_row(form.description) }}
+    {{ form_row(form.save) }}
+    {{ form_end(form) }}
+    <hr>
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>Receptas</th>
+            <th>Aprašymas</th>
+        </tr>
+        {% for entity in entities %}
+            <tr>
+                <td>{{ entity.id }}</td>
+                <td>{{ entity.recipe }}</td>
+                <td>{{ entity.description }}</td>
+            </tr>
+            {% endfor %}
+    </table>
+{% endblock %}

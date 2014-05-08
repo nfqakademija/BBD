@@ -38,6 +38,10 @@
     {{ form_row(form.properties) }}
     {{ form_row(form.description) }}
     {{ form_row(form.country) }}
+    {{ form_row(form.cookingTime) }}
+    {{ form_row(form.celebration) }}
+    {{ form_row(form.mainCookingMethod) }}
+    {{ form_row(form.type) }}
     {{ form_row(form.photo) }}
     {{ form_row(form.save) }}
     {{ form_end(form) }}
@@ -62,7 +66,7 @@
                 {% if entity.country %}
                     <td>{{ entity.country.name }}</td>
                 {% else %}
-                    <td> - </td>
+                        <td> - </td>
                 {% endif %}
                 {% if entity.properties %}
                     <td>

@@ -71,7 +71,7 @@ class Recipe
     /**
      * @ORM\ManyToOne(targetEntity="\NFQAkademija\BaseBundle\Entity\Type")
      */
-    protected $types;
+    protected $type;
     /**
      * @ORM\ManyToOne(targetEntity="\NFQAkademija\BaseBundle\Entity\User")
      */
@@ -93,6 +93,9 @@ class Recipe
      */
     public function __construct()
     {
+    }
+    public function __toString(){
+        return $this->getName();
     }
 
 

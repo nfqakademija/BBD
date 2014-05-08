@@ -36,13 +36,13 @@ class Location
     /**
      * @var float
      *
-     * @ORM\Column(name="latitude", type="float")
+     * @ORM\Column(name="latitude", type="double")
      */
     private $latitude;
     /**
      * @var float
      *
-     * @ORM\Column(name="longitude", type="float", length=255)
+     * @ORM\Column(name="longitude", type="double")
      */
     private $longitude;
     /**

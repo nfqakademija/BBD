@@ -1,0 +1,23 @@
+{#{% extends '::base.html.twig' %}#}
+{% block content %}
+    {{ form_start(form) }}
+    {{ form_row(form.time) }}
+    {{ form_row(form.icon) }}
+    {{ form_row(form.save) }}
+    {{ form_end(form) }}
+    <hr>
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>laikas</th>
+            <th>Ikona</th>
+        </tr>
+        {% for entity in entities %}
+            <tr>
+                <td>{{ entity.id }}</td>
+                <td>{{ entity.time }}</td>
+                <td>{{ entity.icon }}</td>
+            </tr>
+            {% endfor %}
+    </table>
+{% endblock %}

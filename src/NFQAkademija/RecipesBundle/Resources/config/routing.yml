@@ -38,3 +38,31 @@ nfq_akademija_new_property:
 nfq_akademija_places:
     pattern:  /places
     defaults: { _controller: NFQAkademijaRecipesBundle:Places:index }
+
+nfq_akademija_new_type:
+    pattern: /newtype
+    defaults: { _controller: NFQAkademijaRecipesBundle:Type:new }
+
+nfq_akademija_new_cooking_time:
+    pattern: /newcookingtime
+    defaults: { _controller: NFQAkademijaRecipesBundle:CookingTime:new }
+
+nfq_akademija_new_celebration:
+    pattern: /newcelebration
+    defaults: { _controller: NFQAkademijaRecipesBundle:Celebration:new }
+
+nfq_akademija_new_fact:
+    pattern: /newfact
+    defaults: { _controller: NFQAkademijaRecipesBundle:Fact:new }
+
+nfq_akademija_new_location:
+    pattern: /newlocation
+    defaults: { _controller: NFQAkademijaRecipesBundle:Location:new }
+
+nfq_akademija_new_method:
+    pattern: /newmethod
+    defaults: { _controller: NFQAkademijaRecipesBundle:MainCookingMethod:new }
+
+nfq_akademija_new_step:
+    pattern: /newstep
+    defaults: { _controller: NFQAkademijaRecipesBundle:Step:new }

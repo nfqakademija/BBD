@@ -17,6 +17,8 @@ class AdminController extends Controller
             default: $title = "Vartotojai"; break;
         }
 
-        return $this->render('NFQAkademijaRecipesBundle:Admin:index.html.twig',array("type" => $type, "title" => $title));
+        $admin_content = $type;
+
+        return $this->render('NFQAkademijaRecipesBundle:Admin:index.html.twig',array("admin_content" => $admin_content, "title" => $title));
     }
 }

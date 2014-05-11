@@ -29,3 +29,7 @@ nfq_akademija_admin:
 nfq_akademija_admin_type:
     pattern:  /admin_zone/{type}
     defaults: { _controller: NFQAkademijaRecipesBundle:Admin:index }
+
+nfq_akademija_new_recipe:
+    pattern:  /ajax/new_recipe
+    defaults: { _controller: NFQAkademijaRecipesBundle:Ajax:new_recipe }

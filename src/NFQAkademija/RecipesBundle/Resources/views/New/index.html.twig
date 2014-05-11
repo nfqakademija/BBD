@@ -6,6 +6,7 @@
 {% block specific_scripts %}
     <script type="text/javascript">
         function loader(){
+
             sidebar_manipulation();
             $( window ).resize(function() {
                 sidebar_manipulation();
@@ -136,27 +137,56 @@
             }
 
             //ajax to upload everything
+            var formData = new FormData();
+            formData.append('new_recipe_title', title);
+            formData.append('new_recipe_about', about);
+            formData.append('new_recipe_image', image);
+            formData.append('new_recipe_time', time);
+            formData.append('new_recipe_country', country);
+            formData.append('new_recipe_type', type);
+            formData.append('new_recipe_main_cooking_method', main_cooking_method);
+            formData.append('new_recipe_properties', properties);
+            formData.append('new_recipe_ingredients', ingredients);
+            formData.append('new_recipe_steps', steps);
+            formData.append('new_recipe_celebrations', celebrations);
 
-            //refresh form
-            $("#new_recipe_title").val('');
-            $("#new_recipe_about").val('');
-            //var image = $("#new_recipe_title").val();
-            $("#new_recipe_time").val('');
-            document.getElementById("new_recipe_country").selectedIndex = 0;
-            document.getElementById("new_recipe_type").selectedIndex = 0;
-            document.getElementById("new_recipe_main_cooking_method").selectedIndex = 0;
-            document.getElementById('new_recipe_image').value = null;
-            $("#image_name").html('');
-            $('.new_property').remove();
-            $('.new_ingredient').remove();
-            $('.new_step').remove();
-            $('.new_celebration').remove();
+            $.ajax({
+                type: 'POST',
+                url: '{{ path("nfq_akademija_new_recipe") }}',
+                data: formData,
+                dataType: 'json',
+                beforeSend:function(){
+                },
+                processData: false,
+                contentType: false,
+                success:function(data){
+                    alert(data.steps)
+                    if(data.status == "good"){
+                        //refresh form
+                        $("#new_recipe_title").val('');
+                        $("#new_recipe_about").val('');
+                        //var image = $("#new_recipe_title").val();
+                        $("#new_recipe_time").val('');
+                        document.getElementById("new_recipe_country").selectedIndex = 0;
+                        document.getElementById("new_recipe_type").selectedIndex = 0;
+                        document.getElementById("new_recipe_main_cooking_method").selectedIndex = 0;
+                        document.getElementById('new_recipe_image').value = null;
+                        $("#image_name").html('');
+                        $('.new_property').remove();
+                        $('.new_ingredient').remove();
+                        $('.new_step').remove();
+                        $('.new_celebration').remove();
 
-            setTimeout(function(){
-                scroll_content.refresh();
-            },0);
+                        setTimeout(function(){
+                            scroll_content.refresh();
+                        },0);
 
-            toast('Receptas nusiųstas patikrinti','good','logo');
+                        toast('Receptas nusiųstas patikrinti','good','logo');
+                    }else{
+                        toast('Įvyko klaida','bad','logo');
+                    }
+                }
+            });
         }
 
         var properties_amount = 0;

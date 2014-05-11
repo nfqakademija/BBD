@@ -14,27 +14,6 @@ nfq_akademija_cook:
     pattern:  /cook/{recipe_ID}
     defaults: { _controller: NFQAkademijaRecipesBundle:Cook:index }
 
-nfq_akademija_new_recipe:
-    pattern: /new
-    defaults: { _controller: NFQAkademijaRecipesBundle:Recipe:new }
-
-
-nfq_akademija_new_product:
-    pattern: /newproduct
-    defaults: { _controller: NFQAkademijaRecipesBundle:Product:new }
-
-nfq_akademija_new_category:
-    pattern: /newcategory
-    defaults: { _controller: NFQAkademijaRecipesBundle:Category:new }
-
-nfq_akademija_new_country:
-    pattern: /newcountry
-    defaults: { _controller: NFQAkademijaRecipesBundle:Country:new }
-
-nfq_akademija_new_property:
-    pattern: /newproperty
-    defaults: { _controller: NFQAkademijaRecipesBundle:Property:new }
-
 nfq_akademija_places:
     pattern:  /places
     defaults: { _controller: NFQAkademijaRecipesBundle:Places:index }

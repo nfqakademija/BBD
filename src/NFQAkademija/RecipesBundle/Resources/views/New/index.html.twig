@@ -27,10 +27,20 @@
 
         function key_check(event){}
 
+        function image_added(){
+           var image = document.getElementById('new_recipe_image').files[0];
+           if(typeof image === "undefined"){
+               $("#image_name").html('');
+           }else{
+               $("#image_name").html(image.name);
+           }
+
+        }
+
         function new_recipe(){
             var title = $("#new_recipe_title").val();
             var about = $("#new_recipe_about").val();
-            //var image = $("#new_recipe_title").val();
+            var image = document.getElementById('new_recipe_image').files[0];
             var time = $("#new_recipe_time").val();
             var country = $("#new_recipe_country").val();
             var type = $("#new_recipe_type").val();
@@ -85,23 +95,27 @@
 
             //validation
             if(title == ""){
-                toast('Trūksta pavadinimo','bad','new_recipe');
+                toast('Trūksta pavadinimo','bad','logo');
                 return false;
             }
             if(about == ""){
-                toast('Trūksta aprašymo','bad','new_recipe');
+                toast('Trūksta aprašymo','bad','logo');
+                return false;
+            }
+            if(typeof image === "undefined"){
+                toast('Pridėkite nuotrauką','bad','logo');
                 return false;
             }
             if(time == ""){
-                toast('Nurodykite laiką','bad','new_recipe');
+                toast('Nurodykite laiką','bad','logo');
                 return false;
             }
             if(country == null){
-                toast('Nurodykite šalį','bad','new_recipe');
+                toast('Nurodykite šalį','bad','logo');
                 return false;
             }
             if(type == null){
-                toast('Nurodykite tipą','bad','new_recipe');
+                toast('Nurodykite tipą','bad','logo');
                 return false;
             }
 
@@ -112,12 +126,12 @@
             }
 
             if(ingredients.length == 0){
-                toast('Pridėkite ingredientus','bad','new_recipe');
+                toast('Pridėkite ingredientus','bad','logo');
                 return false;
             }
 
             if(steps.length == 0){
-                toast('Pridėkite žingsnius','bad','new_recipe');
+                toast('Pridėkite žingsnius','bad','logo');
                 return false;
             }
 
@@ -131,6 +145,8 @@
             document.getElementById("new_recipe_country").selectedIndex = 0;
             document.getElementById("new_recipe_type").selectedIndex = 0;
             document.getElementById("new_recipe_main_cooking_method").selectedIndex = 0;
+            document.getElementById('new_recipe_image').value = null;
+            $("#image_name").html('');
             $('.new_property').remove();
             $('.new_ingredient').remove();
             $('.new_step').remove();
@@ -140,7 +156,7 @@
                 scroll_content.refresh();
             },0);
 
-            toast('Receptas nusiųstas patikrinti','good','new_recipe');
+            toast('Receptas nusiųstas patikrinti','good','logo');
         }
 
         var properties_amount = 0;
@@ -201,6 +217,9 @@
                         "<div class='sub_delete' onclick='new_recipe_delete(\"new_recipe_celebration_" + celebrations_amount + "\")'></div>" +
                     "</div>";
                     $("#new_recipe_celebrations").append(data);
+                    break;
+                case "image":
+                        $("#new_recipe_image").trigger('click');
                     break;
             }
 
@@ -266,6 +285,8 @@
                     <input type="text" class="new_recipe_input" id="new_recipe_title" placeholder="Pavadinimas" />
                     <textarea type="text" class="new_recipe_textarea" id="new_recipe_about" placeholder="Apie patiekalą" /></textarea>
                     <div class="sub_add" id="sub_add_image" onclick="new_recipe_add('image')">Pridėti nuotrauką</div>
+                    <div id="image_name"></div>
+                    <input type="file" style="display:none;" id="new_recipe_image" onchange="image_added()"/>
                 </div>
 
                 <div class="sub_title">Specifika</div>

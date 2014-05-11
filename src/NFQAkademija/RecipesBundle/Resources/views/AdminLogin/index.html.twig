@@ -16,11 +16,11 @@
             var password = $("#admin_password").val();
 
             if(!check('username', username)){
-                toast('Įveskite vartotojo vardą','bad','admin');
+                toast('Įveskite vartotojo vardą','bad','logo');
                 return false;
             }
             if(!check('password', password)){
-                toast('Įveskite slaptažodį','bad','admin');
+                toast('Įveskite slaptažodį','bad','logo');
                 return false;
             }
 
@@ -123,10 +123,6 @@
              background: -ms-linear-gradient(top, #1237B3, #121F81);
              background: -o-linear-gradient(top, #1237B3, #121F81);
          }
-
-        .toast_inside_admin:after{
-            background-image:url('/images/logo.png');
-        }
 
     </style>
 

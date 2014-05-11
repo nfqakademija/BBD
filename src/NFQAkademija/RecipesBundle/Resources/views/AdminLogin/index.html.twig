@@ -1,0 +1,154 @@
+{% extends "::base.html.twig" %}
+
+
+{% block title %}Admino zona | Foodex{% endblock %}
+
+{% block specific_scripts %}
+    <script type="text/javascript">
+        function loader(){
+            hide_loading_screen();
+        }
+
+        function key_check(event){}
+
+        function admin_login(){
+            var username = $("#admin_username").val();
+            var password = $("#admin_password").val();
+
+            if(!check('username', username)){
+                toast('Įveskite vartotojo vardą','bad','admin');
+                return false;
+            }
+            if(!check('password', password)){
+                toast('Įveskite slaptažodį','bad','admin');
+                return false;
+            }
+
+            show_loading_screen();
+            location.href = "/admin_zone/users";
+        }
+
+    </script>
+
+{% endblock %}
+
+{% block specific_styles %}
+    <style type="text/css">
+        #content_wrapper{
+            left:0px;
+            right:0px;
+            background:#201F1D;
+        }
+
+        #admin_zone{
+            width:960px;
+            height:294px;
+            margin:0 auto;
+            margin-top:-147px;
+            margin-left:-480px;
+            left:50%;
+            top:50%;
+            position:absolute;
+            color:white;
+        }
+
+        #admin_title{
+            width:100%;
+            height:100px;
+            float:left;
+        }
+
+        #admin_title_main{
+            width:100%;
+            height:70px;
+            float:left;
+            text-align:right;
+            font-size:70px;
+            line-height:70px;
+        }
+
+        #admin_title_sub_main{
+            width:100%;
+            height:30px;
+            float:left;
+            text-align:right;
+            font-size:20px;
+            line-height:30px;
+        }
+
+        #admin_inputs_box{
+            width:228px;
+            height:194px;
+            float:right;
+        }
+
+        .admin_login_input{
+            margin-top:20px;
+        }
+
+        #admin_login_button{
+            margin-top:20px;
+            width:208px;
+            height:43px;
+            border:1px solid black;
+            box-shadow:0px 0px 2px black;
+            text-align:center;
+            line-height:43px;
+            font-weight:bold;
+            font-size:18px;
+            text-transform:uppercase;
+            background:#2e5eff;
+            color:white;
+            background: -webkit-linear-gradient(top, #2e5eff, #3B4CCE);
+            background: -moz-linear-gradient(top, #2e5eff, #3B4CCE);
+            background: -ms-linear-gradient(top, #2e5eff, #3B4CCE);
+            background: -o-linear-gradient(top, #2e5eff, #3B4CCE);
+            float:right;
+        }
+
+        #admin_login_button:hover{
+             background:#1947DF;
+             background: -webkit-linear-gradient(top, #1947DF, #2635A7);
+             background: -moz-linear-gradient(top, #1947DF, #2635A7);
+             background: -ms-linear-gradient(top, #1947DF, #2635A7);
+             background: -o-linear-gradient(top, #1947DF, #2635A7);
+         }
+
+        #admin_login_button:active{
+             background:#1237B3;
+             background: -webkit-linear-gradient(top, #1237B3, #121F81);
+             background: -moz-linear-gradient(top, #1237B3, #121F81);
+             background: -ms-linear-gradient(top, #1237B3, #121F81);
+             background: -o-linear-gradient(top, #1237B3, #121F81);
+         }
+
+        .toast_inside_admin:after{
+            background-image:url('/images/logo.png');
+        }
+
+    </style>
+
+{% endblock %}
+
+{% block header_lock %}{% endblock %}
+{% block sidebar %}{% endblock %}
+{% block filters_zone %}{% endblock %}
+{% block config_zone %}{% endblock %}
+
+{% block content %}
+    <div id="content_wrapper">
+        <div id="admin_zone">
+            <div id="admin_title">
+                <div id="admin_title_main">Foodex</div>
+                <div id="admin_title_sub_main">Admino zona</div>
+            </div>
+
+            <div id="admin_inputs_box">
+                <input type="text" id="admin_username" class="admin_login_input" placeholder="Vartotojo vardas"/>
+                <input type="password" id="admin_password" class="admin_login_input" placeholder="Slaptažodis"/>
+                <div id="admin_login_button" onclick="admin_login()">Prisijungti</div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

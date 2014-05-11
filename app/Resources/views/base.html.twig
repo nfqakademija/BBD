@@ -14,7 +14,7 @@
         <link rel="icon" type="image/x-icon" href="/images/favicon.ico" />
         <link href='http://fonts.googleapis.com/css?family=Ubuntu&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
         <script src="/js/script.js" type="text/javascript"></script>
-
+        {% block specific_styles %}{% endblock %}
         {% block specific_scripts %}
             <script type="text/javascript">
                 function loader(){
@@ -80,6 +80,7 @@
             {% block header_lock %}{% endblock %}
         </div>
 
+        {% block sidebar %}
         <div id="sidebar" class="full">
             {% block nav_zone %}
                 <div id="nav_zone">
@@ -123,7 +124,7 @@
                 <div id='config_zone'></div>
             {% endblock %}
         </div>
-
+        {% endblock %}
 
         {% block content %}{% endblock %}
         {% block sidebar_right %}

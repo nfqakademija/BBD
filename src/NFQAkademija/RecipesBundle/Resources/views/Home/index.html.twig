@@ -34,27 +34,6 @@
                  sidebar_manipulation()
              });
 
-
-             /*
-              initialize_scrollbar();
-             $("#content_wrapper").scroll(function(){
-                 scrolled = $("#content_wrapper").scrollTop();
-                 if(scrolled > 400)
-                     toast_top('show');
-                 else
-                     toast_top('hide');
-
-                 var scroll_height = $("#content_wrapper")[0].scrollHeight;
-                 var item_height = $("#content_wrapper").css('height');
-                 item_height = parseInt(item_height.replace('px'));
-                 var height = scroll_height - item_height;
-                 var height_constant = 100;
-                 if(height - scrolled <= height_constant){
-                     load_more();
-                 }
-             });
-             */
-
              if(browser == 'firefox'){
                  $("#search_container").css('box-shadow','none');
              }

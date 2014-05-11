@@ -1,0 +1,122 @@
+{% extends "::base.html.twig" %}
+
+
+{% block title %}{{ title }} | Foodex{% endblock %}
+
+{% block specific_scripts %}
+    <script type="text/javascript">
+        function loader(){
+            scroll_content = new IScroll('#content_wrapper', {
+                scrollbars: true,
+                mouseWheel: true,
+                interactiveScrollbars: true,
+                shrinkScrollbars: 'scale',
+                fadeScrollbars: true,
+            });
+
+            scroll_content.on('scrollStart', function(){ clickable = false; });
+            scroll_content.on('scrollEnd', function(){ clickable = true; });
+
+            $("#content_wrapper").click(function(){ $("#search_input").blur();});
+
+            hide_loading_screen();
+        }
+
+        function key_check(event){}
+
+
+        function admin_content(type){
+            var admin_zone = "/admin_zone";
+            switch(type){
+                case "users":
+                    show_loading_screen();
+                    location.href = admin_zone +"/users";
+                    break;
+                case "recipes":
+                    show_loading_screen();
+                    location.href = admin_zone +"/recipes";
+                    break;
+                case "locations":
+                    show_loading_screen();
+                    location.href = admin_zone +"/locations";
+                    break;
+                case "facts":
+                    show_loading_screen();
+                    location.href = admin_zone +"/facts";
+                    break;
+                case "options":
+                    show_loading_screen();
+                    location.href = admin_zone +"/options";
+                    break;
+                default:
+                    show_loading_screen();
+                    location.href = admin_zone;
+                    break;
+            }
+        }
+
+        function admin_logout(){
+
+        }
+
+    </script>
+
+{% endblock %}
+
+{% block specific_styles %}
+    <style type="text/css">
+        .profile_line_box_bottom{
+            height:40px;
+            text-align: center;
+            padding-left:0px;
+            padding-right:0px;
+            line-height:40px;
+            width:150px;
+        }
+
+        #profile_line_box_cooked{
+            margin-left:0px;
+        }
+    </style>
+
+{% endblock %}
+
+{% block header_lock %}{% endblock %}
+{% block sidebar %}{% endblock %}
+{% block filters_zone %}{% endblock %}
+{% block config_zone %}{% endblock %}
+
+{% block content %}
+<div id="content_wrapper" style="left:0px;padding-bottom:10px;background-image:url('/images/content_background.jpg')">
+    <div class="scroller" id="scroller_content_admin" style="padding-bottom:10px;right:30px;left:0px;">
+        <div id="profile_cover" style="height:100px;">
+            <div id="profile_image" style="height:50px;width:50px;margin-top:25px;margin-bottom:25px;background-image:url('/images/logo.png')"></div>
+            <div id="profile_name" style="height: 100px;line-height: 100px;">{{ title }} | Foodex</div>
+        </div>
+        <div id="profile_line">
+            <div class="profile_line_box transition" id="profile_line_box_cooked" onclick="admin_content('users')">
+                <div class="profile_line_box_bottom">Vartotojai</div>
+            </div>
+            <div class="profile_line_box transition" id="profile_line_box_liked" onclick="admin_content('recipes')">
+                <div class="profile_line_box_bottom">Receptai</div>
+            </div>
+            <div class="profile_line_box transition" id="profile_line_box_created" onclick="admin_content('locations')">
+                <div class="profile_line_box_bottom">Vietos</div>
+            </div>
+            <div class="profile_line_box transition" id="profile_line_box_cooked" onclick="admin_content('facts')">
+                <div class="profile_line_box_bottom">Faktai</div>
+            </div>
+            <div class="profile_line_box transition" id="profile_line_box_liked" onclick="admin_content('options')">
+                <div class="profile_line_box_bottom">Nustatymai</div>
+            </div>
+
+            <div class="profile_line_box transition" id="profile_line_box_options" onclick="admin_logout()">Atsijungti</div>
+        </div>
+
+        <div id="admin_content">
+            {{ admin_content }}
+        </div>
+    </div>
+</div>
+{% endblock %}
+

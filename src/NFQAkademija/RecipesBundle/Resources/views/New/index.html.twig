@@ -1,0 +1,58 @@
+{% extends "::base.html.twig" %}
+
+
+{% block title %}Naujas receptas | Foodex{% endblock %}
+
+{% block specific_scripts %}
+    <script type="text/javascript">
+        function loader(){
+            sidebar_manipulation();
+            $( window ).resize(function() {
+                sidebar_manipulation();
+            });
+
+            scroll_content = new IScroll('#content_wrapper', {
+                scrollbars: true,
+                mouseWheel: true,
+                interactiveScrollbars: true,
+                shrinkScrollbars: 'scale',
+                fadeScrollbars: true,
+            });
+
+            scroll_content.on('scrollStart', function(){ clickable = false; });
+            scroll_content.on('scrollEnd', function(){ clickable = true; });
+
+            hide_loading_screen();
+        }
+
+        function key_check(event){}
+    </script>
+{% endblock %}
+
+{% block header_lock %}{% endblock %}
+{% block filters_zone %}{% endblock %}
+{% block config_zone %}{% endblock %}
+{% block search_zone %}{% endblock %}
+{% block divider %}{% endblock %}
+
+{% block content %}
+    <div id="content_wrapper" style="padding-bottom:10px;background-image:url('/images/content_background.jpg')">
+        <div class="scroller" id="scroller_content_profile" style="width:100%;padding-bottom:10px;">
+            <div id="profile_cover" style="background-image:url('/images/food (11).jpg')">
+                <div id="profile_name" style="padding-left:20px;">Naujas receptas</div>
+            </div>
+            <div id="content_new_recipe">
+
+
+
+
+
+
+
+
+
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

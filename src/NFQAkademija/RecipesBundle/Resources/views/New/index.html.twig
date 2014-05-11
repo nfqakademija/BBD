@@ -28,57 +28,177 @@
         function key_check(event){}
 
         function new_recipe(){
+            var title = $("#new_recipe_title").val();
+            var about = $("#new_recipe_about").val();
+            //var image = $("#new_recipe_title").val();
+            var time = $("#new_recipe_time").val();
+            var country = $("#new_recipe_country").val();
+            var type = $("#new_recipe_type").val();
+            var main_cooking_method = $("#new_recipe_main_cooking_method").val();
+
+            //get properties
+            var properties = [];
+            for(i = 1; i <= properties_amount; i++){
+                if($("#new_recipe_property_" + i).length != 0){
+                    var property = $("#new_recipe_property_" + i + " .new_recipe_select").val();
+                    if(property != null){
+                        properties.push(property);
+                    }
+                }
+            }
+
+
+            //get ingredients
+            var ingredients = [];
+            for(i = 1; i <= ingredients_amount; i++){
+                if($("#new_recipe_ingredient_" + i).length != 0){
+                    var ingredient = $("#new_recipe_ingredient_" + i + " .new_recipe_select").val();
+                    var quantity = $("#new_recipe_ingredient_" + i + " .new_recipe_quantity").val();
+                    var unit = $("#new_recipe_ingredient_" + i + " .new_recipe_units").val();
+                    if(ingredient != null && quantity != "" && unit != ""){
+                        ingredients.push([ingredient, quantity, unit]);
+                    }
+                }
+            }
+
+            //get steps
+            var steps = [];
+            for(i = 1; i <= steps_amount; i++){
+                if($("#new_recipe_step_" + i).length != 0){
+                    var step_info = $("#new_recipe_step_" + i + " .new_recipe_textarea").val();
+                    if(step_info != ""){
+                        steps.push(step_info);
+                    }
+                }
+            }
+
+            //get celebrations
+            var celebrations = [];
+            for(i = 1; i <= celebrations_amount; i++){
+                if($("#new_recipe_celebration_" + i).length != 0){
+                    var celebration = $("#new_recipe_celebration_" + i + " .new_recipe_select").val();
+                    if(celebration != null){
+                        celebrations.push(celebration);
+                    }
+                }
+            }
+
+            //validation
+            if(title == ""){
+                toast('Trūksta pavadinimo','bad','new_recipe');
+                return false;
+            }
+            if(about == ""){
+                toast('Trūksta aprašymo','bad','new_recipe');
+                return false;
+            }
+            if(time == ""){
+                toast('Nurodykite laiką','bad','new_recipe');
+                return false;
+            }
+            if(country == null){
+                toast('Nurodykite šalį','bad','new_recipe');
+                return false;
+            }
+            if(type == null){
+                toast('Nurodykite tipą','bad','new_recipe');
+                return false;
+            }
+
+            //main cooking method, celebrations ir properties - nebutina
+            if(main_cooking_method == null){
+                //toast('Nurodykite pagrindinį gaminimo būdą','bad','new_recipe');
+                //return false;
+            }
+
+            if(ingredients.length == 0){
+                toast('Pridėkite ingredientus','bad','new_recipe');
+                return false;
+            }
+
+            if(steps.length == 0){
+                toast('Pridėkite žingsnius','bad','new_recipe');
+                return false;
+            }
+
+            //ajax to upload everything
+
+            //refresh form
+            $("#new_recipe_title").val('');
+            $("#new_recipe_about").val('');
+            //var image = $("#new_recipe_title").val();
+            $("#new_recipe_time").val('');
+            document.getElementById("new_recipe_country").selectedIndex = 0;
+            document.getElementById("new_recipe_type").selectedIndex = 0;
+            document.getElementById("new_recipe_main_cooking_method").selectedIndex = 0;
+            $('.new_property').remove();
+            $('.new_ingredient').remove();
+            $('.new_step').remove();
+            $('.new_celebration').remove();
+
+            setTimeout(function(){
+                scroll_content.refresh();
+            },0);
 
             toast('Receptas nusiųstas patikrinti','good','new_recipe');
         }
 
+        var properties_amount = 0;
+        var ingredients_amount = 0;
+        var steps_amount = 0;
+        var celebrations_amount = 0;
         function new_recipe_add(type){
             switch(type){
                 case "property":
+                    properties_amount++;
                     var data =
-                    "<div class='new_property' id='new_recipe_property_1'>" +
+                    "<div class='new_property' id='new_recipe_property_" + properties_amount + "'>" +
                         "<select class='new_recipe_select new_recipe_squeezed'>" +
                             "<option value='' disabled selected>Ypatybė</option>" +
                             "<option value='Aštru'>Aštru</option>" +
                         "</select>" +
-                        "<div class='sub_delete' onclick='new_recipe_delete(\"new_recipe_property_1\")'></div>" +
+                        "<div class='sub_delete' onclick='new_recipe_delete(\"new_recipe_property_" + properties_amount + "\")'></div>" +
                     "</div>";
                     $("#new_recipe_properties").append(data);
                     break;
                 case "ingredient":
-                   var data = "<div class='new_ingredient' id='new_recipe_ingredient_1'>" +
+                   ingredients_amount++;
+                   var data =
+                   "<div class='new_ingredient' id='new_recipe_ingredient_" + ingredients_amount + "'>" +
                         "<select class='new_recipe_select new_recipe_squeezed_even_more'>" +
                             "<option value='' disabled selected>Ingredientas</option>" +
                             "<option value='Aštru'>Bananas</option>" +
                         "</select>" +
-                        "<input type='number' class='new_recipe_input new_recipe_quantity' id='new_recipe_quantity_ingredient_1' min='0' step='1' placeholder='1'/>" +
-                        "<select class='new_recipe_select new_recipe_units' id='new_recipe_units_ingredient_1'>" +
+                        "<input type='number' class='new_recipe_input new_recipe_quantity' min='0' step='1' placeholder='X'/>" +
+                        "<select class='new_recipe_select new_recipe_units'>" +
                             "<option value='vnt' selected>vnt</option>" +
                             "<option value='g'>g</option>" +
                             "<option value='kg'>kg</option>" +
                             "<option value='ml'>ml</option>" +
                             "<option value='l'>l</option>" +
                         "</select>" +
-                        "<div class='sub_delete' onclick='new_recipe_delete(\"new_recipe_ingredient_1\")'></div>" +
+                        "<div class='sub_delete' onclick='new_recipe_delete(\"new_recipe_ingredient_" + ingredients_amount + "\")'></div>" +
                     "</div>";
                     $("#new_recipe_ingredients").append(data);
                     break;
                 case "step":
+                    steps_amount++;
                     var data =
-                    "<div class='new_step' id='new_recipe_step_1'>" +
-                        "<textarea type='text' class='new_recipe_textarea new_recipe_squeezed_little_more' placeholder='Žingsnis 1'></textarea>" +
-                        "<div class='sub_delete' onclick='new_recipe_delete(\"new_recipe_step_1\")'></div>" +
+                    "<div class='new_step' id='new_recipe_step_" + steps_amount + "'>" +
+                        "<textarea type='text' class='new_recipe_textarea new_recipe_squeezed_little_more' placeholder='Žingsnis " + steps_amount + "'></textarea>" +
+                        "<div class='sub_delete' onclick='new_recipe_delete(\"new_recipe_step_" + steps_amount + "\")'></div>" +
                     "</div>";
                      $("#new_recipe_steps").append(data);
                     break;
                 case "celebration":
+                    celebrations_amount++;
                     var data =
-                    "<div class='new_celebration' id='new_recipe_celebration_1'>" +
+                    "<div class='new_celebration' id='new_recipe_celebration_" + celebrations_amount + "'>" +
                         "<select class='new_recipe_select new_recipe_celebrations'>" +
                             "<option value='' disabled selected>Šventė</option>" +
                             "<option value='Kalėdos'>Kalėdos</option>" +
                         "</select>" +
-                        "<div class='sub_delete' onclick='new_recipe_delete(\"new_recipe_celebration_1\")'></div>" +
+                        "<div class='sub_delete' onclick='new_recipe_delete(\"new_recipe_celebration_" + celebrations_amount + "\")'></div>" +
                     "</div>";
                     $("#new_recipe_celebrations").append(data);
                     break;

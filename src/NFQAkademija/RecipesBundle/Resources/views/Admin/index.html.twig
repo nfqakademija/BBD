@@ -27,32 +27,8 @@
 
         function admin_content(type){
             var admin_zone = "/admin_zone";
-            switch(type){
-                case "users":
-                    show_loading_screen();
-                    location.href = admin_zone +"/users";
-                    break;
-                case "recipes":
-                    show_loading_screen();
-                    location.href = admin_zone +"/recipes";
-                    break;
-                case "locations":
-                    show_loading_screen();
-                    location.href = admin_zone +"/locations";
-                    break;
-                case "facts":
-                    show_loading_screen();
-                    location.href = admin_zone +"/facts";
-                    break;
-                case "options":
-                    show_loading_screen();
-                    location.href = admin_zone +"/options";
-                    break;
-                default:
-                    show_loading_screen();
-                    location.href = admin_zone;
-                    break;
-            }
+            show_loading_screen();
+            location.href = admin_zone +"/" + type;
         }
 
         function admin_logout(){
@@ -105,6 +81,15 @@
             </div>
             <div class="profile_line_box transition" id="profile_line_box_cooked" onclick="admin_content('facts')">
                 <div class="profile_line_box_bottom">Faktai</div>
+            </div>
+            <div class="profile_line_box transition" id="profile_line_box_liked" onclick="admin_content('filters')">
+                <div class="profile_line_box_bottom">Filtrai</div>
+            </div>
+            <div class="profile_line_box transition" id="profile_line_box_created" onclick="admin_content('ingredients')">
+                <div class="profile_line_box_bottom">Ingredientai</div>
+            </div>
+            <div class="profile_line_box transition" id="profile_line_box_cooked" onclick="admin_content('comments')">
+                <div class="profile_line_box_bottom">Komentarai</div>
             </div>
             <div class="profile_line_box transition" id="profile_line_box_liked" onclick="admin_content('options')">
                 <div class="profile_line_box_bottom">Nustatymai</div>

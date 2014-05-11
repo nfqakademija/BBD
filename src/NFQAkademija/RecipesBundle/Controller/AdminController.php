@@ -13,9 +13,24 @@ class AdminController extends Controller
             case "locations": $title = "Vietos"; break;
             case "facts": $title = "Faktai"; break;
             case "recipes": $title = "Receptai"; break;
+            case "filters": $title = "Filtrai"; break;
+            case "ingredients": $title = "Ingredientai"; break;
+            case "comments": $title = "Komentarai"; break;
             case "options": $title = "Nustatymai"; break;
             default: $title = "Vartotojai"; break;
         }
+
+        /*
+        type:
+        Users:
+        Recipes:
+        Locations:
+        Facts:
+        Options:
+        Filters:
+        Ingredients:
+        Comments:
+         */
 
         $admin_content = $type;
 

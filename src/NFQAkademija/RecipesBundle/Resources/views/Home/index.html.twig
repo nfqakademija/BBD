@@ -3,30 +3,24 @@
 {% block title %}Foodex{% endblock %}
 
  {% block divider %}
-     <div id="divider" class="middle_divider" style="margin-left:10px;margin-top:0px;" onclick="full_sidebar()"></div>
+     <div id="divider" class="middle_divider" onclick="full_sidebar()"></div>
  {% endblock %}
+
  {% block filters_zone %}
-    <div id='filters_zone' style="top:285px;" onclick="full_sidebar()">
+    <div id='filters_zone' onclick="full_sidebar()">
         <div class="scroller" id="scroller_filters"></div>
     </div>
  {% endblock %}
 
 {% block config_zone %}
-    <div id='config_zone'>
-        <div class='filter_element untouchable' onclick="filter_start();show_config_zone(1);">
-            <div class='filter_element_image' id='add'></div>
-            <div class='filter_element_text'>Pridėti filtrą</div>
-        </div>
-    </div>
+    <div id='config_zone'></div>
 {% endblock %}
 
  {% block specific_scripts %}
      <script type="text/javascript">
-
-
          function loader(){
              recipe_size = calculate_recipe_size();
-             append_recipes();
+             load_recipes('true');
              filter_show_selected();
              sidebar_manipulation();
              $( window ).resize(function() {
@@ -85,6 +79,7 @@
              if(!loading_more_status && !load_more_end){
                  loading_more_status = true;
                  recipe_size = calculate_recipe_size();
+
                  var formData = new FormData();
                  formData.append('load_more', 'true');
                  $.ajax({
@@ -93,28 +88,18 @@
                      data: formData,
                      dataType: 'json',
                      beforeSend: function () {
-                         show_loading_more();
+                         show_loading_recipe();
                      },
                      processData: false,
                      contentType: false,
                      success: function (data) {
                          if (data.status == "good") {
                              loading_more_status = false;
-                             load_more_end = true;
-
-                             var recipes = [];
-                             recipes[0] = ["0","/images/food (0).jpg", "title0"];
-                             recipes[1] = ["1","/images/food (1).png", "title0"];
-                             recipes[2] = ["2","/images/food (2).jpg", "title0"];
-                             recipes[3] = ["3","/images/food (3).jpg", "title0"];
-                             recipes[4] = ["4","/images/food (4).jpg", "title0"];
-                             recipes[5] = ["5","/images/food (5).jpg", "title0"];
-
-                             hide_loading_more();
-                             for(i = 0; i < recipes.length; i++){
-                                 append_recipe(recipes[i]);
+                             if(data.end){
+                                 load_more_end = true;
                              }
-
+                             hide_loading_recipe();
+                             load_recipes('false');
                              setTimeout(function(){
                                  scroll_content.refresh();
                              },0);
@@ -138,11 +123,20 @@
         #scroller_content{
             padding-bottom:10px;
         }
+
+        .middle_divider{
+            margin-left:10px;
+            margin-top:0px;
+        }
+
+        #filters_zone{
+            top:285px;
+        }
     </style>
 {% endblock %}
 
 {% block content %}
-    <div id="content_wrapper" >
+    <div id="content_wrapper">
         <div class="scroller" id="scroller_content"></div>
     </div>
 {% endblock %}

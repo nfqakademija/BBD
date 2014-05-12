@@ -3,10 +3,33 @@
 
 {% block title %}Profilis | Foodex{% endblock %}
 
+{% block specific_styles %}
+    <style type="text/css">
+        #content_wrapper{
+            background-image:url('/images/content_background.jpg');
+            padding-bottom:10px;
+        }
+
+        #scroller_content_profile{
+            padding-bottom:10px;
+            right:31px;
+        }
+
+        #profile_image{
+           background-image:url('{{ profile_imageUrl }}');
+        }
+
+        #filters_zone{
+            top:285px;
+        }
+    </style>
+{% endblock %}
+
 {% block specific_scripts %}
     <script type="text/javascript">
         function loader(){
             sidebar_manipulation();
+            recipe_size = calculate_recipe_size();
             $( window ).resize(function() {
                 recalculate_width();
                 sidebar_manipulation();
@@ -63,38 +86,32 @@
 {% endblock %}
 
  {% block filters_zone %}
-     <div id='filters_zone' style="top:285px;" onclick="full_sidebar()">
+     <div id='filters_zone' onclick="full_sidebar()">
          <div class="scroller" id="scroller_filters" ></div>
      </div>
  {% endblock %}
  {% block config_zone %}
-     <div id='config_zone'>
-         <div class='filter_element untouchable' onclick="filter_start();show_config_zone(1);">
-             <div class='filter_element_image' id='add'></div>
-             <div class='filter_element_text'>Asmeninis filtras</div>
-         </div>
-     </div>
+     <div id='config_zone'></div>
  {% endblock %}
 
 {% block content %}
-<div id="content_wrapper" style="padding-bottom:10px;background-image:url('/images/content_background.jpg')">
-    <div class="scroller" id="scroller_content_profile" style="padding-bottom:10px;right:31px;">
+<div id="content_wrapper">
+    <div class="scroller" id="scroller_content_profile">
         <div id="profile_cover">
-            <div id="profile_image" style="background-image:url('/images/profile.png')"></div>
-            <div id="profile_name">Ignas Lekas</div>
-            <div id="profile_mobile_logout"></div>
+            <div id="profile_image"></div>
+            <div id="profile_name">{{ profile_name }}</div>
         </div>
         <div id="profile_line">
             <div class="profile_line_box transition" id="profile_line_box_cooked" onclick="profile_recipes('cooked')">
-                <div class="profile_line_box_top">17</div>
+                <div class="profile_line_box_top">{{ amount_cooked }}</div>
                 <div class="profile_line_box_bottom">Gaminti</div>
             </div>
             <div class="profile_line_box transition" id="profile_line_box_liked" onclick="profile_recipes('liked')">
-                <div class="profile_line_box_top">53</div>
+                <div class="profile_line_box_top">{{ amount_liked }}</div>
                 <div class="profile_line_box_bottom">Mėgstami</div>
             </div>
             <div class="profile_line_box transition" id="profile_line_box_created" onclick="profile_recipes('created')">
-                <div class="profile_line_box_top">5</div>
+                <div class="profile_line_box_top">{{ amount_created }}</div>
                 <div class="profile_line_box_bottom">Sukurti</div>
             </div>
 

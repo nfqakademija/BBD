@@ -102,14 +102,18 @@ function profile_recipes(type){
     });
 }
 
-function append_recipes(){
-    $("#scroller_content").html('');
+function load_recipes(reset){
+    if(reset == 'true'){
+        $("#scroller_content").html('');
+        setTimeout(function(){scroll_content.scrollTo(0, 0)},0);
+        setTimeout(function(){scroll_content.refresh()},0);
+    }
 
     var formData = new FormData();
-    formData.append('append_recipes','true');
+    formData.append('reset', reset);
     $.ajax({
         type: 'POST',
-        url: '/ajax/append_recipes',
+        url: '/ajax/load_recipes',
         data: formData,
         dataType: 'json',
         beforeSend: function () {
@@ -122,7 +126,6 @@ function append_recipes(){
                 for(i = 0; i < recipes.length; i++){
                     append_recipe(recipes[i]);
                 }
-
                 setTimeout(function(){scroll_content.refresh()},0);
             }
         }
@@ -138,14 +141,19 @@ function append_recipe(data){
     $("#scroller_content").append(appendable_data);
 }
 
-function append_products(){
-    $("#scroller_content").html('');
+function load_products(reset){
+    if(reset == "true"){
+        $("#scroller_content").html('');
+        setTimeout(function(){scroll_content.refresh()},0);
+        setTimeout(function(){scroll_content.scrollTo(0, 0)},0);
+    }
+
 
     var formData = new FormData();
-    formData.append('append_products','true');
+    formData.append('load_products','true');
     $.ajax({
         type: 'POST',
-        url: '/ajax/append_products',
+        url: '/ajax/load_products',
         data: formData,
         dataType: 'json',
         beforeSend: function () {
@@ -153,7 +161,6 @@ function append_products(){
         processData: false,
         contentType: false,
         success: function (data) {
-            alert(data.status);
             if (data.status == "good") {
                 var products = data.products;
                 for(i = 0; i < products.length; i++){
@@ -177,11 +184,27 @@ function append_product(data){
 }
 
 function add_product(ID){
-    $('#product_' + ID).fadeOut(transition_time);
+    var formData = new FormData();
+    formData.append('product_id','true');
+    $.ajax({
+        type: 'POST',
+        url: '/ajax/shoppinglist_product_add',
+        data: formData,
+        dataType: 'json',
+        beforeSend: function () {
+        },
+        processData: false,
+        contentType: false,
+        success: function (data) {
+            if (data.status == "good") {
+                $('#product_' + ID).fadeOut(transition_time);
+                setTimeout(function(){scroll_content.refresh();},0);
+            }
+        }
+    });
 }
 
 function append_shoppinglist(){
-    //ajax to get all shoppinglist from user and show it
     var formData = new FormData();
     formData.append('append_shoppinglist','true');
     $.ajax({
@@ -201,13 +224,13 @@ function append_shoppinglist(){
     });
 }
 
-function show_loading_more(){
+function show_loading_recipe(){
     var loading_more_box = "<div class='recipe_box' id='loading_more_box' style=\"width:" + recipe_size + "px;height:" + recipe_size +  "px;\"></div>";
     $("#scroller_content").append(loading_more_box);
     setTimeout(function(){scroll_content.refresh();},0);
 }
 
-function hide_loading_more(){
+function hide_loading_recipe(){
     $('#loading_more_box').remove();
 }
 
@@ -315,7 +338,7 @@ function show_filters(array_of_filters, index){
 
 function filter_start(){
     full_sidebar();
-    filter_level = 1;
+
     var formData = new FormData();
     formData.append('filter_start','true');
     $.ajax({
@@ -323,13 +346,15 @@ function filter_start(){
         url: '/ajax/filter_start',
         data: formData,
         dataType: 'json',
-        beforeSend: function () {
+        beforeSend: function(){
         },
         processData: false,
         contentType: false,
         success: function (data) {
             if (data.status == "good") {
+                filter_level = 1;
                 var filters = data.filters;
+                show_config_zone(1);
                 $("#scroller_filters").fadeOut(transition_time, function(){
                     $("#scroller_filters").html('');
                     $("#scroller_filters").fadeIn(1);
@@ -342,7 +367,6 @@ function filter_start(){
 
 function filter_category(category){
     full_sidebar();
-    filter_level = 2;
 
     var formData = new FormData();
     formData.append('filter_category', category);
@@ -357,6 +381,7 @@ function filter_category(category){
         contentType: false,
         success: function (data) {
             if (data.status == "good") {
+                filter_level = 2;
                 var filters = data.filters;
                 $("#scroller_filters").fadeOut(transition_time, function(){
                     $("#scroller_filters").html('');
@@ -370,7 +395,7 @@ function filter_category(category){
 
 function filter_ingredients_category(ingredients_category){
     full_sidebar();
-    filter_level = 3;
+
     var formData = new FormData();
     formData.append('filter_ingredients_category', ingredients_category);
     $.ajax({
@@ -384,6 +409,7 @@ function filter_ingredients_category(ingredients_category){
         contentType: false,
         success: function (data) {
             if (data.status == "good") {
+                filter_level = 3;
                 var filters = data.filters;
                 $("#scroller_filters").fadeOut(transition_time, function(){
                     $("#scroller_filters").html('');
@@ -552,7 +578,7 @@ function hide_loading_screen(){
 }
 
 function show_loading_screen(){
-    $("#loading_screen").fadeIn(transition_time * 2);
+
     var formData = new FormData();
     formData.append('loading_screen_text', 'true');
     $.ajax({
@@ -567,6 +593,7 @@ function show_loading_screen(){
         success: function (data) {
             if (data.status == "good") {
                 $("#loading_screen_info").html(data.fact);
+                $("#loading_screen").fadeIn(transition_time * 2);
             }
         }
     });
@@ -597,7 +624,6 @@ function filter_go_back(type){
     switch(filter_level) {
         case 0:
             filter_show_selected();
-            show_config_zone(0);
             break;
         case 1:
             filter_start();
@@ -611,9 +637,9 @@ function filter_go_back(type){
 function show_config_zone(state){
     if(state == 0){
         var config_zone =
-            "<div class='filter_element untouchable' onclick=\"filter_start();show_config_zone(1)\">" +
-            "<div class='filter_element_image' id='add'></div>" +
-            "<div class='filter_element_text'>Pridėti filtrą</div>" +
+            "<div class='filter_element untouchable' onclick=\"filter_start();\">" +
+                "<div class='filter_element_image' id='add'></div>" +
+                "<div class='filter_element_text'>Pridėti filtrą</div>" +
             "</div>";
 
         $("#config_zone").fadeOut(transition_time, function(){
@@ -631,7 +657,6 @@ function show_config_zone(state){
 }
 
 function filter_show_selected(){
-    filter_level = 0;
     var formData = new FormData();
     formData.append('filter_show_selected', 'true');
     $.ajax({
@@ -645,7 +670,9 @@ function filter_show_selected(){
         contentType: false,
         success: function (data) {
             if (data.status == "good") {
+                filter_level = 0;
                 var filters = data.filters;
+                show_config_zone(0);
                 $("#scroller_filters").fadeOut(transition_time, function(){
                     $("#scroller_filters").html('');
                     $("#scroller_filters").fadeIn(1);
@@ -658,7 +685,6 @@ function filter_show_selected(){
 }
 
 function filter_personal_show_selected(){
-    filter_level = 0;
     var formData = new FormData();
     formData.append('filter_personal_show_selected', 'true');
     $.ajax({
@@ -672,7 +698,9 @@ function filter_personal_show_selected(){
         contentType: false,
         success: function (data) {
             if (data.status == "good") {
+                filter_level = 0;
                 var filters = data.filters;
+                show_config_zone(0);
                 $("#scroller_filters").fadeOut(transition_time, function(){
                     $("#scroller_filters").html('');
                     $("#scroller_filters").fadeIn(1);
@@ -686,8 +714,13 @@ function filter_personal_show_selected(){
 
 function filter_indicator_change(ID){
     var ID = ID.replace('indicator_change_','');
+    var filter_data = ID.split('-');
+    var filter_type = filter_data[0];
+    var filter_id = filter_data[1];
+
     var formData = new FormData();
-    formData.append('filter_indicator_change', ID);
+    formData.append('filter_type', filter_type);
+    formData.append('filter_id', filter_id);
     $.ajax({
         type: 'POST',
         url: '/ajax/filter_indicator_change',
@@ -712,6 +745,10 @@ function filter_indicator_change(ID){
 function manipulate_filter(ID){
     full_sidebar();
     var new_indicator_status;
+    var filter_data = ID.split('_');
+    var filter_type = filter_data[0];
+    var filter_id = filter_data[1];
+
     var symbols_amount = $("#" + ID + " .filter_element_text").html();
     var symbols_amount = symbols_amount.length;
 
@@ -736,8 +773,9 @@ function manipulate_filter(ID){
     }
 
     var formData = new FormData();
-    formData.append('filter_indicator_change', new_indicator_status);
-    formData.append('filter_ID', ID);
+    formData.append('filter_indicator', new_indicator_status);
+    formData.append('filter_id', filter_id);
+    formData.append('filter_type', filter_type);
     $.ajax({
         type: 'POST',
         url: '/ajax/manipulate_filter',
@@ -793,9 +831,9 @@ function shoppinglist_add(ID){
     });
 }
 
-var shoppinglist_items_ids = 1;
+var shoppinglist_items_ids = 0;
 function shoppinglist_add_enter(){
-    var id = shoppinglist_items_ids++;
+    var id = "entered-" + shoppinglist_items_ids++;
     var image = "url('/images/shoppinglist_item.png')";
     var title = $("#search_input").val();
     $("#search_input").val('');
@@ -835,13 +873,13 @@ function shoppinglist_add_enter(){
 
 function shoppinglist_delete(ID){
     ID = ID.replace('delete_','');
-    $('#' + ID).remove();
-    setTimeout(function(){
-        scroll_filters.refresh();
-    }, 100);
+    var shoppinglist_data = ID.split('-');
+    var shoppinglist_type = shoppinglist_data[0];
+    var shoppinglist_id = shoppinglist_data[1];
 
     var formData = new FormData();
-    formData.append('shoppinglist_delete', ID);
+    formData.append('shoppinglist_type', shoppinglist_type);
+    formData.append('shoppinglist_id', shoppinglist_id);
     $.ajax({
         type: 'POST',
         url: '/ajax/shoppinglist_delete',
@@ -853,7 +891,10 @@ function shoppinglist_delete(ID){
         contentType: false,
         success: function (data) {
             if (data.status == "good") {
-
+                $('#' + ID).remove();
+                setTimeout(function(){
+                    scroll_filters.refresh();
+                }, 100);
             }
         }
     });
@@ -881,31 +922,32 @@ function filter_search_add(ID, type){
         contentType: false,
         success: function (data) {
             if (data.status == "good") {
+                if(filter_level == 0){
+                    var filters = [];
+                    var data = "<div class='filter_element untouchable filter_element_indicator_" + type + "' id='" + id + "' onclick='filter_selected(this.id)'><div class='filter_element_image' style=\"background-image:" + image + ";\"></div><div class='filter_element_text'>" + title + "</div><div class='filter_element_delete' id='delete_" + id + "' onclick='filter_delete(this.id)'></div><div class='filter_element_indicator_change' id='indicator_change_" + id + "' onclick='filter_indicator_change(this.id)'></div><div class='filter_element_indicator_small'></div></div>";
+                    filters[0] = data;
+                    show_filters(filters, 0);
+
+                    setTimeout(function(){scroll_filters.refresh()}, 0);
+                }
             }
         }
     });
 
-    if(filter_level == 0){
-        var filters = [];
-        var data = "<div class='filter_element untouchable filter_element_indicator_" + type + "' id='" + id + "' onclick='filter_selected(this.id)'><div class='filter_element_image' style=\"background-image:" + image + ";\"></div><div class='filter_element_text'>" + title + "</div><div class='filter_element_delete' id='delete_" + id + "' onclick='filter_delete(this.id)'></div><div class='filter_element_indicator_change' id='indicator_change_" + id + "' onclick='filter_indicator_change(this.id)'></div><div class='filter_element_indicator_small'></div></div>";
-        filters[0] = data;
-        show_filters(filters, 0);
 
-        setTimeout(function(){scroll_filters.refresh()}, 0);
-    }
 }
 
 
 
 function filter_delete(ID){
     ID = ID.replace('delete_','');
-    $('#' + ID).remove();
-    setTimeout(function(){
-        scroll_filters.refresh();
-    }, 100);
+    var filter_data = ID.split('-');
+    var filter_type = filter_data[0];
+    var filter_id = filter_data[1];
 
     var formData = new FormData();
-    formData.append('filter_delete', ID);
+    formData.append('filter_id', filter_id);
+    formData.append('filter_type', filter_type);
     $.ajax({
         type: 'POST',
         url: '/ajax/filter_delete',
@@ -917,6 +959,10 @@ function filter_delete(ID){
         contentType: false,
         success: function (data) {
             if (data.status == "good") {
+                $('#' + ID).remove();
+                setTimeout(function(){
+                    scroll_filters.refresh();
+                }, 100);
             }
         }
     });
@@ -988,25 +1034,21 @@ function search(type){
     }else{
         $('#search_container_inside').html('');
         $('#search_container').css('display','block');
-        var search_data = [];
 
         switch(type) {
             case "search":
                 var ajax_url = "/ajax/search";
-                var form_data_name = "search";
                 break;
             case "shoppinglist":
                 var ajax_url = "/ajax/search_shoppinglist";
-                var form_data_name = "search_shoppinglist";
                 break;
             case "search_places":
                 var ajax_url = "/ajax/search_places";
-                var form_data_name = "search_places";
                 break;
         }
 
         var formData = new FormData();
-        formData.append(form_data_name, value);
+        formData.append("search", value);
         $.ajax({
             type: 'POST',
             url: ajax_url,
@@ -1018,7 +1060,7 @@ function search(type){
             contentType: false,
             success: function (data) {
                 if (data.status == "good") {
-                    search_data = data.search_data;
+                    var search_data = data.search_data;
 
                     for(i = 0; i < search_data.length; i++){
                         $("#search_container_inside").append(search_data[i]);
@@ -1052,14 +1094,8 @@ function show_recipe(recipe_ID){
         hide_recipe();
     }else{
         if($('.recipe_active').length == 0){
-            $("#sidebar_right").removeClass('right_squeeze').addClass('right_full');
-            $('.recipe_box').removeClass('recipe_active');
-            $("#recipe_" + recipe_ID).addClass('recipe_active');
-            scroll_sidebar_right.refresh();
-            scroll_sidebar_right.scrollTo(0,0);
-
             var formData = new FormData();
-            formData.append('recipe_right_sidebar_ID', recipe_ID);
+            formData.append('recipe_ID', recipe_ID);
             $.ajax({
                 type: 'POST',
                 url: '/ajax/recipe_right_sidebar',
@@ -1071,7 +1107,15 @@ function show_recipe(recipe_ID){
                 contentType: false,
                 success: function (data) {
                     if (data.status == "good") {
-
+                        $("#scroll_sidebar_right").html(data.recipe_data)
+                        $("#sidebar_right_cook_button").click(function(){
+                            cook(recipe_ID);
+                        });
+                        $("#sidebar_right").removeClass('right_squeeze').addClass('right_full');
+                        $('.recipe_box').removeClass('recipe_active');
+                        $("#recipe_" + recipe_ID).addClass('recipe_active');
+                        scroll_sidebar_right.refresh();
+                        scroll_sidebar_right.scrollTo(0,0);
                     }
                 }
             });
@@ -1148,7 +1192,7 @@ function ingredient_selected(ingredient_ID){
             $("#ingredient_indicator-" + ingredient_ID).removeClass('ingredient_indicator_undefined').addClass('ingredient_indicator_shoppinglist');
 
             var formData = new FormData();
-            formData.append('ingredient_add', ingredient_ID);
+            formData.append('ingredient_ID', ingredient_ID);
             $.ajax({
                 type: 'POST',
                 url: '/ajax/ingredient_add',

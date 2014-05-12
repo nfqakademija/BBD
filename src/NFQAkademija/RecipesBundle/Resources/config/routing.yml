@@ -38,13 +38,13 @@ nfq_akademija_profile_recipes:
     pattern:  /ajax/profile_recipes
     defaults: { _controller: NFQAkademijaRecipesBundle:Ajax:profile_recipes }
 
-nfq_akademija_append_recipes:
-    pattern:  /ajax/append_recipes
-    defaults: { _controller: NFQAkademijaRecipesBundle:Ajax:append_recipes }
+nfq_akademija_load_recipes:
+    pattern:  /ajax/load_recipes
+    defaults: { _controller: NFQAkademijaRecipesBundle:Ajax:load_recipes }
 
-nfq_akademija_append_products:
-    pattern:  /ajax/append_products
-    defaults: { _controller: NFQAkademijaRecipesBundle:Ajax:append_products}
+nfq_akademija_load_products:
+    pattern:  /ajax/load_products
+    defaults: { _controller: NFQAkademijaRecipesBundle:Ajax:load_products}
 
 nfq_akademija_append_shoppinglist:
     pattern:  /ajax/append_shoppinglist
@@ -85,6 +85,14 @@ nfq_akademija_loading_screen_text:
 nfq_akademija_shoppinglist_add:
     pattern:  /ajax/shoppinglist_add
     defaults: { _controller: NFQAkademijaRecipesBundle:Ajax:shoppinglist_add}
+
+nfq_akademija_shoppinglist_product_add:
+    pattern:  /ajax/shoppinglist_product_add:
+    defaults: { _controller: NFQAkademijaRecipesBundle:Ajax:shoppinglist_product_add}
+
+nfq_akademija_shoppinglist_delete:
+    pattern:  /ajax/shoppinglist_delete
+    defaults: { _controller: NFQAkademijaRecipesBundle:Ajax:shoppinglist_delete}
 
 nfq_akademija_filter_search_add:
     pattern:  /ajax/filter_search_add

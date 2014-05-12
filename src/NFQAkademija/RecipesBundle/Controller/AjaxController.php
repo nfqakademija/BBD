@@ -68,15 +68,17 @@ class AjaxController extends Controller
         return $jsonResponse;
     }
 
-    public function append_recipesAction(Request $request)
+    public function load_recipesAction(Request $request)
     {
         $request_data = $request->request;
+        $reset = $request_data->get('reset');
 
+        if($reset == "true"){
+            //reset limit to 0 - LIMIT 10, 0;
+        }
 
-        //MYSQL SELECT
-        //get recipe_ID, image_url, title from filters
+        //get recipe_ID, image_url, title formed from filters and limit and form recipes array
         $recipes = [];
-
         $recipes[0] = ["0","/images/food (0).jpg", "title0"];
         $recipes[1] = ["1","/images/food (1).png", "title0"];
         $recipes[2] = ["2","/images/food (2).jpg", "title0"];
@@ -100,14 +102,12 @@ class AjaxController extends Controller
         return $jsonResponse;
     }
 
-    public function append_productsAction(Request $request)
+    public function load_productsAction(Request $request)
     {
         $request_data = $request->request;
 
-
-        //MYSQL SELECT
-        //get product_ID, image_url, title //akcijos
-        //kolkas random produktai - ingredientai
+        //get ingredients_ID, image_url, title RANDOM
+        //later akcijos ir panasiai
 
         $products = [];
         $products[0] = ["0","/images/food (0).jpg", "title0"];
@@ -286,21 +286,23 @@ class AjaxController extends Controller
     public function filter_ingredients_categoryAction(Request $request)
     {
         $request_data = $request->request;
-        //MYSQL SELECT
+
+
         $ingredients_category = $request_data->get('filter_ingredients_category');
+        //from category get all ingredients and form $filters array
+        //look in current filters session to see indicaators (want, not_want)
+
         $filters = [];
-        switch($ingredients_category) {
-            case "ingredients_category_1":
-                $filters[0] = "<div class='filter_element untouchable' id='ingredients_1' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/drinks.png');\"></div><div class='filter_element_text'>Lašiša</div><div class='filter_element_indicator' id='indicator_ingredients_1'></div></div>";
-                $filters[1] = "<div class='filter_element untouchable' id='ingredients_2' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/pastries.png');\"></div><div class='filter_element_text'>Karpis</div><div class='filter_element_indicator' id='indicator_ingredients_2'></div></div>";
-                $filters[2] = "<div class='filter_element untouchable' id='ingredients_3' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/deserts.png');\"></div><div class='filter_element_text'>Upėtakis</div><div class='filter_element_indicator' id='indicator_ingredients_3'></div></div>";
-                $filters[3] = "<div class='filter_element untouchable' id='ingredients_4' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/second_dishes.png');\"></div><div class='filter_element_text'>Kardžuvė</div><div class='filter_element_indicator' id='indicator_ingredients_4'></div></div>";
-                $filters[4] = "<div class='filter_element untouchable' id='ingredients_5' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/canned_meals.png');\"></div><div class='filter_element_text'>Ungurys</div><div class='filter_element_indicator' id='indicator_ingredients_5'></div></div>";
-            break;
-        }
+        $filters[0] = "<div class='filter_element untouchable' id='ingredients_1' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/drinks.png');\"></div><div class='filter_element_text'>Lašiša</div><div class='filter_element_indicator' id='indicator_ingredients_1'></div></div>";
+        $filters[1] = "<div class='filter_element untouchable' id='ingredients_2' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/pastries.png');\"></div><div class='filter_element_text'>Karpis</div><div class='filter_element_indicator' id='indicator_ingredients_2'></div></div>";
+        $filters[2] = "<div class='filter_element untouchable' id='ingredients_3' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/deserts.png');\"></div><div class='filter_element_text'>Upėtakis</div><div class='filter_element_indicator' id='indicator_ingredients_3'></div></div>";
+        $filters[3] = "<div class='filter_element untouchable' id='ingredients_4' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/second_dishes.png');\"></div><div class='filter_element_text'>Kardžuvė</div><div class='filter_element_indicator' id='indicator_ingredients_4'></div></div>";
+        $filters[4] = "<div class='filter_element untouchable' id='ingredients_5' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/canned_meals.png');\"></div><div class='filter_element_text'>Ungurys</div><div class='filter_element_indicator' id='indicator_ingredients_5'></div></div>";
+
 
         $response = array(
             'status' => 'good',
+            'filters' => $filters,
         );
 
         $jsonResponse = new Response(json_encode($response));
@@ -311,7 +313,8 @@ class AjaxController extends Controller
     public function loading_screen_textAction(Request $request)
     {
         $request_data = $request->request;
-        //MYSQL SELECT
+        //get random fact from database about food
+        //create session
 
         $fact = "Bla bla";
 
@@ -328,7 +331,7 @@ class AjaxController extends Controller
     public function filter_show_selectedAction(Request $request)
     {
         $request_data = $request->request;
-        //MYSQL SELECT
+        //from current_filters_session get filters id and type, indicator and form $filters array
         $filters = [];
         $filters[0] = "<div class='filter_element untouchable filter_element_indicator_not_want' id='universities-1' onclick='filter_selected(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/types.png');\"></div><div class='filter_element_text'>Selected 1</div><div class='filter_element_delete' id='delete_universities-1' onclick='filter_delete(this.id)'></div><div class='filter_element_indicator_change' id='indicator_change_universities-1' onclick='filter_indicator_change(this.id)'></div><div class='filter_element_indicator_small'></div></div>";
         $filters[1] = "<div class='filter_element untouchable filter_element_indicator_want' id='universities-2' onclick='filter_selected(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/times.png');\"></div><div class='filter_element_text'>Selected want</div><div class='filter_element_delete' id='delete_universities-2' onclick='filter_delete(this.id)'></div><div class='filter_element_indicator_change' id='indicator_change_universities-2' onclick='filter_indicator_change(this.id)'></div><div class='filter_element_indicator_small'></div></div>";
@@ -347,7 +350,7 @@ class AjaxController extends Controller
     public function filter_personal_show_selectedAction(Request $request)
     {
         $request_data = $request->request;
-        //MYSQL SELECT
+        //from personal_filters_session get filters id and type, indicator and form $filters array
         $filters = [];
         $filters[0] = "<div class='filter_element untouchable filter_element_indicator_not_want' id='universities-1' onclick='filter_selected(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/types.png');\"></div><div class='filter_element_text'>Selected 1</div><div class='filter_element_delete' id='delete_universities-1' onclick='filter_delete(this.id)'></div><div class='filter_element_indicator_change' id='indicator_change_universities-1' onclick='filter_indicator_change(this.id)'></div><div class='filter_element_indicator_small'></div></div>";
         $filters[1] = "<div class='filter_element untouchable filter_element_indicator_want' id='universities-2' onclick='filter_selected(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/times.png');\"></div><div class='filter_element_text'>Selected want</div><div class='filter_element_delete' id='delete_universities-2' onclick='filter_delete(this.id)'></div><div class='filter_element_indicator_change' id='indicator_change_universities-2' onclick='filter_indicator_change(this.id)'></div><div class='filter_element_indicator_small'></div></div>";
@@ -366,8 +369,10 @@ class AjaxController extends Controller
     public function filter_indicator_changeAction(Request $request)
     {
         $request_data = $request->request;
-        //MYSQL SELECT
+        $filter_type = $request_data->get('filter_type');
+        $filter_id = $request_data->get('filter_id');
 
+        //change indicator type to vice-versa for filter in current filters session
         $response = array(
             'status' => 'good',
         );
@@ -380,7 +385,13 @@ class AjaxController extends Controller
     public function manipulate_filterAction(Request $request)
     {
         $request_data = $request->request;
-        //MYSQL SELECT
+        $filter_type = $request_data->get('filter_type');
+        $filter_id = $request_data->get('filter_id');
+        $filter_indicator = $request_data->get('filter_indicator');
+
+        //change indicator in current filters session
+        //want, not_want, none
+        //none = delete
 
         $response = array(
             'status' => 'good',
@@ -394,9 +405,28 @@ class AjaxController extends Controller
     public function shoppinglist_addAction(Request $request)
     {
         $request_data = $request->request;
-        //MYSQL SELECT
+
         $id = $request_data->get("shoppinglist_add_id");
         $title = $request_data->get("shoppinglist_add_title");
+
+        //add to user db and current shoppinglist session
+
+        $response = array(
+            'status' => 'good',
+        );
+
+        $jsonResponse = new Response(json_encode($response));
+        $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
+        return $jsonResponse;
+    }
+
+    public function shoppinglist_product_addAction(Request $request)
+    {
+        $request_data = $request->request;
+
+        $id = $request_data->get("product_id");
+
+        //add to user db and current shoppinglist session
 
         $response = array(
             'status' => 'good',
@@ -410,9 +440,11 @@ class AjaxController extends Controller
     public function shoppinglist_deleteAction(Request $request)
     {
         $request_data = $request->request;
-        //MYSQL SELECT
-        $id = $request_data->get("shoppinglist_delete");
 
+        $shoppinglist_type = $request_data->get("shoppinglist_type");
+        $shoppinglist_id = $request_data->get("shoppinglist_id");
+
+        //delete from user db and current shopinglist session
 
         $response = array(
             'status' => 'good',
@@ -440,7 +472,10 @@ class AjaxController extends Controller
     public function filter_deleteAction(Request $request)
     {
         $request_data = $request->request;
-        //MYSQL SELECT
+        $filter_type = $request_data->get('filter_type');
+        $filter_id = $request_data->get('filter_id');
+
+        //delete filter from current filters session
 
         $response = array(
             'status' => 'good',
@@ -454,17 +489,18 @@ class AjaxController extends Controller
     public function searchAction(Request $request)
     {
         $request_data = $request->request;
-        //MYSQL SELECT
+
         $value = $request_data->get('search');
+        //from search value get filters and recipes. do not show which are already selected in current filters session
 
         $search_data = [];
         $search_data[0] =
-        "<div class='s_e search_item untouchable' id='search-ingredient-95'>" +
-            "<div class='s_e search_item_image' style=\"background-image:url('images/food (2).jpg')\"></div>" +
-            "<div class='s_e search_item_title'>Ananasas</div>" +
-            "<div class='s_e search_item_bottom_info'>Ingredientas</div>" +
-            "<div class='s_e filter_element_indicator indicator_search want' style='right: 25px;' onclick=\"filter_search_add('search-ingredient-95','want')\"></div>" +
-            "<div class='s_e filter_element_indicator indicator_search not_want' style='right: 3px;' onclick=\"filter_search_add('search-ingredient-95','not_want')\"></div>" +
+        "<div class='s_e search_item untouchable' id='search-ingredient-95'>".
+            "<div class='s_e search_item_image' style=\"background-image:url('images/food (2).jpg')\"></div>".
+            "<div class='s_e search_item_title'>Ananasas</div>".
+            "<div class='s_e search_item_bottom_info'>Ingredientas</div>".
+            "<div class='s_e filter_element_indicator indicator_search want' style='right: 25px;' onclick=\"filter_search_add('search-ingredient-95','want')\"></div>".
+            "<div class='s_e filter_element_indicator indicator_search not_want' style='right: 3px;' onclick=\"filter_search_add('search-ingredient-95','not_want')\"></div>".
         "</div>";
 
         $response = array(
@@ -480,15 +516,17 @@ class AjaxController extends Controller
     public function search_shoppinglistAction(Request $request)
     {
         $request_data = $request->request;
-        //MYSQL SELECT
-        $value = $request_data->get('search_shoppinglist');
+        $value = $request_data->get('search');
+        //from search value get ingredients. do not show which are in current shoppinglist session
+        //get ingredientID, title, type, imageUrl
+
 
         $search_data = [];
         $search_data[0] =
-            "<div class='s_e search_item untouchable' id='shoppinglist-ingredient-95' onclick='shoppinglist_add(this.id)'>"+
-                "<div class='s_e search_item_image' style=\"background-image:url('images/food (2).jpg')\"></div>"+
-                "<div class='s_e search_item_title'>Ananasas</div>"+
-                "<div class='s_e search_item_bottom_info'>Ingredientas</div>"+
+            "<div class='s_e search_item untouchable' id='shoppinglist-ingredient-95' onclick='shoppinglist_add(this.id)'>".
+                "<div class='s_e search_item_image' style=\"background-image:url('images/food (2).jpg')\"></div>".
+                "<div class='s_e search_item_title'>Ananasas</div>".
+                "<div class='s_e search_item_bottom_info'>Ingredientas</div>".
             "</div>";
 
         $response = array(
@@ -504,15 +542,16 @@ class AjaxController extends Controller
     public function search_placesAction(Request $request)
     {
         $request_data = $request->request;
-        //MYSQL SELECT
-        $value = $request_data->get('search_places');
+        $value = $request_data->get('search');
+        //from search value get places.
+        //get title, imageUrl, type
 
         $search_data = [];
         $search_data[0] =
-            "<div class='s_e search_item untouchable' id='search-maxima' onclick=\"show_nearest('maxima');\">" +
-                "<div class='s_e search_item_image' style=\"background-image:url('/images/maxima.png')\"></div>" +
-                "<div class='s_e search_item_title'>Maxima</div>" +
-                "<div class='s_e search_item_bottom_info'>Parduotuvė</div>" +
+            "<div class='s_e search_item untouchable' id='search-maxima' onclick=\"show_nearest('maxima');\">".
+                "<div class='s_e search_item_image' style=\"background-image:url('/images/maxima.png')\"></div>".
+                "<div class='s_e search_item_title'>Maxima</div>".
+                "<div class='s_e search_item_bottom_info'>Parduotuvė</div>".
             "</div>";
 
         $response = array(
@@ -528,26 +567,68 @@ class AjaxController extends Controller
     public function recipe_right_sidebarAction(Request $request)
     {
         $request_data = $request->request;
-        //MYSQL SELECT
-        $recipe_ID = $request_data->get('recipe_right_sidebar_ID');
 
-        //from ajax with recipe ID get
-        /*
-        var image;
-        var title;
-        var country;
-        var time;
-        var rating;
-        var main_cooking_method;
-        var type;
-        var characteristics; //array of them
-        var celebration; //array of them or empty
-        var ingredients; //array of them
-        */
+        $recipe_ID = $request_data->get('recipe_ID');
+
+        //from recipe_ID get all data about recipe and form recipe_data variable
+
+        $title = "bla";
+        $imageUrl = "/images/food (5).jpg";
+        $like_status = "not_liked";
+        $like_count = "59";
+        $author = "autorius";
+        $time = "25 min";
+        $country = "Lenkija";
+        $type = "Antrijie";
+        $main_cooking_method = "Virimas";
+        $properties = "Aštru, sūru";
+        $celebration = "Kalėdos";
+
+        //from recipe_ID get all ingredients:id, imageUrl, title, amount, unit
+        //from current shoppinglist and current filters session get indicator
+
+        $ingredient_ID = '2';
+        $ingredient_imageUrl = "/images/food (5).jpg";
+        $ingredient_title = "Bananas";
+        $ingredient_quantity = "5";
+        $ingredient_unit = "vnt";
+        $ingredient_indicator = "have"; // have, shoppinglist, undefined
+
+        $ingredient =
+        "<div class='ingredient untouchable' id='ingredient-$ingredient_ID' onclick=\"ingredient_selected('$ingredient_ID')\">
+            <div class='ingredient_image' style='background-image:url(\"$ingredient_imageUrl\")'></div>
+            <div class='ingredient_text'>$ingredient_title</div>
+            <div class='ingredient_size'>$ingredient_quantity $ingredient_unit</div>
+            <div class='ingredient_indicator ingredient_indicator_$ingredient_indicator' id='ingredient_indicator-$ingredient_ID'></div>
+        </div>";
+
+        $ingredients = $ingredient.$ingredient.$ingredient;
+
+        $recipe_data =
+        "<div id='sidebar_right_image' style='background-image:url(\"$imageUrl\");'></div>
+            <div id='sidebar_right_title'>$title</div>
+            <div id='sidebar_right_info'>
+                <div class='sidebar_right_info_item untouchable $like_status' id='sidebar_right_like' onclick=\"recipe_like('$recipe_ID', this.id)\">$like_count</div>
+                <div class='sidebar_right_info_item' id='sidebar_right_author'>$author</div>
+                <div class='sidebar_right_info_item' id='sidebar_right_time'>$time</div>
+                <div class='sidebar_right_info_item' id='sidebar_right_country'>$country</div>
+                <div class='sidebar_right_info_item' id='sidebar_right_type'>$type</div>
+                <div class='sidebar_right_info_item' id='sidebar_right_characteristics'>$properties</div>
+                <div class='sidebar_right_info_item' id='sidebar_right_main_cooking_method'>$main_cooking_method</div>
+                <div class='sidebar_right_info_item' id='sidebar_right_celebration'>$celebration</div>
+            </div>
+            <div id='sidebar_right_ingredients'>
+                <div id='sidebar_right_ingredients_text'>Ingredientai</div>
+                <div class='sidebar_right_ingredients_button' id='sidebar_right_ingredients_coop' onclick=\"show_top_layer('coop','$recipe_ID')\"></div>
+                <div class='sidebar_right_ingredients_button' id='sidebar_right_ingredients_shoppinglist' onclick=\"add_to_shopping_list('$recipe_ID')\"></div>
+            </div>
+            <div id='divider' class='ingredients_divider'></div>
+            <div id='sidebar_right_ingredients_zone'>$ingredients</div>
+        </div>";
 
         $response = array(
             'status' => 'good',
-
+            'recipe_data' => $recipe_data,
         );
 
         $jsonResponse = new Response(json_encode($response));
@@ -576,13 +657,11 @@ class AjaxController extends Controller
     public function ingredient_addAction(Request $request)
     {
         $request_data = $request->request;
-        //MYSQL SELECT
         $ingredient_ID = $request_data->get('ingredient_ID');
-        //add to users shoppinglist ingredient and quantity
+        //add to current shoppinglist session and to users_shoppinglist in database ingredient and quantity
 
         $response = array(
             'status' => 'good',
-
         );
 
         $jsonResponse = new Response(json_encode($response));
@@ -593,13 +672,12 @@ class AjaxController extends Controller
     public function ingredient_add_allAction(Request $request)
     {
         $request_data = $request->request;
-        //MYSQL SELECT
         $recipe_ID = $request_data->get('recipe_ID');
-        //add to users shoppinglist ingredient and quantity
-
+        //add to current shoppinglist session and to users_shoppinglist in database ingredients and quantities
+        //get ingredients and quantities from recipe_ID
+        //sum up quantities
         $response = array(
             'status' => 'good',
-
         );
 
         $jsonResponse = new Response(json_encode($response));
@@ -610,12 +688,12 @@ class AjaxController extends Controller
     public function ingredient_deleteAction(Request $request)
     {
         $request_data = $request->request;
-        //MYSQL SELECT
+
         $ingredient_ID = $request_data->get('ingredient_ID');
+        //delete ingredient and quantity from current shoppinglist session and users_shoppinglist in database
 
         $response = array(
             'status' => 'good',
-
         );
 
         $jsonResponse = new Response(json_encode($response));
@@ -732,11 +810,12 @@ class AjaxController extends Controller
     public function load_moreAction(Request $request)
     {
         $request_data = $request->request;
-        //MYSQL SELECT
+        //check if there is results to retreive and increase limit session by 10
+        //if no results send 'end' => true else 'end' => false
 
         $response = array(
             'status' => 'good',
-
+            'end' => true,
         );
 
         $jsonResponse = new Response(json_encode($response));

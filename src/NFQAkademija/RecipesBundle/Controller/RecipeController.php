@@ -12,8 +12,8 @@ class RecipeController extends Controller
     {
         return $this->createFormBuilder($entity)
             ->add('name', 'text', array(
-                'required' => true,
                 'label' => 'Pavadinimas',
+                'required' => true,
                 'trim' => true))
             ->add('properties', 'entity', array(
                 'mapped' => true,
@@ -24,11 +24,11 @@ class RecipeController extends Controller
                 'expanded' => true,
                 'multiple' => true))
             ->add('description', 'text', array(
-                'required' => true,
+                'required' => false,
                 'label' => 'Gaminimo aprašymas',
                 'trim' => true))
             ->add('photo', 'text', array(
-                'required' => true,
+                'required' => false,
                 'label' => 'Paveiksliuko adresas',
                 'trim' => true))
             ->add('country', 'entity', array(

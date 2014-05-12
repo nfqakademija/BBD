@@ -32,7 +32,23 @@
         }
 
         function admin_logout(){
-
+            var formData = new FormData();
+            formData.append('admin_logout', 'true');
+            $.ajax({
+                type: 'POST',
+                url: '/ajax/admin_logout',
+                data: formData,
+                dataType: 'json',
+                beforeSend: function () {
+                },
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    if (data.status == "good") {
+                        location.href = "/admin_zone";
+                    }
+                }
+            });
         }
 
     </script>

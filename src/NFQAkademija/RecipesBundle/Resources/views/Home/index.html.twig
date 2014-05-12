@@ -85,58 +85,64 @@
              if(!loading_more_status && !load_more_end){
                  loading_more_status = true;
                  recipe_size = calculate_recipe_size();
-                 show_loading_more();
-                 var recipes = [];
-                 recipes[0] = ["0","/images/food (0).jpg", "title0"];
-                 recipes[1] = ["1","/images/food (1).png", "title0"];
-                 recipes[2] = ["2","/images/food (2).jpg", "title0"];
-                 recipes[3] = ["3","/images/food (3).jpg", "title0"];
-                 recipes[4] = ["4","/images/food (4).jpg", "title0"];
-                 recipes[5] = ["5","/images/food (5).jpg", "title0"];
-                 hide_loading_more();
-                 for(i = 0; i < recipes.length; i++){
-                     append_recipe(recipes[i]);
-                 }
-
-                 loading_more_status = false;
-                 load_more_end = true;
-                 setTimeout(function(){
-                     scroll_content.refresh();
-                 },0);
-                 /*
+                 var formData = new FormData();
+                 formData.append('load_more', 'true');
                  $.ajax({
                      type: 'POST',
-                     url: 'ajax.php',
-                     data: { load_more: 'true'},
-                     beforeSend:function(){
-                         if(!load_more_end)
-                             show_loading();
+                     url: '/ajax/load_more',
+                     data: formData,
+                     dataType: 'json',
+                     beforeSend: function () {
+                         show_loading_more();
                      },
-                     success:function(data){
-                         loading_more_status = false;
-                         var data = " ";
-                         if(data != ""){
-                             hide_loading();
-                         }else if(data == ""){
-                             hide_loading();
+                     processData: false,
+                     contentType: false,
+                     success: function (data) {
+                         if (data.status == "good") {
+                             loading_more_status = false;
                              load_more_end = true;
+
+                             var recipes = [];
+                             recipes[0] = ["0","/images/food (0).jpg", "title0"];
+                             recipes[1] = ["1","/images/food (1).png", "title0"];
+                             recipes[2] = ["2","/images/food (2).jpg", "title0"];
+                             recipes[3] = ["3","/images/food (3).jpg", "title0"];
+                             recipes[4] = ["4","/images/food (4).jpg", "title0"];
+                             recipes[5] = ["5","/images/food (5).jpg", "title0"];
+
+                             hide_loading_more();
+                             for(i = 0; i < recipes.length; i++){
+                                 append_recipe(recipes[i]);
+                             }
+
+                             setTimeout(function(){
+                                 scroll_content.refresh();
+                             },0);
                          }
                      }
                  });
-                  */
              }
          }
 
-         function key_check(event){
-
-         }
+         function key_check(event){}
      </script>
  {% endblock %}
 
+{% block specific_styles %}
+    <style type="text/css">
+        #content_wrapper{
+            background-color:black;
+            padding-bottom:10px;
+        }
 
+        #scroller_content{
+            padding-bottom:10px;
+        }
+    </style>
+{% endblock %}
 
 {% block content %}
-    <div id="content_wrapper" style="background-color:black;padding-bottom:10px;">
-        <div class="scroller" id="scroller_content" style="padding-bottom:10px;"></div>
+    <div id="content_wrapper" >
+        <div class="scroller" id="scroller_content"></div>
     </div>
 {% endblock %}

@@ -686,6 +686,81 @@ class AjaxController extends Controller
 
     public function commentAction(Request $request)
     {
+    $request_data = $request->request;
+    //MYSQL SELECT
+
+    $response = array(
+        'status' => 'good',
+
+    );
+
+    $jsonResponse = new Response(json_encode($response));
+    $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
+    return $jsonResponse;
+    }
+
+    public function admin_logoutAction(Request $request)
+    {
+        $request_data = $request->request;
+        //MYSQL SELECT
+
+        $response = array(
+            'status' => 'good',
+
+        );
+
+        $jsonResponse = new Response(json_encode($response));
+        $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
+        return $jsonResponse;
+    }
+
+    public function admin_loginAction(Request $request)
+    {
+        $request_data = $request->request;
+        //MYSQL SELECT
+
+        $response = array(
+            'status' => 'good',
+
+        );
+
+        $jsonResponse = new Response(json_encode($response));
+        $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
+        return $jsonResponse;
+    }
+
+    public function load_moreAction(Request $request)
+    {
+        $request_data = $request->request;
+        //MYSQL SELECT
+
+        $response = array(
+            'status' => 'good',
+
+        );
+
+        $jsonResponse = new Response(json_encode($response));
+        $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
+        return $jsonResponse;
+    }
+
+    public function nearest_placeAction(Request $request)
+    {
+        $request_data = $request->request;
+        //MYSQL SELECT
+
+        $response = array(
+            'status' => 'good',
+
+        );
+
+        $jsonResponse = new Response(json_encode($response));
+        $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
+        return $jsonResponse;
+    }
+
+    public function custom_placeAction(Request $request)
+    {
         $request_data = $request->request;
         //MYSQL SELECT
 

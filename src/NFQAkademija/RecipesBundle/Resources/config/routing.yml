@@ -146,3 +146,23 @@ nfq_akademija_comment:
     pattern:  /ajax/comment
     defaults: { _controller: NFQAkademijaRecipesBundle:Ajax:comment}
 
+
+nfq_akademija_admin_logout:
+    pattern:  /ajax/admin_logout
+    defaults: { _controller: NFQAkademijaRecipesBundle:Ajax:admin_logout}
+
+nfq_akademija_admin_login:
+    pattern:  /ajax/admin_login
+    defaults: { _controller: NFQAkademijaRecipesBundle:Ajax:admin_login}
+
+nfq_akademija_load_more:
+    pattern:  /ajax/load_more
+    defaults: { _controller: NFQAkademijaRecipesBundle:Ajax:load_more}
+
+nfq_akademija_nearest_place:
+    pattern:  /ajax/nearest_place
+    defaults: { _controller: NFQAkademijaRecipesBundle:Ajax:nearest_place}
+
+nfq_akademija_custom_place:
+    pattern:  /ajax/custom_place
+    defaults: { _controller: NFQAkademijaRecipesBundle:Ajax:custom_place}

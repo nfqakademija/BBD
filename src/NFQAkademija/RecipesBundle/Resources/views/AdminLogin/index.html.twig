@@ -24,10 +24,24 @@
                 return false;
             }
 
-            //ajax call to check admin status
-
-            show_loading_screen();
-            location.href = "/admin_zone/users";
+            var formData = new FormData();
+            formData.append('admin_login', 'true');
+            $.ajax({
+                type: 'POST',
+                url: '/ajax/admin_login',
+                data: formData,
+                dataType: 'json',
+                beforeSend: function () {
+                },
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    if (data.status == "good") {
+                        show_loading_screen();
+                        location.href = "/admin_zone/users";
+                    }
+                }
+            });
         }
 
     </script>

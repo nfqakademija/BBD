@@ -203,7 +203,8 @@ function append_shoppinglist(){
 
 function show_loading_more(){
     var loading_more_box = "<div class='recipe_box' id='loading_more_box' style=\"width:" + recipe_size + "px;height:" + recipe_size +  "px;\"></div>";
-    $("#content_wrapper").append(loading_more_box);
+    $("#scroller_content").append(loading_more_box);
+    setTimeout(function(){scroll_content.refresh();},0);
 }
 
 function hide_loading_more(){

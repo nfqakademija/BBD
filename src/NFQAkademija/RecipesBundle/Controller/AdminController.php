@@ -33,6 +33,9 @@ class AdminController extends Controller
          */
 
         $admin_content = $type;
+
+
+
         //return $this->forward('NFQAkademijaRecipesBundle:Admin:users');
         return $this->render('NFQAkademijaRecipesBundle:Admin:index.html.twig',array("admin_content" => $admin_content, "title" => $title));
     }

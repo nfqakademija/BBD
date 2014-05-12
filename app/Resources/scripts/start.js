@@ -61,54 +61,68 @@ function profile_recipes(type){
     $("#profile_line_box_" + type).addClass('profile_line_box_' + type + '_active');
     recipe_size = calculate_recipe_size();
     //ajax to get recipes
-    var recipes = [];
-    recipes[0] = ["0","/images/food (0).jpg", "title0"];
-    recipes[1] = ["1","/images/food (1).png", "title0"];
-    recipes[2] = ["2","/images/food (2).jpg", "title0"];
-    recipes[3] = ["3","/images/food (3).jpg", "title0"];
-    recipes[4] = ["4","/images/food (4).jpg", "title0"];
-    recipes[5] = ["5","/images/food (5).jpg", "title0"];
-    recipes[6] = ["6","/images/food (6).jpg", "title0"];
-    recipes[7] = ["7","/images/food (7).jpg", "title0"];
-    recipes[8] = ["8","/images/food (8).jpg", "title0"];
-    recipes[9] = ["9","/images/food (9).jpg", "title0"];
-    recipes[10] = ["10","/images/food (10).jpg", "title0"];
-    recipes[11] = ["11","/images/food (11).jpg", "title0"];
-    recipes[12] = ["12","/images/food (12).jpg", "title0"];
-    recipes[13] = ["13","/images/food (13).jpg", "title0"];
-    recipes[14] = ["14","/images/food (14).jpg", "title0"];
-    recipes[15] = ["15","/images/food (15).jpg", "title0"];
-    recipes[16] = ["16","/images/food (16).jpg", "title0"];
-    recipes[17] = ["17","/images/food (17).jpg", "title0"];
-    recipes[18] = ["18","/images/food (18).jpg", "title0"];
-    recipes[19] = ["19","/images/food (19).jpg", "title0"];
-    recipes[20] = ["20","/images/food (20).jpg", "title0"];
 
+    var formData = new FormData();
+    formData.append('profile_recipes_type',type);
+    $.ajax({
+        type: 'POST',
+        url: '{{ path("nfq_akademija_profile_recipes") }}',
+        data: formData,
+        dataType: 'json',
+        beforeSend: function () {
+        },
+        processData: false,
+        contentType: false,
+        success: function (data) {
+            if (data.status == "good") {
 
-    $('#profile_recipes').fadeOut(transition_time,function(){
-        $('#profile_recipes').html('');
+                var recipes = [];
+                recipes[0] = ["0","/images/food (0).jpg", "title0"];
+                recipes[1] = ["1","/images/food (1).png", "title0"];
+                recipes[2] = ["2","/images/food (2).jpg", "title0"];
+                recipes[3] = ["3","/images/food (3).jpg", "title0"];
+                recipes[4] = ["4","/images/food (4).jpg", "title0"];
+                recipes[5] = ["5","/images/food (5).jpg", "title0"];
+                recipes[6] = ["6","/images/food (6).jpg", "title0"];
+                recipes[7] = ["7","/images/food (7).jpg", "title0"];
+                recipes[8] = ["8","/images/food (8).jpg", "title0"];
+                recipes[9] = ["9","/images/food (9).jpg", "title0"];
+                recipes[10] = ["10","/images/food (10).jpg", "title0"];
+                recipes[11] = ["11","/images/food (11).jpg", "title0"];
+                recipes[12] = ["12","/images/food (12).jpg", "title0"];
+                recipes[13] = ["13","/images/food (13).jpg", "title0"];
+                recipes[14] = ["14","/images/food (14).jpg", "title0"];
+                recipes[15] = ["15","/images/food (15).jpg", "title0"];
+                recipes[16] = ["16","/images/food (16).jpg", "title0"];
+                recipes[17] = ["17","/images/food (17).jpg", "title0"];
+                recipes[18] = ["18","/images/food (18).jpg", "title0"];
+                recipes[19] = ["19","/images/food (19).jpg", "title0"];
+                recipes[20] = ["20","/images/food (20).jpg", "title0"];
 
-        if(type == "created"){
-            var appendable_data = "<div class='recipe_box' style=\"background-color:white;background-size:70% 70%;background-image: url('/images/new_recipe.png');width:" + recipe_size + "px;height:" + recipe_size +  "px;\" onclick='go_to_new_recipe()'><div class='recipe_box_info'>Sukurti naują receptą</div></div>";
-            $("#profile_recipes").append(appendable_data);
+                $('#profile_recipes').fadeOut(transition_time,function(){
+                    $('#profile_recipes').html('');
+
+                    if(type == "created"){
+                        var appendable_data = "<div class='recipe_box' style=\"background-color:white;background-size:70% 70%;background-image: url('/images/new_recipe.png');width:" + recipe_size + "px;height:" + recipe_size +  "px;\" onclick='go_to_new_recipe()'><div class='recipe_box_info'>Sukurti naują receptą</div></div>";
+                        $("#profile_recipes").append(appendable_data);
+                    }
+
+                    for(i = 0; i < recipes.length; i++){
+                        var data = recipes[i];
+                        var id = data[0];
+                        var image = data[1];
+                        var title = data[2];
+                        var appendable_data = "<div class='recipe_box' id='recipe_" + id + "' style=\"background-image: url('" + image + "');width:" + recipe_size + "px;height:" + recipe_size +  "px;\" onclick=\"show_recipe('" + id + "')\"><div class='recipe_box_info'>" + title + "</div></div>";
+                        $("#profile_recipes").append(appendable_data);
+                    }
+
+                    $('#profile_recipes').fadeIn(transition_time);
+                    setTimeout(function(){scroll_content.refresh();},0);
+                });
+
+            }
         }
-
-        for(i = 0; i < recipes.length; i++){
-            var data = recipes[i];
-            var id = data[0];
-            var image = data[1];
-            var title = data[2];
-            var appendable_data = "<div class='recipe_box' id='recipe_" + id + "' style=\"background-image: url('" + image + "');width:" + recipe_size + "px;height:" + recipe_size +  "px;\" onclick=\"show_recipe('" + id + "')\"><div class='recipe_box_info'>" + title + "</div></div>";
-            $("#profile_recipes").append(appendable_data);
-        }
-
-        $('#profile_recipes').fadeIn(transition_time);
-        setTimeout(function(){scroll_content.refresh();},0);
     });
-
-
-
-
 }
 
 function append_recipes(){

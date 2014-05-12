@@ -18,14 +18,16 @@ class AjaxController extends Controller
         $time = $request_data->get('new_recipe_time');
         $country = $request_data->get('new_recipe_country');
         $main_cooking_method = $request_data->get('new_recipe_main_cooking_method');
-        $properties = $request_data->get('new_recipe_properties');
-        $ingredients = $request_data->get('new_recipe_ingredients');
-        $steps = $request_data->get('new_recipe_steps');
-        $celebrations = $request_data->get('new_recipe_celebrations');
+        $properties = json_decode($request_data->get('new_recipe_properties'));
+        $ingredients = json_decode(json_decode($request_data->get('new_recipe_ingredients')));
+        $steps = json_decode($request_data->get('new_recipe_steps'));
+        $celebrations = json_decode($request_data->get('new_recipe_celebrations'));
+
+        //MYSQL INSERT
+
 
         $response = array(
             'status' => 'good',
-            'steps' => $ingredients,
         );
 
         $jsonResponse = new Response(json_encode($response));

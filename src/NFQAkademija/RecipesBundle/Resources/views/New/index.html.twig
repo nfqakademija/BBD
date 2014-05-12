@@ -145,10 +145,10 @@
             formData.append('new_recipe_country', country);
             formData.append('new_recipe_type', type);
             formData.append('new_recipe_main_cooking_method', main_cooking_method);
-            formData.append('new_recipe_properties', properties);
-            formData.append('new_recipe_ingredients', ingredients);
-            formData.append('new_recipe_steps', steps);
-            formData.append('new_recipe_celebrations', celebrations);
+            formData.append('new_recipe_properties', JSON.stringify(properties));
+            formData.append('new_recipe_ingredients', JSON.stringify(JSON.stringify(ingredients)));
+            formData.append('new_recipe_steps', JSON.stringify(steps));
+            formData.append('new_recipe_celebrations', JSON.stringify(celebrations));
 
             $.ajax({
                 type: 'POST',
@@ -160,12 +160,10 @@
                 processData: false,
                 contentType: false,
                 success:function(data){
-                    alert(data.steps)
                     if(data.status == "good"){
                         //refresh form
                         $("#new_recipe_title").val('');
                         $("#new_recipe_about").val('');
-                        //var image = $("#new_recipe_title").val();
                         $("#new_recipe_time").val('');
                         document.getElementById("new_recipe_country").selectedIndex = 0;
                         document.getElementById("new_recipe_type").selectedIndex = 0;

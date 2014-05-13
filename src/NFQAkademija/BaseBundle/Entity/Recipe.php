@@ -204,7 +204,7 @@ class Recipe
      */
     public function removeProperty(\NFQAkademija\BaseBundle\Entity\Property $properties)
     {
-        $this->properties->removeElement($properties);
+        $this->removeProperty($properties);
     }
 
     /**
@@ -375,7 +375,7 @@ class Recipe
      */
     public function removeStep(\NFQAkademija\BaseBundle\Entity\Step $steps)
     {
-        $this->steps->removeElement($steps);
+        $this->removeStep($steps);
     }
 
     /**
@@ -408,7 +408,7 @@ class Recipe
      */
     public function removeProduct(\NFQAkademija\BaseBundle\Entity\RecipeProduct $products)
     {
-        $this->products->removeElement($products);
+        $this->removeProduct($products);
     }
 
     /**
@@ -441,7 +441,7 @@ class Recipe
      */
     public function removeLike(\NFQAkademija\BaseBundle\Entity\Like $likes)
     {
-        $this->likes->removeElement($likes);
+        $this->removeLike($likes);
     }
 
     /**
@@ -474,7 +474,7 @@ class Recipe
      */
     public function removeProducedRecipe(\NFQAkademija\BaseBundle\Entity\ProducedRecipe $producedRecipes)
     {
-        $this->producedRecipes->removeElement($producedRecipes);
+        $this->removeProducedRecipe($producedRecipes);
     }
 
     /**
@@ -507,7 +507,7 @@ class Recipe
      */
     public function removeRecipeProduct(\NFQAkademija\BaseBundle\Entity\RecipeProduct $recipeProducts)
     {
-        $this->recipeProducts->removeElement($recipeProducts);
+        $this->removeRecipeProduct($recipeProducts);
     }
 
     /**

@@ -24,16 +24,16 @@ class Category
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string", length=255)
+     * @ORM\Column(name="photo", type="string", length=255)
      */
-    private $Name;
+    private $photo;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="photo", type="string", length=255)
+     * @ORM\Column(name="name", type="string", length=255)
      */
-    private $Photo;
+    private $name;
 
     /**
      * @ORM\OneToMany(targetEntity="\NFQAkademija\BaseBundle\Entity\Product", mappedBy="category")
@@ -68,7 +68,7 @@ class Category
      */
     public function setName($name)
     {
-        $this->Name = $name;
+        $this->name = $name;
 
         return $this;
     }
@@ -80,7 +80,7 @@ class Category
      */
     public function getName()
     {
-        return $this->Name;
+        return $this->name;
     }
 
     /**
@@ -91,7 +91,7 @@ class Category
      */
     public function setPhoto($photo)
     {
-        $this->Photo = $photo;
+        $this->photo = $photo;
 
         return $this;
     }
@@ -103,7 +103,7 @@ class Category
      */
     public function getPhoto()
     {
-        return $this->Photo;
+        return $this->photo;
     }
 
     /**
@@ -112,7 +112,7 @@ class Category
      * @param \NFQAkademija\BaseBundle\Entity\Product $products
      * @return Category
      */
-    public function addProduct(\NFQAkademija\BaseBundle\Entity\Product $products)
+    public function addProduct(Product $products)
     {
         $this->products[] = $products;
 
@@ -124,7 +124,7 @@ class Category
      *
      * @param \NFQAkademija\BaseBundle\Entity\Product $products
      */
-    public function removeProduct(\NFQAkademija\BaseBundle\Entity\Product $products)
+    public function removeProduct(Product $products)
     {
         $this->products->removeElement($products);
     }

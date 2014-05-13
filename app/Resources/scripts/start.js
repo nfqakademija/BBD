@@ -185,7 +185,7 @@ function append_product(data){
 
 function add_product(ID){
     var formData = new FormData();
-    formData.append('product_id','true');
+    formData.append('product_id',ID);
     $.ajax({
         type: 'POST',
         url: '/ajax/shoppinglist_product_add',
@@ -198,7 +198,7 @@ function add_product(ID){
         success: function (data) {
             if (data.status == "good") {
                 $('#product_' + ID).fadeOut(transition_time);
-                setTimeout(function(){scroll_content.refresh();},0);
+                setTimeout(function(){scroll_content.refresh();}, transition_time);
             }
         }
     });
@@ -902,6 +902,9 @@ function shoppinglist_delete(ID){
 
 function filter_search_add(ID, type){
     var id = ID.replace('search-','');
+    var filter_data = id.split('-');
+    var filter_type = filter_data[0];
+    var filter_id = filter_data[1];
     var image = $('#' + ID + " .search_item_image").css('background-image');
     image = image.replace('"', "'");
     var title = $('#' + ID + " .search_item_title").html();
@@ -910,7 +913,9 @@ function filter_search_add(ID, type){
     input_focus('search');
 
     var formData = new FormData();
-    formData.append('filter_search_add', ID);
+    formData.append('filter_type', filter_type);
+    formData.append('filter_id', filter_id);
+    formData.append('filter_indicator', type);
     $.ajax({
         type: 'POST',
         url: '/ajax/filter_search_add',
@@ -1042,7 +1047,7 @@ function search(type){
             case "shoppinglist":
                 var ajax_url = "/ajax/search_shoppinglist";
                 break;
-            case "search_places":
+            case "places":
                 var ajax_url = "/ajax/search_places";
                 break;
         }
@@ -1763,12 +1768,11 @@ function share_food(recipe_ID){
 
 function add_comment(recipe_ID){
     if(check_if_user_is_loged()){
-
         var comment = $('#step_comment_box_area').val();
         if(check('not_empty', comment)){
-
             var formData = new FormData();
             formData.append('recipe_ID', recipe_ID);
+            formData.append('comment', comment);
             $.ajax({
                 type: 'POST',
                 url: '/ajax/comment',

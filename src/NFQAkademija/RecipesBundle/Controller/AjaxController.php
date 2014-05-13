@@ -11,20 +11,23 @@ class AjaxController extends Controller
     public function new_recipeAction(Request $request)
     {
         $request_data = $request->request;
+        $request_files = $request->files;
 
         $title = $request_data->get('new_recipe_title');
         $about = $request_data->get('new_recipe_about');
-        $image = $request_data->get('new_recipe_image');
         $time = $request_data->get('new_recipe_time');
         $country = $request_data->get('new_recipe_country');
         $main_cooking_method = $request_data->get('new_recipe_main_cooking_method');
+        $celebration = $request_data->get('new_recipe_celebration');
+        $type = $request_data->get('new_recipe_type');
+
         $properties = json_decode($request_data->get('new_recipe_properties'));
         $ingredients = json_decode(json_decode($request_data->get('new_recipe_ingredients')));
         $steps = json_decode($request_data->get('new_recipe_steps'));
-        $celebrations = json_decode($request_data->get('new_recipe_celebrations'));
 
-        //MYSQL INSERT
+        $image = $request_files->get('new_recipe_image');
 
+        //insert all data into DB in recipes
 
         $response = array(
             'status' => 'good',
@@ -41,8 +44,8 @@ class AjaxController extends Controller
 
         $type = $request_data->get('profile_recipes_type');
 
-        //MYSQL SELECT
-        //get recipe_ID, image_url, title
+        //get recipe_ID, image_url, title which user cooked, liked or created TYPE
+        //[id, imageUrl, title]
         $recipes = [];
 
         $recipes[0] = ["0","/images/food (0).jpg", "title0"];
@@ -77,7 +80,9 @@ class AjaxController extends Controller
             //reset limit to 0 - LIMIT 10, 0;
         }
 
-        //get recipe_ID, image_url, title formed from filters and limit and form recipes array
+        //get recipe_ID, image_url, title and limit and form recipes array
+        //[id, imageUrl, title]
+        //WHERE filters occur
         $recipes = [];
         $recipes[0] = ["0","/images/food (0).jpg", "title0"];
         $recipes[1] = ["1","/images/food (1).png", "title0"];
@@ -107,6 +112,7 @@ class AjaxController extends Controller
         $request_data = $request->request;
 
         //get ingredients_ID, image_url, title RANDOM
+        //20 RANDOM ingredientu
         //later akcijos ir panasiai
 
         $products = [];
@@ -135,8 +141,8 @@ class AjaxController extends Controller
     public function append_shoppinglistAction(Request $request)
     {
         $request_data = $request->request;
-        //MYSQL SELECT
-        //get shoppinglist
+
+        //from DB get shoppinglist and form shoppinglist_session
 
 
         $response = array(
@@ -151,8 +157,8 @@ class AjaxController extends Controller
     public function filter_startAction(Request $request)
     {
         $request_data = $request->request;
-        //MYSQL SELECT
-        //get filter start
+
+        //show first filters types
         $filters = [];
         $filters[0] = "<div class='filter_element untouchable' id='types' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/types.png');\"></div><div class='filter_element_text'>Tipai</div></div>";
         $filters[1] = "<div class='filter_element untouchable' id='characteristics' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/characteristics.png');\"></div><div class='filter_element_text'>Ypatybės</div></div>";
@@ -176,9 +182,10 @@ class AjaxController extends Controller
     public function filter_categoryAction(Request $request)
     {
         $request_data = $request->request;
-        //MYSQL SELECT
-        //get filter start
+
+
         $category = $request_data->get('filter_category');
+        //get filters categories in specific type
         $filters = [];
         switch($category){
             case "types":
@@ -458,7 +465,11 @@ class AjaxController extends Controller
     public function filter_search_addAction(Request $request)
     {
         $request_data = $request->request;
-        //MYSQL SELECT
+        $filter_type = $request_data->get("filter_type");
+        $filter_id = $request_data->get("filter_id");
+        $filter_indicator = $request_data->get("filter_indicator");
+
+        //add filter to current session
 
         $response = array(
             'status' => 'good',
@@ -639,14 +650,13 @@ class AjaxController extends Controller
     public function user_cookingAction(Request $request)
     {
         $request_data = $request->request;
-        //MYSQL SELECT
+
         $recipe_ID = $request_data->get('recipe_ID');
         //add to user that he is cooking this recipe
 
 
         $response = array(
             'status' => 'good',
-
         );
 
         $jsonResponse = new Response(json_encode($response));
@@ -704,12 +714,11 @@ class AjaxController extends Controller
     public function coop_infoAction(Request $request)
     {
         $request_data = $request->request;
-        //MYSQL SELECT
+
         $recipe_ID = $request_data->get('recipe_ID');
 
         $response = array(
             'status' => 'good',
-
         );
 
         $jsonResponse = new Response(json_encode($response));
@@ -720,11 +729,12 @@ class AjaxController extends Controller
     public function loginAction(Request $request)
     {
         $request_data = $request->request;
-        //MYSQL SELECT
+
+        //create session that user is loged in
+        //change profile navigation bar
 
         $response = array(
             'status' => 'good',
-
         );
 
         $jsonResponse = new Response(json_encode($response));
@@ -735,11 +745,11 @@ class AjaxController extends Controller
     public function likeAction(Request $request)
     {
         $request_data = $request->request;
-        //MYSQL SELECT
+        $recipe_ID = $request_data->get('recipe_ID');
 
+        //add to user that he liked this recipe
         $response = array(
             'status' => 'good',
-
         );
 
         $jsonResponse = new Response(json_encode($response));
@@ -750,11 +760,9 @@ class AjaxController extends Controller
     public function shareAction(Request $request)
     {
         $request_data = $request->request;
-        //MYSQL SELECT
 
         $response = array(
             'status' => 'good',
-
         );
 
         $jsonResponse = new Response(json_encode($response));
@@ -764,27 +772,30 @@ class AjaxController extends Controller
 
     public function commentAction(Request $request)
     {
-    $request_data = $request->request;
-    //MYSQL SELECT
+        $request_data = $request->request;
+        $recipe_ID = $request_data->get('recipe_ID');
+        $comment = $request_data->get('comment');
 
-    $response = array(
-        'status' => 'good',
+        //add comment to recipe
 
-    );
+        $response = array(
+            'status' => 'good',
+        );
 
-    $jsonResponse = new Response(json_encode($response));
-    $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
-    return $jsonResponse;
+        $jsonResponse = new Response(json_encode($response));
+        $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
+        return $jsonResponse;
     }
 
     public function admin_logoutAction(Request $request)
     {
         $request_data = $request->request;
-        //MYSQL SELECT
+
+        //delete login session
+        //change back profile navigation
 
         $response = array(
             'status' => 'good',
-
         );
 
         $jsonResponse = new Response(json_encode($response));
@@ -795,11 +806,11 @@ class AjaxController extends Controller
     public function admin_loginAction(Request $request)
     {
         $request_data = $request->request;
-        //MYSQL SELECT
+
+        //create admin session
 
         $response = array(
             'status' => 'good',
-
         );
 
         $jsonResponse = new Response(json_encode($response));
@@ -826,11 +837,14 @@ class AjaxController extends Controller
     public function nearest_placeAction(Request $request)
     {
         $request_data = $request->request;
-        //MYSQL SELECT
+        $title = $request_data->get('title');
+
+        //from DB get nearest place with that TITLE
+        $place = [$title, $title,'55.909933', '23.983622', '/images/maxima.png'];
 
         $response = array(
             'status' => 'good',
-
+            'place' => $place,
         );
 
         $jsonResponse = new Response(json_encode($response));
@@ -841,11 +855,21 @@ class AjaxController extends Controller
     public function custom_placeAction(Request $request)
     {
         $request_data = $request->request;
-        //MYSQL SELECT
+        $type = $request_data->get('type');
+        $radius = $request_data->get('radius');
+
+        //from DB get all places with TYPE and in that RADIUS
+        $places = [];
+        $places[0] = ['Maxima','tipas0','54.909933', '23.983622', '/images/maxima.png'];
+        $places[1] = ['Norfa','tipas0','54.910833', '23.976841', '/images/norfa.png'];
+        $places[2] = ['Iki','tipas0','54.907780', '23.983622', '/images/iki.png'];
+        $places[3] = ['Hesburger','tipas0','54.906690', '23.983640', '/images/hesburger.png'];
+        $places[4] = ['McDonalds','tipas0','54.907000', '23.983648', '/images/mcdonalds.png'];
+        $places[5] = ['Rimi','tipas0','54.909933', '23.983670', '/images/rimi.png'];
 
         $response = array(
             'status' => 'good',
-
+            'places' => $places,
         );
 
         $jsonResponse = new Response(json_encode($response));
@@ -853,6 +877,3 @@ class AjaxController extends Controller
         return $jsonResponse;
     }
 }
-
-
-

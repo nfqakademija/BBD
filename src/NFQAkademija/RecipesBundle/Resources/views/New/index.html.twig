@@ -35,7 +35,6 @@
            }else{
                $("#image_name").html(image.name);
            }
-
         }
 
         function new_recipe(){
@@ -46,18 +45,16 @@
             var country = $("#new_recipe_country").val();
             var type = $("#new_recipe_type").val();
             var main_cooking_method = $("#new_recipe_main_cooking_method").val();
+            var celebration = $("#new_recipe_celebration").val();
 
             //get properties
             var properties = [];
-            for(i = 1; i <= properties_amount; i++){
-                if($("#new_recipe_property_" + i).length != 0){
-                    var property = $("#new_recipe_property_" + i + " .new_recipe_select").val();
-                    if(property != null){
-                        properties.push(property);
-                    }
+            $('.properties_checkbox').each(function(){
+                if($(this).hasClass('checked')){
+                    var property = ($(this).attr('id')).replace('new_recipe_checkbox_property_','');
+                    properties.push(property);
                 }
-            }
-
+            });
 
             //get ingredients
             var ingredients = [];
@@ -83,17 +80,6 @@
                 }
             }
 
-            //get celebrations
-            var celebrations = [];
-            for(i = 1; i <= celebrations_amount; i++){
-                if($("#new_recipe_celebration_" + i).length != 0){
-                    var celebration = $("#new_recipe_celebration_" + i + " .new_recipe_select").val();
-                    if(celebration != null){
-                        celebrations.push(celebration);
-                    }
-                }
-            }
-
             //validation
             if(title == ""){
                 toast('Trūksta pavadinimo','bad','logo');
@@ -107,7 +93,7 @@
                 toast('Pridėkite nuotrauką','bad','logo');
                 return false;
             }
-            if(time == ""){
+            if(time == null){
                 toast('Nurodykite laiką','bad','logo');
                 return false;
             }
@@ -121,10 +107,6 @@
             }
 
             //main cooking method, celebrations ir properties - nebutina
-            if(main_cooking_method == null){
-                //toast('Nurodykite pagrindinį gaminimo būdą','bad','new_recipe');
-                //return false;
-            }
 
             if(ingredients.length == 0){
                 toast('Pridėkite ingredientus','bad','logo');
@@ -145,14 +127,16 @@
             formData.append('new_recipe_country', country);
             formData.append('new_recipe_type', type);
             formData.append('new_recipe_main_cooking_method', main_cooking_method);
+            formData.append('new_recipe_celebration', celebration);
+
             formData.append('new_recipe_properties', JSON.stringify(properties));
             formData.append('new_recipe_ingredients', JSON.stringify(JSON.stringify(ingredients)));
             formData.append('new_recipe_steps', JSON.stringify(steps));
-            formData.append('new_recipe_celebrations', JSON.stringify(celebrations));
+
 
             $.ajax({
                 type: 'POST',
-                url: '{{ path("nfq_akademija_new_recipe") }}',
+                url: '/ajax/new_recipe',
                 data: formData,
                 dataType: 'json',
                 beforeSend:function(){
@@ -162,53 +146,49 @@
                 success:function(data){
                     if(data.status == "good"){
                         //refresh form
+                        ingredients_amount = 0;
+                        steps_amount = 0;
                         $("#new_recipe_title").val('');
                         $("#new_recipe_about").val('');
-                        $("#new_recipe_time").val('');
+                        document.getElementById("new_recipe_time").selectedIndex = 0;
                         document.getElementById("new_recipe_country").selectedIndex = 0;
                         document.getElementById("new_recipe_type").selectedIndex = 0;
                         document.getElementById("new_recipe_main_cooking_method").selectedIndex = 0;
+                        document.getElementById("new_recipe_celebration").selectedIndex = 0;
                         document.getElementById('new_recipe_image').value = null;
                         $("#image_name").html('');
-                        $('.new_property').remove();
                         $('.new_ingredient').remove();
                         $('.new_step').remove();
-                        $('.new_celebration').remove();
+                        $('.properties_checkbox').removeClass('checked').removeClass('not_checked').addClass('not_checked');
 
                         setTimeout(function(){
                             scroll_content.refresh();
                         },0);
 
+                        $("#profile_cover").html(data.recipe)
                         toast('Receptas nusiųstas patikrinti','good','logo');
                     }else{
                         toast('Įvyko klaida','bad','logo');
                     }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    toast('Įvyko klaida. Perkraukite puslapį','bad','logo');
+                    //alert(xhr.responseText);
+                    //alert(thrownError);
                 }
             });
         }
 
-        var properties_amount = 0;
         var ingredients_amount = 0;
         var steps_amount = 0;
-        var celebrations_amount = 0;
         function new_recipe_add(type){
             switch(type){
-                case "property":
-                    properties_amount++;
-                    var data =
-                    "<div class='new_property' id='new_recipe_property_" + properties_amount + "'>" +
-                        "<select class='new_recipe_select new_recipe_squeezed'>" +
-                            "<option value='' disabled selected>Ypatybė</option>" +
-                            "<option value='Aštru'>Aštru</option>" +
-                        "</select>" +
-                        "<div class='sub_delete' onclick='new_recipe_delete(\"new_recipe_property_" + properties_amount + "\")'></div>" +
-                    "</div>";
-                    $("#new_recipe_properties").append(data);
-                    break;
                 case "ingredient":
                    ingredients_amount++;
                    var data =
+
                    "<div class='new_ingredient' id='new_recipe_ingredient_" + ingredients_amount + "'>" +
+                        "<div class='input_title'>Ingredientas " + ingredients_amount + "</div>" +
                         "<select class='new_recipe_select new_recipe_squeezed_even_more'>" +
                             "<option value='' disabled selected>Ingredientas</option>" +
                             "<option value='Aštru'>Bananas</option>" +
@@ -229,22 +209,11 @@
                     steps_amount++;
                     var data =
                     "<div class='new_step' id='new_recipe_step_" + steps_amount + "'>" +
+                        "<div class='input_title'>Žingsnis " + steps_amount + "</div>" +
                         "<textarea type='text' class='new_recipe_textarea new_recipe_squeezed_little_more' placeholder='Žingsnis " + steps_amount + "'></textarea>" +
                         "<div class='sub_delete' onclick='new_recipe_delete(\"new_recipe_step_" + steps_amount + "\")'></div>" +
                     "</div>";
                      $("#new_recipe_steps").append(data);
-                    break;
-                case "celebration":
-                    celebrations_amount++;
-                    var data =
-                    "<div class='new_celebration' id='new_recipe_celebration_" + celebrations_amount + "'>" +
-                        "<select class='new_recipe_select new_recipe_celebrations'>" +
-                            "<option value='' disabled selected>Šventė</option>" +
-                            "<option value='Kalėdos'>Kalėdos</option>" +
-                        "</select>" +
-                        "<div class='sub_delete' onclick='new_recipe_delete(\"new_recipe_celebration_" + celebrations_amount + "\")'></div>" +
-                    "</div>";
-                    $("#new_recipe_celebrations").append(data);
                     break;
                 case "image":
                         $("#new_recipe_image").trigger('click');
@@ -264,6 +233,14 @@
                 },0);
             });
         }
+
+    function property_indicator(ID){
+        if($("#" + ID).hasClass('not_checked')){
+            $("#" + ID).removeClass('not_checked').addClass('checked');
+        }else if($("#" + ID).hasClass('checked')){
+            $("#" + ID).removeClass('checked').addClass('not_checked');
+        }
+    }
     </script>
 {% endblock %}
 
@@ -310,30 +287,33 @@
             <div id="content_new_recipe">
                 <div class="sub_title">Pagrindiniai</div>
                 <div class="sub_box" id="new_recipe_main">
-                    <input type="text" class="new_recipe_input" id="new_recipe_title" placeholder="Pavadinimas" />
-                    <textarea type="text" class="new_recipe_textarea" id="new_recipe_about" placeholder="Apie patiekalą" /></textarea>
-                    <div class="sub_add" id="sub_add_image" onclick="new_recipe_add('image')">Pridėti nuotrauką</div>
+                    <div class="input_title">Pavadinimas</div><input type="text" class="new_recipe_input" id="new_recipe_title" placeholder="Pavadinimas" />
+                    <div class="input_title">Apie patiekalą</div><textarea type="text" class="new_recipe_textarea" id="new_recipe_about" placeholder="Apie patiekalą" /></textarea>
+                    <div class="input_title">Nuotrauka</div><div class="sub_add" id="sub_add_image" onclick="new_recipe_add('image')">Pridėti nuotrauką</div>
                     <div id="image_name"></div>
                     <input type="file" style="display:none;" id="new_recipe_image" onchange="image_added()"/>
                 </div>
 
                 <div class="sub_title">Specifika</div>
                 <div class="sub_box" id="new_recipe_specific">
-                    <input type="number" class="new_recipe_input" id="new_recipe_time" min="5" max="180" step="5" placeholder="Pagaminimo laikas" />
+                    <div class="input_title">Pagaminimo laikas</div>
+                    <select class="new_recipe_select" id="new_recipe_time">
+                        <option value="" disabled selected>Pagaminimo laikas</option>
+                        <option value="5">5min</option>
+                        <option value="10">10min</option>
+                        <option value="15">15min</option>
+                        <option value="20">20min</option>
+                    </select>
+                    <div class="input_title">Patiekalo kilmė</div>
                     <select class="new_recipe_select" id="new_recipe_country">
-                        <option value="" disabled selected>Patiekalo šalis</option>
+                        <option value="" disabled selected>Patiekalo kilmė</option>
                         <option value="Lietuva">Lietuva</option>
                     </select>
+                    <div class="input_title">Patiekalo tipas</div>
                     <select class="new_recipe_select" id="new_recipe_type">
                         <option value="" disabled selected>Patiekalo tipas</option>
                         <option value="Antrieji patiekalai">Antrieji patiekalai</option>
                     </select>
-                </div>
-
-                <div class="sub_title">Ypatybės</div>
-                <div class="sub_box">
-                    <div id="new_recipe_properties"></div>
-                    <div class="sub_add" id="sub_add_property" onclick="new_recipe_add('property')">Pridėti ypatybę</div>
                 </div>
 
                 <div class="sub_title">Ingredientai</div>
@@ -342,22 +322,33 @@
                     <div class="sub_add" id="sub_add_ingredient" onclick="new_recipe_add('ingredient')">Pridėti ingredientą</div>
                 </div>
 
-                <div class="sub_title">Gaminimo eiga pažingsniui</div>
+                <div class="sub_title">Gaminimo eiga</div>
                 <div class="sub_box">
                     <div id="new_recipe_steps"></div>
                     <div class="sub_add" id="sub_add_step" onclick="new_recipe_add('step')">Pridėti žingsnį</div>
                 </div>
 
+                <div class="sub_title">Ypatybės</div>
+                <div class="sub_box">
+                    <div id="new_recipe_properties">
+                        <div class="new_recipe_checkbox properties_checkbox not_checked" id="new_recipe_checkbox_property_1" onclick="property_indicator(this.id)"><div class="new_recipe_checkbox_box"></div><div class="new_recipe_checkbox_title">Ypatybė 1</div></div>
+                        <div class="new_recipe_checkbox properties_checkbox not_checked" id="new_recipe_checkbox_property_2" onclick="property_indicator(this.id)"><div class="new_recipe_checkbox_box"></div><div class="new_recipe_checkbox_title">Ypatybė 1</div></div>
+                        <div class="new_recipe_checkbox properties_checkbox not_checked" id="new_recipe_checkbox_property_3" onclick="property_indicator(this.id)"><div class="new_recipe_checkbox_box"></div><div class="new_recipe_checkbox_title">Ypatybė 1</div></div>
+                    </div>
+                </div>
+
                 <div class="sub_title">Papildoma</div>
                 <div class="sub_box" id="new_recipe_additional">
+                    <div class="input_title">Gaminimo būdas</div>
                     <select class="new_recipe_select" id="new_recipe_main_cooking_method">
                         <option value="" disabled selected>Pagrindinis gaminimo būdas</option>
                         <option value="Mikrobangų krosnelė">Mikrobangų krosnelė</option>
                     </select>
-                    <div id="new_recipe_celebrations">
-
-                    </div>
-                    <div class="sub_add" id="sub_add_celebration" onclick="new_recipe_add('celebration')">Pridėti šventę</div>
+                    <div class="input_title">Tinka šventei</div>
+                    <select class="new_recipe_select" id="new_recipe_celebration">
+                        <option value="" disabled selected>Šventė</option>
+                        <option value="Kalėdos">Kalėdos</option>
+                    </select>
                 </div>
 
                 <div id="save_new_recipe_button" onclick="new_recipe()">Sukurti</div>

@@ -22,13 +22,19 @@ nfq_akademija_new:
     pattern:  /new
     defaults: { _controller: NFQAkademijaRecipesBundle:New:index }
 
-nfq_akademija_admin:
+
+
+
+nfq_akademija_admin_login:
     pattern:  /admin_zone
-    defaults: { _controller: NFQAkademijaRecipesBundle:AdminLogin:index }
+    defaults: { _controller: NFQAkademijaRecipesBundle:Admin:login }
 
 nfq_akademija_admin_type:
     pattern:  /admin_zone/{type}
     defaults: { _controller: NFQAkademijaRecipesBundle:Admin:index }
+
+
+
 
 nfq_akademija_new_recipe:
     pattern:  /ajax/new_recipe
@@ -87,7 +93,7 @@ nfq_akademija_shoppinglist_add:
     defaults: { _controller: NFQAkademijaRecipesBundle:Ajax:shoppinglist_add}
 
 nfq_akademija_shoppinglist_product_add:
-    pattern:  /ajax/shoppinglist_product_add:
+    pattern:  /ajax/shoppinglist_product_add
     defaults: { _controller: NFQAkademijaRecipesBundle:Ajax:shoppinglist_product_add}
 
 nfq_akademija_shoppinglist_delete:

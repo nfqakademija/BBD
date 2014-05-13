@@ -27,7 +27,10 @@ class AjaxController extends Controller
 
         $image = $request_files->get('new_recipe_image');
 
+
+
         //insert all data into DB in recipes
+        //$entities = $this->getDoctrine()->getManager()->getRepository("NFQAkademija")
 
         $response = array(
             'status' => 'good',

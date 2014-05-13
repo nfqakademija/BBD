@@ -22,9 +22,6 @@ nfq_akademija_new:
     pattern:  /new
     defaults: { _controller: NFQAkademijaRecipesBundle:New:index }
 
-
-
-
 nfq_akademija_admin_login:
     pattern:  /admin_zone
     defaults: { _controller: NFQAkademijaRecipesBundle:Admin:login }
@@ -32,9 +29,6 @@ nfq_akademija_admin_login:
 nfq_akademija_admin_type:
     pattern:  /admin_zone/{type}
     defaults: { _controller: NFQAkademijaRecipesBundle:Admin:index }
-
-
-
 
 nfq_akademija_new_recipe:
     pattern:  /ajax/new_recipe
@@ -165,7 +159,7 @@ nfq_akademija_admin_logout:
     pattern:  /ajax/admin_logout
     defaults: { _controller: NFQAkademijaRecipesBundle:Ajax:admin_logout}
 
-nfq_akademija_admin_login:
+nfq_akademija_ajax_admin_login:
     pattern:  /ajax/admin_login
     defaults: { _controller: NFQAkademijaRecipesBundle:Ajax:admin_login}
 

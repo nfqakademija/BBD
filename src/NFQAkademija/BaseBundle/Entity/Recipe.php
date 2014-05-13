@@ -86,7 +86,6 @@ class Recipe
      */
     protected $likes;
 
-
     /**
      * Creates a Doctrine Collection for members.
      */

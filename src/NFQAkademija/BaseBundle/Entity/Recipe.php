@@ -100,8 +100,6 @@ class Recipe
      */
     public function __construct()
     {
-        $this->recipeProduct = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->producedRecipe = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
 

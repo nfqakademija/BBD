@@ -8,7 +8,7 @@ class DefaultController extends Controller
 {
     public function indexAction($name)
     {
-        $user = $this->getDoctrine()->getManager()->getRepository('NFQAkademijaBaseBundle:User');
+        //$user = $this->getDoctrine()->getManager()->getRepository('NFQAkademijaBaseBundle:User');
 
         return $this->render('NFQAkademijaBaseBundle:Default:index.html.twig', array('name' => $name));
     }

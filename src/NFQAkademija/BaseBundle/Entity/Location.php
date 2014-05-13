@@ -57,12 +57,6 @@ class Location
      * @ORM\Column(name="about", type="string", length=255)
      */
     private $about;
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="photo", type="string", length=255)
-     */
-    private $photo;
 
     /**
      * Get id
@@ -167,28 +161,6 @@ class Location
         return $this->about;
     }
 
-    /**
-     * Set photo
-     *
-     * @param string $photo
-     * @return Location
-     */
-    public function setPhoto($photo)
-    {
-        $this->photo = $photo;
-
-        return $this;
-    }
-
-    /**
-     * Get photo
-     *
-     * @return string 
-     */
-    public function getPhoto()
-    {
-        return $this->photo;
-    }
 
     /**
      * Set latitude

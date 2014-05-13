@@ -186,20 +186,15 @@
                 case "ingredient":
                    ingredients_amount++;
                    var data =
-
                    "<div class='new_ingredient' id='new_recipe_ingredient_" + ingredients_amount + "'>" +
                         "<div class='input_title'>Ingredientas " + ingredients_amount + "</div>" +
                         "<select class='new_recipe_select new_recipe_squeezed_even_more'>" +
                             "<option value='' disabled selected>Ingredientas</option>" +
-                            "<option value='Aštru'>Bananas</option>" +
+                            "{{ options_ingredients | raw}}" +
                         "</select>" +
-                        "<input type='number' class='new_recipe_input new_recipe_quantity' min='0' step='1' placeholder='X'/>" +
+                        "<input type='number' class='new_recipe_input new_recipe_quantity' min='0' step='1' value='0'/>" +
                         "<select class='new_recipe_select new_recipe_units'>" +
-                            "<option value='vnt' selected>vnt</option>" +
-                            "<option value='g'>g</option>" +
-                            "<option value='kg'>kg</option>" +
-                            "<option value='ml'>ml</option>" +
-                            "<option value='l'>l</option>" +
+                             "{{ options_units | raw}}" +
                         "</select>" +
                         "<div class='sub_delete' onclick='new_recipe_delete(\"new_recipe_ingredient_" + ingredients_amount + "\")'></div>" +
                     "</div>";
@@ -299,20 +294,17 @@
                     <div class="input_title">Pagaminimo laikas</div>
                     <select class="new_recipe_select" id="new_recipe_time">
                         <option value="" disabled selected>Pagaminimo laikas</option>
-                        <option value="5">5min</option>
-                        <option value="10">10min</option>
-                        <option value="15">15min</option>
-                        <option value="20">20min</option>
+                        {{ options_times | raw}}
                     </select>
                     <div class="input_title">Patiekalo kilmė</div>
                     <select class="new_recipe_select" id="new_recipe_country">
                         <option value="" disabled selected>Patiekalo kilmė</option>
-                        <option value="Lietuva">Lietuva</option>
+                        {{ options_countries | raw}}
                     </select>
                     <div class="input_title">Patiekalo tipas</div>
                     <select class="new_recipe_select" id="new_recipe_type">
                         <option value="" disabled selected>Patiekalo tipas</option>
-                        <option value="Antrieji patiekalai">Antrieji patiekalai</option>
+                        {{ options_types | raw}}
                     </select>
                 </div>
 
@@ -331,9 +323,7 @@
                 <div class="sub_title">Ypatybės</div>
                 <div class="sub_box">
                     <div id="new_recipe_properties">
-                        <div class="new_recipe_checkbox properties_checkbox not_checked" id="new_recipe_checkbox_property_1" onclick="property_indicator(this.id)"><div class="new_recipe_checkbox_box"></div><div class="new_recipe_checkbox_title">Ypatybė 1</div></div>
-                        <div class="new_recipe_checkbox properties_checkbox not_checked" id="new_recipe_checkbox_property_2" onclick="property_indicator(this.id)"><div class="new_recipe_checkbox_box"></div><div class="new_recipe_checkbox_title">Ypatybė 1</div></div>
-                        <div class="new_recipe_checkbox properties_checkbox not_checked" id="new_recipe_checkbox_property_3" onclick="property_indicator(this.id)"><div class="new_recipe_checkbox_box"></div><div class="new_recipe_checkbox_title">Ypatybė 1</div></div>
+                        {{ checkboxes_properties | raw }}
                     </div>
                 </div>
 
@@ -342,12 +332,12 @@
                     <div class="input_title">Gaminimo būdas</div>
                     <select class="new_recipe_select" id="new_recipe_main_cooking_method">
                         <option value="" disabled selected>Pagrindinis gaminimo būdas</option>
-                        <option value="Mikrobangų krosnelė">Mikrobangų krosnelė</option>
+                        {{ options_main_cooking_methods | raw}}
                     </select>
                     <div class="input_title">Tinka šventei</div>
                     <select class="new_recipe_select" id="new_recipe_celebration">
                         <option value="" disabled selected>Šventė</option>
-                        <option value="Kalėdos">Kalėdos</option>
+                        {{ options_celebrations | raw}}
                     </select>
                 </div>
 

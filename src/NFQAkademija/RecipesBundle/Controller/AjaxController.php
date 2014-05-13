@@ -2,6 +2,7 @@
 
 namespace NFQAkademija\RecipesBundle\Controller;
 
+use NFQAkademija\BaseBundle\Entity\Recipe;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,10 +28,28 @@ class AjaxController extends Controller
 
         $image = $request_files->get('new_recipe_image');
 
-
-
         //insert all data into DB in recipes
-        //$entities = $this->getDoctrine()->getManager()->getRepository("NFQAkademija")
+        $recipe = new Recipe();
+        $recipe->setName($title); //varchar
+        $recipe->setCelebration($celebration); //id
+        $recipe->setCountry($country); //id
+        $recipe->setDescription($about); //varchar
+        $recipe->setMainCookingMethod($main_cooking_method); //id
+        $recipe->setPhoto('/images/profile.png'); //id
+        $recipe->setCookingTime($time); //id
+        $recipe->setType($type); //id
+
+        foreach($properties as $properti){
+            $property = new Property();
+            $property
+            $recipe->addProperty($property);
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($recipe);
+        $em->flush();
+
+
 
         $response = array(
             'status' => 'good',

@@ -2,6 +2,7 @@
 
 namespace NFQAkademija\RecipesBundle\Controller;
 
+use Doctrine\ORM\EntityManager;
 use NFQAkademija\BaseBundle\Entity\Recipe;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
@@ -11,6 +12,8 @@ class AjaxController extends Controller
 {
     public function new_recipeAction(Request $request)
     {
+        /** @var EntityManager $em */
+        $em = $this->getDoctrine()->getManager();
         $request_data = $request->request;
         $request_files = $request->files;
 
@@ -22,7 +25,7 @@ class AjaxController extends Controller
         $celebration = $request_data->get('new_recipe_celebration');
         $type = $request_data->get('new_recipe_type');
 
-        $properties = json_decode($request_data->get('new_recipe_properties'));
+        $propertiesIds = json_decode($request_data->get('new_recipe_properties'));
         $ingredients = json_decode(json_decode($request_data->get('new_recipe_ingredients')));
         $steps = json_decode($request_data->get('new_recipe_steps'));
 
@@ -39,13 +42,12 @@ class AjaxController extends Controller
         $recipe->setCookingTime($time); //id
         $recipe->setType($type); //id
 
-        foreach($properties as $properti){
-            $property = new Property();
-            $property
+        $properties = $em->getRepository("NFQAkademijaBaseBundle:Property")->findBy(array('id' => $propertiesIds));
+
+        foreach ($properties as $property) {
             $recipe->addProperty($property);
         }
 
-        $em = $this->getDoctrine()->getManager();
         $em->persist($recipe);
         $em->flush();
 

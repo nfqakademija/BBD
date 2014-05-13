@@ -4,7 +4,6 @@ namespace NFQAkademija\BaseBundle\Entity;
 
 use FOS\UserBundle\Model\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * User
@@ -76,6 +75,8 @@ class User extends BaseUser
         $this->shoppingList = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
+
+
     /**
      * Get id
      *
@@ -85,93 +86,6 @@ class User extends BaseUser
     {
         return $this->id;
     }
-
-    /**
-     * Set name
-     *
-     * @param string $name
-     * @return User
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    /**
-     * Get name
-     *
-     * @return string 
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * Set surname
-     *
-     * @param string $surname
-     * @return User
-     */
-    public function setSurname($surname)
-    {
-        $this->surname = $surname;
-
-        return $this;
-    }
-
-    /**
-     * Get surname
-     *
-     * @return string 
-     */
-    public function getSurname()
-    {
-        return $this->surname;
-    }
-
-    /**
-     * Add shoppingList
-     *
-     * @param \NFQAkademija\BaseBundle\Entity\ShoppingList $shoppingList
-     * @return User
-     */
-    public function addShoppingList(\NFQAkademija\BaseBundle\Entity\ShoppingList $shoppingList)
-    {
-        $this->shoppingList[] = $shoppingList;
-
-        return $this;
-    }
-
-    /**
-     * Remove shoppingList
-     *
-     * @param \NFQAkademija\BaseBundle\Entity\ShoppingList $shoppingList
-     */
-    public function removeShoppingList(\NFQAkademija\BaseBundle\Entity\ShoppingList $shoppingList)
-    {
-        $this->shoppingList->removeElement($shoppingList);
-    }
-
-    /**
-     * Get shoppingList
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getShoppingList()
-    {
-        return $this->shoppingList;
-    }
-
-    /**
-     * Add shoppingList
-     *
-     * @param \NFQAkademija\BaseBundle\Entity\ShoppingList $shoppingList
-     * @return User
-     */
-
 
     /**
      * Set facebook_id
@@ -263,6 +177,85 @@ class User extends BaseUser
     public function getGoogleAccessToken()
     {
         return $this->google_access_token;
+    }
+
+    /**
+     * Set name
+     *
+     * @param string $name
+     * @return User
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string 
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Set surname
+     *
+     * @param string $surname
+     * @return User
+     */
+    public function setSurname($surname)
+    {
+        $this->surname = $surname;
+
+        return $this;
+    }
+
+    /**
+     * Get surname
+     *
+     * @return string 
+     */
+    public function getSurname()
+    {
+        return $this->surname;
+    }
+
+    /**
+     * Add shoppingList
+     *
+     * @param \NFQAkademija\BaseBundle\Entity\ShoppingList $shoppingList
+     * @return User
+     */
+    public function addShoppingList(\NFQAkademija\BaseBundle\Entity\ShoppingList $shoppingList)
+    {
+        $this->shoppingList[] = $shoppingList;
+
+        return $this;
+    }
+
+    /**
+     * Remove shoppingList
+     *
+     * @param \NFQAkademija\BaseBundle\Entity\ShoppingList $shoppingList
+     */
+    public function removeShoppingList(\NFQAkademija\BaseBundle\Entity\ShoppingList $shoppingList)
+    {
+        $this->shoppingList->removeElement($shoppingList);
+    }
+
+    /**
+     * Get shoppingList
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getShoppingList()
+    {
+        return $this->shoppingList;
     }
 
     /**

@@ -152,8 +152,6 @@ class Recipe
         return $this->description;
     }
 
-
-
     /**
      * Set photo
      *
@@ -175,29 +173,6 @@ class Recipe
     public function getPhoto()
     {
         return $this->photo;
-    }
-
-    /**
-     * Set cookingDuration
-     *
-     * @param \DateTime $cookingDuration
-     * @return Recipe
-     */
-    public function setCookingDuration($cookingDuration)
-    {
-        $this->cookingDuration = $cookingDuration;
-
-        return $this;
-    }
-
-    /**
-     * Get cookingDuration
-     *
-     * @return \DateTime 
-     */
-    public function getCookingDuration()
-    {
-        return $this->cookingDuration;
     }
 
     /**
@@ -326,49 +301,49 @@ class Recipe
     }
 
     /**
-     * Set type
+     * Set types
      *
-     * @param \NFQAkademija\BaseBundle\Entity\Type $type
+     * @param \NFQAkademija\BaseBundle\Entity\Type $types
      * @return Recipe
      */
-    public function setType(\NFQAkademija\BaseBundle\Entity\Type $type = null)
+    public function setTypes(\NFQAkademija\BaseBundle\Entity\Type $types = null)
     {
-        $this->type = $type;
+        $this->types = $types;
 
         return $this;
     }
 
     /**
-     * Get type
+     * Get types
      *
      * @return \NFQAkademija\BaseBundle\Entity\Type 
      */
-    public function getType()
+    public function getTypes()
     {
-        return $this->type;
+        return $this->types;
     }
 
     /**
-     * Set tuser
+     * Set user
      *
-     * @param \NFQAkademija\BaseBundle\Entity\User $tuser
+     * @param \NFQAkademija\BaseBundle\Entity\User $user
      * @return Recipe
      */
-    public function setTuser(\NFQAkademija\BaseBundle\Entity\User $tuser = null)
+    public function setUser(\NFQAkademija\BaseBundle\Entity\User $user = null)
     {
-        $this->tuser = $tuser;
+        $this->user = $user;
 
         return $this;
     }
 
     /**
-     * Get tuser
+     * Get user
      *
      * @return \NFQAkademija\BaseBundle\Entity\User 
      */
-    public function getTuser()
+    public function getUser()
     {
-        return $this->tuser;
+        return $this->user;
     }
 
     /**
@@ -468,51 +443,5 @@ class Recipe
     public function getProducedRecipes()
     {
         return $this->producedRecipes;
-    }
-
-    /**
-     * Set types
-     *
-     * @param \NFQAkademija\BaseBundle\Entity\Type $types
-     * @return Recipe
-     */
-    public function setTypes(\NFQAkademija\BaseBundle\Entity\Type $types = null)
-    {
-        $this->types = $types;
-
-        return $this;
-    }
-
-    /**
-     * Get types
-     *
-     * @return \NFQAkademija\BaseBundle\Entity\Type 
-     */
-    public function getTypes()
-    {
-        return $this->types;
-    }
-
-    /**
-     * Set user
-     *
-     * @param \NFQAkademija\BaseBundle\Entity\User $user
-     * @return Recipe
-     */
-    public function setUser(\NFQAkademija\BaseBundle\Entity\User $user = null)
-    {
-        $this->user = $user;
-
-        return $this;
-    }
-
-    /**
-     * Get user
-     *
-     * @return \NFQAkademija\BaseBundle\Entity\User 
-     */
-    public function getUser()
-    {
-        return $this->user;
     }
 }

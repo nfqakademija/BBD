@@ -41,6 +41,7 @@ class UserFridge
         $this->products = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
+
     /**
      * Get id
      *

@@ -7,6 +7,9 @@ use NFQAkademija\BaseBundle\Entity\Recipe;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use NFQAkademija\BaseBundle\Entity\Fact;
+use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
 
 class AjaxController extends Controller
 {
@@ -50,8 +53,6 @@ class AjaxController extends Controller
 
         $em->persist($recipe);
         $em->flush();
-
-
 
         $response = array(
             'status' => 'good',
@@ -894,6 +895,100 @@ class AjaxController extends Controller
         $response = array(
             'status' => 'good',
             'places' => $places,
+        );
+
+        $jsonResponse = new Response(json_encode($response));
+        $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
+        return $jsonResponse;
+    }
+
+    public function admin_new_factAction(Request $request)
+    {
+        $request_data = $request->request;
+        $fact_text = $request_data->get('fact_text');
+
+        /** @var EntityManager $em */
+        $em = $this->getDoctrine()->getManager();
+
+        //insert fact into DB
+        $fact = new Fact();
+        $fact->setText($fact_text);
+        $em->persist($fact);
+        $em->flush();
+
+
+        //get fact data to show it
+
+        ///*
+        $repository = $this->getDoctrine()->getRepository('NFQAkademijaBaseBundle:Fact');
+        $query = $repository->createQueryBuilder('f')
+            ->select('f.id, f.text')
+            ->setMaxResults(1)
+            ->orderBy('f.id', 'DESC')
+            ->getQuery();
+
+        //*/
+        /*
+        $dql = "SELECT f FROM NFQAkademijaBaseBundle:Fact f ORDER BY f.id DESC LIMIT 1";
+        $query = $em->createQuery($dql);
+        */
+
+        $latest_fact = $query->getSingleResult();
+        $id = $latest_fact->getId();
+        $text = $latest_fact->getText();
+
+        $fact_data =
+        "<div id='fact_$id'>
+            <div class='input_title'>$id</div>
+            <input type='text' class='new_recipe_input' placeholder='Faktas' value='$text'/>
+            <div class='sub_save' onclick=\"save_fact('$id')\"></div>
+            <div class='sub_delete' onclick=\"delete_fact('$id')\"></div>
+        </div>";
+
+        $response = array(
+            'status' => 'good',
+            'fact_data' => $id,
+        );
+
+        $jsonResponse = new Response(json_encode($response));
+        $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
+        return $jsonResponse;
+    }
+
+    public function admin_delete_factAction(Request $request)
+    {
+        $request_data = $request->request;
+        $fact_ID = $request_data->get('fact_ID');
+
+        /** @var EntityManager $em */
+        $em = $this->getDoctrine()->getManager();
+        $fact = $em->getRepository('NFQAkademijaBaseBundle:Fact')->find($fact_ID);
+        $em->remove($fact);
+        $em->flush();
+
+        $response = array(
+            'status' => 'good',
+        );
+
+        $jsonResponse = new Response(json_encode($response));
+        $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
+        return $jsonResponse;
+    }
+
+    public function admin_save_factAction(Request $request)
+    {
+        $request_data = $request->request;
+        $fact_ID = $request_data->get('fact_ID');
+        $fact_text = $request_data->get('fact_text');
+
+        /** @var EntityManager $em */
+        $em = $this->getDoctrine()->getManager();
+        $fact = $em->getRepository('NFQAkademijaBaseBundle:Fact')->find($fact_ID);
+        $fact->setText($fact_text);
+        $em->flush();
+
+        $response = array(
+            'status' => 'good',
         );
 
         $jsonResponse = new Response(json_encode($response));

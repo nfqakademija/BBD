@@ -58,7 +58,7 @@
             formData.append('fact_text', fact_text);
             $.ajax({
                 type: 'POST',
-                url: '/ajax/save_fact',
+                url: '/ajax/admin_save_fact',
                 data: formData,
                 dataType: 'json',
                 beforeSend:function(){
@@ -83,7 +83,7 @@
             formData.append('fact_ID', ID);
             $.ajax({
                 type: 'POST',
-                url: '/ajax/delete_fact',
+                url: '/ajax/admin_delete_fact',
                 data: formData,
                 dataType: 'json',
                 beforeSend:function(){
@@ -101,6 +101,7 @@
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
                     toast('Įvyko klaida. Perkraukite puslapį','bad','logo');
+                    console.log(xhr.responseText)
                 }
             });
         }
@@ -111,7 +112,7 @@
             formData.append('fact_text', fact_text);
             $.ajax({
                 type: 'POST',
-                url: '/ajax/new_fact',
+                url: '/ajax/admin_new_fact',
                 data: formData,
                 dataType: 'json',
                 beforeSend:function(){
@@ -124,6 +125,7 @@
                         setTimeout(function(){scroll_content.refresh()},0);
                         toast('Faktas sukurtas','good','logo');
                         var fact_data = data.fact_data;
+                        alert(fact_data)
                         $("#data_container").prepend(fact_data);
                     }else{
                         toast('Įvyko klaida','bad','logo');
@@ -131,6 +133,7 @@
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
                     toast('Įvyko klaida. Perkraukite puslapį','bad','logo');
+                    console.log(xhr.responseText)
                 }
             });
         }
@@ -205,6 +208,10 @@
             float:right;
             margin-bottom:10px;
         }
+
+        #data_container{
+            float:left;
+        }
     </style>
 
 {% endblock %}
@@ -238,23 +245,9 @@
             <div class="input_title">Faktas</div><input style="width:440px;" type="text" class="new_recipe_input" id="new_fact" placeholder="Faktas" />
             <div id="save_new_recipe_button" onclick="new_fact()">Pridėti</div>
 
-            <div class="sub_title" id="data_container">Faktai</div>
-            <div id="fact_1">
-                <div class="input_title">1</div><input type="text" class="new_recipe_input" placeholder="Faktas" value="aaafkat"/>
-                <div class='sub_save' onclick="save_fact('1')"></div>
-                <div class='sub_delete' onclick="delete_fact('1')"></div>
-            </div>
-
-            <div id="fact_2">
-                <div class="input_title">1</div><input type="text" class="new_recipe_input" placeholder="Faktas" value="aaafkat"/>
-                <div class='sub_save' onclick="save_fact('2')"></div>
-                <div class='sub_delete' onclick="delete_fact('2')"></div>
-            </div>
-
-            <div id="fact_3">
-                <div class="input_title">1</div><input type="text" class="new_recipe_input" placeholder="Faktas" value="aaafkat"/>
-                <div class='sub_save' onclick="save_fact('3')"></div>
-                <div class='sub_delete' onclick="delete_fact('3')"></div>
+            <div class="sub_title">Faktai</div>
+            <div id="data_container">
+                {{ facts | raw }}
             </div>
         </div>
     </div>

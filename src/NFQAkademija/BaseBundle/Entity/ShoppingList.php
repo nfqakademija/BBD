@@ -58,7 +58,7 @@ class ShoppingList
      * @param \NFQAkademija\BaseBundle\Entity\ShoppingListProduct $products
      * @return ShoppingList
      */
-    public function addProduct(\NFQAkademija\BaseBundle\Entity\ShoppingListProduct $products)
+    public function addProduct(ShoppingListProduct $products)
     {
         $this->products[] = $products;
 
@@ -70,9 +70,10 @@ class ShoppingList
      *
      * @param \NFQAkademija\BaseBundle\Entity\ShoppingListProduct $products
      */
-    public function removeProduct(\NFQAkademija\BaseBundle\Entity\ShoppingListProduct $products)
+    public function removeProduct(ShoppingListProduct $products)
     {
-        $this->products->removeElement($products);
+        /** @var $products ShoppingListProduct */
+        $this->removeProduct($products);
     }
 
     /**

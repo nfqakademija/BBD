@@ -181,7 +181,7 @@ class Recipe
      * @param \NFQAkademija\BaseBundle\Entity\Property $properties
      * @return Recipe
      */
-    public function addProperty(\NFQAkademija\BaseBundle\Entity\Property $properties)
+    public function addProperty(Property $properties)
     {
         $this->properties[] = $properties;
 
@@ -193,9 +193,10 @@ class Recipe
      *
      * @param \NFQAkademija\BaseBundle\Entity\Property $properties
      */
-    public function removeProperty(\NFQAkademija\BaseBundle\Entity\Property $properties)
+    public function removeProperty(Property $properties)
     {
-        $this->properties->removeElement($properties);
+        /** @var $properties Property */
+        $this->removeProperty($properties);
     }
 
     /**
@@ -214,7 +215,7 @@ class Recipe
      * @param \NFQAkademija\BaseBundle\Entity\Country $country
      * @return Recipe
      */
-    public function setCountry(\NFQAkademija\BaseBundle\Entity\Country $country = null)
+    public function setCountry(Country $country = null)
     {
         $this->country = $country;
 
@@ -237,7 +238,7 @@ class Recipe
      * @param \NFQAkademija\BaseBundle\Entity\Celebration $celebration
      * @return Recipe
      */
-    public function setCelebration(\NFQAkademija\BaseBundle\Entity\Celebration $celebration = null)
+    public function setCelebration(Celebration $celebration = null)
     {
         $this->celebration = $celebration;
 
@@ -260,7 +261,7 @@ class Recipe
      * @param \NFQAkademija\BaseBundle\Entity\CookingTime $cookingTime
      * @return Recipe
      */
-    public function setCookingTime(\NFQAkademija\BaseBundle\Entity\CookingTime $cookingTime = null)
+    public function setCookingTime(CookingTime $cookingTime = null)
     {
         $this->cookingTime = $cookingTime;
 
@@ -283,7 +284,7 @@ class Recipe
      * @param \NFQAkademija\BaseBundle\Entity\MainCookingMethod $mainCookingMethod
      * @return Recipe
      */
-    public function setMainCookingMethod(\NFQAkademija\BaseBundle\Entity\MainCookingMethod $mainCookingMethod = null)
+    public function setMainCookingMethod(MainCookingMethod $mainCookingMethod = null)
     {
         $this->mainCookingMethod = $mainCookingMethod;
 
@@ -306,7 +307,7 @@ class Recipe
      * @param \NFQAkademija\BaseBundle\Entity\Type $types
      * @return Recipe
      */
-    public function setTypes(\NFQAkademija\BaseBundle\Entity\Type $types = null)
+    public function setTypes(Type $types = null)
     {
         $this->types = $types;
 
@@ -329,7 +330,7 @@ class Recipe
      * @param \NFQAkademija\BaseBundle\Entity\User $user
      * @return Recipe
      */
-    public function setUser(\NFQAkademija\BaseBundle\Entity\User $user = null)
+    public function setUser(User $user = null)
     {
         $this->user = $user;
 
@@ -352,7 +353,7 @@ class Recipe
      * @param \NFQAkademija\BaseBundle\Entity\Step $steps
      * @return Recipe
      */
-    public function addStep(\NFQAkademija\BaseBundle\Entity\Step $steps)
+    public function addStep(Step $steps)
     {
         $this->steps[] = $steps;
 
@@ -364,9 +365,10 @@ class Recipe
      *
      * @param \NFQAkademija\BaseBundle\Entity\Step $steps
      */
-    public function removeStep(\NFQAkademija\BaseBundle\Entity\Step $steps)
+    public function removeStep(Step $steps)
     {
-        $this->steps->removeElement($steps);
+        /** @var $steps Step */
+        $this->removeStep($steps);
     }
 
     /**
@@ -385,7 +387,7 @@ class Recipe
      * @param \NFQAkademija\BaseBundle\Entity\Like $likes
      * @return Recipe
      */
-    public function addLike(\NFQAkademija\BaseBundle\Entity\Like $likes)
+    public function addLike(Like $likes)
     {
         $this->likes[] = $likes;
 
@@ -397,9 +399,10 @@ class Recipe
      *
      * @param \NFQAkademija\BaseBundle\Entity\Like $likes
      */
-    public function removeLike(\NFQAkademija\BaseBundle\Entity\Like $likes)
+    public function removeLike(Like $likes)
     {
-        $this->likes->removeElement($likes);
+        /** @var $likes Like */
+        $this->removeLike($likes);
     }
 
     /**
@@ -418,7 +421,7 @@ class Recipe
      * @param \NFQAkademija\BaseBundle\Entity\ProducedRecipe $producedRecipes
      * @return Recipe
      */
-    public function addProducedRecipe(\NFQAkademija\BaseBundle\Entity\ProducedRecipe $producedRecipes)
+    public function addProducedRecipe(ProducedRecipe $producedRecipes)
     {
         $this->producedRecipes[] = $producedRecipes;
 
@@ -430,9 +433,10 @@ class Recipe
      *
      * @param \NFQAkademija\BaseBundle\Entity\ProducedRecipe $producedRecipes
      */
-    public function removeProducedRecipe(\NFQAkademija\BaseBundle\Entity\ProducedRecipe $producedRecipes)
+    public function removeProducedRecipe(ProducedRecipe $producedRecipes)
     {
-        $this->producedRecipes->removeElement($producedRecipes);
+        /** @var $producedRecipe ProducedRecipe */
+        $this->removeProducedRecipe($producedRecipes);
     }
 
     /**

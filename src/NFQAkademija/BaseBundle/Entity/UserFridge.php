@@ -58,7 +58,7 @@ class UserFridge
      * @param \NFQAkademija\BaseBundle\Entity\User $users
      * @return UserFridge
      */
-    public function addUser(\NFQAkademija\BaseBundle\Entity\User $users)
+    public function addUser(User $users)
     {
         $this->users[] = $users;
 
@@ -70,9 +70,10 @@ class UserFridge
      *
      * @param \NFQAkademija\BaseBundle\Entity\User $users
      */
-    public function removeUser(\NFQAkademija\BaseBundle\Entity\User $users)
+    public function removeUser(User $users)
     {
-        $this->users->removeElement($users);
+        /** @var $users User */
+        $this->removeUser($users);
     }
 
     /**
@@ -91,7 +92,7 @@ class UserFridge
      * @param \NFQAkademija\BaseBundle\Entity\UserProduct $products
      * @return UserFridge
      */
-    public function addProduct(\NFQAkademija\BaseBundle\Entity\UserProduct $products)
+    public function addProduct(UserProduct $products)
     {
         $this->products[] = $products;
 
@@ -103,9 +104,10 @@ class UserFridge
      *
      * @param \NFQAkademija\BaseBundle\Entity\UserProduct $products
      */
-    public function removeProduct(\NFQAkademija\BaseBundle\Entity\UserProduct $products)
+    public function removeProduct(UserProduct $products)
     {
-        $this->products->removeElement($products);
+        /** @var $products UserProduct */
+        $this->removeProduct($products);
     }
 
     /**

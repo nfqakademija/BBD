@@ -85,15 +85,7 @@ class Recipe
      * @ORM\OneToMany(targetEntity="\NFQAkademija\BaseBundle\Entity\Like", mappedBy="recipe")
      */
     protected $likes;
-    /**
-     * @ORM\OneToMany(targetEntity="\NFQAkademija\BaseBundle\Entity\ProducedRecipe", mappedBy="recipe")
-     */
-    protected $producedRecipes;
 
-    /**
-     * @ORM\OneToMany(targetEntity="\NFQAkademija\BaseBundle\Entity\RecipeProduct", mappedBy="recipe")
-     */
-    protected $recipeProducts;
 
     /**
      * Creates a Doctrine Collection for members.
@@ -454,71 +446,4 @@ class Recipe
         return $this->likes;
     }
 
-    /**
-     * Add producedRecipes
-     *
-     * @param \NFQAkademija\BaseBundle\Entity\ProducedRecipe $producedRecipes
-     * @return Recipe
-     */
-    public function addProducedRecipe(\NFQAkademija\BaseBundle\Entity\ProducedRecipe $producedRecipes)
-    {
-        $this->producedRecipes[] = $producedRecipes;
-
-        return $this;
-    }
-
-    /**
-     * Remove producedRecipes
-     *
-     * @param \NFQAkademija\BaseBundle\Entity\ProducedRecipe $producedRecipes
-     */
-    public function removeProducedRecipe(\NFQAkademija\BaseBundle\Entity\ProducedRecipe $producedRecipes)
-    {
-        /** @var $producedRecipes ProducedRecipe */
-        $this->removeProducedRecipe($producedRecipes);
-    }
-
-    /**
-     * Get producedRecipes
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getProducedRecipes()
-    {
-        return $this->producedRecipes;
-    }
-
-    /**
-     * Add recipeProducts
-     *
-     * @param \NFQAkademija\BaseBundle\Entity\RecipeProduct $recipeProducts
-     * @return Recipe
-     */
-    public function addRecipeProduct(\NFQAkademija\BaseBundle\Entity\RecipeProduct $recipeProducts)
-    {
-        $this->recipeProducts[] = $recipeProducts;
-
-        return $this;
-    }
-
-    /**
-     * Remove recipeProducts
-     *
-     * @param \NFQAkademija\BaseBundle\Entity\RecipeProduct $recipeProducts
-     */
-    public function removeRecipeProduct(\NFQAkademija\BaseBundle\Entity\RecipeProduct $recipeProducts)
-    {
-        /** @var $recipeProducts RecipeProduct */
-        $this->removeRecipeProduct($recipeProducts);
-    }
-
-    /**
-     * Get recipeProducts
-     *
-     * @return \Doctrine\Common\Collections\Collection
-     */
-    public function getRecipeProducts()
-    {
-        return $this->recipeProducts;
-    }
 }

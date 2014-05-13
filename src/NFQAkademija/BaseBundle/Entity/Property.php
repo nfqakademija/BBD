@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="properties")
  * @ORM\Entity
  */
+
 class Property
 {
     /**
@@ -19,6 +20,7 @@ class Property
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
+
     private $id;
 
     /**
@@ -26,6 +28,7 @@ class Property
      *
      * @ORM\Column(name="name", type="string", length=255)
      */
+
     private $name;
 
     /**
@@ -33,6 +36,7 @@ class Property
      *
      * @ORM\Column(name="photo", type="string", length=255)
      */
+
     private $photo;
 
     /**
@@ -109,7 +113,7 @@ class Property
      * @param \NFQAkademija\BaseBundle\Entity\Recipe $recipes
      * @return Property
      */
-    public function addRecipe(\NFQAkademija\BaseBundle\Entity\Recipe $recipes)
+    public function addRecipe(Recipe $recipes)
     {
         $this->recipes[] = $recipes;
 
@@ -121,7 +125,7 @@ class Property
      *
      * @param \NFQAkademija\BaseBundle\Entity\Recipe $recipes
      */
-    public function removeRecipe(\NFQAkademija\BaseBundle\Entity\Recipe $recipes)
+    public function removeRecipe(Recipe $recipes)
     {
         $this->recipes->removeElement($recipes);
     }

@@ -60,100 +60,76 @@ function profile_recipes(type){
     $(".profile_line_box").removeClass().addClass('profile_line_box');
     $("#profile_line_box_" + type).addClass('profile_line_box_' + type + '_active');
     recipe_size = calculate_recipe_size();
-    //ajax to get recipes
-    var recipes = [];
-    recipes[0] = ["0","/images/food (0).jpg", "title0"];
-    recipes[1] = ["1","/images/food (1).png", "title0"];
-    recipes[2] = ["2","/images/food (2).jpg", "title0"];
-    recipes[3] = ["3","/images/food (3).jpg", "title0"];
-    recipes[4] = ["4","/images/food (4).jpg", "title0"];
-    recipes[5] = ["5","/images/food (5).jpg", "title0"];
-    recipes[6] = ["6","/images/food (6).jpg", "title0"];
-    recipes[7] = ["7","/images/food (7).jpg", "title0"];
-    recipes[8] = ["8","/images/food (8).jpg", "title0"];
-    recipes[9] = ["9","/images/food (9).jpg", "title0"];
-    recipes[10] = ["10","/images/food (10).jpg", "title0"];
-    recipes[11] = ["11","/images/food (11).jpg", "title0"];
-    recipes[12] = ["12","/images/food (12).jpg", "title0"];
-    recipes[13] = ["13","/images/food (13).jpg", "title0"];
-    recipes[14] = ["14","/images/food (14).jpg", "title0"];
-    recipes[15] = ["15","/images/food (15).jpg", "title0"];
-    recipes[16] = ["16","/images/food (16).jpg", "title0"];
-    recipes[17] = ["17","/images/food (17).jpg", "title0"];
-    recipes[18] = ["18","/images/food (18).jpg", "title0"];
-    recipes[19] = ["19","/images/food (19).jpg", "title0"];
-    recipes[20] = ["20","/images/food (20).jpg", "title0"];
 
-
-    $('#profile_recipes').fadeOut(transition_time,function(){
-        $('#profile_recipes').html('');
-
-        if(type == "created"){
-            var appendable_data = "<div class='recipe_box' style=\"background-color:white;background-size:70% 70%;background-image: url('/images/new_recipe.png');width:" + recipe_size + "px;height:" + recipe_size +  "px;\" onclick='go_to_new_recipe()'><div class='recipe_box_info'>Sukurti naują receptą</div></div>";
-            $("#profile_recipes").append(appendable_data);
-        }
-
-        for(i = 0; i < recipes.length; i++){
-            var data = recipes[i];
-            var id = data[0];
-            var image = data[1];
-            var title = data[2];
-            var appendable_data = "<div class='recipe_box' id='recipe_" + id + "' style=\"background-image: url('" + image + "');width:" + recipe_size + "px;height:" + recipe_size +  "px;\" onclick=\"show_recipe('" + id + "')\"><div class='recipe_box_info'>" + title + "</div></div>";
-            $("#profile_recipes").append(appendable_data);
-        }
-
-        $('#profile_recipes').fadeIn(transition_time);
-        setTimeout(function(){scroll_content.refresh();},0);
-    });
-
-
-
-
-}
-
-function append_recipes(){
-    $("#scroller_content").html('');
-    //later need from ajax with filters
-    var recipes = [];
-    recipes[0] = ["0","/images/food (0).jpg", "title0"];
-    recipes[1] = ["1","/images/food (1).png", "title0"];
-    recipes[2] = ["2","/images/food (2).jpg", "title0"];
-    recipes[3] = ["3","/images/food (3).jpg", "title0"];
-    recipes[4] = ["4","/images/food (4).jpg", "title0"];
-    recipes[5] = ["5","/images/food (5).jpg", "title0"];
-    recipes[6] = ["6","/images/food (6).jpg", "title0"];
-    recipes[7] = ["7","/images/food (7).jpg", "title0"];
-    recipes[8] = ["8","/images/food (8).jpg", "title0"];
-    recipes[9] = ["9","/images/food (9).jpg", "title0"];
-    recipes[10] = ["10","/images/food (10).jpg", "title0"];
-    recipes[11] = ["11","/images/food (11).jpg", "title0"];
-    recipes[12] = ["12","/images/food (12).jpg", "title0"];
-    recipes[13] = ["13","/images/food (13).jpg", "title0"];
-    recipes[14] = ["14","/images/food (14).jpg", "title0"];
-    recipes[15] = ["15","/images/food (15).jpg", "title0"];
-    recipes[16] = ["16","/images/food (16).jpg", "title0"];
-    recipes[17] = ["17","/images/food (17).jpg", "title0"];
-
-    for(i = 0; i < recipes.length; i++){
-        append_recipe(recipes[i]);
-    }
-
-    setTimeout(function(){scroll_content.refresh()},0);
-
-    /*
+    var formData = new FormData();
+    formData.append('profile_recipes_type',type);
     $.ajax({
         type: 'POST',
-        url: 'ajax.php',
-        data: { append_files: 'true' },
+        url: '/ajax/profile_recipes',
+        data: formData,
         dataType: 'json',
-        success:function(data){
-            var recipes = data.recipes;
-            for(i = 0; i < recipes.length; i++){
-                append_recipe(recipes[i]);
+        beforeSend: function () {
+        },
+        processData: false,
+        contentType: false,
+        success: function (data) {
+            if (data.status == "good") {
+                var recipes = data.recipes;
+
+                $('#profile_recipes').fadeOut(transition_time,function(){
+                    $('#profile_recipes').html('');
+
+                    if(type == "created"){
+                        var appendable_data = "<div class='recipe_box' style=\"background-color:white;background-size:70% 70%;background-image: url('/images/new_recipe.png');width:" + recipe_size + "px;height:" + recipe_size +  "px;\" onclick='go_to_new_recipe()'><div class='recipe_box_info'>Sukurti naują receptą</div></div>";
+                        $("#profile_recipes").append(appendable_data);
+                    }
+
+                    for(i = 0; i < recipes.length; i++){
+                        var data = recipes[i];
+                        var id = data[0];
+                        var image = data[1];
+                        var title = data[2];
+                        var appendable_data = "<div class='recipe_box' id='recipe_" + id + "' style=\"background-image: url('" + image + "');width:" + recipe_size + "px;height:" + recipe_size +  "px;\" onclick=\"show_recipe('" + id + "')\"><div class='recipe_box_info'>" + title + "</div></div>";
+                        $("#profile_recipes").append(appendable_data);
+                    }
+
+                    $('#profile_recipes').fadeIn(transition_time);
+                    setTimeout(function(){scroll_content.refresh();},0);
+                });
+
             }
         }
     });
-    */
+}
+
+function load_recipes(reset){
+    if(reset == 'true'){
+        $("#scroller_content").html('');
+        setTimeout(function(){scroll_content.scrollTo(0, 0)},0);
+        setTimeout(function(){scroll_content.refresh()},0);
+    }
+
+    var formData = new FormData();
+    formData.append('reset', reset);
+    $.ajax({
+        type: 'POST',
+        url: '/ajax/load_recipes',
+        data: formData,
+        dataType: 'json',
+        beforeSend: function () {
+        },
+        processData: false,
+        contentType: false,
+        success: function (data) {
+            if (data.status == "good") {
+                var recipes = data.recipes;
+                for(i = 0; i < recipes.length; i++){
+                    append_recipe(recipes[i]);
+                }
+                setTimeout(function(){scroll_content.refresh()},0);
+            }
+        }
+    });
 }
 
 function append_recipe(data){
@@ -165,61 +141,96 @@ function append_recipe(data){
     $("#scroller_content").append(appendable_data);
 }
 
-function append_products(){
-    $("#scroller_content").html('');
-
-    //ajax to get suggestions shoppinglist
-    var products = [];
-    products[0] = ["0","/images/food (0).jpg", "title0"];
-    products[1] = ["1","/images/food (1).png", "title0"];
-    products[2] = ["2","/images/food (2).jpg", "title0"];
-    products[3] = ["3","/images/food (3).jpg", "title0"];
-    products[4] = ["4","/images/food (4).jpg", "title0"];
-    products[5] = ["5","/images/food (5).jpg", "title0"];
-    products[6] = ["6","/images/food (6).jpg", "title0"];
-    products[7] = ["7","/images/food (7).jpg", "title0"];
-    products[8] = ["8","/images/food (8).jpg", "title0"];
-    products[9] = ["9","/images/food (9).jpg", "title0"];
-    products[10] = ["10","/images/food (10).jpg", "title0"];
-    products[11] = ["11","/images/food (11).jpg", "title0"];
-    products[12] = ["12","/images/food (12).jpg", "title0"];
-    products[13] = ["13","/images/food (13).jpg", "title0"];
-    products[14] = ["14","/images/food (14).jpg", "title0"];
-    products[15] = ["15","/images/food (15).jpg", "title0"];
-    products[16] = ["16","/images/food (16).jpg", "title0"];
-    products[17] = ["17","/images/food (17).jpg", "title0"];
-
-    for(i = 0; i < products.length; i++){
-        append_product(products[i]);
+function load_products(reset){
+    if(reset == "true"){
+        $("#scroller_content").html('');
+        setTimeout(function(){scroll_content.refresh()},0);
+        setTimeout(function(){scroll_content.scrollTo(0, 0)},0);
     }
 
-    setTimeout(function(){scroll_content.refresh()},100);
+
+    var formData = new FormData();
+    formData.append('load_products','true');
+    $.ajax({
+        type: 'POST',
+        url: '/ajax/load_products',
+        data: formData,
+        dataType: 'json',
+        beforeSend: function () {
+        },
+        processData: false,
+        contentType: false,
+        success: function (data) {
+            if (data.status == "good") {
+                var products = data.products;
+                for(i = 0; i < products.length; i++){
+                    append_product(products[i]);
+                }
+                setTimeout(function(){scroll_content.refresh()},0);
+            }
+        }
+    });
 }
+
+
 
 function append_product(data){
     var id = data[0];
     var image = data[1];
     var title = data[2];
-
     var appendable_data = "<div class='recipe_box' id='product_" + id + "' style=\"background-image: url('" + image + "');width:" + recipe_size + "px;height:" + recipe_size +  "px;\"><div class='recipe_box_info'>" + title + "</div><div class='recipe_box_button' id='recipe_box_button_add_to_shoppinglist' onclick=\"add_product('" + id + "')\"></div></div>";
 
     $("#scroller_content").append(appendable_data);
 }
 
 function add_product(ID){
-    $('#product_' + ID).fadeOut(transition_time);
+    var formData = new FormData();
+    formData.append('product_id',ID);
+    $.ajax({
+        type: 'POST',
+        url: '/ajax/shoppinglist_product_add',
+        data: formData,
+        dataType: 'json',
+        beforeSend: function () {
+        },
+        processData: false,
+        contentType: false,
+        success: function (data) {
+            if (data.status == "good") {
+                $('#product_' + ID).fadeOut(transition_time);
+                setTimeout(function(){scroll_content.refresh();}, transition_time);
+            }
+        }
+    });
 }
 
 function append_shoppinglist(){
-    //ajax to get all shoppinglist from user and show it
+    var formData = new FormData();
+    formData.append('append_shoppinglist','true');
+    $.ajax({
+        type: 'POST',
+        url: '/ajax/append_shoppinglist',
+        data: formData,
+        dataType: 'json',
+        beforeSend: function () {
+        },
+        processData: false,
+        contentType: false,
+        success: function (data) {
+            if (data.status == "good") {
+
+            }
+        }
+    });
 }
 
-function show_loading_more(){
+function show_loading_recipe(){
     var loading_more_box = "<div class='recipe_box' id='loading_more_box' style=\"width:" + recipe_size + "px;height:" + recipe_size +  "px;\"></div>";
-    $("#content_wrapper").append(loading_more_box);
+    $("#scroller_content").append(loading_more_box);
+    setTimeout(function(){scroll_content.refresh();},0);
 }
 
-function hide_loading_more(){
+function hide_loading_recipe(){
     $('#loading_more_box').remove();
 }
 
@@ -327,207 +338,96 @@ function show_filters(array_of_filters, index){
 
 function filter_start(){
     full_sidebar();
-    filter_level = 1;
-    var filters = [];
-    filters[0] = "<div class='filter_element untouchable' id='types' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/types.png');\"></div><div class='filter_element_text'>Tipai</div></div>";
-    filters[1] = "<div class='filter_element untouchable' id='characteristics' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/characteristics.png');\"></div><div class='filter_element_text'>Ypatybės</div></div>";
-    filters[2] = "<div class='filter_element untouchable' id='times' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/times.png');\"></div><div class='filter_element_text'>Laikai</div></div>";
-    filters[3] = "<div class='filter_element untouchable' id='countries' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/countries.png');\"></div><div class='filter_element_text'>Šalys</div></div>";
-    filters[4] = "<div class='filter_element untouchable' id='ingredients_categories' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/ingredients_categories.png');\"></div><div class='filter_element_text'>Ingredientai</div></div>";
-    filters[5] = "<div class='filter_element untouchable' id='celebrations' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/celebrations.png');\"></div><div class='filter_element_text'>Šventės</div></div>";
-    filters[6] = "<div class='filter_element untouchable' id='cooking_methods' onclick='filter_category(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/cooking_methods.png');\"></div><div class='filter_element_text'>Gaminimo būdai</div></div>";
 
-    $("#scroller_filters").fadeOut(transition_time, function(){
-        $("#scroller_filters").html('');
-        $("#scroller_filters").fadeIn(1);
-        show_filters(filters, 0);
+    var formData = new FormData();
+    formData.append('filter_start','true');
+    $.ajax({
+        type: 'POST',
+        url: '/ajax/filter_start',
+        data: formData,
+        dataType: 'json',
+        beforeSend: function(){
+        },
+        processData: false,
+        contentType: false,
+        success: function (data) {
+            if (data.status == "good") {
+                filter_level = 1;
+                var filters = data.filters;
+                show_config_zone(1);
+                $("#scroller_filters").fadeOut(transition_time, function(){
+                    $("#scroller_filters").html('');
+                    $("#scroller_filters").fadeIn(1);
+                    show_filters(filters, 0);
+                });
+            }
+        }
     });
-
-    /*
-     $.ajax({
-     type: 'POST',
-     url: 'ajax.php',
-     data: { filter_start: 'true' },
-     dataType: 'json',
-     beforeSend:function(){
-     },
-     success:function(data){
-     $("#filters_zone").fadeOut(transition_time, function(){
-     $("#filters_zone").html(data.filters);
-     $("#filters_zone").fadeIn(transition_time);
-     });
-     $("#config_zone").fadeOut(transition_time, function(){
-     $("#config_zone").html(data.config_zone);
-     $("#config_zone").fadeIn(transition_time);
-     });
-     }
-     });
-     */
 }
 
 function filter_category(category){
     full_sidebar();
-    filter_level = 2;
-    var filters = [];
-    switch(category){
-        case "types":
-            filters[0] = "<div class='filter_element untouchable' id='types_1' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/drinks.png');\"></div><div class='filter_element_text'>Gėrimai</div><div class='filter_element_indicator' id='indicator_types_1'></div></div>";
-            filters[1] = "<div class='filter_element untouchable' id='types_2' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/pastries.png');\"></div><div class='filter_element_text'>Kepiniai</div><div class='filter_element_indicator' id='indicator_types_2'></div></div>";
-            filters[2] = "<div class='filter_element untouchable' id='types_3' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/desserts.png');\"></div><div class='filter_element_text'>Desertai</div><div class='filter_element_indicator' id='indicator_types_3'></div></div>";
-            filters[3] = "<div class='filter_element untouchable' id='types_4' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/second_dishes.png');\"></div><div class='filter_element_text'>Antrieji patiekalai</div><div class='filter_element_indicator' id='indicator_types_4'></div></div>";
-            filters[4] = "<div class='filter_element untouchable' id='types_5' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/canned_meals.png');\"></div><div class='filter_element_text'>Konservuoti patiekalai</div><div class='filter_element_indicator' id='indicator_types_5'></div></div>";
-            filters[5] = "<div class='filter_element untouchable' id='types_6' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/porridges.png');\"></div><div class='filter_element_text'>Košės</div><div class='filter_element_indicator' id='indicator_types_6'></div></div>";
-            filters[6] = "<div class='filter_element untouchable' id='types_7' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('images/salads.png');\"></div><div class='filter_element_text'>Salotos</div><div class='filter_element_indicator' id='indicator_types_7'></div></div>";
-            filters[7] = "<div class='filter_element untouchable' id='types_8' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/soups.png');\"></div><div class='filter_element_text'>Sriubos</div><div class='filter_element_indicator' id='indicator_types_8'></div></div>";
-            filters[8] = "<div class='filter_element untouchable' id='types_9' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/sandwitches.png');\"></div><div class='filter_element_text'>Sumuštiniai</div><div class='filter_element_indicator' id='indicator_types_9'></div></div>";
-            filters[9] = "<div class='filter_element untouchable' id='types_10' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/stews.png');\"></div><div class='filter_element_text'>Troškiniai</div><div class='filter_element_indicator' id='indicator_types_10'></div></div>";
-            filters[10] = "<div class='filter_element untouchable' id='types_11' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/jams.png');\"></div><div class='filter_element_text'>Uogienės</div><div class='filter_element_indicator' id='indicator_types_11'></div></div>";
-            filters[11] = "<div class='filter_element untouchable' id='types_12' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/snacks.png');\"></div><div class='filter_element_text'>Užkandžiai</div><div class='filter_element_indicator' id='indicator_types_12'></div></div>";
-            filters[12] = "<div class='filter_element untouchable' id='types_13' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/sauces.png');\"></div><div class='filter_element_text'>Padažai</div><div class='filter_element_indicator' id='indicator_types_13'></div></div>";
-            break;
-        case "times":
-            filters[0] = "<div class='filter_element untouchable' id='times_1' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/times.png');\"></div><div class='filter_element_text'>Iki 5min</div><div class='filter_element_indicator' id='indicator_times_1'></div></div>";
-            filters[1] = "<div class='filter_element untouchable' id='times_2' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/times.png');\"></div><div class='filter_element_text'>Iki 10min</div><div class='filter_element_indicator' id='indicator_times_2'></div></div>";
-            filters[2] = "<div class='filter_element untouchable' id='times_3' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/times.png');\"></div><div class='filter_element_text'>Iki 15min</div><div class='filter_element_indicator' id='indicator_times_3'></div></div>";
-            filters[3] = "<div class='filter_element untouchable' id='times_4' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/times.png');\"></div><div class='filter_element_text'>Iki 20min</div><div class='filter_element_indicator' id='indicator_times_4'></div></div>";
-            filters[4] = "<div class='filter_element untouchable' id='times_5' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/times.png');\"></div><div class='filter_element_text'>Iki 25min</div><div class='filter_element_indicator' id='indicator_times_5'></div></div>";
-            filters[5] = "<div class='filter_element untouchable' id='times_6' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/times.png');\"></div><div class='filter_element_text'>Iki 30min</div><div class='filter_element_indicator' id='indicator_times_6'></div></div>";
-            filters[6] = "<div class='filter_element untouchable' id='times_7' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/times.png');\"></div><div class='filter_element_text'>Iki 45min</div><div class='filter_element_indicator' id='indicator_times_7'></div></div>";
-            filters[7] = "<div class='filter_element untouchable' id='times_8' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/times.png');\"></div><div class='filter_element_text'>Iki 1h</div><div class='filter_element_indicator' id='indicator_times_8'></div></div>";
-            filters[8] = "<div class='filter_element untouchable' id='times_9' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/times.png');\"></div><div class='filter_element_text'>Iki 1h 30min</div><div class='filter_element_indicator' id='indicator_times_9'></div></div>";
-            filters[9] = "<div class='filter_element untouchable' id='times_10' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/times.png');\"></div><div class='filter_element_text'>Iki 2h</div><div class='filter_element_indicator' id='indicator_times_10'></div></div>";
-            filters[10] = "<div class='filter_element untouchable' id='times_11' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/times.png');\"></div><div class='filter_element_text'>Iki 3h</div><div class='filter_element_indicator' id='indicator_times_11'></div></div>";
-            break;
-        case "characteristics":
-            filters[0] = "<div class='filter_element untouchable' id='characteristics_1' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/hot.png');\"></div><div class='filter_element_text'>Aštru</div><div class='filter_element_indicator' id='indicator_characteristics_1'></div></div>";
-            filters[1] = "<div class='filter_element untouchable' id='characteristics_2' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/sour.png');\"></div><div class='filter_element_text'>Rūgštu</div><div class='filter_element_indicator' id='indicator_characteristics_2'></div></div>";
-            filters[2] = "<div class='filter_element untouchable' id='characteristics_3' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/salty.png');\"></div><div class='filter_element_text'>Sūru</div><div class='filter_element_indicator' id='indicator_characteristics_3'></div></div>";
-            filters[3] = "<div class='filter_element untouchable' id='characteristics_4' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/exotic.png');\"></div><div class='filter_element_text'>Egzotiška</div><div class='filter_element_indicator' id='indicator_characteristics_4'></div></div>";
-            filters[4] = "<div class='filter_element untouchable' id='characteristics_5' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/cheap.png');\"></div><div class='filter_element_text'>Pigu</div><div class='filter_element_indicator' id='indicator_characteristics_5'></div></div>";
-            filters[5] = "<div class='filter_element untouchable' id='characteristics_6' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/fast.png');\"></div><div class='filter_element_text'>Greita</div><div class='filter_element_indicator' id='indicator_characteristics_6'></div></div>";
-            filters[6] = "<div class='filter_element untouchable' id='characteristics_7' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/spicy.png');\"></div><div class='filter_element_text'>Pikantiška</div><div class='filter_element_indicator' id='indicator_characteristics_7'></div></div>";
-            filters[7] = "<div class='filter_element untouchable' id='characteristics_8' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/breakfast.png');\"></div><div class='filter_element_text'>Pusryčiams</div><div class='filter_element_indicator' id='indicator_characteristics_8'></div></div>";
-            filters[8] = "<div class='filter_element untouchable' id='characteristics_10' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/lunch.png');\"></div><div class='filter_element_text'>Pietums</div><div class='filter_element_indicator' id='indicator_characteristics_10'></div></div>";
-            filters[9] = "<div class='filter_element untouchable' id='characteristics_11' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/dinner.png');\"></div><div class='filter_element_text'>Vakarienei</div><div class='filter_element_indicator' id='indicator_characteristics_11'></div></div>";
-            filters[10] = "<div class='filter_element untouchable' id='characteristics_12' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/sweden_table.png');\"></div><div class='filter_element_text'>Švediškam stalui</div><div class='filter_element_indicator' id='indicator_characteristics_12'></div></div>";
-            filters[11] = "<div class='filter_element untouchable' id='characteristics_13' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/beer.png');\"></div><div class='filter_element_text'>Užkanda prie alaus</div><div class='filter_element_indicator' id='indicator_characteristics_13'></div></div>";
-            filters[12] = "<div class='filter_element untouchable' id='characteristics_14' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/vegatarian.png');\"></div><div class='filter_element_text'>Vegetariška</div><div class='filter_element_indicator' id='indicator_characteristics_14'></div></div>";
-            filters[13] = "<div class='filter_element untouchable' id='characteristics_15' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/vegan.png');\"></div><div class='filter_element_text'>Veganiška</div><div class='filter_element_indicator' id='indicator_characteristics_15'></div></div>";
-            filters[14] = "<div class='filter_element untouchable' id='characteristics_16' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/for_kids.png');\"></div><div class='filter_element_text'>Vaikams</div><div class='filter_element_indicator' id='indicator_characteristics_16'></div></div>";
-            filters[15] = "<div class='filter_element untouchable' id='characteristics_17' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/diet.png');\"></div><div class='filter_element_text'>Dietinis</div><div class='filter_element_indicator' id='indicator_characteristics_17'></div></div>";
-            filters[16] = "<div class='filter_element untouchable' id='characteristics_18' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/health.png');\"></div><div class='filter_element_text'>Gydomasis</div><div class='filter_element_indicator' id='indicator_characteristics_18'></div></div>";
-            break;
 
-        case "countries":
-            filters[0] = "<div class='filter_element untouchable' id='countries_1' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/time.png');\"></div><div class='filter_element_text'>Lietuva</div><div class='filter_element_indicator' id='indicator_countries_1'></div></div>";
-            filters[1] = "<div class='filter_element untouchable' id='countries_2' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/time.png');\"></div><div class='filter_element_text'>Švedija</div><div class='filter_element_indicator' id='indicator_countries_2'></div></div>";
-            filters[2] = "<div class='filter_element untouchable' id='countries_3' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/time.png');\"></div><div class='filter_element_text'>JAV</div><div class='filter_element_indicator' id='indicator_countries_3'></div></div>";
-            filters[3] = "<div class='filter_element untouchable' id='countries_4' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/time.png');\"></div><div class='filter_element_text'>Kinija</div><div class='filter_element_indicator' id='indicator_countries_4'></div></div>";
-            filters[4] = "<div class='filter_element untouchable' id='countries_5' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/time.png');\"></div><div class='filter_element_text'>Turkija</div><div class='filter_element_indicator' id='indicator_countries_5'></div></div>";
-            break;
-
-        case "celebrations":
-            filters[0] = "<div class='filter_element untouchable' id='celebrations_1' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/birthday.png');\"></div><div class='filter_element_text'>Gimtadienis</div><div class='filter_element_indicator' id='indicator_celebrations_1'></div></div>";
-            filters[1] = "<div class='filter_element untouchable' id='celebrations_2' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/time.png');\"></div><div class='filter_element_text'>Helauvynas</div><div class='filter_element_indicator' id='indicator_celebrations_2'></div></div>";
-            filters[2] = "<div class='filter_element untouchable' id='celebrations_3' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/time.png');\"></div><div class='filter_element_text'>Kalėdos</div><div class='filter_element_indicator' id='indicator_celebrations_3'></div></div>";
-            filters[3] = "<div class='filter_element untouchable' id='celebrations_4' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/time.png');\"></div><div class='filter_element_text'>Kūčios</div><div class='filter_element_indicator' id='indicator_celebrations_4'></div></div>";
-            filters[4] = "<div class='filter_element untouchable' id='celebrations_5' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/time.png');\"></div><div class='filter_element_text'>Užgavėnės</div><div class='filter_element_indicator' id='indicator_celebrations_5'></div></div>";
-            filters[5] = "<div class='filter_element untouchable' id='celebrations_6' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/time.png');\"></div><div class='filter_element_text'>Velykos</div><div class='filter_element_indicator' id='indicator_celebrations_6'></div></div>";
-            filters[6] = "<div class='filter_element untouchable' id='celebrations_7' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/time.png');\"></div><div class='filter_element_text'>Vestuvės</div><div class='filter_element_indicator' id='indicator_celebrations_7'></div></div>";
-            break;
-
-        case "cooking_methods":
-            filters[0] = "<div class='filter_element untouchable' id='cooking_methods_1' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/time.png');\"></div><div class='filter_element_text'>Grilyje</div><div class='filter_element_indicator' id='indicator_cooking_methods_1'></div></div>";
-            filters[1] = "<div class='filter_element untouchable' id='cooking_methods_2' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/time.png');\"></div><div class='filter_element_text'>Džiovinti</div><div class='filter_element_indicator' id='indicator_cooking_methods_2'></div></div>";
-            filters[2] = "<div class='filter_element untouchable' id='cooking_methods_3' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/time.png');\"></div><div class='filter_element_text'>Garuose</div><div class='filter_element_indicator' id='indicator_cooking_methods_3'></div></div>";
-            filters[3] = "<div class='filter_element untouchable' id='cooking_methods_4' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/time.png');\"></div><div class='filter_element_text'>Kepti</div><div class='filter_element_indicator' id='indicator_cooking_methods_4'></div></div>";
-            filters[4] = "<div class='filter_element untouchable' id='cooking_methods_5' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/time.png');\"></div><div class='filter_element_text'>Išmaišyti</div><div class='filter_element_indicator' id='indicator_cooking_methods_5'></div></div>";
-            filters[5] = "<div class='filter_element untouchable' id='cooking_methods_6' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/time.png');\"></div><div class='filter_element_text'>Marinuoti</div><div class='filter_element_indicator' id='indicator_cooking_methods_6'></div></div>";
-            filters[6] = "<div class='filter_element untouchable' id='cooking_methods_7' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/time.png');\"></div><div class='filter_element_text'>Mikrobangėje</div><div class='filter_element_indicator' id='indicator_cooking_methods_7'></div></div>";
-            filters[7] = "<div class='filter_element untouchable' id='cooking_methods_8' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/time.png');\"></div><div class='filter_element_text'>Orkaitėje</div><div class='filter_element_indicator' id='indicator_cooking_methods_8'></div></div>";
-            filters[8] = "<div class='filter_element untouchable' id='cooking_methods_9' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/time.png');\"></div><div class='filter_element_text'>Rauginti</div><div class='filter_element_indicator' id='indicator_cooking_methods_9'></div></div>";
-            filters[9] = "<div class='filter_element untouchable' id='cooking_methods_10' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/time.png');\"></div><div class='filter_element_text'>Išrūkyti</div><div class='filter_element_indicator' id='indicator_cooking_methods_10'></div></div>";
-            filters[10] = "<div class='filter_element untouchable' id='cooking_methods_11' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/time.png');\"></div><div class='filter_element_text'>Plakti</div><div class='filter_element_indicator' id='indicator_cooking_methods_11'></div></div>";
-            filters[11] = "<div class='filter_element untouchable' id='cooking_methods_12' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/time.png');\"></div><div class='filter_element_text'>Sušaldyti</div><div class='filter_element_indicator' id='indicator_cooking_methods_12'></div></div>";
-            filters[12] = "<div class='filter_element untouchable' id='cooking_methods_13' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/time.png');\"></div><div class='filter_element_text'>Ištroškinti</div><div class='filter_element_indicator' id='indicator_cooking_methods_13'></div></div>";
-            filters[13] = "<div class='filter_element untouchable' id='cooking_methods_14' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/time.png');\"></div><div class='filter_element_text'>Išvirti</div><div class='filter_element_indicator' id='indicator_cooking_methods_14'></div></div>";
-            break;
-
-        case "ingredients_categories":
-            filters[0] = "<div class='filter_element untouchable' id='ingredients_category_1' onclick='filter_ingredients_category(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/time.png');\"></div><div class='filter_element_text'>Žuvis</div></div>";
-            filters[1] = "<div class='filter_element untouchable' id='ingredients_category_2' onclick='filter_ingredients_category(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/time.png');\"></div><div class='filter_element_text'>Mėsa</div></div>";
-            filters[2] = "<div class='filter_element untouchable' id='ingredients_category_3' onclick='filter_ingredients_category(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/time.png');\"></div><div class='filter_element_text'>Pieno produktai</div></div>";
-            filters[3] = "<div class='filter_element untouchable' id='ingredients_category_4' onclick='filter_ingredients_category(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/time.png');\"></div><div class='filter_element_text'>Grūdinė kultūra</div></div>";
-            filters[4] = "<div class='filter_element untouchable' id='ingredients_category_5' onclick='filter_ingredients_category(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/time.png');\"></div><div class='filter_element_text'>Riešutai</div></div>";
-            break;
-    }
-
-    $("#scroller_filters").fadeOut(transition_time, function(){
-        $("#scroller_filters").html('');
-        $("#scroller_filters").fadeIn(1);
-        show_filters(filters, 0);
-    });
-
-    /*
+    var formData = new FormData();
+    formData.append('filter_category', category);
     $.ajax({
         type: 'POST',
-        url: 'ajax.php',
-        data: { filter_category: category },
+        url: '/ajax/filter_category',
+        data: formData,
         dataType: 'json',
-        success:function(data){
-            $("#filters_zone").fadeOut(transition_time, function(){
-                $("#filters_zone").html(data.filters);
-                $("#filters_zone").fadeIn(transition_time);
-            });
-            $("#config_zone").fadeOut(transition_time, function(){
-                $("#config_zone").html(data.config_zone);
-                $("#config_zone").fadeIn(transition_time);
-            });
+        beforeSend: function () {
+        },
+        processData: false,
+        contentType: false,
+        success: function (data) {
+            if (data.status == "good") {
+                filter_level = 2;
+                var filters = data.filters;
+                $("#scroller_filters").fadeOut(transition_time, function(){
+                    $("#scroller_filters").html('');
+                    $("#scroller_filters").fadeIn(1);
+                    show_filters(filters, 0);
+                });
+            }
         }
     });
-
-    */
 }
 
 function filter_ingredients_category(ingredients_category){
     full_sidebar();
-    filter_level = 3;
-    var filters = [];
-    switch(ingredients_category) {
-        case "ingredients_category_1":
-            filters[0] = "<div class='filter_element untouchable' id='ingredients_1' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/drinks.png');\"></div><div class='filter_element_text'>Lašiša</div><div class='filter_element_indicator' id='indicator_ingredients_1'></div></div>";
-            filters[1] = "<div class='filter_element untouchable' id='ingredients_2' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/pastries.png');\"></div><div class='filter_element_text'>Karpis</div><div class='filter_element_indicator' id='indicator_ingredients_2'></div></div>";
-            filters[2] = "<div class='filter_element untouchable' id='ingredients_3' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/deserts.png');\"></div><div class='filter_element_text'>Upėtakis</div><div class='filter_element_indicator' id='indicator_ingredients_3'></div></div>";
-            filters[3] = "<div class='filter_element untouchable' id='ingredients_4' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/second_dishes.png');\"></div><div class='filter_element_text'>Kardžuvė</div><div class='filter_element_indicator' id='indicator_ingredients_4'></div></div>";
-            filters[4] = "<div class='filter_element untouchable' id='ingredients_5' onclick='manipulate_filter(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/canned_meals.png');\"></div><div class='filter_element_text'>Ungurys</div><div class='filter_element_indicator' id='indicator_ingredients_5'></div></div>";
-        break;
-    }
 
-    $("#scroller_filters").fadeOut(transition_time, function(){
-        $("#scroller_filters").html('');
-        $("#scroller_filters").fadeIn(1);
-        show_filters(filters, 0);
+    var formData = new FormData();
+    formData.append('filter_ingredients_category', ingredients_category);
+    $.ajax({
+        type: 'POST',
+        url: '/ajax/filter_ingredients_category',
+        data: formData,
+        dataType: 'json',
+        beforeSend: function () {
+        },
+        processData: false,
+        contentType: false,
+        success: function (data) {
+            if (data.status == "good") {
+                filter_level = 3;
+                var filters = data.filters;
+                $("#scroller_filters").fadeOut(transition_time, function(){
+                    $("#scroller_filters").html('');
+                    $("#scroller_filters").fadeIn(1);
+                    show_filters(filters, 0);
+                });
+            }
+        }
     });
 }
-
 
 function check_if_user_is_loged(){
     FB.getLoginStatus(function(response) {
         if (response.status == 'connected') {
-            // the user is logged in and has authenticated your
-            // app, and response.authResponse supplies
-            // the user's ID, a valid access token, a signed
-            // request, and the time the access token
-            // and signed request each expire
-            //var uid = response.authResponse.userID;
-            //var accessToken = response.authResponse.accessToken;
             user_login_status = true;
         } else if (response.status == 'not_authorized') {
-            // the user is logged in to Facebook,
-            // but has not authenticated your app
             user_login_status = false;
         } else {
-            // the user isn't logged in to Facebook.
             user_login_status = false;
         }
     });
@@ -678,7 +578,26 @@ function hide_loading_screen(){
 }
 
 function show_loading_screen(){
-    $("#loading_screen").fadeIn(transition_time * 2);
+
+    var formData = new FormData();
+    formData.append('loading_screen_text', 'true');
+    $.ajax({
+        type: 'POST',
+        url: '/ajax/loading_screen_text',
+        data: formData,
+        dataType: 'json',
+        beforeSend: function () {
+        },
+        processData: false,
+        contentType: false,
+        success: function (data) {
+            if (data.status == "good") {
+                $("#loading_screen_info").html(data.fact);
+                $("#loading_screen").fadeIn(transition_time * 2);
+            }
+        }
+    });
+
     //$("#loading_screen_title").css('left','50%');
     //$("#loading_screen_info").css('left','0px');
     //$("#loading_screen_info").css('width','auto');
@@ -705,7 +624,6 @@ function filter_go_back(type){
     switch(filter_level) {
         case 0:
             filter_show_selected();
-            show_config_zone(0);
             break;
         case 1:
             filter_start();
@@ -719,9 +637,9 @@ function filter_go_back(type){
 function show_config_zone(state){
     if(state == 0){
         var config_zone =
-            "<div class='filter_element untouchable' onclick=\"filter_start();show_config_zone(1)\">" +
-            "<div class='filter_element_image' id='add'></div>" +
-            "<div class='filter_element_text'>Pridėti filtrą</div>" +
+            "<div class='filter_element untouchable' onclick=\"filter_start();\">" +
+                "<div class='filter_element_image' id='add'></div>" +
+                "<div class='filter_element_text'>Pridėti filtrą</div>" +
             "</div>";
 
         $("#config_zone").fadeOut(transition_time, function(){
@@ -739,50 +657,98 @@ function show_config_zone(state){
 }
 
 function filter_show_selected(){
-    //show selected filters
-    filter_level = 0;
-    var filters = [];
-
-    filters[0] = "<div class='filter_element untouchable filter_element_indicator_not_want' id='universities-1' onclick='filter_selected(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/types.png');\"></div><div class='filter_element_text'>Selected 1</div><div class='filter_element_delete' id='delete_universities-1' onclick='filter_delete(this.id)'></div><div class='filter_element_indicator_change' id='indicator_change_universities-1' onclick='filter_indicator_change(this.id)'></div><div class='filter_element_indicator_small'></div></div>";
-    filters[1] = "<div class='filter_element untouchable filter_element_indicator_want' id='universities-2' onclick='filter_selected(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/times.png');\"></div><div class='filter_element_text'>Selected want</div><div class='filter_element_delete' id='delete_universities-2' onclick='filter_delete(this.id)'></div><div class='filter_element_indicator_change' id='indicator_change_universities-2' onclick='filter_indicator_change(this.id)'></div><div class='filter_element_indicator_small'></div></div>";
-    filters[2] = "<div class='filter_element untouchable filter_element_indicator_not_want' id='universities-3' onclick='filter_selected(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/celebrations.png');\"></div><div class='filter_element_text'>Selected 3</div><div class='filter_element_delete' id='delete_universities-3' onclick='filter_delete(this.id)'></div><div class='filter_element_indicator_change' id='indicator_change_universities-3' onclick='filter_indicator_change(this.id)'></div><div class='filter_element_indicator_small'></div></div>";
-
-    $("#scroller_filters").fadeOut(transition_time, function(){
-        $("#scroller_filters").html('');
-        $("#scroller_filters").fadeIn(1);
-        show_filters(filters, 0);
+    var formData = new FormData();
+    formData.append('filter_show_selected', 'true');
+    $.ajax({
+        type: 'POST',
+        url: '/ajax/filter_show_selected',
+        data: formData,
+        dataType: 'json',
+        beforeSend: function () {
+        },
+        processData: false,
+        contentType: false,
+        success: function (data) {
+            if (data.status == "good") {
+                filter_level = 0;
+                var filters = data.filters;
+                show_config_zone(0);
+                $("#scroller_filters").fadeOut(transition_time, function(){
+                    $("#scroller_filters").html('');
+                    $("#scroller_filters").fadeIn(1);
+                    show_filters(filters, 0);
+                });
+                setTimeout(function(){scroll_filters.refresh();},0);
+            }
+        }
     });
 }
 
 function filter_personal_show_selected(){
-    //show selected filters
-    filter_level = 0;
-    var filters = [];
-
-    filters[0] = "<div class='filter_element untouchable filter_element_indicator_not_want' id='universities-1' onclick='filter_selected(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/types.png');\"></div><div class='filter_element_text'>Selected 1</div><div class='filter_element_delete' id='delete_universities-1' onclick='filter_delete(this.id)'></div><div class='filter_element_indicator_change' id='indicator_change_universities-1' onclick='filter_indicator_change(this.id)'></div><div class='filter_element_indicator_small'></div></div>";
-    filters[1] = "<div class='filter_element untouchable filter_element_indicator_want' id='universities-2' onclick='filter_selected(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/times.png');\"></div><div class='filter_element_text'>Selected want</div><div class='filter_element_delete' id='delete_universities-2' onclick='filter_delete(this.id)'></div><div class='filter_element_indicator_change' id='indicator_change_universities-2' onclick='filter_indicator_change(this.id)'></div><div class='filter_element_indicator_small'></div></div>";
-    filters[2] = "<div class='filter_element untouchable filter_element_indicator_not_want' id='universities-3' onclick='filter_selected(this.id)'><div class='filter_element_image' style=\"background-image:url('/images/celebrations.png');\"></div><div class='filter_element_text'>Selected 3</div><div class='filter_element_delete' id='delete_universities-3' onclick='filter_delete(this.id)'></div><div class='filter_element_indicator_change' id='indicator_change_universities-3' onclick='filter_indicator_change(this.id)'></div><div class='filter_element_indicator_small'></div></div>";
-
-    $("#scroller_filters").fadeOut(transition_time, function(){
-        $("#scroller_filters").html('');
-        $("#scroller_filters").fadeIn(1);
-        show_filters(filters, 0);
+    var formData = new FormData();
+    formData.append('filter_personal_show_selected', 'true');
+    $.ajax({
+        type: 'POST',
+        url: '/ajax/filter_personal_show_selected',
+        data: formData,
+        dataType: 'json',
+        beforeSend: function () {
+        },
+        processData: false,
+        contentType: false,
+        success: function (data) {
+            if (data.status == "good") {
+                filter_level = 0;
+                var filters = data.filters;
+                show_config_zone(0);
+                $("#scroller_filters").fadeOut(transition_time, function(){
+                    $("#scroller_filters").html('');
+                    $("#scroller_filters").fadeIn(1);
+                    show_filters(filters, 0);
+                });
+                setTimeout(function(){scroll_filters.refresh();},0);
+            }
+        }
     });
 }
 
 function filter_indicator_change(ID){
     var ID = ID.replace('indicator_change_','');
+    var filter_data = ID.split('-');
+    var filter_type = filter_data[0];
+    var filter_id = filter_data[1];
 
-    if($("#" + ID).hasClass('filter_element_indicator_not_want')){
-        $('#' + ID).removeClass('filter_element_indicator_not_want').addClass('filter_element_indicator_want');
-    }else if($("#" + ID).hasClass('filter_element_indicator_want')){
-        $('#' + ID).removeClass('filter_element_indicator_want').addClass('filter_element_indicator_not_want');
-    }
+    var formData = new FormData();
+    formData.append('filter_type', filter_type);
+    formData.append('filter_id', filter_id);
+    $.ajax({
+        type: 'POST',
+        url: '/ajax/filter_indicator_change',
+        data: formData,
+        dataType: 'json',
+        beforeSend: function () {
+        },
+        processData: false,
+        contentType: false,
+        success: function (data) {
+            if (data.status == "good") {
+                if($("#" + ID).hasClass('filter_element_indicator_not_want')){
+                    $('#' + ID).removeClass('filter_element_indicator_not_want').addClass('filter_element_indicator_want');
+                }else if($("#" + ID).hasClass('filter_element_indicator_want')){
+                    $('#' + ID).removeClass('filter_element_indicator_want').addClass('filter_element_indicator_not_want');
+                }
+            }
+        }
+    });
 }
 
 function manipulate_filter(ID){
     full_sidebar();
     var new_indicator_status;
+    var filter_data = ID.split('_');
+    var filter_type = filter_data[0];
+    var filter_id = filter_data[1];
+
     var symbols_amount = $("#" + ID + " .filter_element_text").html();
     var symbols_amount = symbols_amount.length;
 
@@ -806,23 +772,25 @@ function manipulate_filter(ID){
         new_indicator_status = "want";
     }
 
-    //send new_indicator_status and filter_ID
-    /*
+    var formData = new FormData();
+    formData.append('filter_indicator', new_indicator_status);
+    formData.append('filter_id', filter_id);
+    formData.append('filter_type', filter_type);
     $.ajax({
         type: 'POST',
-        url: 'ajax.php',
+        url: '/ajax/manipulate_filter',
+        data: formData,
         dataType: 'json',
-        data: { filter_manipulate: ID },
-        success:function(data){
-            if(data.status == "removed"){
-                $("#indicator_" + ID).removeClass('added');
-            }else if(data.status == "added"){
-                $("#indicator_" + ID).addClass('added');
+        beforeSend: function () {
+        },
+        processData: false,
+        contentType: false,
+        success: function (data) {
+            if (data.status == "good") {
+
             }
-            append_recipes();
         }
     });
-    */
 }
 
 function shoppinglist_add(ID){
@@ -843,12 +811,29 @@ function shoppinglist_add(ID){
         scroll_filters.scrollBy(0, scroll_filters.maxScrollY, 600, IScroll.utils.ease.bounce);
     },100)
 
-    //ajax to add to shoopinglist
+    var formData = new FormData();
+    formData.append('shoppinglist_add_id', id);
+    formData.append('shoppinglist_add_title', title);
+    $.ajax({
+        type: 'POST',
+        url: '/ajax/shoppinglist_add',
+        data: formData,
+        dataType: 'json',
+        beforeSend: function () {
+        },
+        processData: false,
+        contentType: false,
+        success: function (data) {
+            if (data.status == "good") {
+
+            }
+        }
+    });
 }
 
-var shoppinglist_items_ids = 1;
+var shoppinglist_items_ids = 0;
 function shoppinglist_add_enter(){
-    var id = shoppinglist_items_ids++;
+    var id = "entered-" + shoppinglist_items_ids++;
     var image = "url('/images/shoppinglist_item.png')";
     var title = $("#search_input").val();
     $("#search_input").val('');
@@ -863,34 +848,63 @@ function shoppinglist_add_enter(){
         //var scroll_amount =  scroll_filters.maxScrollY - scroll_filters.y;
         scroll_filters.scrollBy(0, scroll_filters.maxScrollY, 600, IScroll.utils.ease.bounce);
     },100)
-    //ajax to add to shoopinglist
+
+    var formData = new FormData();
+    formData.append('shoppinglist_add_id', id);
+    formData.append('shoppinglist_add_title', title);
+    $.ajax({
+        type: 'POST',
+        url: '/ajax/shoppinglist_add',
+        data: formData,
+        dataType: 'json',
+        beforeSend: function () {
+        },
+        processData: false,
+        contentType: false,
+        success: function (data) {
+            if (data.status == "good") {
+
+            }
+        }
+    });
+
 }
 
 
 function shoppinglist_delete(ID){
     ID = ID.replace('delete_','');
-    $('#' + ID).remove();
-    setTimeout(function(){
-        scroll_filters.refresh();
-    }, 100);
+    var shoppinglist_data = ID.split('-');
+    var shoppinglist_type = shoppinglist_data[0];
+    var shoppinglist_id = shoppinglist_data[1];
 
-    /*
-     $.ajax({
-     type: 'POST',
-     url: 'ajax.php',
-     data: { filter_delete: ID },
-     beforeSend:function(){
-     },
-     success:function(data){
-     $('#' + ID).remove();
-     append_recipes();
-     }
-     });
-     */
+    var formData = new FormData();
+    formData.append('shoppinglist_type', shoppinglist_type);
+    formData.append('shoppinglist_id', shoppinglist_id);
+    $.ajax({
+        type: 'POST',
+        url: '/ajax/shoppinglist_delete',
+        data: formData,
+        dataType: 'json',
+        beforeSend: function () {
+        },
+        processData: false,
+        contentType: false,
+        success: function (data) {
+            if (data.status == "good") {
+                $('#' + ID).remove();
+                setTimeout(function(){
+                    scroll_filters.refresh();
+                }, 100);
+            }
+        }
+    });
 }
 
 function filter_search_add(ID, type){
     var id = ID.replace('search-','');
+    var filter_data = id.split('-');
+    var filter_type = filter_data[0];
+    var filter_id = filter_data[1];
     var image = $('#' + ID + " .search_item_image").css('background-image');
     image = image.replace('"', "'");
     var title = $('#' + ID + " .search_item_title").html();
@@ -898,57 +912,65 @@ function filter_search_add(ID, type){
     input_blur();
     input_focus('search');
 
-    //send with ajax to filters
-    //see which filters level, if = 0, add to panel
-    if(filter_level == 0){
-        var filters = [];
-        var data = "<div class='filter_element untouchable filter_element_indicator_" + type + "' id='" + id + "' onclick='filter_selected(this.id)'><div class='filter_element_image' style=\"background-image:" + image + ";\"></div><div class='filter_element_text'>" + title + "</div><div class='filter_element_delete' id='delete_" + id + "' onclick='filter_delete(this.id)'></div><div class='filter_element_indicator_change' id='indicator_change_" + id + "' onclick='filter_indicator_change(this.id)'></div><div class='filter_element_indicator_small'></div></div>";
-        filters[0] = data;
-        show_filters(filters, 0);
-
-        setTimeout(function(){scroll_filters.refresh()}, 0);
-    }
-
-    /*
+    var formData = new FormData();
+    formData.append('filter_type', filter_type);
+    formData.append('filter_id', filter_id);
+    formData.append('filter_indicator', type);
     $.ajax({
         type: 'POST',
-        url: 'ajax.php',
+        url: '/ajax/filter_search_add',
+        data: formData,
         dataType: 'json',
-        data: { filter_search_add: ID },
-        success:function(data){
-            append_recipes();
-            $("#search_input").val('');
-            $("#search_container").html('');
-            $("#search_container").css('display','none');
-            if(data.filter_level == 0)
-                $("#scroller_filters").append(data.filter);
+        beforeSend: function () {
+        },
+        processData: false,
+        contentType: false,
+        success: function (data) {
+            if (data.status == "good") {
+                if(filter_level == 0){
+                    var filters = [];
+                    var data = "<div class='filter_element untouchable filter_element_indicator_" + type + "' id='" + id + "' onclick='filter_selected(this.id)'><div class='filter_element_image' style=\"background-image:" + image + ";\"></div><div class='filter_element_text'>" + title + "</div><div class='filter_element_delete' id='delete_" + id + "' onclick='filter_delete(this.id)'></div><div class='filter_element_indicator_change' id='indicator_change_" + id + "' onclick='filter_indicator_change(this.id)'></div><div class='filter_element_indicator_small'></div></div>";
+                    filters[0] = data;
+                    show_filters(filters, 0);
+
+                    setTimeout(function(){scroll_filters.refresh()}, 0);
+                }
+            }
         }
     });
 
-    */
+
 }
 
 
 
 function filter_delete(ID){
     ID = ID.replace('delete_','');
-    $('#' + ID).remove();
-    setTimeout(function(){
-        scroll_filters.refresh();
-    }, 100);
-    /*
+    var filter_data = ID.split('-');
+    var filter_type = filter_data[0];
+    var filter_id = filter_data[1];
+
+    var formData = new FormData();
+    formData.append('filter_id', filter_id);
+    formData.append('filter_type', filter_type);
     $.ajax({
         type: 'POST',
-        url: 'ajax.php',
-        data: { filter_delete: ID },
-        beforeSend:function(){
+        url: '/ajax/filter_delete',
+        data: formData,
+        dataType: 'json',
+        beforeSend: function () {
         },
-        success:function(data){
-            $('#' + ID).remove();
-            append_recipes();
+        processData: false,
+        contentType: false,
+        success: function (data) {
+            if (data.status == "good") {
+                $('#' + ID).remove();
+                setTimeout(function(){
+                    scroll_filters.refresh();
+                }, 100);
+            }
         }
     });
-    */
 }
 
 function filter_selected(ID){
@@ -1017,73 +1039,40 @@ function search(type){
     }else{
         $('#search_container_inside').html('');
         $('#search_container').css('display','block');
-        var data = [];
 
-        /*
-         $.ajax({
-         type: 'POST',
-         url: 'ajax.php',
-         dataType: 'json',
-         data: { search: value },
-         success:function(data){
-         $("#search_container").html('');
-         if(data.search_results.length > 0){
-         $("#search_container").css('display','block');
-         }else{
-         $("#search_container").css('display','none');
-         }
-
-         for(i = 0; i < data.search_results.length; i++){
-         $("#search_container").append(data.search_results[i]);
-         }
-         }
-         });
-
-         */
-
-        switch(type){
+        switch(type) {
             case "search":
-                //get data with ajax from search_value
-                for(i = 0; i < 7; i++){
-                    data[i] =
-                    "<div class='s_e search_item untouchable' id='search-ingredient-95'>" +
-                        "<div class='s_e search_item_image' style=\"background-image:url('images/food (2).jpg')\"></div>" +
-                        "<div class='s_e search_item_title'>Ananasas</div>" +
-                        "<div class='s_e search_item_bottom_info'>Ingredientas</div>" +
-                        "<div class='s_e filter_element_indicator indicator_search want' style='right: 25px;' onclick=\"filter_search_add('search-ingredient-95','want')\"></div>" +
-                        "<div class='s_e filter_element_indicator indicator_search not_want' style='right: 3px;' onclick=\"filter_search_add('search-ingredient-95','not_want')\"></div>" +
-                    "</div>";
-                }
+                var ajax_url = "/ajax/search";
                 break;
-
             case "shoppinglist":
-                //get data with ajax from search_value
-                for(i = 0; i < 7; i++){
-                    data[i] =
-                    "<div class='s_e search_item untouchable' id='shoppinglist-ingredient-95' onclick='shoppinglist_add(this.id)'>"+
-                        "<div class='s_e search_item_image' style=\"background-image:url('images/food (2).jpg')\"></div>"+
-                        "<div class='s_e search_item_title'>Ananasas</div>"+
-                        "<div class='s_e search_item_bottom_info'>Ingredientas</div>"+
-                    "</div>";
-                }
+                var ajax_url = "/ajax/search_shoppinglist";
                 break;
-
             case "places":
-                //get data with ajax from search_value
-               for(i = 0; i < 7; i++){
-                    data[i] =
-                        "<div class='s_e search_item untouchable' id='search-maxima' onclick=\"show_nearest('maxima');\">" +
-                            "<div class='s_e search_item_image' style=\"background-image:url('/images/maxima.png')\"></div>" +
-                            "<div class='s_e search_item_title'>Maxima</div>" +
-                            "<div class='s_e search_item_bottom_info'>Parduotuvė</div>" +
-                        "</div>";
-                }
+                var ajax_url = "/ajax/search_places";
                 break;
         }
 
-        for(i = 0; i < data.length; i++){
-            $("#search_container_inside").append(data[i]);
-        }
+        var formData = new FormData();
+        formData.append("search", value);
+        $.ajax({
+            type: 'POST',
+            url: ajax_url,
+            data: formData,
+            dataType: 'json',
+            beforeSend: function () {
+            },
+            processData: false,
+            contentType: false,
+            success: function (data) {
+                if (data.status == "good") {
+                    var search_data = data.search_data;
+
+                    for(i = 0; i < search_data.length; i++){
+                        $("#search_container_inside").append(search_data[i]);
+                    }
+                }
+            }
+        });
     }
 }
 
@@ -1110,23 +1099,31 @@ function show_recipe(recipe_ID){
         hide_recipe();
     }else{
         if($('.recipe_active').length == 0){
-            $("#sidebar_right").removeClass('right_squeeze').addClass('right_full');
-            $('.recipe_box').removeClass('recipe_active');
-            $("#recipe_" + recipe_ID).addClass('recipe_active');
-            scroll_sidebar_right.refresh();
-            scroll_sidebar_right.scrollTo(0,0);
-
-            //from ajax with recipe ID get
-            var image;
-            var title;
-            var country;
-            var time;
-            var rating;
-            var main_cooking_method;
-            var type;
-            var characteristics; //array of them
-            var celebration; //array of them or empty
-            var ingredients; //array of them
+            var formData = new FormData();
+            formData.append('recipe_ID', recipe_ID);
+            $.ajax({
+                type: 'POST',
+                url: '/ajax/recipe_right_sidebar',
+                data: formData,
+                dataType: 'json',
+                beforeSend: function () {
+                },
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    if (data.status == "good") {
+                        $("#scroll_sidebar_right").html(data.recipe_data)
+                        $("#sidebar_right_cook_button").click(function(){
+                            cook(recipe_ID);
+                        });
+                        $("#sidebar_right").removeClass('right_squeeze').addClass('right_full');
+                        $('.recipe_box').removeClass('recipe_active');
+                        $("#recipe_" + recipe_ID).addClass('recipe_active');
+                        scroll_sidebar_right.refresh();
+                        scroll_sidebar_right.scrollTo(0,0);
+                    }
+                }
+            });
 
         }else{
             hide_recipe();
@@ -1142,13 +1139,27 @@ function hide_recipe(){
     $('.recipe_box').removeClass('recipe_active');
 }
 
-
-
 function cook(recipe_ID){
     show_loading_screen();
     location.href = "/cook/" + recipe_ID;
 
-    //send ajax can keep track of time spent on cooking. starting time
+    var formData = new FormData();
+    formData.append('recipe_ID', recipe_ID);
+    $.ajax({
+        type: 'POST',
+        url: '/ajax/user_cooking',
+        data: formData,
+        dataType: 'json',
+        beforeSend: function () {
+        },
+        processData: false,
+        contentType: false,
+        success: function (data) {
+            if (data.status == "good") {
+
+            }
+        }
+    });
 }
 
 
@@ -1156,10 +1167,6 @@ function cook(recipe_ID){
 //tracks down mouse click
 $(document).mousedown(function(event){
     if($(event.target).attr("id") == "search_container" || ( typeof $(event.target).attr("class") !== "undefined" && $(event.target).hasClass('s_e'))){
-        //alert($(event.target).attr("id"));
-        //$('#search_input').focus();
-        //event.stopImmediatePropagation();
-        //&& $("#search_input").is(":focus")
         event.preventDefault();
     }
 });
@@ -1188,10 +1195,45 @@ function ingredient_selected(ingredient_ID){
         var indicator = classes[1];
         if(indicator == "ingredient_indicator_undefined"){
             $("#ingredient_indicator-" + ingredient_ID).removeClass('ingredient_indicator_undefined').addClass('ingredient_indicator_shoppinglist');
-            //ajax to add to shoping list
+
+            var formData = new FormData();
+            formData.append('ingredient_ID', ingredient_ID);
+            $.ajax({
+                type: 'POST',
+                url: '/ajax/ingredient_add',
+                data: formData,
+                dataType: 'json',
+                beforeSend: function () {
+                },
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    if (data.status == "good") {
+
+                    }
+                }
+            });
+
         }else if(indicator == "ingredient_indicator_shoppinglist"){
             $("#ingredient_indicator-" + ingredient_ID).removeClass('ingredient_indicator_shoppinglist').addClass('ingredient_indicator_have');
-            //ajax to remove from shoping list
+
+            var formData = new FormData();
+            formData.append('ingredient_delete', ingredient_ID);
+            $.ajax({
+                type: 'POST',
+                url: '/ajax/ingredient_delete',
+                data: formData,
+                dataType: 'json',
+                beforeSend: function () {
+                },
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    if (data.status == "good") {
+
+                    }
+                }
+            });
         }else if(indicator == "ingredient_indicator_have"){
             $("#ingredient_indicator-" + ingredient_ID).removeClass('ingredient_indicator_have').addClass('ingredient_indicator_undefined');
         }
@@ -1202,9 +1244,26 @@ function ingredient_selected(ingredient_ID){
 
 function add_to_shopping_list(recipe_ID){
     if(check_if_user_is_loged()){
-        $('.ingredient_indicator').removeClass('ingredient_indicator_have').removeClass('ingredient_indicator_undefined').removeClass('ingredient_indicator_shoppinglist').addClass('ingredient_indicator_shoppinglist');
-        //ajax add all products of recipe to shopping list
-        toast('Produktai sudėti į pirkinių krepšį','good', 'shoppinglist');
+        var formData = new FormData();
+        formData.append('recipe_ID', recipe_ID);
+        $.ajax({
+            type: 'POST',
+            url: '/ajax/ingredient_add_all',
+            data: formData,
+            dataType: 'json',
+            beforeSend: function () {
+            },
+            processData: false,
+            contentType: false,
+            success: function (data) {
+                if (data.status == "good") {
+                    $('.ingredient_indicator').removeClass('ingredient_indicator_have').removeClass('ingredient_indicator_undefined').removeClass('ingredient_indicator_shoppinglist').addClass('ingredient_indicator_shoppinglist');
+                    toast('Produktai sudėti į pirkinių krepšį','good', 'shoppinglist');
+                }
+            }
+        });
+
+
     }else{
         show_top_layer('account');
     }
@@ -1223,6 +1282,24 @@ function coop(recipe_ID){
         var title = "Šiškebabas";
         var image = "http://www.foodex.lt/images/food (5).jpg";
         var link = "http://www.foodex.lt/cook/1/";
+
+        var formData = new FormData();
+        formData.append('recipe_ID', recipe_ID);
+        $.ajax({
+            type: 'POST',
+            url: '/ajax/coop_info',
+            data: formData,
+            dataType: 'json',
+            beforeSend: function () {
+            },
+            processData: false,
+            contentType: false,
+            success: function (data) {
+                if (data.status == "good") {
+                }
+            }
+        });
+
 
         //use facebook API to share on wall to cook together with missing ingredients
         $(".ingredient").each(function(){
@@ -1517,7 +1594,23 @@ function facebook_login(){
     FB.login(function(response) {
         if (response.authResponse) {
             show_loading_screen();
-            location.href = location.href;
+            var formData = new FormData();
+            formData.append('login', 'true');
+            $.ajax({
+                type: 'POST',
+                url: '/ajax/login',
+                data: formData,
+                dataType: 'json',
+                beforeSend: function () {
+                },
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    if (data.status == "good") {
+                        location.href = location.href;
+                    }
+                }
+            });
         } else {
             toast('Įvyko klaida. Bandykite dar kartą','bad', 'login');
         }
@@ -1571,35 +1664,50 @@ function previous_step(){
     }
 }
 
-//likinti = patinka ir ysiminti
 function recipe_like(recipe_ID, box_ID){
 
     if(check_if_user_is_loged()){
         //ajax to change status and get new status
-        var like_status = true;
 
-        if(like_status){
-            //make liked
-            $("#" + box_ID).removeClass('not_liked').addClass('liked');
-            if(box_ID == "sidebar_right_like"){
-                var current_likes = parseInt($("#sidebar_right_like").html()) + 1
-                $("#sidebar_right_like").html(current_likes);
-            }else if(box_ID == "step_like"){
-                $("#" + box_ID).html("Patinka");
-            }
+        var formData = new FormData();
+        formData.append('recipe_ID', recipe_ID);
+        $.ajax({
+            type: 'POST',
+            url: '/ajax/like',
+            data: formData,
+            dataType: 'json',
+            beforeSend: function () {
+            },
+            processData: false,
+            contentType: false,
+            success: function (data) {
+                if (data.status == "good") {
+                    var like_status = true;
+                    if(like_status){
+                        //make liked
+                        $("#" + box_ID).removeClass('not_liked').addClass('liked');
+                        if(box_ID == "sidebar_right_like"){
+                            var current_likes = parseInt($("#sidebar_right_like").html()) + 1
+                            $("#sidebar_right_like").html(current_likes);
+                        }else if(box_ID == "step_like"){
+                            $("#" + box_ID).html("Patinka");
+                        }
 
-            toast('Receptas pridėtas prie mėgstamiausių','good', 'liked');
-        }else{
-            //make not liked
-            $("#" + box_ID).removeClass('liked').addClass('not_liked');
-            if(box_ID == "sidebar_right_like") {
-                var current_likes = parseInt($("#sidebar_right_like").html()) - 1;
-                $("#sidebar_right_like").html(current_likes);
-            }else if(box_ID == "step_like"){
-                $("#" + box_ID).html("Patinka");
+                        toast('Receptas pridėtas prie mėgstamiausių','good', 'liked');
+                    }else{
+                        //make not liked
+                        $("#" + box_ID).removeClass('liked').addClass('not_liked');
+                        if(box_ID == "sidebar_right_like") {
+                            var current_likes = parseInt($("#sidebar_right_like").html()) - 1;
+                            $("#sidebar_right_like").html(current_likes);
+                        }else if(box_ID == "step_like"){
+                            $("#" + box_ID).html("Patinka");
+                        }
+                        toast('Receptas pašalintas iš mėgstamiausių','bad', 'not_liked');
+                    }
+                }
             }
-            toast('Receptas pašalintas iš mėgstamiausių','bad', 'not_liked');
-        }
+        });
     }else{
         show_top_layer('account');
     }
@@ -1613,6 +1721,25 @@ function share_food(recipe_ID){
         var image = "http://bbd.dev/images/food (5).jpg";
         var title = "Šiškebabas";
         var about = "Šiškebabas labai skanus ir geras patiekalas";
+
+        var formData = new FormData();
+        formData.append('recipe_ID', recipe_ID);
+        $.ajax({
+            type: 'POST',
+            url: '/ajax/share',
+            data: formData,
+            dataType: 'json',
+            beforeSend: function () {
+            },
+            processData: false,
+            contentType: false,
+            success: function (data) {
+                if (data.status == "good") {
+
+                }
+            }
+        });
+
 
         FB.api('/me/feed', 'post', {
             message: title,
@@ -1641,12 +1768,28 @@ function share_food(recipe_ID){
 
 function add_comment(recipe_ID){
     if(check_if_user_is_loged()){
-
         var comment = $('#step_comment_box_area').val();
         if(check('not_empty', comment)){
-            //ajax to add comment
-            squzee_comment_box();
-            toast('Atsiliepimas įrašytas','good','write');
+            var formData = new FormData();
+            formData.append('recipe_ID', recipe_ID);
+            formData.append('comment', comment);
+            $.ajax({
+                type: 'POST',
+                url: '/ajax/comment',
+                data: formData,
+                dataType: 'json',
+                beforeSend: function () {
+                },
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    if (data.status == "good") {
+                        squeeze_comment_box();
+                        toast('Atsiliepimas įrašytas','good','write');
+                    }
+                }
+            });
+
         }else{
             toast('Įrašykite ką nors','bad','write');
         }
@@ -1656,7 +1799,7 @@ function add_comment(recipe_ID){
     }
 }
 
-function squzee_comment_box(){
+function squeeze_comment_box(){
     $('.step_comment_box_comments').animate({bottom: "50%", top: "50%"}, transition_time * 2,function(){
         $(".step_comment_box_comments").html("<div id='step_comment_title'>Ačiū</div>");
         $('.step_comment_box_comments').animate({height: "52px", marginTop: "-26px"}, transition_time);
@@ -1665,6 +1808,24 @@ function squzee_comment_box(){
 
 function logout(){
     FB.logout(function(response) {
+        var formData = new FormData();
+        formData.append('logout', 'true');
+        $.ajax({
+            type: 'POST',
+            url: '/ajax/logout',
+            data: formData,
+            dataType: 'json',
+            beforeSend: function () {
+            },
+            processData: false,
+            contentType: false,
+            success: function (data) {
+                if (data.status == "good") {
+                    squeeze_comment_box();
+                    toast('Atsiliepimas įrašytas','good','write');
+                }
+            }
+        });
         location.href = "/";
     });
 }

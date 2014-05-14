@@ -27,8 +27,6 @@ class Comment
      */
     private $text;
 
-
-
     /**
      * Get id
      *

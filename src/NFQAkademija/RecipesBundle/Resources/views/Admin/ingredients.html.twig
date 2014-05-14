@@ -1,0 +1,155 @@
+{% extends "::base.html.twig" %}
+
+
+{% block title %}Vartotojai | Foodex{% endblock %}
+
+{% block specific_scripts %}
+    <script type="text/javascript">
+        function loader(){
+            scroll_content = new IScroll('#content_wrapper', {
+                scrollbars: true,
+                mouseWheel: true,
+                interactiveScrollbars: true,
+                shrinkScrollbars: 'scale',
+                fadeScrollbars: true,
+            });
+
+            scroll_content.on('scrollStart', function(){ clickable = false; });
+            scroll_content.on('scrollEnd', function(){ clickable = true; });
+
+            $("#content_wrapper").click(function(){ $("#search_input").blur();});
+
+            hide_loading_screen();
+        }
+
+        function key_check(event){}
+
+
+        function admin_content(type){
+            var admin_zone = "/admin_zone";
+            show_loading_screen();
+            location.href = admin_zone +"/" + type;
+        }
+
+        function admin_logout(){
+            var formData = new FormData();
+            formData.append('admin_logout', 'true');
+            $.ajax({
+                type: 'POST',
+                url: '/ajax/admin_logout',
+                data: formData,
+                dataType: 'json',
+                beforeSend: function () {
+                },
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    if (data.status == "good") {
+                        location.href = "/admin_zone";
+                    }
+                }
+            });
+        }
+    </script>
+
+{% endblock %}
+
+{% block specific_styles %}
+    <style type="text/css">
+        #content_wrapper{
+            left:0px;
+            padding-bottom:10px;
+            background-image:url('/images/content_background.jpg');
+        }
+
+        #scroller_content_admin{
+            padding-bottom:10px;
+            right:30px;
+            left:0px;
+        }
+
+        .line_box{
+            float:left;
+            text-align: center;
+            height:40px;
+            line-height:45px;
+            text-align: center;
+            padding-left:0px;
+            padding-right:0px;
+            width:150px;
+        }
+
+        .line_box:hover {
+            background-color: rgba(238, 238, 238, 1);
+            height: 40px;
+            border-bottom: 6px solid #D5D5D5;
+        }
+
+        .active_line_box{
+            background-color: rgba(238, 238, 238, 1);
+            height: 40px;
+            border-bottom: 6px solid #D5D5D5;
+        }
+
+
+        #profile_cover{
+            height:100px;
+        }
+
+        #profile_image{
+            height:50px;
+            width:50px;
+            margin-top:25px;
+            margin-bottom:25px;
+            background-image:url('/images/logo.png');
+        }
+
+        #profile_name{
+            height: 100px;
+            line-height: 100px;
+        }
+
+        #admin_content{
+            width:100%;
+            height:auto;
+            padding:10px;
+            float:left;
+        }
+    </style>
+
+{% endblock %}
+
+{% block header_lock %}{% endblock %}
+{% block sidebar %}{% endblock %}
+{% block filters_zone %}{% endblock %}
+{% block config_zone %}{% endblock %}
+
+{% block content %}
+<div id="content_wrapper">
+    <div class="scroller" id="scroller_content_admin" >
+        <div id="profile_cover">
+            <div id="profile_image"></div>
+            <div id="profile_name">Vartotojai | Foodex</div>
+        </div>
+        <div id="profile_line">
+            <div class="line_box transition" onclick="admin_content('users')">Vartotojai</div>
+            <div class="line_box transition" onclick="admin_content('recipes')">Receptai</div>
+            <div class="line_box transition" onclick="admin_content('locations')">Vietos</div>
+            <div class="line_box transition" onclick="admin_content('facts')">Faktai</div>
+            <div class="line_box transition" onclick="admin_content('filters')">Filtrai</div>
+            <div class="line_box transition active_line_box" onclick="admin_content('ingredients')">Ingredientai</div>
+            <div class="line_box transition" onclick="admin_content('comments')">Komentarai</div>
+            <div class="line_box transition" onclick="admin_content('options')">Nustatymai</div>
+            <div class="line_box transition" style="float:right;" onclick="admin_logout()">Atsijungti</div>
+        </div>
+
+        <div id="admin_content">
+
+            users
+
+
+        </div>
+    </div>
+</div>
+{% endblock %}
+

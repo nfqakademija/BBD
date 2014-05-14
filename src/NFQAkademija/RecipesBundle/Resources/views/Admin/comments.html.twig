@@ -1,7 +1,7 @@
 {% extends "::base.html.twig" %}
 
 
-{% block title %}Vartotojai | Foodex{% endblock %}
+{% block title %}Komentarai | Foodex{% endblock %}
 
 {% block specific_scripts %}
     <script type="text/javascript">
@@ -129,7 +129,7 @@
     <div class="scroller" id="scroller_content_admin" >
         <div id="profile_cover">
             <div id="profile_image"></div>
-            <div id="profile_name">Vartotojai | Foodex</div>
+            <div id="profile_name">Komentarai | Foodex</div>
         </div>
         <div id="profile_line">
             <div class="line_box transition" onclick="admin_content('users')">Vartotojai</div>
@@ -144,10 +144,10 @@
         </div>
 
         <div id="admin_content">
-
-            users
-
-
+            <div class="sub_title">Komentarai</div>
+            <div id="data_container">
+                {{ comments | raw }}
+            </div>
         </div>
     </div>
 </div>

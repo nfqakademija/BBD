@@ -192,3 +192,8 @@ nfq_akademija_admin_delete_data:
     defaults: { _controller: NFQAkademijaRecipesBundle:Ajax:admin_delete_data}
 
 
+nfq_akademija_admin_load_selects:
+    pattern:  /ajax/admin_load_selects
+    defaults: { _controller: NFQAkademijaRecipesBundle:Ajax:admin_load_selects}
+
+

@@ -945,6 +945,46 @@ class AjaxController extends Controller
                 $inserted_data = $inserted_data->getContent();
 
                 break;
+            case "Comment":
+                //get data
+                $text = $request_data->get('text');
+                $recipe_id = $request_data->get('recipe_id');
+                $user_id = '1';
+
+                //set data
+                $data = new Comment();
+                $data->setText($text);
+                $data->setUser($user_id);
+                $data->setRecipe($recipe_id);
+
+                //insert data into DB
+                $em->persist($data);
+                $em->flush();
+
+
+                //get inserted data
+                $repository = $this->getDoctrine()->getRepository('NFQAkademijaBaseBundle:'.$data_type);
+                $query = $repository->createQueryBuilder('f')
+                    //select data
+                    ->select('f.id, f.text, f.user, f.recipe')
+                    ->setMaxResults(1)
+                    ->orderBy('f.id', 'DESC')
+                    ->getQuery();
+                $latest_data = $query->getSingleResult();
+
+                $id = $latest_data["id"];
+                $text = $latest_data["text"];
+                $user = $latest_data["user"];
+                $recipe = $latest_data["recipe"];
+
+                $inserted_data = $this->render('NFQAkademijaRecipesBundle:AjaxViews:'.$data_type.'.html.twig',
+                    array(
+                        'id' => $id,
+                        'text' => $text,
+                    ));
+                $inserted_data = $inserted_data->getContent();
+
+                break;
         }
 
         $response = array(
@@ -1040,6 +1080,47 @@ class AjaxController extends Controller
         $em->flush();
         $response = array(
             'status' => 'good',
+        );
+
+        $jsonResponse = new Response(json_encode($response));
+        $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
+        return $jsonResponse;
+    }
+
+    public function admin_load_selectsAction(Request $request)
+    {
+        $request_data = $request->request;
+        /** @var EntityManager $em */
+        $em = $this->getDoctrine()->getManager();
+        $select_type = ucfirst($request_data->get('select_type'));
+        $select_data = [];
+
+        switch($select_type){
+            case "Recipe":
+                $data = $em->getRepository('NFQAkademijaBaseBundle:'.$select_type)->findAll();
+                $select_array = [];
+                foreach($data as $single_data){
+                    //get data
+                    $id = $single_data->getId();
+                    $title = $single_data->getName();
+
+
+                    //set data
+                    $select_array[] = ["id" => $id, "title" => $title];
+                }
+
+                $html_data = $this->render('NFQAkademijaRecipesBundle:AjaxViews:SelectOption'.$select_type.'.html.twig',
+                    array(
+                        'select_array' => $select_array,
+                    ));
+                $html_data = $html_data->getContent();
+                $select_data [] = $html_data;
+                break;
+        }
+
+        $response = array(
+            'status' => 'good',
+            'select_data' => $select_data,
         );
 
         $jsonResponse = new Response(json_encode($response));

@@ -1,7 +1,7 @@
 {% extends "::base.html.twig" %}
 
 
-{% block title %}Faktai | Foodex{% endblock %}
+{% block title %}Komentarai | Foodex{% endblock %}
 
 {% block specific_scripts %}
     <script type="text/javascript">
@@ -14,6 +14,7 @@
                 fadeScrollbars: true,
             });
             load_data();
+            load_selects('Recipe', 'new_comment_recipe');
         }
         function key_check(event){}
         function admin_content(type){
@@ -148,10 +149,10 @@
             });
         }
 
-        var data_type = "Fact";
-        var new_toast = "Faktas sukurtas";
-        var save_toast = "Faktas išsaugotas";
-        var delete_toast = "Faktas ištrintas";
+        var data_type = "Comment";
+        var new_toast = "Komentaras sukurtas";
+        var save_toast = "Komentaras išsaugotas";
+        var delete_toast = "Komentaras ištrintas";
         //changeable functions
         function get_new_data(){
             //default data
@@ -159,10 +160,12 @@
             formData.append('data_type', data_type);
 
             //get data
-            var fact_text = $("#new_fact").val();
+            var text = $("#new_comment_text").val();
+            var recipe_id = $("#new_recipe_id").val();
 
             //set data
-            formData.append('fact_text', fact_text);
+            formData.append('text', text);
+            formData.append('recipe_id', recipe_id);
 
             return formData;
         }
@@ -174,16 +177,51 @@
             formData.append('data_type', data_type);
 
             //get data
-            var fact_text = $("#data_" + id + " input").val();
+            var text = $("#data_" + id + " #input_text").val();
+            var user_id = $("#data_" + id + " #input_user").val();
+            var recipe_Id = $("#data_" + id + " #input_recipe").val();
 
             //set data
-            formData.append('fact_text', fact_text);
+            formData.append('text', text);
+            formData.append('user_id', user_id);
+            formData.append('recipe_id', user_id);
 
             return formData;
         }
 
         function reset_forms(){
-            $("#new_fact").val('');
+            $("#new_comment_text").val('');
+            document.getElementById("new_recipe_id").selectedIndex = 0;
+        }
+
+        function load_selects(select_type, select_id){
+            var formData = new FormData();
+            formData.append('select_type', select_type);
+            $.ajax({
+                type: 'POST',
+                url: '/ajax/admin_load_selects',
+                data: formData,
+                dataType: 'json',
+                beforeSend:function(){
+                },
+                processData: false,
+                contentType: false,
+                success:function(data){
+                    if(data.status == "good"){
+                        for(i = 0; i < data.select_data.length; i++){
+
+                            $("#" + select_id).append(data.select_data[i]);
+                        }
+                    }else{
+                        toast('Įvyko klaida','bad','logo');
+                    }
+                    setTimeout(function(){scroll_content.refresh();},0);
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    toast('Įvyko klaida. Perkraukite puslapį','bad','logo');
+                    console.log(xhr.responseText)
+                }
+            });
         }
 
     </script>
@@ -274,25 +312,27 @@
         <div class="scroller" id="scroller_content_admin" >
             <div id="profile_cover">
                 <div id="profile_image"></div>
-                <div id="profile_name">Vartotojai | Foodex</div>
+                <div id="profile_name">Komentarai | Foodex</div>
             </div>
             <div id="profile_line">
                 <div class="line_box transition" onclick="admin_content('users')">Vartotojai</div>
                 <div class="line_box transition" onclick="admin_content('recipes')">Receptai</div>
                 <div class="line_box transition" onclick="admin_content('locations')">Vietos</div>
-                <div class="line_box transition active_line_box" onclick="admin_content('facts')">Faktai</div>
+                <div class="line_box transition" onclick="admin_content('facts')">Faktai</div>
                 <div class="line_box transition" onclick="admin_content('filters')">Filtrai</div>
                 <div class="line_box transition" onclick="admin_content('ingredients')">Ingredientai</div>
-                <div class="line_box transition" onclick="admin_content('comments')">Komentarai</div>
+                <div class="line_box transition active_line_box" onclick="admin_content('comments')">Komentarai</div>
                 <div class="line_box transition" onclick="admin_content('options')">Nustatymai</div>
                 <div class="line_box transition" style="float:right;" onclick="admin_logout()">Atsijungti</div>
             </div>
 
             <div id="admin_content">
                 <div class="sub_title">Pridėti naują</div>
-                <div class="input_title">Faktas</div><input style="width:440px;" type="text" class="new_recipe_input" id="new_fact" placeholder="Faktas" />
-                <div id="save_new_recipe_button" onclick="new_data()">Pridėti</div>
 
+                <div class="input_title">Komentaras</div><textarea type='text' style="width:440px;" class='new_recipe_textarea' id="new_comment_text" placeholder='Komentaras'></textarea>
+                <div class="input_title">Receptas</div><select class='new_recipe_select' style="width:452px;" id="new_comment_recipe"></select>
+
+                <div id="save_new_recipe_button" onclick="new_data()">Pridėti</div>
                 <div class="sub_title">Duomenys</div>
                 <div id="data_container"></div>
             </div>

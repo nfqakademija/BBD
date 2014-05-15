@@ -28,9 +28,20 @@ class Comment
      */
     private $text;
     /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="date", type="datetime")
+     */
+    private $date;
+    /**
      * @ORM\ManyToOne(targetEntity="\NFQAkademija\BaseBundle\Entity\User")
      */
     protected $user;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="\NFQAkademija\BaseBundle\Entity\Recipe")
+     */
+    protected $recipe;
 
     /**
      * Get id
@@ -86,5 +97,50 @@ class Comment
     public function getUser()
     {
         return $this->user;
+    }
+    /**
+     * Set recipe
+     *
+     * @param \NFQAkademija\BaseBundle\Entity\Recipe $recipe
+     * @return Comment
+     */
+    public function setRecipe(\NFQAkademija\BaseBundle\Entity\Recipe $recipe = null)
+    {
+        $this->recipe = $recipe;
+
+        return $this;
+    }
+
+    /**
+     * Get recipe
+     *
+     * @return \NFQAkademija\BaseBundle\Entity\Recipe 
+     */
+    public function getRecipe()
+    {
+        return $this->recipe;
+    }
+
+    /**
+     * Set date
+     *
+     * @param \DateTime $date
+     * @return Comment
+     */
+    public function setDate($date)
+    {
+        $this->date = $date;
+
+        return $this;
+    }
+
+    /**
+     * Get date
+     *
+     * @return \DateTime 
+     */
+    public function getDate()
+    {
+        return $this->date;
     }
 }

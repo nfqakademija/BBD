@@ -925,34 +925,27 @@ class AjaxController extends Controller
 
 
                 //get inserted data
-                $repository = $this->getDoctrine()->getRepository('NFQAkademijaBaseBundle:Fact');
+                $repository = $this->getDoctrine()->getRepository('NFQAkademijaBaseBundle:'.$data_type);
                 $query = $repository->createQueryBuilder('f')
+                    //select data
                     ->select('f.id, f.text')
                     ->setMaxResults(1)
                     ->orderBy('f.id', 'DESC')
                     ->getQuery();
-
-                /*
-                $dql = "SELECT f FROM NFQAkademijaBaseBundle:Fact f ORDER BY f.id DESC LIMIT 1";
-                $query = $em->createQuery($dql);
-                */
-
                 $latest_data = $query->getSingleResult();
-                $id = $latest_data->getId();
-                $text = $latest_data->getText();
 
-                $inserted_data =
-                "<div id='data_$id'>
-                    <div class='input_title'>$id</div>
-                    <input type='text' class='new_recipe_input' placeholder='Faktas' value='$text'/>
-                    <div class='sub_save' onclick=\"save_data('$id')\"></div>
-                    <div class='sub_delete' onclick=\"delete_data('$id')\"></div>
-                </div>";
+                $id = $latest_data["id"];
+                $text = $latest_data["text"];
+
+                $inserted_data = $this->render('NFQAkademijaRecipesBundle:AjaxViews:'.$data_type.'.html.twig',
+                    array(
+                        'id' => $id,
+                        'text' => $text,
+                    ));
+                $inserted_data = $inserted_data->getContent();
 
                 break;
         }
-
-
 
         $response = array(
             'status' => 'good',
@@ -981,13 +974,13 @@ class AjaxController extends Controller
                     $id = $single_data->getId();
 
                     //set data
-                    $loaded_data [] =
-                    "<div id='data_$id'>
-                        <div class='input_title'>$id</div>
-                        <input type='text' class='new_recipe_input' placeholder='Faktas' value='$text'/>
-                        <div class='sub_save' onclick=\"save_data('$id')\"></div>
-                        <div class='sub_delete' onclick=\"delete_data('$id')\"></div>
-                    </div>";
+                    $html_data = $this->render('NFQAkademijaRecipesBundle:AjaxViews:'.$data_type.'.html.twig',
+                        array(
+                            'id' => $id,
+                            'text' => $text,
+                        ));
+                    $html_data = $html_data->getContent();
+                    $loaded_data [] = $html_data;
                 }
                 break;
         }
@@ -1054,3 +1047,10 @@ class AjaxController extends Controller
         return $jsonResponse;
     }
 }
+
+
+/*
+$dql = "SELECT f FROM NFQAkademijaBaseBundle:Fact f ORDER BY f.id DESC LIMIT 1";
+$query = $em->createQuery($dql);
+*/
+//file_put_contents('log.log', print_r($latest_data, true), FILE_APPEND);

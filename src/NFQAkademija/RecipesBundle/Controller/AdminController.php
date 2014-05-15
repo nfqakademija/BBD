@@ -64,47 +64,14 @@ class AdminController extends Controller
                     ));
                 break;
 
-            case "facts":
-                $facts = "";
-                $facts_data = $em->getRepository('NFQAkademijaBaseBundle:Fact')->findAll();
-                foreach($facts_data as $fact){
-                    $text = $fact->getText();
-                    $id = $fact->getId();
-                    $facts .=
-                    "<div id='fact_$id'>
-                        <div class='input_title'>$id</div>
-                        <input type='text' class='new_recipe_input' placeholder='Faktas' value='$text'/>
-                        <div class='sub_save' onclick=\"save_fact('$id')\"></div>
-                        <div class='sub_delete' onclick=\"delete_fact('$id')\"></div>
-                    </div>";
-                }
-
-                return $this->render('NFQAkademijaRecipesBundle:Admin:facts.html.twig',
-                    array(
-                        'title' => 'Faktai',
-                        'facts' => $facts,
-                    ));
-                break;
+            case "facts": return $this->render('NFQAkademijaRecipesBundle:Admin:facts.html.twig',array()); break;
 
             case "recipes": return $this->render('NFQAkademijaRecipesBundle:Admin:recipes.html.twig',array());break;
             case "filters": return $this->render('NFQAkademijaRecipesBundle:Admin:filters.html.twig',array());break;
             case "ingredients": return $this->render('NFQAkademijaRecipesBundle:Admin:ingredients.html.twig',array());break;
 
             case "comments":
-                $comments = "";
-                $comments_data = $em->getRepository('NFQAkademijaBaseBundle:Comment')->findAll();
-                foreach($comments_data as $comment){
-                    $text = $comment->getText();
-                    $id = $comment->getId();
-                    $user = "Autorius";//$comment->getUser()->getName();
-                    $comments .=
-                        "<div id='comment_$id'>
-                        <div class='input_title'>$user</div>
-                        <input type='text' class='new_recipe_input' placeholder='Komentaras' value='$text'/>
-                        <div class='sub_save' onclick=\"save_comment('$id')\"></div>
-                        <div class='sub_delete' onclick=\"delete_comment('$id')\"></div>
-                    </div>";
-                }
+
 
                 return $this->render('NFQAkademijaRecipesBundle:Admin:comments.html.twig',
                     array(

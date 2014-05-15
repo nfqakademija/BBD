@@ -902,52 +902,120 @@ class AjaxController extends Controller
         return $jsonResponse;
     }
 
-    public function admin_new_factAction(Request $request)
+    public function admin_new_dataAction(Request $request)
     {
         $request_data = $request->request;
-        $fact_text = $request_data->get('fact_text');
+        /** @var EntityManager $em */
+        $em = $this->getDoctrine()->getManager();
+        $data_type = ucfirst($request_data->get('data_type'));
+        $inserted_data = "";
+
+        switch($data_type){
+            case "Fact":
+                //get data
+                $fact_text = $request_data->get('fact_text');
+
+                //set data
+                $data = new Fact();
+                $data->setText($fact_text);
+
+                //insert data into DB
+                $em->persist($data);
+                $em->flush();
+
+
+                //get inserted data
+                $repository = $this->getDoctrine()->getRepository('NFQAkademijaBaseBundle:Fact');
+                $query = $repository->createQueryBuilder('f')
+                    ->select('f.id, f.text')
+                    ->setMaxResults(1)
+                    ->orderBy('f.id', 'DESC')
+                    ->getQuery();
+
+                /*
+                $dql = "SELECT f FROM NFQAkademijaBaseBundle:Fact f ORDER BY f.id DESC LIMIT 1";
+                $query = $em->createQuery($dql);
+                */
+
+                $latest_data = $query->getSingleResult();
+                $id = $latest_data->getId();
+                $text = $latest_data->getText();
+
+                $inserted_data =
+                "<div id='data_$id'>
+                    <div class='input_title'>$id</div>
+                    <input type='text' class='new_recipe_input' placeholder='Faktas' value='$text'/>
+                    <div class='sub_save' onclick=\"save_data('$id')\"></div>
+                    <div class='sub_delete' onclick=\"delete_data('$id')\"></div>
+                </div>";
+
+                break;
+        }
+
+
+
+        $response = array(
+            'status' => 'good',
+            'inserted_data' => $inserted_data,
+        );
+
+        $jsonResponse = new Response(json_encode($response));
+        $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
+        return $jsonResponse;
+    }
+
+    public function admin_load_dataAction(Request $request)
+    {
+        $request_data = $request->request;
+        /** @var EntityManager $em */
+        $em = $this->getDoctrine()->getManager();
+        $data_type = ucfirst($request_data->get('data_type'));
+        $loaded_data = [];
+
+        switch($data_type){
+            case "Fact":
+                $data = $em->getRepository('NFQAkademijaBaseBundle:'.$data_type)->findAll();
+                foreach($data as $single_data){
+                    //get data
+                    $text = $single_data->getText();
+                    $id = $single_data->getId();
+
+                    //set data
+                    $loaded_data [] =
+                    "<div id='data_$id'>
+                        <div class='input_title'>$id</div>
+                        <input type='text' class='new_recipe_input' placeholder='Faktas' value='$text'/>
+                        <div class='sub_save' onclick=\"save_data('$id')\"></div>
+                        <div class='sub_delete' onclick=\"delete_data('$id')\"></div>
+                    </div>";
+                }
+                break;
+        }
+
+        $response = array(
+            'status' => 'good',
+            'loaded_data' => $loaded_data,
+        );
+
+        $jsonResponse = new Response(json_encode($response));
+        $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
+        return $jsonResponse;
+    }
+
+    public function admin_delete_dataAction(Request $request)
+    {
+        $request_data = $request->request;
+        $id = $request_data->get('id');
+        $data_type = ucfirst($request_data->get('data_type'));
 
         /** @var EntityManager $em */
         $em = $this->getDoctrine()->getManager();
-
-        //insert fact into DB
-        $fact = new Fact();
-        $fact->setText($fact_text);
-        $em->persist($fact);
+        $data = $em->getRepository('NFQAkademijaBaseBundle:'.$data_type)->find($id);
+        $em->remove($data);
         $em->flush();
-
-
-        //get fact data to show it
-
-        ///*
-        $repository = $this->getDoctrine()->getRepository('NFQAkademijaBaseBundle:Fact');
-        $query = $repository->createQueryBuilder('f')
-            ->select('f.id, f.text')
-            ->setMaxResults(1)
-            ->orderBy('f.id', 'DESC')
-            ->getQuery();
-
-        //*/
-        /*
-        $dql = "SELECT f FROM NFQAkademijaBaseBundle:Fact f ORDER BY f.id DESC LIMIT 1";
-        $query = $em->createQuery($dql);
-        */
-
-        $latest_fact = $query->getSingleResult();
-        $id = $latest_fact->getId();
-        $text = $latest_fact->getText();
-
-        $fact_data =
-        "<div id='fact_$id'>
-            <div class='input_title'>$id</div>
-            <input type='text' class='new_recipe_input' placeholder='Faktas' value='$text'/>
-            <div class='sub_save' onclick=\"save_fact('$id')\"></div>
-            <div class='sub_delete' onclick=\"delete_fact('$id')\"></div>
-        </div>";
 
         $response = array(
             'status' => 'good',
-            'fact_data' => $id,
         );
 
         $jsonResponse = new Response(json_encode($response));
@@ -955,266 +1023,28 @@ class AjaxController extends Controller
         return $jsonResponse;
     }
 
-    public function admin_delete_factAction(Request $request)
+    public function admin_save_dataAction(Request $request)
     {
         $request_data = $request->request;
-        $fact_ID = $request_data->get('fact_ID');
-
         /** @var EntityManager $em */
         $em = $this->getDoctrine()->getManager();
-        $fact = $em->getRepository('NFQAkademijaBaseBundle:Fact')->find($fact_ID);
-        $em->remove($fact);
+        $data_type = ucfirst($request_data->get('data_type'));
+        $id = $request_data->get('id');
+
+        switch($data_type){
+            case "Fact":
+                $data = $em->getRepository('NFQAkademijaBaseBundle:'.$data_type)->find($id);
+
+                //get data
+                $fact_text = $request_data->get('fact_text');
+
+                //set data
+                $data->setText($fact_text);
+
+                break;
+        }
+
         $em->flush();
-
-        $response = array(
-            'status' => 'good',
-        );
-
-        $jsonResponse = new Response(json_encode($response));
-        $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
-        return $jsonResponse;
-    }
-
-    public function admin_save_factAction(Request $request)
-    {
-        $request_data = $request->request;
-        $fact_ID = $request_data->get('fact_ID');
-        $fact_text = $request_data->get('fact_text');
-
-        /** @var EntityManager $em */
-        $em = $this->getDoctrine()->getManager();
-        $fact = $em->getRepository('NFQAkademijaBaseBundle:Fact')->find($fact_ID);
-        $fact->setText($fact_text);
-        $em->flush();
-
-        $response = array(
-            'status' => 'good',
-        );
-
-        $jsonResponse = new Response(json_encode($response));
-        $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
-        return $jsonResponse;
-    }
-
-    public function admin_new_locationAction(Request $request)
-    {
-        $request_data = $request->request;
-        $response = array(
-            'status' => 'good',
-        );
-
-        $jsonResponse = new Response(json_encode($response));
-        $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
-        return $jsonResponse;
-    }
-
-    public function admin_save_locationAction(Request $request)
-    {
-        $request_data = $request->request;
-        $response = array(
-            'status' => 'good',
-        );
-
-        $jsonResponse = new Response(json_encode($response));
-        $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
-        return $jsonResponse;
-    }
-
-    public function admin_delete_locationAction(Request $request)
-    {
-        $request_data = $request->request;
-        $response = array(
-            'status' => 'good',
-        );
-
-        $jsonResponse = new Response(json_encode($response));
-        $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
-        return $jsonResponse;
-    }
-
-    public function admin_new_commentAction(Request $request)
-    {
-        $request_data = $request->request;
-        $response = array(
-            'status' => 'good',
-        );
-
-        $jsonResponse = new Response(json_encode($response));
-        $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
-        return $jsonResponse;
-    }
-
-    public function admin_save_commentAction(Request $request)
-    {
-        $request_data = $request->request;
-        $response = array(
-            'status' => 'good',
-        );
-
-        $jsonResponse = new Response(json_encode($response));
-        $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
-        return $jsonResponse;
-    }
-
-    public function admin_delete_commentAction(Request $request)
-    {
-        $request_data = $request->request;
-        $response = array(
-            'status' => 'good',
-        );
-
-        $jsonResponse = new Response(json_encode($response));
-        $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
-        return $jsonResponse;
-    }
-
-    public function admin_new_filterAction(Request $request)
-    {
-        $request_data = $request->request;
-        $response = array(
-            'status' => 'good',
-        );
-
-        $jsonResponse = new Response(json_encode($response));
-        $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
-        return $jsonResponse;
-    }
-
-    public function admin_save_filterAction(Request $request)
-    {
-        $request_data = $request->request;
-        $response = array(
-            'status' => 'good',
-        );
-
-        $jsonResponse = new Response(json_encode($response));
-        $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
-        return $jsonResponse;
-    }
-
-    public function admin_delete_filterAction(Request $request)
-    {
-        $request_data = $request->request;
-        $response = array(
-            'status' => 'good',
-        );
-
-        $jsonResponse = new Response(json_encode($response));
-        $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
-        return $jsonResponse;
-    }
-
-    public function admin_new_ingredientAction(Request $request)
-    {
-        $request_data = $request->request;
-        $response = array(
-            'status' => 'good',
-        );
-
-        $jsonResponse = new Response(json_encode($response));
-        $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
-        return $jsonResponse;
-    }
-
-    public function admin_save_ingredientAction(Request $request)
-    {
-        $request_data = $request->request;
-        $response = array(
-            'status' => 'good',
-        );
-
-        $jsonResponse = new Response(json_encode($response));
-        $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
-        return $jsonResponse;
-    }
-
-    public function admin_delete_ingredientAction(Request $request)
-    {
-        $request_data = $request->request;
-        $response = array(
-            'status' => 'good',
-        );
-
-        $jsonResponse = new Response(json_encode($response));
-        $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
-        return $jsonResponse;
-    }
-
-    public function admin_new_userAction(Request $request)
-    {
-        $request_data = $request->request;
-        $response = array(
-            'status' => 'good',
-        );
-
-        $jsonResponse = new Response(json_encode($response));
-        $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
-        return $jsonResponse;
-    }
-
-    public function admin_save_userAction(Request $request)
-    {
-        $request_data = $request->request;
-        $response = array(
-            'status' => 'good',
-        );
-
-        $jsonResponse = new Response(json_encode($response));
-        $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
-        return $jsonResponse;
-    }
-
-    public function admin_delete_userAction(Request $request)
-    {
-        $request_data = $request->request;
-        $response = array(
-            'status' => 'good',
-        );
-
-        $jsonResponse = new Response(json_encode($response));
-        $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
-        return $jsonResponse;
-    }
-
-    public function admin_new_recipeAction(Request $request)
-    {
-        $request_data = $request->request;
-        $response = array(
-            'status' => 'good',
-        );
-
-        $jsonResponse = new Response(json_encode($response));
-        $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
-        return $jsonResponse;
-    }
-
-    public function admin_save_recipeAction(Request $request)
-    {
-        $request_data = $request->request;
-        $response = array(
-            'status' => 'good',
-        );
-
-        $jsonResponse = new Response(json_encode($response));
-        $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
-        return $jsonResponse;
-    }
-
-    public function admin_delete_recipeAction(Request $request)
-    {
-        $request_data = $request->request;
-        $response = array(
-            'status' => 'good',
-        );
-
-        $jsonResponse = new Response(json_encode($response));
-        $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
-        return $jsonResponse;
-    }
-
-    public function admin_save_optionAction(Request $request)
-    {
-        $request_data = $request->request;
         $response = array(
             'status' => 'good',
         );

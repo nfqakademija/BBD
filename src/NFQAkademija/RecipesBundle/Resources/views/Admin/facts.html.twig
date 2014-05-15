@@ -13,24 +13,14 @@
                 shrinkScrollbars: 'scale',
                 fadeScrollbars: true,
             });
-
-            scroll_content.on('scrollStart', function(){ clickable = false; });
-            scroll_content.on('scrollEnd', function(){ clickable = true; });
-
-            $("#content_wrapper").click(function(){ $("#search_input").blur();});
-
-            hide_loading_screen();
+            load_data();
         }
-
         function key_check(event){}
-
-
         function admin_content(type){
             var admin_zone = "/admin_zone";
             show_loading_screen();
             location.href = admin_zone +"/" + type;
         }
-
         function admin_logout(){
             var formData = new FormData();
             formData.append('admin_logout', 'true');
@@ -50,15 +40,11 @@
                 }
             });
         }
-
-        function save_fact(ID){
-            var fact_text = $("#fact_" + ID + " input").val();
-            var formData = new FormData();
-            formData.append('fact_ID', ID);
-            formData.append('fact_text', fact_text);
+        function new_data(){
+            var formData = get_new_data();
             $.ajax({
                 type: 'POST',
-                url: '/ajax/admin_save_fact',
+                url: '/ajax/admin_new_data',
                 data: formData,
                 dataType: 'json',
                 beforeSend:function(){
@@ -67,34 +53,11 @@
                 contentType: false,
                 success:function(data){
                     if(data.status == "good"){
-                        toast('Faktas pakeistas','good','logo');
-                    }else{
-                        toast('Įvyko klaida','bad','logo');
-                    }
-                },
-                error: function (xhr, ajaxOptions, thrownError) {
-                    toast('Įvyko klaida. Perkraukite puslapį','bad','logo');
-                }
-            });
-        }
-
-        function delete_fact(ID){
-            var formData = new FormData();
-            formData.append('fact_ID', ID);
-            $.ajax({
-                type: 'POST',
-                url: '/ajax/admin_delete_fact',
-                data: formData,
-                dataType: 'json',
-                beforeSend:function(){
-                },
-                processData: false,
-                contentType: false,
-                success:function(data){
-                    if(data.status == "good"){
-                        $("#fact_" + ID).remove();
+                        reset_forms();
+                        toast(new_toast, 'good', 'logo');
+                        var inserted_data = data.inserted_data;
+                        $("#data_container").prepend(inserted_data);
                         setTimeout(function(){scroll_content.refresh()},0);
-                        toast('Faktas ištrintas','good','logo');
                     }else{
                         toast('Įvyko klaida','bad','logo');
                     }
@@ -105,37 +68,122 @@
                 }
             });
         }
+        function save_data(id){
+            var formData = get_save_data(id);
+            $.ajax({
+                type: 'POST',
+                url: '/ajax/admin_save_data',
+                data: formData,
+                dataType: 'json',
+                beforeSend:function(){
+                },
+                processData: false,
+                contentType: false,
+                success:function(data){
+                    if(data.status == "good"){
+                        toast(save_toast,'good','logo');
+                    }else{
+                        toast('Įvyko klaida','bad','logo');
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    toast('Įvyko klaida. Perkraukite puslapį','bad','logo');
+                }
+            });
+        }
+        function delete_data(id){
+            var formData = new FormData();
+            formData.append('id', id);
+            formData.append('data_type', data_type);
+            $.ajax({
+                type: 'POST',
+                url: '/ajax/admin_delete_data',
+                data: formData,
+                dataType: 'json',
+                beforeSend:function(){
+                },
+                processData: false,
+                contentType: false,
+                success:function(data){
+                    if(data.status == "good"){
+                        $("#data_" + id).remove();
+                        setTimeout(function(){scroll_content.refresh()},0);
+                        toast(delete_toast, 'good', 'logo');
+                    }else{
+                        toast('Įvyko klaida','bad','logo');
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    toast('Įvyko klaida. Perkraukite puslapį','bad','logo');
+                }
+            });
+        }
+        function load_data(){
+            var formData = new FormData();
+            formData.append('data_type', data_type);
+            $.ajax({
+                type: 'POST',
+                url: '/ajax/admin_load_data',
+                data: formData,
+                dataType: 'json',
+                beforeSend:function(){
+                },
+                processData: false,
+                contentType: false,
+                success:function(data){
+                    if(data.status == "good"){
+                        for(i = 0; i < data.loaded_data.length; i++){
+                            $("#data_container").append(data.loaded_data[i]);
+                        }
+                    }else{
+                        toast('Įvyko klaida','bad','logo');
+                    }
+                    setTimeout(function(){scroll_content.refresh();},0);
+                    hide_loading_screen();
 
-        function new_fact(){
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    toast('Įvyko klaida. Perkraukite puslapį','bad','logo');
+                }
+            });
+        }
+
+        var data_type = "Fact";
+        var new_toast = "Faktas sukurtas";
+        var save_toast = "Faktas išsaugotas";
+        var delete_toast = "Faktas ištrintas";
+        //changeable functions
+        function get_new_data(){
+            //default data
+            var formData = new FormData();
+            formData.append('data_type', data_type);
+
+            //get data
             var fact_text = $("#new_fact").val();
-            var formData = new FormData();
+
+            //set data
             formData.append('fact_text', fact_text);
-            $.ajax({
-                type: 'POST',
-                url: '/ajax/admin_new_fact',
-                data: formData,
-                dataType: 'json',
-                beforeSend:function(){
-                },
-                processData: false,
-                contentType: false,
-                success:function(data){
-                    if(data.status == "good"){
-                        $("#new_fact").val('');
-                        setTimeout(function(){scroll_content.refresh()},0);
-                        toast('Faktas sukurtas','good','logo');
-                        var fact_data = data.fact_data;
-                        alert(fact_data)
-                        $("#data_container").prepend(fact_data);
-                    }else{
-                        toast('Įvyko klaida','bad','logo');
-                    }
-                },
-                error: function (xhr, ajaxOptions, thrownError) {
-                    toast('Įvyko klaida. Perkraukite puslapį','bad','logo');
-                    console.log(xhr.responseText)
-                }
-            });
+
+            return formData;
+        }
+
+        function get_save_data(id){
+            //default data
+            var formData = new FormData();
+            formData.append('id', id);
+            formData.append('data_type', data_type);
+
+            //get data
+            var fact_text = $("#data_" + id + " input").val();
+
+            //set data
+            formData.append('fact_text', fact_text);
+
+            return formData;
+        }
+
+        function reset_forms(){
+            $("#new_fact").val('');
         }
 
     </script>
@@ -198,7 +246,7 @@
         }
 
         #admin_content{
-            width:100%;
+            width:622px;
             height:auto;
             padding:10px;
             float:left;
@@ -240,15 +288,13 @@
             <div class="line_box transition" style="float:right;" onclick="admin_logout()">Atsijungti</div>
         </div>
 
-        <div id="admin_content" style="width:622px;">
-            <div class="sub_title">Pridėti faktą</div>
+        <div id="admin_content">
+            <div class="sub_title">Pridėti naują</div>
             <div class="input_title">Faktas</div><input style="width:440px;" type="text" class="new_recipe_input" id="new_fact" placeholder="Faktas" />
-            <div id="save_new_recipe_button" onclick="new_fact()">Pridėti</div>
+            <div id="save_new_recipe_button" onclick="new_data()">Pridėti</div>
 
-            <div class="sub_title">Faktai</div>
-            <div id="data_container">
-                {{ facts | raw }}
-            </div>
+            <div class="sub_title">Duomenys</div>
+            <div id="data_container"></div>
         </div>
     </div>
 </div>

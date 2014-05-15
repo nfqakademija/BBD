@@ -595,6 +595,9 @@ function show_loading_screen(){
                 $("#loading_screen_info").html(data.fact);
                 $("#loading_screen").fadeIn(transition_time * 2);
             }
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            toast('Įvyko klaida. Perkraukite puslapį','bad','logo');
         }
     });
 

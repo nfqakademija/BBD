@@ -1,7 +1,6 @@
 <?php
 
 namespace NFQAkademija\BaseBundle\Entity;
-
 use Doctrine\ORM\Mapping as ORM;
 
 /**

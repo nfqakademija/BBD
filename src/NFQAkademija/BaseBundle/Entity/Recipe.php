@@ -87,6 +87,10 @@ class Recipe
     protected $likes;
 
     /**
+     * @ORM\OneToMany(targetEntity="\NFQAkademija\BaseBundle\Entity\Comment", mappedBy="recipe")
+     */
+    protected $comments;
+    /**
      * Creates a Doctrine Collection for members.
      */
     public function __construct()

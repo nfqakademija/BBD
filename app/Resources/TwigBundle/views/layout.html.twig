@@ -1,0 +1,129 @@
+{% extends "::base.html.twig" %}
+
+
+{% block title %}Klaida | Foodex{% endblock %}
+
+{% block specific_scripts %}
+    <script type="text/javascript">
+        function loader(){
+            hide_loading_screen();
+        }
+
+        function key_check(event){}
+
+        function get_back(){
+            location.href = "/";
+        }
+
+    </script>
+
+{% endblock %}
+
+{% block specific_styles %}
+    <style type="text/css">
+        #content_wrapper{
+            left:0px;
+            right:0px;
+            background:#201F1D;
+        }
+
+        #error_zone{
+            width:960px;
+            height:294px;
+            margin:0 auto;
+            margin-top:-147px;
+            margin-left:-480px;
+            left:50%;
+            top:50%;
+            position:absolute;
+            color:white;
+        }
+
+        #error_title{
+            width:100%;
+            height:100px;
+            float:left;
+        }
+
+        #error_title_main{
+            width:100%;
+            height:70px;
+            float:left;
+            text-align:right;
+            font-size:70px;
+            line-height:70px;
+        }
+
+        #error_title_sub_main{
+            width:100%;
+            height:30px;
+            float:left;
+            text-align:right;
+            font-size:20px;
+            line-height:30px;
+        }
+
+        #get_back_box{
+            width:228px;
+            height:194px;
+            float:right;
+        }
+
+        #get_back_button{
+            bottom:0px;
+            width:208px;
+            position: absolute;
+            right: 0px;
+            height:43px;
+            border:1px solid black;
+            box-shadow:0px 0px 2px black;
+            text-align:center;
+            line-height:43px;
+            font-weight:bold;
+            font-size:18px;
+            text-transform:uppercase;
+            background:#2e5eff;
+            color:white;
+            background: -webkit-linear-gradient(top, #2e5eff, #3B4CCE);
+            background: -moz-linear-gradient(top, #2e5eff, #3B4CCE);
+            background: -ms-linear-gradient(top, #2e5eff, #3B4CCE);
+            background: -o-linear-gradient(top, #2e5eff, #3B4CCE);
+        }
+
+        #get_back_button:hover{
+            background:#1947DF;
+            background: -webkit-linear-gradient(top, #1947DF, #2635A7);
+            background: -moz-linear-gradient(top, #1947DF, #2635A7);
+            background: -ms-linear-gradient(top, #1947DF, #2635A7);
+            background: -o-linear-gradient(top, #1947DF, #2635A7);
+        }
+
+        #get_back_button:active {
+            background: #1237B3;
+            background: -webkit-linear-gradient(top, #1237B3, #121F81);
+            background: -moz-linear-gradient(top, #1237B3, #121F81);
+            background: -ms-linear-gradient(top, #1237B3, #121F81);
+            background: -o-linear-gradient(top, #1237B3, #121F81);
+        }
+
+    </style>
+
+{% endblock %}
+
+{% block sidebar %}{% endblock %}
+
+{% block content %}
+    <div id="content_wrapper">
+        <div id="error_zone">
+            <div id="error_title">
+                <div id="error_title_main">Foodex</div>
+                <div id="error_title_sub_main">Klaida {{ status_code }}</div>
+            </div>
+
+            <div id="get_back_box">
+                <div id="get_back_button" onclick="get_back()">Grįžti</div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

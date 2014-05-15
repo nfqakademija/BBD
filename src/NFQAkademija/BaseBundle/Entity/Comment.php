@@ -31,8 +31,6 @@ class Comment
      */
     protected $user;
 
-
-
     /**
      * Get id
      *

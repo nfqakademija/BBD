@@ -6,7 +6,6 @@
         function key_check(event){}
 
         function loader(){
-            //initialize maps and other stuff related to maps
             getLocation();
             sidebar_manipulation();
             $( window ).resize(function() {
@@ -120,78 +119,95 @@
         }
 
         function show_places(operator, type, radius){
+            //from google API
             if(operator == "google"){
-                //from google API
                 //show_on_map('Kebabinė', false);
-                //show_on_map('Picerija', false);
-                //show_on_map('Palink', false);
-                //show_on_map('Maxima', false);
-                //show_on_map('greito maisto restoranas', false);
             }else if(operator == "custom"){
                 //from local DB
                 //traukti is DB vietu lat, long image_url, title ir sukti cikla ir atvaizduoti
                 //title, type, lat, long, image_url
-
                 //add_custom_place('Title', 'tipas', '54.909933', '23.983622' , '/images/add.png');
-
                 //kebabinė, picerija(pizza express, pica pica, charlie pica, can can), načnykas, greito maisto, hesburger, mcdonalds,
                 //restoranus, kavines, užkandinės, bandelinės, prekybos centrai (Savas, Molas, Urmas, Mega, Akropolis), maxima, norfa, iki, samsonas, fresh market
                 //aibė, express market, krautuvės
-                var places = get_custom_places(type, radius);
 
-                var title, type, lat, long, icon;
-                for(i = 0; i < places.length; i++){
-                    title = places[i][0];
-                    type = places[i][1];
-                    lat = places[i][2];
-                    long = places[i][3];
-                    icon = places[i][4];
-                    add_custom_place(title, type, lat, long , icon);
-                }
+                get_custom_places(type, radius, function(places){
+                    var title, type, lat, long, icon;
+                    for(i = 0; i < places.length; i++){
+                        title = places[i][0];
+                        type = places[i][1];
+                        lat = places[i][2];
+                        long = places[i][3];
+                        icon = places[i][4];
+                        add_custom_place(title, type, lat, long , icon);
+                    }
+                });
+
+
             }
         }
 
-        function get_custom_places(type, radius){
-            var places = [];
-            //ajax call to get from type: all
-            places[0] = ['Maxima','tipas0','54.909933', '23.983622', '/images/maxima.png'];
-            places[1] = ['Norfa','tipas0','54.910833', '23.976841', '/images/norfa.png'];
-            places[2] = ['Iki','tipas0','54.907780', '23.983622', '/images/iki.png'];
-            places[3] = ['Hesburger','tipas0','54.906690', '23.983640', '/images/hesburger.png'];
-            places[4] = ['McDonalds','tipas0','54.907000', '23.983648', '/images/mcdonalds.png'];
-            places[5] = ['Rimi','tipas0','54.909933', '23.983670', '/images/rimi.png'];
+        function get_custom_places(type, radius, callback){
+            var formData = new FormData();
+            formData.append('type', type);
+            formData.append('radius', radius);
+            $.ajax({
+                type: 'POST',
+                url: '/ajax/custom_place',
+                data: formData,
+                dataType: 'json',
+                beforeSend: function () {
+                },
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    if (data.status == "good") {
+                        var places = data.places;
 
+                        //-----------
+                        var center_lat = your_X;
+                        var center_long = your_Y;
+                        var center_location = new google.maps.LatLng(center_lat, center_long);
+                        var distance;
+                        var place_location;
+                        var shownable_places = [];
 
-            //-----------
-            var center_lat = your_X;
-            var center_long = your_Y;
-            var center_location = new google.maps.LatLng(center_lat, center_long);
-            var distance;
-            var place_location;
-            var shownable_places = [];
+                        //select places to be shown in radius
+                        for(i = 0; i < places.length; i++){
+                            place_location = new google.maps.LatLng(places[i][2], places[i][3]);
+                            distance = google.maps.geometry.spherical.computeDistanceBetween (center_location, place_location);
+                            distance = distance.toFixed(0);
+                            if(distance <= radius){
+                                shownable_places.push(places[i]);
+                            }
+                        }
 
-            //select places to be shown in radius
-            for(i = 0; i < places.length; i++){
-                place_location = new google.maps.LatLng(places[i][2], places[i][3]);
-                distance = google.maps.geometry.spherical.computeDistanceBetween (center_location, place_location);
-                distance = distance.toFixed(0);
-                if(distance <= radius){
-                    shownable_places.push(places[i]);
+                        callback(shownable_places);
+                    }
                 }
-            }
-
-            return shownable_places;
+            });
         }
 
-        function get_nearest_place(title){
-            //ajax call to get by title in lower case
-            var place = [title, title,'55.909933', '23.983622', '/images/maxima.png'];
-
-            return place;
+        function get_nearest_place(title, callback){
+            var formData = new FormData();
+            formData.append('title',title);
+            $.ajax({
+                type: 'POST',
+                url: '/ajax/nearest_place',
+                data: formData,
+                dataType: 'json',
+                beforeSend: function () {
+                },
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    if (data.status == "good") {
+                        var place = data.place;
+                        callback(place);
+                    }
+                }
+            });
         }
-
-
-
 
         function calcRoute(end, type){
             var start = my_location;
@@ -334,19 +350,22 @@
                     var marker_location = marker.position;
                     place_location = marker_location;
                     google.maps.event.trigger(marker, 'click');
+                    map.panTo(place_location);
                     break;
                 }
             }
 
             //if the nearest does not exsist so add it to map
             if(place_location == ""){
-                var nearest_place = get_nearest_place(title.toLowerCase());
-                add_custom_place(nearest_place[0], nearest_place[1], nearest_place[2], nearest_place[3] , nearest_place[4]);
-                place_location = new google.maps.LatLng(nearest_place[2], nearest_place[3]);
-                google.maps.event.trigger(markersArray[markersArray.length - 1], 'click');
+                get_nearest_place(title.toLowerCase(),function(nearest_place){
+                    add_custom_place(nearest_place[0], nearest_place[1], nearest_place[2], nearest_place[3] , nearest_place[4]);
+                    place_location = new google.maps.LatLng(nearest_place[2], nearest_place[3]);
+                    google.maps.event.trigger(markersArray[markersArray.length - 1], 'click');
+                    map.panTo(place_location);
+                });
+
             }
 
-            map.panTo(place_location);
             if(mobile_state){
                 empty_sidebar_slide();
             }

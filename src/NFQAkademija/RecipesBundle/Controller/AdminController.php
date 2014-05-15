@@ -31,11 +31,38 @@ class AdminController extends Controller
                 $users = "";
                 return $this->render('NFQAkademijaRecipesBundle:Admin:users.html.twig',
                     array(
+                        'title' => 'Vartotojai',
                         'users' => $users,
                     ));
                 break;
 
-            case "locations": return $this->render('NFQAkademijaRecipesBundle:Admin:locations.html.twig',array());break;
+            case "locations":
+
+                $locations = "";
+                $locations_data = $em->getRepository('NFQAkademijaBaseBundle:Location')->findAll();
+                foreach($locations_data as $location){
+                    $id = $location->getId();
+                    $title = $location->getTitle();
+                    $lat = $location->getLatitude();
+                    $long = $location->getLongitude();
+                    $icon = $location->getIcon();
+                    $about = $location->getAbout();
+
+                    $locations .=
+                        "<div id='location_$id'>
+                        <div class='input_title'>$id</div>
+                        <input type='text' class='new_recipe_input' placeholder='Faktas' value='$text'/>
+                        <div class='sub_save' onclick=\"save_location('$id')\"></div>
+                        <div class='sub_delete' onclick=\"delete_location('$id')\"></div>
+                    </div>";
+                }
+
+                return $this->render('NFQAkademijaRecipesBundle:Admin:locations.html.twig',
+                    array(
+                        'title' => 'Vietos',
+                        'locations' => $locations,
+                    ));
+                break;
 
             case "facts":
                 $facts = "";
@@ -54,6 +81,7 @@ class AdminController extends Controller
 
                 return $this->render('NFQAkademijaRecipesBundle:Admin:facts.html.twig',
                     array(
+                        'title' => 'Faktai',
                         'facts' => $facts,
                     ));
                 break;
@@ -80,6 +108,7 @@ class AdminController extends Controller
 
                 return $this->render('NFQAkademijaRecipesBundle:Admin:comments.html.twig',
                     array(
+                        'title' => 'Komentarai',
                         'comments' => $comments,
                     ));
                 break;

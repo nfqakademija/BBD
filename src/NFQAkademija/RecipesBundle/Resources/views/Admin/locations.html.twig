@@ -1,7 +1,7 @@
 {% extends "::base.html.twig" %}
 
 
-{% block title %}Vartotojai | Foodex{% endblock %}
+{% block title %}{{ title }} | Foodex{% endblock %}
 
 {% block specific_scripts %}
     <script type="text/javascript">
@@ -47,6 +47,103 @@
                     if (data.status == "good") {
                         location.href = "/admin_zone";
                     }
+                }
+            });
+        }
+
+        function new_location(){
+            var title = $("#new_location_title").val();
+            var type = $("#new_location_type").val();
+            var lat = $("#new_location_lat").val();
+            var long = $("#new_location_long").val();
+            var about = $("#new_location_about").val();
+            var icon = $("#new_location_icon").val();
+
+            var formData = new FormData();
+            formData.append('title', title);
+            formData.append('type', type);
+            formData.append('lat', lat);
+            formData.append('long', long);
+            formData.append('about', about);
+            formData.append('icon', icon);
+            $.ajax({
+                type: 'POST',
+                url: '/ajax/admin_new_location',
+                data: formData,
+                dataType: 'json',
+                beforeSend:function(){
+                },
+                processData: false,
+                contentType: false,
+                success:function(data){
+                    if(data.status == "good"){
+                        $("#new_fact").val('');
+                        setTimeout(function(){scroll_content.refresh()},0);
+                        toast('Vieta sukurta','good','logo');
+                        var new_data = data.location_data;
+                        $("#data_container").prepend(new_data);
+                    }else{
+                        toast('Įvyko klaida','bad','logo');
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    toast('Įvyko klaida. Perkraukite puslapį','bad','logo');
+                    console.log(xhr.responseText)
+                }
+            });
+        }
+
+        function save_location(ID){
+            var fact_text = $("#location_" + ID + " input").val();
+            var formData = new FormData();
+            formData.append('fact_ID', ID);
+            formData.append('fact_text', fact_text);
+            $.ajax({
+                type: 'POST',
+                url: '/ajax/admin_save_fact',
+                data: formData,
+                dataType: 'json',
+                beforeSend:function(){
+                },
+                processData: false,
+                contentType: false,
+                success:function(data){
+                    if(data.status == "good"){
+                        toast('Faktas pakeistas','good','logo');
+                    }else{
+                        toast('Įvyko klaida','bad','logo');
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    toast('Įvyko klaida. Perkraukite puslapį','bad','logo');
+                }
+            });
+        }
+
+        function delete_fact(ID){
+            var formData = new FormData();
+            formData.append('fact_ID', ID);
+            $.ajax({
+                type: 'POST',
+                url: '/ajax/admin_delete_fact',
+                data: formData,
+                dataType: 'json',
+                beforeSend:function(){
+                },
+                processData: false,
+                contentType: false,
+                success:function(data){
+                    if(data.status == "good"){
+                        $("#fact_" + ID).remove();
+                        setTimeout(function(){scroll_content.refresh()},0);
+                        toast('Faktas ištrintas','good','logo');
+                    }else{
+                        toast('Įvyko klaida','bad','logo');
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    toast('Įvyko klaida. Perkraukite puslapį','bad','logo');
+                    console.log(xhr.responseText)
                 }
             });
         }
@@ -129,7 +226,7 @@
     <div class="scroller" id="scroller_content_admin" >
         <div id="profile_cover">
             <div id="profile_image"></div>
-            <div id="profile_name">Vartotojai | Foodex</div>
+            <div id="profile_name">{{ title }} | Foodex</div>
         </div>
         <div id="profile_line">
             <div class="line_box transition" onclick="admin_content('users')">Vartotojai</div>
@@ -143,9 +240,28 @@
             <div class="line_box transition" style="float:right;" onclick="admin_logout()">Atsijungti</div>
         </div>
 
-        <div id="admin_content">
+        <div id="admin_content" style="width:622px;">
 
-            users
+            <div class="sub_title">Pridėti vietą</div>
+            <div class="input_title">Pavadinimas</div><input style="width:440px;" type="text" class="new_recipe_input" id="new_location_title" placeholder="Vietos pavadinimas" />
+            <div class="input_title">Tipas</div>
+            <select class='new_recipe_select' id="new_location_type">
+                <option value="" disabled selected>Pasirinkite tipą</option>
+                <option value="shop">Parduotuvė</option>
+                <option value="fast_food">Greitas maistas</option>
+                <option value="restaurant">Restoranas</option>
+                <option value="other">Kita</option>
+            </select>
+            <div class="input_title">Latitude</div><input style="width:440px;" type="text" class="new_recipe_input" id="new_location_title" placeholder="Latitude" />
+            <div class="input_title">Longitute</div><input style="width:440px;" type="text" class="new_recipe_input" id="new_location_title" placeholder="Longitude" />
+            <div class="input_title">Apie</div><textarea type='text' class='new_recipe_textarea' placeholder='Apie' style="width:440px"></textarea>
+            <div class="input_title">Ikona</div><input style="width:440px;" type="text" class="new_recipe_input" id="new_location_title" placeholder="Ikonos URL" />
+            <div id="save_new_recipe_button" onclick="new_location()">Pridėti</div>
+
+            <div class="sub_title">Vietos</div>
+            <div id="data_container">
+                {{ locations | raw }}
+            </div>
 
 
         </div>

@@ -995,4 +995,232 @@ class AjaxController extends Controller
         $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
         return $jsonResponse;
     }
+
+    public function admin_new_locationAction(Request $request)
+    {
+        $request_data = $request->request;
+        $response = array(
+            'status' => 'good',
+        );
+
+        $jsonResponse = new Response(json_encode($response));
+        $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
+        return $jsonResponse;
+    }
+
+    public function admin_save_locationAction(Request $request)
+    {
+        $request_data = $request->request;
+        $response = array(
+            'status' => 'good',
+        );
+
+        $jsonResponse = new Response(json_encode($response));
+        $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
+        return $jsonResponse;
+    }
+
+    public function admin_delete_locationAction(Request $request)
+    {
+        $request_data = $request->request;
+        $response = array(
+            'status' => 'good',
+        );
+
+        $jsonResponse = new Response(json_encode($response));
+        $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
+        return $jsonResponse;
+    }
+
+    public function admin_new_commentAction(Request $request)
+    {
+        $request_data = $request->request;
+        $response = array(
+            'status' => 'good',
+        );
+
+        $jsonResponse = new Response(json_encode($response));
+        $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
+        return $jsonResponse;
+    }
+
+    public function admin_save_commentAction(Request $request)
+    {
+        $request_data = $request->request;
+        $response = array(
+            'status' => 'good',
+        );
+
+        $jsonResponse = new Response(json_encode($response));
+        $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
+        return $jsonResponse;
+    }
+
+    public function admin_delete_commentAction(Request $request)
+    {
+        $request_data = $request->request;
+        $response = array(
+            'status' => 'good',
+        );
+
+        $jsonResponse = new Response(json_encode($response));
+        $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
+        return $jsonResponse;
+    }
+
+    public function admin_new_filterAction(Request $request)
+    {
+        $request_data = $request->request;
+        $response = array(
+            'status' => 'good',
+        );
+
+        $jsonResponse = new Response(json_encode($response));
+        $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
+        return $jsonResponse;
+    }
+
+    public function admin_save_filterAction(Request $request)
+    {
+        $request_data = $request->request;
+        $response = array(
+            'status' => 'good',
+        );
+
+        $jsonResponse = new Response(json_encode($response));
+        $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
+        return $jsonResponse;
+    }
+
+    public function admin_delete_filterAction(Request $request)
+    {
+        $request_data = $request->request;
+        $response = array(
+            'status' => 'good',
+        );
+
+        $jsonResponse = new Response(json_encode($response));
+        $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
+        return $jsonResponse;
+    }
+
+    public function admin_new_ingredientAction(Request $request)
+    {
+        $request_data = $request->request;
+        $response = array(
+            'status' => 'good',
+        );
+
+        $jsonResponse = new Response(json_encode($response));
+        $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
+        return $jsonResponse;
+    }
+
+    public function admin_save_ingredientAction(Request $request)
+    {
+        $request_data = $request->request;
+        $response = array(
+            'status' => 'good',
+        );
+
+        $jsonResponse = new Response(json_encode($response));
+        $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
+        return $jsonResponse;
+    }
+
+    public function admin_delete_ingredientAction(Request $request)
+    {
+        $request_data = $request->request;
+        $response = array(
+            'status' => 'good',
+        );
+
+        $jsonResponse = new Response(json_encode($response));
+        $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
+        return $jsonResponse;
+    }
+
+    public function admin_new_userAction(Request $request)
+    {
+        $request_data = $request->request;
+        $response = array(
+            'status' => 'good',
+        );
+
+        $jsonResponse = new Response(json_encode($response));
+        $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
+        return $jsonResponse;
+    }
+
+    public function admin_save_userAction(Request $request)
+    {
+        $request_data = $request->request;
+        $response = array(
+            'status' => 'good',
+        );
+
+        $jsonResponse = new Response(json_encode($response));
+        $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
+        return $jsonResponse;
+    }
+
+    public function admin_delete_userAction(Request $request)
+    {
+        $request_data = $request->request;
+        $response = array(
+            'status' => 'good',
+        );
+
+        $jsonResponse = new Response(json_encode($response));
+        $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
+        return $jsonResponse;
+    }
+
+    public function admin_new_recipeAction(Request $request)
+    {
+        $request_data = $request->request;
+        $response = array(
+            'status' => 'good',
+        );
+
+        $jsonResponse = new Response(json_encode($response));
+        $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
+        return $jsonResponse;
+    }
+
+    public function admin_save_recipeAction(Request $request)
+    {
+        $request_data = $request->request;
+        $response = array(
+            'status' => 'good',
+        );
+
+        $jsonResponse = new Response(json_encode($response));
+        $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
+        return $jsonResponse;
+    }
+
+    public function admin_delete_recipeAction(Request $request)
+    {
+        $request_data = $request->request;
+        $response = array(
+            'status' => 'good',
+        );
+
+        $jsonResponse = new Response(json_encode($response));
+        $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
+        return $jsonResponse;
+    }
+
+    public function admin_save_optionAction(Request $request)
+    {
+        $request_data = $request->request;
+        $response = array(
+            'status' => 'good',
+        );
+
+        $jsonResponse = new Response(json_encode($response));
+        $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
+        return $jsonResponse;
+    }
 }

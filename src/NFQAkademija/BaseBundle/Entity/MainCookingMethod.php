@@ -31,9 +31,9 @@ class MainCookingMethod
     /**
      * @var string
      *
-     * @ORM\Column(name="icon", type="string", length=255)
+     * @ORM\Column(name="photo", type="string", length=255)
      */
-    private $icon;
+    private $photo;
     /**
      * @ORM\OneToMany(targetEntity="\NFQAkademija\BaseBundle\Entity\Recipe", mappedBy="mainCookingMethod")
      */
@@ -80,29 +80,6 @@ class MainCookingMethod
     }
 
     /**
-     * Set icon
-     *
-     * @param string $icon
-     * @return MainCookingMethod
-     */
-    public function setIcon($icon)
-    {
-        $this->icon = $icon;
-
-        return $this;
-    }
-
-    /**
-     * Get icon
-     *
-     * @return string 
-     */
-    public function getIcon()
-    {
-        return $this->icon;
-    }
-
-    /**
      * Add recipes
      *
      * @param \NFQAkademija\BaseBundle\Entity\Recipe $recipes
@@ -133,5 +110,28 @@ class MainCookingMethod
     public function getRecipes()
     {
         return $this->recipes;
+    }
+
+    /**
+     * Set photo
+     *
+     * @param string $photo
+     * @return MainCookingMethod
+     */
+    public function setPhoto($photo)
+    {
+        $this->photo = $photo;
+
+        return $this;
+    }
+
+    /**
+     * Get photo
+     *
+     * @return string 
+     */
+    public function getPhoto()
+    {
+        return $this->photo;
     }
 }

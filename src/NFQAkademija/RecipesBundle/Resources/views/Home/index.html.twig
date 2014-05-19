@@ -21,7 +21,7 @@
          function loader(){
              recipe_size = calculate_recipe_size();
              load_recipes('true');
-             filter_show_selected();
+             filters_show('selected','');
              sidebar_manipulation();
              $( window ).resize(function() {
                  recalculate_width();

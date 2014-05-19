@@ -31,9 +31,10 @@ class Type
     /**
      * @var string
      *
-     * @ORM\Column(name="icon", type="string", length=255)
+     * @ORM\Column(name="photo", type="string", length=255)
      */
-    private $icon;
+
+    private $photo;
     /**
      * @ORM\OneToMany(targetEntity="\NFQAkademija\BaseBundle\Entity\Recipe", mappedBy="type")
      */
@@ -80,26 +81,26 @@ class Type
     }
 
     /**
-     * Set icon
+     * Set photo
      *
-     * @param string $icon
+     * @param string $photo
      * @return Type
      */
-    public function setIcon($icon)
+    public function setPhoto($photo)
     {
-        $this->icon = $icon;
+        $this->photo = $photo;
 
         return $this;
     }
 
     /**
-     * Get icon
+     * Get photo
      *
      * @return string 
      */
-    public function getIcon()
+    public function getPhoto()
     {
-        return $this->icon;
+        return $this->photo;
     }
 
     /**

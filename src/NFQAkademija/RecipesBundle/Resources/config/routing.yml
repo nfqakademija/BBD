@@ -50,37 +50,17 @@ nfq_akademija_append_shoppinglist:
     pattern:  /ajax/append_shoppinglist
     defaults: { _controller: NFQAkademijaRecipesBundle:Ajax:append_shoppinglist}
 
-nfq_akademija_filter_start:
-    pattern:  /ajax/filter_start
-    defaults: { _controller: NFQAkademijaRecipesBundle:Ajax:filter_start}
-
-nfq_akademija_filter_category:
-    pattern:  /ajax/filter_category
-    defaults: { _controller: NFQAkademijaRecipesBundle:Ajax:filter_category}
-
-nfq_akademija_filter_ingredients_category:
-    pattern:  /ajax/filter_ingredients_category
-    defaults: { _controller: NFQAkademijaRecipesBundle:Ajax:filter_ingredients_category}
-
-nfq_akademija_filter_show_selected:
-    pattern:  /ajax/filter_show_selected
-    defaults: { _controller: NFQAkademijaRecipesBundle:Ajax:filter_show_selected}
-
-nfq_akademija_filter_personal_show_selected:
-    pattern:  /ajax/filter_personal_show_selected
-    defaults: { _controller: NFQAkademijaRecipesBundle:Ajax:filter_personal_show_selected}
+nfq_akademija_filters_show:
+    pattern:  /ajax/filters_show
+    defaults: { _controller: NFQAkademijaRecipesBundle:Ajax:filters_show}
 
 nfq_akademija_filter_indicator_change:
     pattern:  /ajax/filter_indicator_change
     defaults: { _controller: NFQAkademijaRecipesBundle:Ajax:filter_indicator_change}
 
-nfq_akademija_manipulate_filter:
-    pattern:  /ajax/manipulate_filter
-    defaults: { _controller: NFQAkademijaRecipesBundle:Ajax:manipulate_filter}
-
-nfq_akademija_loading_screen_text:
-    pattern:  /ajax/loading_screen_text
-    defaults: { _controller: NFQAkademijaRecipesBundle:Ajax:loading_screen_text}
+nfq_akademija_loading_screen:
+    pattern:  /ajax/loading_screen
+    defaults: { _controller: NFQAkademijaRecipesBundle:Ajax:loading_screen}
 
 nfq_akademija_shoppinglist_add:
     pattern:  /ajax/shoppinglist_add
@@ -94,13 +74,6 @@ nfq_akademija_shoppinglist_delete:
     pattern:  /ajax/shoppinglist_delete
     defaults: { _controller: NFQAkademijaRecipesBundle:Ajax:shoppinglist_delete}
 
-nfq_akademija_filter_search_add:
-    pattern:  /ajax/filter_search_add
-    defaults: { _controller: NFQAkademijaRecipesBundle:Ajax:filter_search_add}
-
-nfq_akademija_filter_delete:
-    pattern:  /ajax/filter_delete
-    defaults: { _controller: NFQAkademijaRecipesBundle:Ajax:filter_delete}
 
 nfq_akademija_search:
     pattern:  /ajax/search

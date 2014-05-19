@@ -2,13 +2,140 @@ Array
 (
     [0] => Array
         (
-            [id] => 25
-            [text] => a0
+            [id] => 4
+            [name] => Antrieji patiekalai
+            [photo] => second_dishes.png
+        )
+
+    [1] => Array
+        (
+            [id] => 3
+            [name] => Desertai
+            [photo] => deserts.png
+        )
+
+    [2] => Array
+        (
+            [id] => 1
+            [name] => Gėrimai
+            [photo] => drinks.png
+        )
+
+    [3] => Array
+        (
+            [id] => 2
+            [name] => Kepiniai
+            [photo] => pastries.png
+        )
+
+    [4] => Array
+        (
+            [id] => 5
+            [name] => Konservuoti patiekalai
+            [photo] => canned_meals.png
+        )
+
+    [5] => Array
+        (
+            [id] => 6
+            [name] => Košės
+            [photo] => porridges.png
+        )
+
+    [6] => Array
+        (
+            [id] => 7
+            [name] => Salotos
+            [photo] => salads.png
+        )
+
+    [7] => Array
+        (
+            [id] => 8
+            [name] => Sriubos
+            [photo] => soups.png
+        )
+
+    [8] => Array
+        (
+            [id] => 9
+            [name] => Sumuštiniai
+            [photo] => sandwitches.png
+        )
+
+    [9] => Array
+        (
+            [id] => 10
+            [name] => Troškiniai
+            [photo] => stews.png
+        )
+
+    [10] => Array
+        (
+            [id] => 11
+            [name] => Uogienės
+            [photo] => jams.png
+        )
+
+    [11] => Array
+        (
+            [id] => 12
+            [name] => Užkandžiai
+            [photo] => snacks.png
         )
 
 )
 Array
 (
-    [id] => 26
-    [text] => a0
+    [0] => Array
+        (
+            [id] => 1
+            [name] => Aštru
+            [photo] => Hot
+        )
+
+)
+Array
+(
+)
+Array
+(
+    [0] => Array
+        (
+            [id] => 1
+            [name] => Aštru
+            [photo] => Hot
+            [info] => blabla
+        )
+
+)
+Array
+(
+    [0] => Array
+        (
+            [id] => 1
+            [name] => Aštru
+            [photo] => Hot
+        )
+
+)
+Array
+(
+    [0] => Array
+        (
+            [id] => 1
+            [name] => Aštru
+            [photo] => Hot
+        )
+
+)
+Array
+(
+    [0] => Array
+        (
+            [id] => 1
+            [name] => Aštru
+            [photo] => Hot
+        )
+
 )

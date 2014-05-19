@@ -336,43 +336,15 @@ function show_filters(array_of_filters, index){
     }
 }
 
-function filter_start(){
+function filters_show(type, category){
     full_sidebar();
 
     var formData = new FormData();
-    formData.append('filter_start','true');
+    formData.append('type', type);
+    formData.append('category', category);
     $.ajax({
         type: 'POST',
-        url: '/ajax/filter_start',
-        data: formData,
-        dataType: 'json',
-        beforeSend: function(){
-        },
-        processData: false,
-        contentType: false,
-        success: function (data) {
-            if (data.status == "good") {
-                filter_level = 1;
-                var filters = data.filters;
-                show_config_zone(1);
-                $("#scroller_filters").fadeOut(transition_time, function(){
-                    $("#scroller_filters").html('');
-                    $("#scroller_filters").fadeIn(1);
-                    show_filters(filters, 0);
-                });
-            }
-        }
-    });
-}
-
-function filter_category(category){
-    full_sidebar();
-
-    var formData = new FormData();
-    formData.append('filter_category', category);
-    $.ajax({
-        type: 'POST',
-        url: '/ajax/filter_category',
+        url: '/ajax/filters_show',
         data: formData,
         dataType: 'json',
         beforeSend: function () {
@@ -381,35 +353,18 @@ function filter_category(category){
         contentType: false,
         success: function (data) {
             if (data.status == "good") {
-                filter_level = 2;
-                var filters = data.filters;
-                $("#scroller_filters").fadeOut(transition_time, function(){
-                    $("#scroller_filters").html('');
-                    $("#scroller_filters").fadeIn(1);
-                    show_filters(filters, 0);
-                });
-            }
-        }
-    });
-}
+                if (type == 'selected' || type == 'selected_personal'){
+                    filter_level = 0;
+                    show_config_zone(0);
+                }else if(type == 'categories'){
+                    filter_level = 1;
+                    show_config_zone(1);
+                }else if(type == 'inside_category'){
+                    filter_level = 2;
+                }else if(type == 'ingredients'){
+                    filter_level = 3;
+                }
 
-function filter_ingredients_category(ingredients_category){
-    full_sidebar();
-
-    var formData = new FormData();
-    formData.append('filter_ingredients_category', ingredients_category);
-    $.ajax({
-        type: 'POST',
-        url: '/ajax/filter_ingredients_category',
-        data: formData,
-        dataType: 'json',
-        beforeSend: function () {
-        },
-        processData: false,
-        contentType: false,
-        success: function (data) {
-            if (data.status == "good") {
-                filter_level = 3;
                 var filters = data.filters;
                 $("#scroller_filters").fadeOut(transition_time, function(){
                     $("#scroller_filters").html('');
@@ -575,15 +530,37 @@ function hide_loading_screen(){
     //$("#loading_screen_info").animate({left: left},transition_time * 2,function(){
         $("#loading_screen").fadeOut(transition_time * 2);
    // });
+
+    var formData = new FormData();
+    formData.append('status', 'end');
+    $.ajax({
+        type: 'POST',
+        url: '/ajax/loading_screen',
+        data: formData,
+        dataType: 'json',
+        beforeSend: function () {
+        },
+        processData: false,
+        contentType: false,
+        success: function (data) {
+            if (data.status == "good") {
+            }
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            toast('Įvyko klaida. Perkraukite puslapį','bad','logo');
+        }
+    });
+
 }
 
 function show_loading_screen(){
+    $("#loading_screen").fadeIn(transition_time * 2);
 
     var formData = new FormData();
-    formData.append('loading_screen_text', 'true');
+    formData.append('status', 'start');
     $.ajax({
         type: 'POST',
-        url: '/ajax/loading_screen_text',
+        url: '/ajax/loading_screen',
         data: formData,
         dataType: 'json',
         beforeSend: function () {
@@ -593,7 +570,6 @@ function show_loading_screen(){
         success: function (data) {
             if (data.status == "good") {
                 $("#loading_screen_info").html(data.fact);
-                $("#loading_screen").fadeIn(transition_time * 2);
             }
         },
         error: function (xhr, ajaxOptions, thrownError) {
@@ -626,13 +602,13 @@ function filter_go_back(type){
 
     switch(filter_level) {
         case 0:
-            filter_show_selected();
+            filters_show('selected','');
             break;
         case 1:
-            filter_start();
+            filters_show('categories','');
             break;
         case 2:
-            filter_category('ingredients_categories');
+            filters_show('inside_category','ingredients_categories');
             break;
     }
 }
@@ -640,7 +616,7 @@ function filter_go_back(type){
 function show_config_zone(state){
     if(state == 0){
         var config_zone =
-            "<div class='filter_element untouchable' onclick=\"filter_start();\">" +
+            "<div class='filter_element untouchable' onclick=\"filters_show('categories','');\">" +
                 "<div class='filter_element_image' id='add'></div>" +
                 "<div class='filter_element_text'>Pridėti filtrą</div>" +
             "</div>";
@@ -659,71 +635,11 @@ function show_config_zone(state){
     }
 }
 
-function filter_show_selected(){
+function filter_send_indicator_changes(filter_type, filter_id, indicator_status){
     var formData = new FormData();
-    formData.append('filter_show_selected', 'true');
-    $.ajax({
-        type: 'POST',
-        url: '/ajax/filter_show_selected',
-        data: formData,
-        dataType: 'json',
-        beforeSend: function () {
-        },
-        processData: false,
-        contentType: false,
-        success: function (data) {
-            if (data.status == "good") {
-                filter_level = 0;
-                var filters = data.filters;
-                show_config_zone(0);
-                $("#scroller_filters").fadeOut(transition_time, function(){
-                    $("#scroller_filters").html('');
-                    $("#scroller_filters").fadeIn(1);
-                    show_filters(filters, 0);
-                });
-                setTimeout(function(){scroll_filters.refresh();},0);
-            }
-        }
-    });
-}
-
-function filter_personal_show_selected(){
-    var formData = new FormData();
-    formData.append('filter_personal_show_selected', 'true');
-    $.ajax({
-        type: 'POST',
-        url: '/ajax/filter_personal_show_selected',
-        data: formData,
-        dataType: 'json',
-        beforeSend: function () {
-        },
-        processData: false,
-        contentType: false,
-        success: function (data) {
-            if (data.status == "good") {
-                filter_level = 0;
-                var filters = data.filters;
-                show_config_zone(0);
-                $("#scroller_filters").fadeOut(transition_time, function(){
-                    $("#scroller_filters").html('');
-                    $("#scroller_filters").fadeIn(1);
-                    show_filters(filters, 0);
-                });
-                setTimeout(function(){scroll_filters.refresh();},0);
-            }
-        }
-    });
-}
-
-function filter_indicator_change(ID){
-    var ID = ID.replace('indicator_change_','');
-    var filter_data = ID.split('-');
-    var filter_type = filter_data[0];
-    var filter_id = filter_data[1];
-
-    var formData = new FormData();
-    formData.append('filter_type', filter_type);
-    formData.append('filter_id', filter_id);
+    formData.append('type', filter_type);
+    formData.append('id', filter_id);
+    formData.append('indicator', indicator_status);
     $.ajax({
         type: 'POST',
         url: '/ajax/filter_indicator_change',
@@ -735,14 +651,28 @@ function filter_indicator_change(ID){
         contentType: false,
         success: function (data) {
             if (data.status == "good") {
-                if($("#" + ID).hasClass('filter_element_indicator_not_want')){
-                    $('#' + ID).removeClass('filter_element_indicator_not_want').addClass('filter_element_indicator_want');
-                }else if($("#" + ID).hasClass('filter_element_indicator_want')){
-                    $('#' + ID).removeClass('filter_element_indicator_want').addClass('filter_element_indicator_not_want');
-                }
+
             }
         }
     });
+}
+
+function filter_indicator_change(ID){
+    var ID = ID.replace('indicator_change_','');
+    var filter_data = ID.split('-');
+    var filter_type = filter_data[0];
+    var filter_id = filter_data[1];
+    var new_indicator_status;
+
+    if($("#" + ID).hasClass('filter_element_indicator_not_want')){
+        $('#' + ID).removeClass('filter_element_indicator_not_want').addClass('filter_element_indicator_want');
+        new_indicator_status = 'want';
+    }else if($("#" + ID).hasClass('filter_element_indicator_want')){
+        $('#' + ID).removeClass('filter_element_indicator_want').addClass('filter_element_indicator_not_want');
+        new_indicator_status = 'not_want';
+    }
+
+    filter_send_indicator_changes(filter_type, filter_id, new_indicator_status);
 }
 
 function manipulate_filter(ID){
@@ -775,25 +705,7 @@ function manipulate_filter(ID){
         new_indicator_status = "want";
     }
 
-    var formData = new FormData();
-    formData.append('filter_indicator', new_indicator_status);
-    formData.append('filter_id', filter_id);
-    formData.append('filter_type', filter_type);
-    $.ajax({
-        type: 'POST',
-        url: '/ajax/manipulate_filter',
-        data: formData,
-        dataType: 'json',
-        beforeSend: function () {
-        },
-        processData: false,
-        contentType: false,
-        success: function (data) {
-            if (data.status == "good") {
-
-            }
-        }
-    });
+    filter_send_indicator_changes(filter_type, filter_id, new_indicator_status);
 }
 
 function shoppinglist_add(ID){
@@ -915,34 +827,16 @@ function filter_search_add(ID, type){
     input_blur();
     input_focus('search');
 
-    var formData = new FormData();
-    formData.append('filter_type', filter_type);
-    formData.append('filter_id', filter_id);
-    formData.append('filter_indicator', type);
-    $.ajax({
-        type: 'POST',
-        url: '/ajax/filter_search_add',
-        data: formData,
-        dataType: 'json',
-        beforeSend: function () {
-        },
-        processData: false,
-        contentType: false,
-        success: function (data) {
-            if (data.status == "good") {
-                if(filter_level == 0){
-                    var filters = [];
-                    var data = "<div class='filter_element untouchable filter_element_indicator_" + type + "' id='" + id + "' onclick='filter_selected(this.id)'><div class='filter_element_image' style=\"background-image:" + image + ";\"></div><div class='filter_element_text'>" + title + "</div><div class='filter_element_delete' id='delete_" + id + "' onclick='filter_delete(this.id)'></div><div class='filter_element_indicator_change' id='indicator_change_" + id + "' onclick='filter_indicator_change(this.id)'></div><div class='filter_element_indicator_small'></div></div>";
-                    filters[0] = data;
-                    show_filters(filters, 0);
+    if(filter_level == 0){
+        var filters = [];
+        var data = "<div class='filter_element untouchable filter_element_indicator_" + type + "' id='" + id + "' onclick='filter_selected(this.id)'><div class='filter_element_image' style=\"background-image:" + image + ";\"></div><div class='filter_element_text'>" + title + "</div><div class='filter_element_delete' id='delete_" + id + "' onclick='filter_delete(this.id)'></div><div class='filter_element_indicator_change' id='indicator_change_" + id + "' onclick='filter_indicator_change(this.id)'></div><div class='filter_element_indicator_small'></div></div>";
+        filters[0] = data;
+        show_filters(filters, 0);
 
-                    setTimeout(function(){scroll_filters.refresh()}, 0);
-                }
-            }
-        }
-    });
+        setTimeout(function(){scroll_filters.refresh()}, 100);
+    }
 
-
+    filter_send_indicator_changes(filter_type, filter_id, type);
 }
 
 
@@ -952,28 +846,12 @@ function filter_delete(ID){
     var filter_data = ID.split('-');
     var filter_type = filter_data[0];
     var filter_id = filter_data[1];
+    $('#' + ID).remove();
+    setTimeout(function(){
+        scroll_filters.refresh();
+    }, 100);
 
-    var formData = new FormData();
-    formData.append('filter_id', filter_id);
-    formData.append('filter_type', filter_type);
-    $.ajax({
-        type: 'POST',
-        url: '/ajax/filter_delete',
-        data: formData,
-        dataType: 'json',
-        beforeSend: function () {
-        },
-        processData: false,
-        contentType: false,
-        success: function (data) {
-            if (data.status == "good") {
-                $('#' + ID).remove();
-                setTimeout(function(){
-                    scroll_filters.refresh();
-                }, 100);
-            }
-        }
-    });
+    filter_send_indicator_changes(filter_type, filter_id, 'none');
 }
 
 function filter_selected(ID){
@@ -1187,7 +1065,7 @@ function input_focus(type){
 
 function input_blur(){
     $("#search_zone").removeClass('active_search_zone');
-    $("#search_zone").addClass('unactive_search_zone');
+    $("#search_zone").addClass('unactive_search_zone//');
     $('#search_container_inside').html('');
     $('#search_container').css('display','none');
 }

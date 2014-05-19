@@ -24,16 +24,16 @@ class Country
     /**
      * @var string
      *
-     * @ORM\Column(name="Name", type="string", length=255)
+     * @ORM\Column(name="name", type="string", length=255)
      */
-    private $Name;
+    private $name;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="Flag", type="string", length=255)
+     * @ORM\Column(name="photo", type="string", length=255)
      */
-    private $Flag;
+    private $photo;
     /**
      * @ORM\OneToMany(targetEntity="\NFQAkademija\BaseBundle\Entity\Recipe", mappedBy="country")
      */
@@ -56,52 +56,6 @@ class Country
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set Name
-     *
-     * @param string $name
-     * @return Country
-     */
-    public function setName($name)
-    {
-        $this->Name = $name;
-
-        return $this;
-    }
-
-    /**
-     * Get Name
-     *
-     * @return string 
-     */
-    public function getName()
-    {
-        return $this->Name;
-    }
-
-    /**
-     * Set Flag
-     *
-     * @param string $flag
-     * @return Country
-     */
-    public function setFlag($flag)
-    {
-        $this->Flag = $flag;
-
-        return $this;
-    }
-
-    /**
-     * Get Flag
-     *
-     * @return string 
-     */
-    public function getFlag()
-    {
-        return $this->Flag;
     }
 
     /**
@@ -135,5 +89,51 @@ class Country
     public function getRecipes()
     {
         return $this->recipes;
+    }
+
+    /**
+     * Set name
+     *
+     * @param string $name
+     * @return Country
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string 
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Set photo
+     *
+     * @param string $photo
+     * @return Country
+     */
+    public function setPhoto($photo)
+    {
+        $this->photo = $photo;
+
+        return $this;
+    }
+
+    /**
+     * Get photo
+     *
+     * @return string 
+     */
+    public function getPhoto()
+    {
+        return $this->photo;
     }
 }

@@ -43,7 +43,7 @@
             $("#content_wrapper").click(function(){ $("#search_input").blur();});
 
             load_products('true');
-            append_shoppinglist();
+            load_shoppinglist();
 
             hide_loading_screen();
         }
@@ -74,12 +74,23 @@
 {% endblock %}
 
 {% block config_zone %}{% endblock %}
+{% block specific_styles %}
+    <style type="text/css">
+        #content_wrapper{
+            background-image:url('/images/content_background.jpg');
+            padding-bottom:10px;
+        }
+
+        #scroller_content{
+            padding-bottom:10px;
+        }
+
+    </style>
+{% endblock %}
 
 {% block content %}
-<div id="content_wrapper" style="padding-bottom:10px;background-image:url('/images/content_background.jpg')">
-    <div class="scroller" id="scroller_content" style="padding-bottom:10px;">
-
-    </div>
+<div id="content_wrapper">
+    <div class="scroller" id="scroller_content"></div>
 </div>
 {% endblock %}
 

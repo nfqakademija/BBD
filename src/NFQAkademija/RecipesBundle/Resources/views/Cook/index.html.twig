@@ -1,7 +1,7 @@
 {% extends "::base.html.twig" %}
 
 
-{% block title %}{{ recipe_ID }} | Foodex{% endblock %}
+{% block title %}{{ title }} | Foodex{% endblock %}
 {% block specific_scripts %}
     <script type="text/javascript">
         function key_check(event){
@@ -17,7 +17,7 @@
         function loader() {
             sidebar_manipulation();
             //get steps amount
-            steps_amount = 3;
+            steps_amount = {{ steps_amount }};
 
             steps_sidebar_initialize();
             $(window).resize(function () {
@@ -133,23 +133,25 @@
             $("#steps_others_like_box").click(function(){ $("#search_input").blur();});
             $("#step_comment_answers_box").click(function(){ $("#search_input").blur();});
 
-            //hide_loading_screen();
+            hide_loading_screen();
         }
     </script>
 {% endblock %}
+
 {% block search_zone %}
-    <div id="divider" class="top_divider" style='margin-top:10px;margin-left:10px;' onclick="full_sidebar()"></div>
+    <div id="divider" class="top_divider" onclick="full_sidebar()"></div>
     <div id="cook_left_sidebar_wrapper">
         <div class="scroller" id="cook_left_sidebar_wrapper_scroller">
-            <div id="search_zone" class='cook_ingredients_zone' style="background:transparent !important; border:1px solid transparent !important;box-shadow:0px 0px 0px transparent !important; height:auto;" onclick="full_sidebar()">
+            <div id="search_zone" class='cook_ingredients_zone' onclick="full_sidebar()">
                 <div id="cook_ingredients">
-                    <div class="sidebar_right_info_item untouchable not_liked" id="sidebar_right_like" onclick="recipe_like('1', this.id)">59</div>
-                    <div class="sidebar_right_info_item" id="sidebar_right_author">Autorius</div>
-                    <div class="sidebar_right_info_item" id="sidebar_right_time">25 min</div>
-                    <div class="sidebar_right_info_item" id="sidebar_right_country">Lenkija</div>
-                    <div class="sidebar_right_info_item" id="sidebar_right_main_cooking_method">Virimas</div>
-                    <div class="sidebar_right_info_item" id="sidebar_right_type">Antrieji patiekalai</div>
-                    <div class="sidebar_right_info_item" id="sidebar_right_characteristics">Aštru, sūru</div>
+                    <div class="sidebar_right_info_item untouchable {{ like_status }}" id="sidebar_right_like" onclick="recipe_like('{{ id }}', this.id)">{{ like_amount }}</div>
+                    <div class="sidebar_right_info_item" id="sidebar_right_author">{{ author }}</div>
+                    <div class="sidebar_right_info_item" id="sidebar_right_time">{{ cooking_time }}</div>
+                    <div class="sidebar_right_info_item" id="sidebar_right_country">{{ country }}</div>
+                    <div class="sidebar_right_info_item" id="sidebar_right_main_cooking_method">{{ main_cooking_method }}</div>
+                    <div class="sidebar_right_info_item" id="sidebar_right_type">{{ type }}</div>
+                    <div class="sidebar_right_info_item" id="sidebar_right_properties">{{ properties }}</div>
+                    <div class="sidebar_right_info_item" id="sidebar_right_celebration">{{ celebration }}</div>
                 </div>
             </div>
 {% endblock %}
@@ -159,29 +161,16 @@
  {% endblock %}
 
 {% block filters_zone %}
-            <div id='filters_zone' style="position:relative !important;top:0px !important;bottom:0px !important;height:auto !important;float:left;" onclick="full_sidebar()">
+        <div id='filters_zone' style="position:relative !important;top:0px !important;bottom:0px !important;height:auto !important;float:left;" onclick="full_sidebar()">
+            {% for ingredient in ingredients %}
                 <div class="ingredient untouchable">
-                    <div class="ingredient_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
-                    <div class="ingredient_text">Bananas</div>
-                    <div class="ingredient_size">5 vnt</div>
+                    <div class="ingredient_image" style="background-image:url('{{ ingredient.imageUrl }}')"></div>
+                    <div class="ingredient_text">{{ ingredient.title }}</div>
+                    <div class="ingredient_size">{{ ingredient.amount }} {{ ingredient.unit }}</div>
                 </div>
-                <div class="ingredient untouchable">
-                    <div class="ingredient_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
-                    <div class="ingredient_text">Jautiena</div>
-                    <div class="ingredient_size">250 g</div>
-                </div>
-                <div class="ingredient untouchable">
-                    <div class="ingredient_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
-                    <div class="ingredient_text">Cukinija</div>
-                    <div class="ingredient_size">500 g</div>
-                </div>
-                <div class="ingredient untouchable">
-                    <div class="ingredient_image" style="background-image:url('{{ asset('images/random.png') }}')"></div>
-                    <div class="ingredient_text">Ananasas</div>
-                    <div class="ingredient_size">100 g</div>
-                </div>
-            </div>
+            {% endfor %}
         </div>
+    </div>
     </div>
 {% endblock %}
 
@@ -190,70 +179,76 @@
         <div id="sidebar_right_cook_button" class="untouchable next_step" onclick="next_step()">Sekantis</div>
     </div>
 {% endblock %}
+{% block specific_styles %}
+    <style type="text/css">
+        #content_wrapper{
+            background-image:url('/images/food (19).jpg');
+            right:-30px;
+        }
+        #search_zone{
+            background:transparent !important;
+            border:1px solid transparent !important;
+            box-shadow:0px 0px 0px transparent !important;
+            height:auto;
+        }
+        #top_divider{
+            margin-top:10px;
+            margin-left:10px;
+        }
+    </style>
+{% endblock %}
 
 {% block content %}
-    <div id="content_wrapper" style="background-image:url('/images/food (19).jpg');right:-30px;" >
-        <div class="step" id="step_0" style="background-image:url('/images/food (19).jpg');">
-            <div class="step_title">Šiškebabas</div>
+    <div id="content_wrapper">
+        <div class="step" id="step_0" style="background-image:url('{{ imageUrl }}');">
+            <div class="step_title">{{ title }}</div>
 
             <div id="step_about_box">
                 <div id="step_about_title">Apie patiekalą</div>
-                <div id="step_about">Šiškebabas yra puikus produktus valgykite ir džiaukitės</div>
+                <div id="step_about">{{ about }}</div>
             </div>
 
             <div id="step_comment_box" class="step_answers_box">
                 <div id="step_comment_title" class="step_answers_title">Atsiliepimai</div>
                 <div id="step_comment_answers_box">
                     <div class="scroller" id="step_comment_answers_box_scroller">
-                        <div class="step_answer"><div class="step_answer_image" style="background-image:url('/images/profile.png')"></div><div class="step_answer_text">Nuostabus šiškebabas</div></div>
-                        <div class="step_answer"><div class="step_answer_image" style="background-image:url('/images/profile.png')"></div><div class="step_answer_text">Šūdų krūva ne maistas</div></div>
-                        <div class="step_answer"><div class="step_answer_image" style="background-image:url('/images/profile.png')"></div><div class="step_answer_text">Labai skanu. Patiko visai šeimai</div></div>
-                        <div class="step_answer"><div class="step_answer_image" style="background-image:url('/images/profile.png')"></div><div class="step_answer_text">Rekomenduoju vietoj agurko naudoti išvirtą agurką</div></div>
-                    </div>
+                        {% for comment in comments %}
+                            <div class="step_answer"><div class="step_answer_image" style="background-image:url('{{ comment.imageUrl }}')"></div><div class="step_answer_text">{{ comment.text }}</div></div>
+                        {% endfor %}
+                        </div>
                 </div>
             </div>
             <div class="step_go step_down" onclick="next_step()"></div>
         </div>
-        <div class="step" id="step_1">
-            <div class="step_go step_up" onclick="previous_step()"></div>
-            <div class="step_id">Žingsnis</div>
-            <div class="step_timer untouchable" id="step_1_timer" onclick="cook_timer(this.id)">00:00:00</div>
-            <div class="step_info">Supjaustyti agurkus</div>
-            <div class="step_go step_down" onclick="next_step()"></div>
-        </div>
-        <div class="step" id="step_2">
-            <div class="step_go step_up" onclick="previous_step()"></div>
-            <div class="step_id">Žingsnis</div>
-            <div class="step_timer untouchable" id="step_2_timer" onclick="cook_timer(this.id)">00:00:00</div>
-            <div class="step_info">Išvirti agurkus</div>
-            <div class="step_go step_down" onclick="next_step()"></div>
-        </div>
-        <div class="step" id="step_3">
-            <div class="step_go step_up" onclick="previous_step()"></div>
-            <div class="step_id">Žingsnis</div>
-            <div class="step_timer untouchable" id="step_3_timer" onclick="cook_timer(this.id)">00:00:00</div>
-            <div class="step_info">Agurkus sudėti į lėkštę</div>
-            <div class="step_go step_down" onclick="next_step()"></div>
-        </div>
+        {% for step in steps %}
+            <div class="step" id="step_{{ step.id }}">
+                <div class="step_go step_up" onclick="previous_step()"></div>
+                <div class="step_id">Žingsnis</div>
+                <div class="step_timer untouchable" id="step_{{ step.id }}_timer" onclick="cook_timer(this.id)">00:00:00</div>
+                <div class="step_info">{{ step.info }}</div>
+                <div class="step_go step_down" onclick="next_step()"></div>
+            </div>
+        {% endfor %}
 
         <div class="step" id="step_last">
             <div class="step_go step_up" onclick="previous_step()"></div>
             <div class="step_id last_id">Skanaus</div>
-            <div class="step_button not_liked" id="step_like" onclick="recipe_like('1', this.id)">Patiko?</div>
-            <div class="step_button" id="step_share" onclick="show_top_layer('share','1')">Pasidalink</div>
+            <div class="step_button {{ like_status }}" id="step_like" onclick="recipe_like('{{ id }}', this.id)">Patiko?</div>
+            <div class="step_button" id="step_share" onclick="show_top_layer('share','{{ id }}')">Pasidalink</div>
 
             <div id="step_comment_box" class="step_comment_box_comments">
                 <div id="step_comment_title" >Atsiliepimas</div>
                 <textarea id="step_comment_box_area" placeholder="Jūsų pastebėjimai, patarimai, alternatyvos ..."></textarea>
-                <div id="step_comment" onclick="add_comment('1')">Skelbti</div>
+                <div id="step_comment" onclick="add_comment('{{ id }}')">Skelbti</div>
             </div>
 
             <div id="step_others_like">
                 <div id="steps_others_like_title">Kuriem patiko šis patiekalas taip pat patiko:</div>
                 <div id="steps_others_like_box">
                     <div class="scroller" id="steps_others_like_box_scroller">
-                        <div class='recipe_box' id='recipe_1' style="background-image: url('/images/food (5).jpg');width:100px;height:100px;" onclick="show_recipe('1')"></div>
-                        <div class='recipe_box' id='recipe_2' style="background-image: url('/images/food (9).jpg');width:100px;height:100px;" onclick="show_recipe('2')"></div>
+                        {% for similar_recipe in similar_recipes %}
+                            <div class='recipe_box' id='recipe_{{ similar_recipe.id }}' style="background-image: url('{{ similar_recipe.imageUrl }}');width:100px;height:100px;" onclick="show_recipe('{{ similar_recipe.id }}')"><div class='recipe_box_info'>{{ similar_recipe.title }}</div></div>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
@@ -261,6 +256,5 @@
     </div>
 
     <div id="steps_sidebar"><div id="steps_sidebar_pointer"></div></div>
-
 
 {% endblock %}

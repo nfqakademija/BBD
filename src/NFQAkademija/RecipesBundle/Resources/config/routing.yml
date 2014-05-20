@@ -11,7 +11,7 @@ nfq_akademija_shoppinglist:
     defaults: { _controller: NFQAkademijaRecipesBundle:ShoppingList:index }
 
 nfq_akademija_cook:
-    pattern:  /cook/{recipe_ID}
+    pattern:  /cook/{id}
     defaults: { _controller: NFQAkademijaRecipesBundle:Cook:index }
 
 nfq_akademija_places:
@@ -46,9 +46,9 @@ nfq_akademija_load_products:
     pattern:  /ajax/load_products
     defaults: { _controller: NFQAkademijaRecipesBundle:Ajax:load_products}
 
-nfq_akademija_append_shoppinglist:
-    pattern:  /ajax/append_shoppinglist
-    defaults: { _controller: NFQAkademijaRecipesBundle:Ajax:append_shoppinglist}
+nfq_akademija_load_shoppinglist:
+    pattern:  /ajax/load_shoppinglist
+    defaults: { _controller: NFQAkademijaRecipesBundle:Ajax:load_shoppinglist}
 
 nfq_akademija_filters_show:
     pattern:  /ajax/filters_show

@@ -62,7 +62,7 @@ function profile_recipes(type){
     recipe_size = calculate_recipe_size();
 
     var formData = new FormData();
-    formData.append('profile_recipes_type',type);
+    formData.append('type',type);
     $.ajax({
         type: 'POST',
         url: '/ajax/profile_recipes',
@@ -204,12 +204,12 @@ function add_product(ID){
     });
 }
 
-function append_shoppinglist(){
+function load_shoppinglist(){
     var formData = new FormData();
-    formData.append('append_shoppinglist','true');
+    formData.append('load_shoppinglist','true');
     $.ajax({
         type: 'POST',
-        url: '/ajax/append_shoppinglist',
+        url: '/ajax/load_shoppinglist',
         data: formData,
         dataType: 'json',
         beforeSend: function () {
@@ -651,7 +651,7 @@ function filter_send_indicator_changes(filter_type, filter_id, indicator_status)
         contentType: false,
         success: function (data) {
             if (data.status == "good") {
-
+                load_recipes('true');
             }
         }
     });
@@ -1003,7 +1003,12 @@ function show_recipe(recipe_ID){
                         scroll_sidebar_right.refresh();
                         scroll_sidebar_right.scrollTo(0,0);
                     }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    toast('Įvyko klaida. Perkraukite puslapį','bad','logo');
+                    console.log(xhr.responseText);
                 }
+
             });
 
         }else{

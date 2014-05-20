@@ -95,7 +95,13 @@ class Recipe
      */
     public function __construct()
     {
+
     }
+
+    public function __toString(){
+        return $this->getName();
+    }
+
     /**
      * Get id
      *

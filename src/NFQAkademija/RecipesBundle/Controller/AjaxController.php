@@ -12,6 +12,11 @@ use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\HttpFoundation\Session\Session;
 
+//SESIJOS, padaryti fakto loadinimo ir filtru indicatoriu keitima, sudejima y masyva
+//isgauti viska is recipo pagal id
+
+
+
 class AjaxController extends Controller
 {
     public function new_recipeAction(Request $request)
@@ -68,10 +73,20 @@ class AjaxController extends Controller
     {
         $request_data = $request->request;
 
-        $type = $request_data->get('profile_recipes_type');
+        $type = $request_data->get('type');
 
         //get recipe_ID, image_url, title which user cooked, liked or created TYPE
         //[id, imageUrl, title]
+
+        $repository = $this->getDoctrine()->getRepository('NFQAkademijaBaseBundle:Recipe');
+        $query = $repository->createQueryBuilder('f')
+            ->select('f.id, f.name, f.photo')
+            ->orderBy('f.name', 'ASC')
+            ->getQuery();
+
+        $data = $query->getResult();
+
+
         $recipes = [];
 
         $recipes[0] = ["0","/images/food (0).jpg", "title0"];
@@ -101,10 +116,27 @@ class AjaxController extends Controller
     {
         $request_data = $request->request;
         $reset = $request_data->get('reset');
+        $limit = 20;
+        $offset = 0; //get offset from session
 
         if($reset == "true"){
             //reset limit to 0 - LIMIT 10, 0;
+            $offset = 0;
+
         }
+
+        $repository = $this->getDoctrine()->getRepository('NFQAkademijaBaseBundle:Recipe');
+        $query = $repository->createQueryBuilder('f')
+            ->select('f.id, f.name, f.photo')
+            ->orderBy('f.name', 'ASC')
+            ->setFirstResult($offset)
+            ->setMaxResults($limit)
+            ->getQuery();
+
+        $data = $query->getResult();
+
+        //increase in session
+        $offset += 10;
 
         //get recipe_ID, image_url, title and limit and form recipes array
         //[id, imageUrl, title]
@@ -164,11 +196,12 @@ class AjaxController extends Controller
         return $jsonResponse;
     }
 
-    public function append_shoppinglistAction(Request $request)
+    public function load_shoppinglistAction(Request $request)
     {
         $request_data = $request->request;
 
         //from DB get shoppinglist and form shoppinglist_session
+
 
 
         $response = array(
@@ -315,12 +348,13 @@ class AjaxController extends Controller
             $repository = $this->getDoctrine()->getRepository('NFQAkademijaBaseBundle:Fact');
             $query = $repository->createQueryBuilder('f')
                 ->select('f.text')
-                ->orderBy('RAND()')
-                ->setMaxResult(1)
+                //->orderBy('RAND()')
                 ->getQuery();
-            $data = $query->getResult();
+            $data = $query->getSingleResult();
             $fact = $data["text"];
 
+            $session = $request->getSession();
+            $session->set('loading_screen', $fact);
         }else{
             //delete session
         }
@@ -347,6 +381,8 @@ class AjaxController extends Controller
         //want, not_want, none
         //none = delete
         //if not exists - add to session
+
+
 
         //item[] = ["type" => $type, "id" => $id, "indicator" => $indicator]
 
@@ -538,10 +574,40 @@ class AjaxController extends Controller
     public function recipe_right_sidebarAction(Request $request)
     {
         $request_data = $request->request;
-
         $recipe_ID = $request_data->get('recipe_ID');
 
-        //from recipe_ID get all data about recipe and form recipe_data variable
+        /*
+        $repository = $this->getDoctrine()->getRepository('NFQAkademijaBaseBundle:Recipe');
+        $recipe = $repository->find('1');
+
+        $products = $recipe->getProducts();
+        $name = $recipe->getName();
+        file_put_contents('log.log', print_r($products, true), FILE_APPEND);
+        */
+        //from recipe_ID get all ingredients:id, imageUrl, title, amount, unit
+        //from current shoppinglist and current filters session get
+        $ingredients = "";
+        $ingredient_ID = '2';
+        $ingredient_imageUrl = "/images/food (5).jpg";
+        $ingredient_title = "Bananas";
+        $ingredient_quantity = "5";
+        $ingredient_unit = "vnt";
+        $ingredient_indicator = "have"; // have, shoppinglist, undefined
+
+        $ingredient = $this->render('NFQAkademijaRecipesBundle:AjaxViews:Ingredient.html.twig',
+            array(
+                'id' => $ingredient_ID,
+                'title' => $ingredient_title,
+                'imageUrl' => $ingredient_imageUrl,
+                'quantity' => $ingredient_quantity,
+                'unit' => $ingredient_unit,
+                'indicator' => $ingredient_indicator,
+            ));
+        $ingredient = $ingredient->getContent();
+        $ingredients .= $ingredient;
+        $ingredients .= $ingredient;
+        $ingredients .= $ingredient;
+
 
         $title = "bla";
         $imageUrl = "/images/food (5).jpg";
@@ -555,47 +621,23 @@ class AjaxController extends Controller
         $properties = "Aštru, sūru";
         $celebration = "Kalėdos";
 
-        //from recipe_ID get all ingredients:id, imageUrl, title, amount, unit
-        //from current shoppinglist and current filters session get indicator
-
-        $ingredient_ID = '2';
-        $ingredient_imageUrl = "/images/food (5).jpg";
-        $ingredient_title = "Bananas";
-        $ingredient_quantity = "5";
-        $ingredient_unit = "vnt";
-        $ingredient_indicator = "have"; // have, shoppinglist, undefined
-
-        $ingredient =
-        "<div class='ingredient untouchable' id='ingredient-$ingredient_ID' onclick=\"ingredient_selected('$ingredient_ID')\">
-            <div class='ingredient_image' style='background-image:url(\"$ingredient_imageUrl\")'></div>
-            <div class='ingredient_text'>$ingredient_title</div>
-            <div class='ingredient_size'>$ingredient_quantity $ingredient_unit</div>
-            <div class='ingredient_indicator ingredient_indicator_$ingredient_indicator' id='ingredient_indicator-$ingredient_ID'></div>
-        </div>";
-
-        $ingredients = $ingredient.$ingredient.$ingredient;
-
-        $recipe_data =
-        "<div id='sidebar_right_image' style='background-image:url(\"$imageUrl\");'></div>
-            <div id='sidebar_right_title'>$title</div>
-            <div id='sidebar_right_info'>
-                <div class='sidebar_right_info_item untouchable $like_status' id='sidebar_right_like' onclick=\"recipe_like('$recipe_ID', this.id)\">$like_count</div>
-                <div class='sidebar_right_info_item' id='sidebar_right_author'>$author</div>
-                <div class='sidebar_right_info_item' id='sidebar_right_time'>$time</div>
-                <div class='sidebar_right_info_item' id='sidebar_right_country'>$country</div>
-                <div class='sidebar_right_info_item' id='sidebar_right_type'>$type</div>
-                <div class='sidebar_right_info_item' id='sidebar_right_characteristics'>$properties</div>
-                <div class='sidebar_right_info_item' id='sidebar_right_main_cooking_method'>$main_cooking_method</div>
-                <div class='sidebar_right_info_item' id='sidebar_right_celebration'>$celebration</div>
-            </div>
-            <div id='sidebar_right_ingredients'>
-                <div id='sidebar_right_ingredients_text'>Ingredientai</div>
-                <div class='sidebar_right_ingredients_button' id='sidebar_right_ingredients_coop' onclick=\"show_top_layer('coop','$recipe_ID')\"></div>
-                <div class='sidebar_right_ingredients_button' id='sidebar_right_ingredients_shoppinglist' onclick=\"add_to_shopping_list('$recipe_ID')\"></div>
-            </div>
-            <div id='divider' class='ingredients_divider'></div>
-            <div id='sidebar_right_ingredients_zone'>$ingredients</div>
-        </div>";
+        $recipe_data = $this->render('NFQAkademijaRecipesBundle:AjaxViews:RecipeRightSidebar.html.twig',
+            array(
+                'id' => $recipe_ID,
+                'title' => $title,
+                'imageUrl' => $imageUrl,
+                'like_status' => $like_status,
+                'like_count' => $like_count,
+                'author' => $author,
+                'time' => $time,
+                'country' => $country,
+                'type' => $type,
+                'main_cooking_method' => $main_cooking_method,
+                'properties' => $properties,
+                'celebration' => $celebration,
+                'ingredients' => $ingredients,
+            ));
+        $recipe_data = $recipe_data->getContent();
 
         $response = array(
             'status' => 'good',

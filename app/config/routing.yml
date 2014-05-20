@@ -1,14 +1,14 @@
 # app/config/routing.yml
-hwi_oauth_security:
-    resource: "@HWIOAuthBundle/Resources/config/routing/login.xml"
-    prefix: /login
-
-hwi_oauth_connect:
-    resource: "@HWIOAuthBundle/Resources/config/routing/connect.xml"
-    prefix: /login
+hwi_oauth_redirect:
+    resource: "@HWIOAuthBundle/Resources/config/routing/service.xml"
+    prefix:   /connect
 
 hwi_oauth_redirect:
     resource: "@HWIOAuthBundle/Resources/config/routing/redirect.xml"
+    prefix:   /connect
+
+hwi_oauth_login:
+    resource: "@HWIOAuthBundle/Resources/config/routing/login.xml"
     prefix:   /login
 
 facebook_login:

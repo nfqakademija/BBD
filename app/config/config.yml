@@ -75,7 +75,7 @@ fos_user:
     user_class: NFQAkademija\BaseBundle\Entity\User
 
 hwi_oauth:
-    #firewall_name: secured_area
+    firewall_name: secured_area
     #this is my custom user provider, created from FOSUBUserProvider - will manage the
     #automatic user registration on your site, with data from the provider (facebook. google, etc.)
     #and also, the connecting part (get the token and the user_id)
@@ -94,7 +94,9 @@ hwi_oauth:
             type:                facebook
             client_id:           "%facebook_app_id%"
             client_secret:       "%facebook_app_secret%"
-            scope:               ""
+            scope:               "publish_actions, email, public_profile, user_friends"
+            options:
+              display: popup
         google:
             type:                google
             client_id:           "%google_app_id%"

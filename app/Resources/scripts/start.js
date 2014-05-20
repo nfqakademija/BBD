@@ -1477,30 +1477,24 @@ function steps_sidebar_manipulation(){
 }
 
 function facebook_login(){
-    FB.login(function(response) {
-        if (response.authResponse) {
+    FB.getLoginStatus(function(response) {
+        if (response.status === 'connected') {
+            // connected
+            toast('Jūs jau prisijungęs','bad','login');
             show_loading_screen();
-            var formData = new FormData();
-            formData.append('login', 'true');
-            $.ajax({
-                type: 'POST',
-                url: '/ajax/login',
-                data: formData,
-                dataType: 'json',
-                beforeSend: function () {
-                },
-                processData: false,
-                contentType: false,
-                success: function (data) {
-                    if (data.status == "good") {
-                        location.href = location.href;
-                    }
-                }
-            });
+            document.location = "http://bbd.dev/login/facebook";
         } else {
-            toast('Įvyko klaida. Bandykite dar kartą','bad', 'login');
+            // not_authorized
+            FB.login(function(response) {
+                if (response.authResponse) {
+                    show_loading_screen();
+                    document.location = "http://bbd.dev/login/facebook";
+                } else {
+                    toast('Prisijungimas nepavyko','bad','login');
+                }
+            }, {scope: 'publish_actions, email, public_profile, user_friends'});
         }
-    }, {scope: 'publish_actions, email, public_profile, user_friends'});
+    });
 }
 
 var step_going = false;

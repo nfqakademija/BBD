@@ -23,7 +23,8 @@ class AppKernel extends Kernel
             #Third party components
             new FOS\UserBundle\FOSUserBundle(),
             new HWI\Bundle\OAuthBundle\HWIOAuthBundle(),
-            new NFQAkademija\RecipesBundle\NFQAkademijaRecipesBundle(),];
+            new NFQAkademija\RecipesBundle\NFQAkademijaRecipesBundle(),
+        ];
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
             $bundles[] = new Symfony\Bundle\WebProfilerBundle\WebProfilerBundle();

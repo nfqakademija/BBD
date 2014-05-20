@@ -38,7 +38,9 @@ class Unit
     {
         $this->product = new \Doctrine\Common\Collections\ArrayCollection();
     }
-
+    public function __toString(){
+        return $this->getName();
+    }
     /**
      * Get id
      *

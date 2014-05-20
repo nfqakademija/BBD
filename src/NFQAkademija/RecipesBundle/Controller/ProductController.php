@@ -20,8 +20,13 @@ class ProductController extends Controller
                 'class' => 'NFQAkademijaBaseBundle:Category',
                 'required' => false,
                 'label' => 'Kategorija'))
+            ->add('unit', 'entity', array(
+                'mapped' => true,
+                'class' => 'NFQAkademijaBaseBundle:Unit',
+                'required' => false,
+                'label' => 'Vienetai'))
             ->add('photo', 'text', array(
-                'required' => true,
+                'required' => false,
                 'label' => 'Paveiksliuko adresas',
                 'trim' => true))
             ->add('save', 'submit', array(

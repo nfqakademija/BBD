@@ -59,7 +59,6 @@ class User extends BaseUser
      * @ORM\OneToMany(targetEntity="\NFQAkademija\BaseBundle\Entity\ProducedRecipe", mappedBy="user")
      */
     protected $producedRecipes;
-
     /**
      * Constructor
      */

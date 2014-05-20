@@ -19,6 +19,10 @@ class ShoppingList
      * @ORM\OneToMany(targetEntity="\NFQAkademija\BaseBundle\Entity\ShoppingListProduct", mappedBy="shopingList")
      */
     protected $products;
+    /**
+     * @ORM\ManyToOne(targetEntity="\NFQAkademija\BaseBundle\Entity\User")
+     */
+    protected $user;
 
     /**
      * Creates a Doctrine Collection for members.
@@ -84,5 +88,28 @@ class ShoppingList
     public function getProducts()
     {
         return $this->products;
+    }
+
+    /**
+     * Set user
+     *
+     * @param \NFQAkademija\BaseBundle\Entity\User $user
+     * @return ShoppingList
+     */
+    public function setUser(\NFQAkademija\BaseBundle\Entity\User $user = null)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get user
+     *
+     * @return \NFQAkademija\BaseBundle\Entity\User 
+     */
+    public function getUser()
+    {
+        return $this->user;
     }
 }

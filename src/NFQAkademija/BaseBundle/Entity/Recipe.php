@@ -449,4 +449,37 @@ class Recipe
         return $this->likes;
     }
 
+
+    /**
+     * Add comments
+     *
+     * @param \NFQAkademija\BaseBundle\Entity\Comment $comments
+     * @return Recipe
+     */
+    public function addComment(\NFQAkademija\BaseBundle\Entity\Comment $comments)
+    {
+        $this->comments[] = $comments;
+
+        return $this;
+    }
+
+    /**
+     * Remove comments
+     *
+     * @param \NFQAkademija\BaseBundle\Entity\Comment $comments
+     */
+    public function removeComment(\NFQAkademija\BaseBundle\Entity\Comment $comments)
+    {
+        $this->comments->removeElement($comments);
+    }
+
+    /**
+     * Get comments
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getComments()
+    {
+        return $this->comments;
+    }
 }

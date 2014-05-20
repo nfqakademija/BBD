@@ -366,12 +366,23 @@ function filters_show(type, category){
                 }
 
                 var filters = data.filters;
-                $("#scroller_filters").fadeOut(transition_time, function(){
-                    $("#scroller_filters").html('');
-                    $("#scroller_filters").fadeIn(1);
-                    show_filters(filters, 0);
-                });
+                if(filters.length != 0){
+                    $("#scroller_filters").fadeOut(transition_time, function(){
+                        $("#scroller_filters").html('');
+                        $("#scroller_filters").fadeIn(1);
+                        show_filters(filters, 0);
+                    });
+                }else{
+                    $("#scroller_filters").fadeOut(transition_time, function(){
+                        $("#scroller_filters").html('');
+                        $("#scroller_filters").fadeIn(1);
+                    });
+                }
             }
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            toast('Įvyko klaida. Perkraukite puslapį','bad','logo');
+            console.log(xhr.responseText);
         }
     });
 }
@@ -653,6 +664,10 @@ function filter_send_indicator_changes(filter_type, filter_id, indicator_status)
             if (data.status == "good") {
                 load_recipes('true');
             }
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            toast('Įvyko klaida. Perkraukite puslapį','bad','logo');
+            console.log(xhr.responseText);
         }
     });
 }
@@ -663,7 +678,6 @@ function filter_indicator_change(ID){
     var filter_type = filter_data[0];
     var filter_id = filter_data[1];
     var new_indicator_status;
-
     if($("#" + ID).hasClass('filter_element_indicator_not_want')){
         $('#' + ID).removeClass('filter_element_indicator_not_want').addClass('filter_element_indicator_want');
         new_indicator_status = 'want';
@@ -678,10 +692,9 @@ function filter_indicator_change(ID){
 function manipulate_filter(ID){
     full_sidebar();
     var new_indicator_status;
-    var filter_data = ID.split('_');
+    var filter_data = ID.split('-');
     var filter_type = filter_data[0];
     var filter_id = filter_data[1];
-
     var symbols_amount = $("#" + ID + " .filter_element_text").html();
     var symbols_amount = symbols_amount.length;
 
@@ -815,7 +828,7 @@ function shoppinglist_delete(ID){
     });
 }
 
-function filter_search_add(ID, type){
+function filter_search_add(ID, indicator){
     var id = ID.replace('search-','');
     var filter_data = id.split('-');
     var filter_type = filter_data[0];
@@ -829,14 +842,14 @@ function filter_search_add(ID, type){
 
     if(filter_level == 0){
         var filters = [];
-        var data = "<div class='filter_element untouchable filter_element_indicator_" + type + "' id='" + id + "' onclick='filter_selected(this.id)'><div class='filter_element_image' style=\"background-image:" + image + ";\"></div><div class='filter_element_text'>" + title + "</div><div class='filter_element_delete' id='delete_" + id + "' onclick='filter_delete(this.id)'></div><div class='filter_element_indicator_change' id='indicator_change_" + id + "' onclick='filter_indicator_change(this.id)'></div><div class='filter_element_indicator_small'></div></div>";
+        var data = "<div class='filter_element untouchable filter_element_indicator_" + indicator + "' id='" + id + "' onclick='filter_selected(this.id)'><div class='filter_element_image' style=\"background-image:" + image + ";\"></div><div class='filter_element_text'>" + title + "</div><div class='filter_element_delete' id='delete_" + id + "' onclick='filter_delete(this.id)'></div><div class='filter_element_indicator_change' id='indicator_change_" + id + "' onclick='filter_indicator_change(this.id)'></div><div class='filter_element_indicator_small'></div></div>";
         filters[0] = data;
         show_filters(filters, 0);
 
         setTimeout(function(){scroll_filters.refresh()}, 100);
     }
 
-    filter_send_indicator_changes(filter_type, filter_id, type);
+    filter_send_indicator_changes(filter_id, filter_type, indicator);
 }
 
 
@@ -952,6 +965,10 @@ function search(type){
                         $("#search_container_inside").append(search_data[i]);
                     }
                 }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                toast('Įvyko klaida. Perkraukite puslapį','bad','logo');
+                console.log(xhr.responseText);
             }
         });
     }

@@ -12,9 +12,6 @@ use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\HttpFoundation\Session\Session;
 
-//SESIJOS, padaryti fakto loadinimo ir filtru indicatoriu keitima, sudejima y masyva
-//isgauti viska is recipo pagal id
-
 
 
 class AjaxController extends Controller
@@ -221,23 +218,42 @@ class AjaxController extends Controller
         $em = $this->getDoctrine()->getManager();
         $filters = [];
         $filters_data = [];
+        $selected_filters = [];
 
+        $session = $request->getSession();
+        //$session->remove('filters');
+        if($session->has('filters')){
+            $selected_filters = $session->get('filters');
+        }
+
+        file_put_contents('log.log', print_r($selected_filters, true), FILE_APPEND);
         //selected, selected_personal, categories, inside_category, ingredients
         switch($type){
             case "selected":
                 //get select filters from session
-                $filters_data[0] = ['id' => 'universities-3', 'title' => 'Tipai','imageUrl' => '/images/types.png', 'indicator' => 'not_want', 'twig' => 'FilterSelected'];
-                $filters_data[1] = ['id' => 'universities-1', 'title' => 'Tipai','imageUrl' => '/images/types.png', 'indicator' => 'not_want', 'twig' => 'FilterSelected'];
-                $filters_data[2] = ['id' => 'universities-2', 'title' => 'Tipai','imageUrl' => '/images/types.png', 'indicator' => 'not_want', 'twig' => 'FilterSelected'];
+                foreach($selected_filters as $selected_filter){
+                    $type = $selected_filter["type"];
+                    $id = $selected_filter["id"];
+                    $indicator = $selected_filter["indicator"];
+                    $filter_repository = $em->getRepository('NFQAkademijaBaseBundle:'.$type)->find($id);
+                    $title = $filter_repository->getName();
+                    $imageUrl = $filter_repository->getPhoto();
 
-
+                    $filters_data[] = ['id' => $type.'-'.$id, 'title' => $title,'imageUrl' => $imageUrl, 'indicator' => $indicator, 'twig' => 'FilterSelected'];
+                }
                 break;
             case "selected_personal":
                 //get select filters from DB for user
-                $filters_data[0] = ['id' => 'universities-3', 'title' => 'Tipai','imageUrl' => '/images/types.png', 'indicator' => 'not_want', 'twig' => 'FilterSelected'];
-                $filters_data[1] = ['id' => 'universities-1', 'title' => 'Tipai','imageUrl' => '/images/types.png', 'indicator' => 'not_want', 'twig' => 'FilterSelected'];
-                $filters_data[2] = ['id' => 'universities-2', 'title' => 'Tipai','imageUrl' => '/images/types.png', 'indicator' => 'not_want', 'twig' => 'FilterSelected'];
+                foreach($selected_filters as $selected_filter){
+                    $type = $selected_filter["type"];
+                    $id = $selected_filter["id"];
+                    $indicator = $selected_filter["indicator"];
+                    $filter_repository = $em->getRepository('NFQAkademijaBaseBundle:'.$type)->find($id);
+                    $title = $filter_repository->getName();
+                    $imageUrl = $filter_repository->getPhoto();
 
+                    $filters_data[] = ['id' => $type.'-'.$id, 'title' => $title,'imageUrl' => $imageUrl, 'indicator' => $indicator, 'twig' => 'FilterSelected'];
+                }
                 break;
             case "categories":
                 //show all categories
@@ -269,11 +285,22 @@ class AjaxController extends Controller
                 }
 
                 for($i = 0; $i < count($data); $i++ ){
+                    $indicator = "";
+                    //form indicator
+                    foreach($selected_filters as $selected_filter){
+                        $type = $selected_filter["type"];
+                        $id = $selected_filter["id"];
+                        if($type == $category && $id == $data[$i]['id']) {
+                            $indicator = $selected_filter["indicator"];
+                            break;
+                        }
+                    }
+
                     $filters_data[$i] = [
                         'id' => $category.'-'.$data[$i]['id'],
                         'title' => $data[$i]['name'],
                         'imageUrl' => $data[$i]['photo'],
-                        'indicator' => '',
+                        'indicator' => $indicator,
                         'twig' => $twig,
                     ];
                 }
@@ -381,10 +408,42 @@ class AjaxController extends Controller
         //want, not_want, none
         //none = delete
         //if not exists - add to session
+        //$filters[0] = ["id" => '5', "type" => 'country', "indicator" => "want"];
+        $session = $request->getSession();
+        //$session->remove('filters');
+        if($session->has('filters')){
+            //if at least one filter exists
+            $i = 0;
+            $exists = false;
+            $filters = $session->get('filters');
+            foreach($filters as $filter){
+                $type = $filter["type"];
+                $id = $filter["id"];
+                //if filter is already existing
+                if($type == $filter_type && $id == $filter_id){
+                    if($filter_indicator == "none"){
+                        unset($filters[$i]);
+                    }else{
+                        $filters[$i]["indicator"] = $filter_indicator;
+                    }
+                    $exists = true;
+                    break;
+                }else{
+                    $i++;
+                }
+            }
+            //if filter is not in array
+            if(!$exists){
+                $new_filter = ["id" => $filter_id, "type" => $filter_type, "indicator" => $filter_indicator];
+                $filters [] = $new_filter;
+            }
+        }else{
+            //if no filter exists
+            $filters = [];
+            $filters[0] = ["id" => $filter_id, "type" => $filter_type, "indicator" => $filter_indicator];
+        }
 
-
-
-        //item[] = ["type" => $type, "id" => $id, "indicator" => $indicator]
+        $session->set('filters', $filters);
 
         $response = array(
             'status' => 'good',
@@ -474,13 +533,15 @@ class AjaxController extends Controller
         //from search value get filters and recipes. do not show which are already selected in current filters session
 
         //array
-        //$data[] = ["id" => $id, "imageUrl" => $imageUrl, "title" => $title, "info" => $info]
-        $data = [];
+        //$good_data[] = ["id" => $id, "imageUrl" => $imageUrl, "title" => $title, "info" => $info]
 
         //search is available in:
         //Celebration, CookingTime, Country, MainCookingMethod, Product, Property, Recipe, Type,
+
+        $good_data = [];
         $search_zones = ["Celebration", "CookingTime", "Country", "MainCookingMethod", "Product", "Property", "Recipe", "Type"];
         foreach($search_zones as $zone){
+            $data = [];
             $repository = $this->getDoctrine()->getRepository('NFQAkademijaBaseBundle:'.$zone);
             $query = $repository->createQueryBuilder('f')
                 ->select('f.id, f.name, f.photo')
@@ -488,18 +549,37 @@ class AjaxController extends Controller
                 ->setParameter('name', $value.'%')
                 ->orderBy('f.name', 'ASC')
                 ->getQuery();
-            $data = array_merge($data, $query->getResult());
+            $data = $query->getResult();
+            $twig = "SearchItem";
+            switch($zone){
+                case "Celebration": $info = "Šventė"; break;
+                case "CookingTime": $info = "Laikas"; break;
+                case "Country": $info = "Šalis"; break;
+                case "MainCookingMethod": $info = "Gaminimo būdas"; break;
+                case "Product": $info = "Ingredientas"; break;
+                case "Property": $info = "Ypatybė"; break;
+                case "Recipe": $info = "Patiekalas"; $twig = "SearchRecipe"; break;
+                case "Type": $info = "Tipas"; break;
+            }
+
+            foreach($data as $dat){
+                $good_data[] = ["id" => $dat['id'], "type" => $zone, "title" => $dat['name'], "imageUrl" => $dat['photo'], "info" => $info, "twig" => $twig];
+            }
         }
 
+        for($i = 0; $i < count($good_data); $i++){
+            if($good_data[$i]['twig'] == "SearchRecipe"){
+                $id = $good_data[$i]['id'];
+            }else{
+                $id = $good_data[$i]['id'].'-'.$good_data[$i]['type'];
+            }
 
+            $title = $good_data[$i]['title'];
+            $imageUrl = $good_data[$i]['imageUrl'];
+            $info = $good_data[$i]['info'];
+            $twig = $good_data[$i]['twig'];
 
-        for($i = 0; $i < count($data); $i++){
-            $id = $data[$i]['id'];
-            $title = $data[$i]['name'];
-            $imageUrl = $data[$i]['photo'];
-            $info = "Filtras"; //$data[$i]['info'];
-
-            $filter_data = $this->render('NFQAkademijaRecipesBundle:AjaxViews:SearchItem.html.twig',
+            $filter_data = $this->render('NFQAkademijaRecipesBundle:AjaxViews:'.$twig.'.html.twig',
                 array(
                     'id' => $id,
                     'title' => $title,

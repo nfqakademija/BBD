@@ -3,6 +3,7 @@
     {{ form_start(form) }}
     {{ form_row(form.name) }}
     {{ form_row(form.category) }}
+    {{ form_row(form.unit) }}
     {{ form_row(form.photo) }}
     {{ form_row(form.save) }}
     {{ form_end(form) }}
@@ -12,13 +13,15 @@
             <th>ID</th>
             <th>Pavadinimas</th>
             <th>Kategorija</th>
+            <th>Vienetai</th>
             <th>Foto</th>
         </tr>
-        {% for entity in entities %}z
+        {% for entity in entities %}
             <tr>
                 <td>{{ entity.id }}</td>
                 <td>{{ entity.name }}</td>
                 <td>{{ entity.category }}</td>
+                <td>{{ entity.unit }}</td>
                 <td>{{ entity.photo }}</td>
             </tr>
             {% endfor %}

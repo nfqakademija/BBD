@@ -139,10 +139,10 @@
 {% endblock %}
 
 {% block search_zone %}
-    <div id="divider" class="top_divider" onclick="full_sidebar()"></div>
+    <div id="divider" class="top_divider" style="margin-top:10px;margin-left:10px;" onclick="full_sidebar()"></div>
     <div id="cook_left_sidebar_wrapper">
         <div class="scroller" id="cook_left_sidebar_wrapper_scroller">
-            <div id="search_zone" class='cook_ingredients_zone' onclick="full_sidebar()">
+            <div id="search_zone" class='cook_ingredients_zone' style="background:transparent !important;border:1px solid transparent !important;box-shadow:0px 0px 0px transparent !important;height:auto;" onclick="full_sidebar()">
                 <div id="cook_ingredients">
                     <div class="sidebar_right_info_item untouchable {{ like_status }}" id="sidebar_right_like" onclick="recipe_like('{{ id }}', this.id)">{{ like_amount }}</div>
                     <div class="sidebar_right_info_item" id="sidebar_right_author">{{ author }}</div>
@@ -185,16 +185,6 @@
             background-image:url('/images/food (19).jpg');
             right:-30px;
         }
-        #search_zone{
-            background:transparent !important;
-            border:1px solid transparent !important;
-            box-shadow:0px 0px 0px transparent !important;
-            height:auto;
-        }
-        #top_divider{
-            margin-top:10px;
-            margin-left:10px;
-        }
     </style>
 {% endblock %}
 
@@ -233,7 +223,7 @@
         <div class="step" id="step_last">
             <div class="step_go step_up" onclick="previous_step()"></div>
             <div class="step_id last_id">Skanaus</div>
-            <div class="step_button {{ like_status }}" id="step_like" onclick="recipe_like('{{ id }}', this.id)">Patiko?</div>
+            <div class="step_button {{ like_status }}" id="step_like" onclick="recipe_like('{{ id }}', this.id)">{{ like_word }}</div>
             <div class="step_button" id="step_share" onclick="show_top_layer('share','{{ id }}')">Pasidalink</div>
 
             <div id="step_comment_box" class="step_comment_box_comments">

@@ -1385,8 +1385,8 @@ function full_sidebar(){
     $("#cook_ingredients").css('display','block');
     $(".next_step").html("Sekantis");
     //calculate top px for filters zone
-    //var height_from_top = $(".middle_divider").offset().top;
-    //$("#filters_zone").css('top', height_from_top + 'px');
+    var height_from_top = $(".middle_divider").offset().top;
+    $("#filters_zone").css('top', height_from_top + 'px');
     if(!mobile_state){
         $("#sidebar_slider").css('display','block');
         recalculate_width();

@@ -31,36 +31,73 @@ class CookController extends Controller
         $imageUrl = $recipe->getPhoto();
         $country = $recipe->getCountry()->getName();
         $main_cooking_method = $recipe->getMainCookingMethod()->getName();
-        $type = $recipe->getTypes();
-
-        //$repository = $this->getDoctrine()->getRepository('NFQAkademijaBaseBundle:'.$zone);
-        /*
-        $repository = $em->getRepository('NFQAkademijaBaseBundle:Step');
-        $query = $repository->createQueryBuilder('f')
-            ->select('f.id, f.description')
-            ->where('f.recipe = :id')
-            ->setParameter('id', $id)
-            ->getQuery();
-        $steps = $query->getResult();
-        */
-
-        $steps = $em->getRepository("NFQAkademijaBaseBundle:Step")->findBy(array('recipe' => $id));
+        $type = $recipe->getType()->getName();
+        $steps_data = $em->getRepository("NFQAkademijaBaseBundle:Step")->findBy(array('recipe' => $id));
+        $steps = [];
+        foreach($steps_data as $step){
+            $steps [] = ["id" => $step->getId(), "info" => $step->getDescription()];
+        }
         $steps_amount = count($steps);
 
+        $like_amount = $recipe->getLikes();
+        if($like_amount){
+            $like_amount = count($like_amount);
+        }else{
+            $like_amount = 0;
+        }
 
 
-        $like_status;
-        $like_amount;
+        // 2 user id
+        $user = $em->getRepository('NFQAkademijaBaseBundle:User')->find('2');
+        $like_status = $em->getRepository("NFQAkademijaBaseBundle:Like")->findBy(array('user' => $user));
+        if($like_status){
+            $like_status = "liked";
+            $like_word = "Patinka";
+        }else{
+            $like_status = "not_liked";
+            $like_word = "Patiko?";
+        }
+
+        $properties_data = $recipe->getProperties();
+        $properties = "";
+        foreach($properties_data as $property){
+            $properties .= $property->getName().", ";
+        }
+        $properties = substr($properties, 0, strlen($properties) - 2);
 
 
+        $ingredients_data = $em->getRepository("NFQAkademijaBaseBundle:RecipeProduct")->findBy(array('recipe' => $id));
+        $ingredients = [];
+        foreach($ingredients_data as $ingredient){
+            $ingredients [] = [
+                $product = $ingredient->getProduct(),
+                "imageUrl" => $product->getPhoto(),
+                "title" => $product->getName(),
+                "amount" => $ingredient->getQuantity(),
+                "unit" => $product->getUnit()->getName(),
+            ];
+        }
 
-        $properties;
+        $comments_data = $em->getRepository("NFQAkademijaBaseBundle:Comment")->findBy(array('recipe' => $id));
+        $comments = [];
+        foreach($comments_data as $comment){
+            $comments [] = [
+                $user = $comment->getUser(),
+                "imageUrl" => $user->getPhoto(),
+                "text" => $comment->getText(),
+            ];
+        }
 
 
-        $ingredients_data = $recipe->getProducts();
-        $ingredients;
-        $comments;
-        $similar_recipes;
+        $similar_recipes_data = $em->getRepository("NFQAkademijaBaseBundle:Recipe")->findAll();
+        $similar_recipes = [];
+        foreach($similar_recipes_data as $similar_recipe){
+            $similar_recipes [] = [
+                "id" => $similar_recipe->getId(),
+                "imageUrl" => $similar_recipe->getPhoto(),
+                "title" => $similar_recipe->getName(),
+            ];
+        }
 
 
         return $this->render('NFQAkademijaRecipesBundle:Cook:index.html.twig',
@@ -79,12 +116,11 @@ class CookController extends Controller
                 "properties" => $properties,
                 "celebration" => $celebration,
                 "imageUrl" => $imageUrl,
-
-
                 "ingredients" => $ingredients,
                 "comments" => $comments,
                 "steps" => $steps,
                 "similar_recipes" => $similar_recipes,
+                "like_word" => $like_word,
             ));
     }
 }

@@ -67,7 +67,7 @@ class Recipe
     /**
      * @ORM\ManyToOne(targetEntity="\NFQAkademija\BaseBundle\Entity\Type")
      */
-    protected $types;
+    protected $type;
     /**
      * @ORM\ManyToOne(targetEntity="\NFQAkademija\BaseBundle\Entity\User")
      */
@@ -487,5 +487,28 @@ class Recipe
     public function getComments()
     {
         return $this->comments;
+    }
+
+    /**
+     * Set type
+     *
+     * @param \NFQAkademija\BaseBundle\Entity\Type $type
+     * @return Recipe
+     */
+    public function setType(\NFQAkademija\BaseBundle\Entity\Type $type = null)
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * Get type
+     *
+     * @return \NFQAkademija\BaseBundle\Entity\Type 
+     */
+    public function getType()
+    {
+        return $this->type;
     }
 }

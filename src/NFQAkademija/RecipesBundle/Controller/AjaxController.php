@@ -735,6 +735,8 @@ class AjaxController extends Controller
         //create session that user is loged in
         //change profile navigation bar
 
+
+
         $response = array(
             'status' => 'good',
         );

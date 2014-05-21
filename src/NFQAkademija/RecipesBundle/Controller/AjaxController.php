@@ -199,8 +199,6 @@ class AjaxController extends Controller
 
         //from DB get shoppinglist and form shoppinglist_session
 
-
-
         $response = array(
             'status' => 'good',
         );
@@ -422,7 +420,9 @@ class AjaxController extends Controller
                 //if filter is already existing
                 if($type == $filter_type && $id == $filter_id){
                     if($filter_indicator == "none"){
+                        file_put_contents('log.log', print_r($filters, true), FILE_APPEND);
                         unset($filters[$i]);
+                        file_put_contents('log.log', print_r($filters, true), FILE_APPEND);
                     }else{
                         $filters[$i]["indicator"] = $filter_indicator;
                     }
@@ -527,19 +527,15 @@ class AjaxController extends Controller
 
     public function searchAction(Request $request)
     {
-        $request_data = $request->request;
-
-        $value = $request_data->get('search');
         //from search value get filters and recipes. do not show which are already selected in current filters session
-
-        //array
         //$good_data[] = ["id" => $id, "imageUrl" => $imageUrl, "title" => $title, "info" => $info]
+        //search in: Celebration, CookingTime, Country, MainCookingMethod, Product, Property, Recipe, Type,
 
-        //search is available in:
-        //Celebration, CookingTime, Country, MainCookingMethod, Product, Property, Recipe, Type,
-
+        $request_data = $request->request;
+        $value = $request_data->get('search');
         $good_data = [];
         $search_zones = ["Celebration", "CookingTime", "Country", "MainCookingMethod", "Product", "Property", "Recipe", "Type"];
+
         foreach($search_zones as $zone){
             $data = [];
             $repository = $this->getDoctrine()->getRepository('NFQAkademijaBaseBundle:'.$zone);
@@ -567,26 +563,44 @@ class AjaxController extends Controller
             }
         }
 
-        for($i = 0; $i < count($good_data); $i++){
-            if($good_data[$i]['twig'] == "SearchRecipe"){
-                $id = $good_data[$i]['id'];
-            }else{
-                $id = $good_data[$i]['id'].'-'.$good_data[$i]['type'];
+        //check current filters to not duplicate search results
+        $selected_filters = [];
+        $session = $request->getSession();
+        if($session->has('filters')){
+            $selected_filters = $session->get('filters');
+        }
+
+        foreach($good_data as $data){
+            $found = false;
+            foreach($selected_filters as $selected_filter){
+                $type = $selected_filter["type"];
+                $id = $selected_filter["id"];
+                if($data['id'] == $id && $data['type'] == $type){
+                    $found = true;
+                    break;
+                }
             }
+            if(!$found){
+                if($data['twig'] == "SearchRecipe"){
+                    $id = $data['id'];
+                }else{
+                    $id = $data['type'].'-'.$data['id'];
+                }
 
-            $title = $good_data[$i]['title'];
-            $imageUrl = $good_data[$i]['imageUrl'];
-            $info = $good_data[$i]['info'];
-            $twig = $good_data[$i]['twig'];
+                $title = $data['title'];
+                $imageUrl = $data['imageUrl'];
+                $info = $data['info'];
+                $twig = $data['twig'];
 
-            $filter_data = $this->render('NFQAkademijaRecipesBundle:AjaxViews:'.$twig.'.html.twig',
-                array(
-                    'id' => $id,
-                    'title' => $title,
-                    'imageUrl' => $imageUrl,
-                    'info' => $info,
-                ));
-            $search_data[] = $filter_data->getContent();
+                $filter_data = $this->render('NFQAkademijaRecipesBundle:AjaxViews:'.$twig.'.html.twig',
+                    array(
+                        'id' => $id,
+                        'title' => $title,
+                        'imageUrl' => $imageUrl,
+                        'info' => $info,
+                    ));
+                $search_data[] = $filter_data->getContent();
+            }
         }
 
 

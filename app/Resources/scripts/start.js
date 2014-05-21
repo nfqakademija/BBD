@@ -795,7 +795,6 @@ function shoppinglist_add_enter(){
             }
         }
     });
-
 }
 
 

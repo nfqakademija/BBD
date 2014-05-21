@@ -2,19 +2,33 @@ Array
 (
     [0] => Array
         (
-            [id] => 2
-            [type] => Celebration
-            [indicator] => want
+            [id] => 4
+            [type] => Type
+            [indicator] => not_want
         )
 
-)
-Array
-(
-    [0] => Array
+    [1] => Array
         (
             [id] => 2
             [type] => Celebration
             [indicator] => want
         )
 
+    [2] => Array
+        (
+            [id] => Celebration
+            [type] => 2
+            [indicator] => none
+        )
+
+    [3] => Array
+        (
+            [id] => 1
+            [type] => MainCookingMethod
+            [indicator] => want
+        )
+
+)
+Array
+(
 )

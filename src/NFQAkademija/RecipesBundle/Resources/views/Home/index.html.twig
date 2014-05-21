@@ -20,8 +20,12 @@
      <script type="text/javascript">
          function loader(){
              recipe_size = calculate_recipe_size();
-             load_recipes('true');
-             filters_show('selected','');
+             load_recipes('true', function(){
+                 filters_show('selected','', function(){
+                     hide_loading_screen();
+                 });
+             });
+
              sidebar_manipulation();
              $( window ).resize(function() {
                  recalculate_width();
@@ -70,7 +74,7 @@
              $("#filters_zone").click(function(){ $("#search_input").blur();});
              $("#content_wrapper").click(function(){ $("#search_input").blur();});
 
-             hide_loading_screen();
+
          }
 
          var load_more_end = false;
@@ -98,8 +102,7 @@
                              if(data.end){
                                  load_more_end = true;
                              }
-                             hide_loading_recipe();
-                             load_recipes('false');
+                             load_recipes('false', function(){hide_loading_recipe();});
                              setTimeout(function(){
                                  scroll_content.refresh();
                              },0);

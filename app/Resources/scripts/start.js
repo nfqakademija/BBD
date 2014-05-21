@@ -102,13 +102,8 @@ function profile_recipes(type){
     });
 }
 
-function load_recipes(reset){
-    if(reset == 'true'){
-        $("#scroller_content").html('');
-        setTimeout(function(){scroll_content.scrollTo(0, 0)},0);
-        setTimeout(function(){scroll_content.refresh()},0);
-    }
-
+function load_recipes(reset, callback){
+    callback = callback || function(){};
     var formData = new FormData();
     formData.append('reset', reset);
     $.ajax({
@@ -122,14 +117,32 @@ function load_recipes(reset){
         contentType: false,
         success: function (data) {
             if (data.status == "good") {
+                if(reset == "true"){
+                    $("#scroller_content").html('');
+                    load_more_end = false;
+                    setTimeout(function(){scroll_content.scrollTo(0, 0)},0);
+                }
                 var recipes = data.recipes;
                 for(i = 0; i < recipes.length; i++){
                     append_recipe(recipes[i]);
                 }
                 setTimeout(function(){scroll_content.refresh()},0);
+                callback();
             }
         }
     });
+}
+
+
+function loading(id, display) {
+    if(display == "show"){
+        $("#" + id).append("<div class='loader'></div>");
+        $("#" + id + " .loader").fadeIn(transition_time * 2);
+    }else if (display == "hide") {
+        $("#" + id + " .loader").fadeOut(transition_time * 2, function(){
+            $("#" + id + " .loader").remove();
+        });
+    }
 }
 
 function append_recipe(data){
@@ -336,7 +349,8 @@ function show_filters(array_of_filters, index){
     }
 }
 
-function filters_show(type, category){
+function filters_show(type, category, callback){
+    callback = callback || function(){};
     full_sidebar();
 
     var formData = new FormData();
@@ -378,6 +392,7 @@ function filters_show(type, category){
                         $("#scroller_filters").fadeIn(1);
                     });
                 }
+                callback();
             }
         },
         error: function (xhr, ajaxOptions, thrownError) {
@@ -646,7 +661,9 @@ function show_config_zone(state){
     }
 }
 
+
 function filter_send_indicator_changes(filter_type, filter_id, indicator_status){
+    loading('content_wrapper', 'show');
     var formData = new FormData();
     formData.append('type', filter_type);
     formData.append('id', filter_id);
@@ -662,7 +679,9 @@ function filter_send_indicator_changes(filter_type, filter_id, indicator_status)
         contentType: false,
         success: function (data) {
             if (data.status == "good") {
-                load_recipes('true');
+                load_recipes('true', function(){
+                    loading('content_wrapper', 'hide');
+                });
             }
         },
         error: function (xhr, ajaxOptions, thrownError) {
@@ -1004,6 +1023,7 @@ function show_recipe(recipe_ID){
                 data: formData,
                 dataType: 'json',
                 beforeSend: function () {
+                    loading("recipe_" + recipe_ID, 'show');
                 },
                 processData: false,
                 contentType: false,
@@ -1018,6 +1038,7 @@ function show_recipe(recipe_ID){
                         $("#recipe_" + recipe_ID).addClass('recipe_active');
                         scroll_sidebar_right.refresh();
                         scroll_sidebar_right.scrollTo(0,0);
+                        loading("recipe_" + recipe_ID, 'hide');
                     }
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
@@ -1043,8 +1064,6 @@ function hide_recipe(){
 
 function cook(recipe_ID){
     show_loading_screen();
-    location.href = "/cook/" + recipe_ID;
-
     var formData = new FormData();
     formData.append('recipe_ID', recipe_ID);
     $.ajax({
@@ -1058,7 +1077,7 @@ function cook(recipe_ID){
         contentType: false,
         success: function (data) {
             if (data.status == "good") {
-
+                location.href = "/cook/" + recipe_ID;
             }
         }
     });

@@ -32,3 +32,333 @@ Array
 Array
 (
 )
+Array
+(
+    [0] => Array
+        (
+            [id] => Celebration
+            [type] => 2
+            [indicator] => want
+        )
+
+)
+Array
+(
+)
+Array
+(
+    [0] => Array
+        (
+            [id] => Celebration
+            [type] => 2
+            [indicator] => want
+        )
+
+)
+Array
+(
+    [0] => Array
+        (
+            [id] => Celebration
+            [type] => 2
+            [indicator] => want
+        )
+
+)
+Array
+(
+    [0] => Array
+        (
+            [id] => Celebration
+            [type] => 2
+            [indicator] => want
+        )
+
+    [1] => Array
+        (
+            [id] => 10
+            [type] => Type
+            [indicator] => want
+        )
+
+    [2] => Array
+        (
+            [id] => 11
+            [type] => Type
+            [indicator] => want
+        )
+
+)
+Array
+(
+)
+Array
+(
+)
+Array
+(
+)
+Array
+(
+    [0] => Array
+        (
+            [id] => 4
+            [type] => Type
+            [indicator] => want
+        )
+
+)
+Array
+(
+    [0] => Array
+        (
+            [id] => 4
+            [type] => Type
+            [indicator] => not_want
+        )
+
+)
+Array
+(
+)
+Array
+(
+)
+Array
+(
+)
+Array
+(
+)
+Array
+(
+    [0] => Array
+        (
+            [id] => 4
+            [type] => Type
+            [indicator] => want
+        )
+
+)
+Array
+(
+    [0] => Array
+        (
+            [id] => 4
+            [type] => Type
+            [indicator] => not_want
+        )
+
+    [1] => Array
+        (
+            [id] => Country
+            [type] => 2
+            [indicator] => not_want
+        )
+
+)
+Array
+(
+)
+Array
+(
+)
+Array
+(
+    [0] => Array
+        (
+            [id] => Celebration
+            [type] => 2
+            [indicator] => want
+        )
+
+)
+Array
+(
+)
+Array
+(
+)
+Array
+(
+)
+Array
+(
+    [0] => Array
+        (
+            [id] => 4
+            [type] => Type
+            [indicator] => want
+        )
+
+)
+Array
+(
+    [0] => Array
+        (
+            [id] => 4
+            [type] => Type
+            [indicator] => want
+        )
+
+)
+Array
+(
+    [0] => Array
+        (
+            [id] => 4
+            [type] => Type
+            [indicator] => want
+        )
+
+)
+Array
+(
+    [0] => Array
+        (
+            [id] => 4
+            [type] => Type
+            [indicator] => want
+        )
+
+)
+Array
+(
+    [0] => Array
+        (
+            [id] => 4
+            [type] => Type
+            [indicator] => not_want
+        )
+
+)
+Array
+(
+    [0] => Array
+        (
+            [id] => 4
+            [type] => Type
+            [indicator] => not_want
+        )
+
+)
+Array
+(
+    [0] => Array
+        (
+            [id] => 4
+            [type] => Type
+            [indicator] => want
+        )
+
+)
+Array
+(
+    [0] => Array
+        (
+            [id] => 4
+            [type] => Type
+            [indicator] => want
+        )
+
+)
+Array
+(
+    [0] => Array
+        (
+            [id] => 4
+            [type] => Type
+            [indicator] => want
+        )
+
+)
+Array
+(
+    [0] => Array
+        (
+            [id] => 4
+            [type] => Type
+            [indicator] => want
+        )
+
+)
+Array
+(
+    [0] => Array
+        (
+            [id] => 4
+            [type] => Type
+            [indicator] => want
+        )
+
+)
+Array
+(
+    [0] => Array
+        (
+            [id] => 4
+            [type] => Type
+            [indicator] => want
+        )
+
+)
+Array
+(
+    [0] => Array
+        (
+            [id] => 4
+            [type] => Type
+            [indicator] => want
+        )
+
+)
+Array
+(
+    [0] => Array
+        (
+            [id] => 4
+            [type] => Type
+            [indicator] => want
+        )
+
+)
+Array
+(
+    [0] => Array
+        (
+            [id] => 4
+            [type] => Type
+            [indicator] => want
+        )
+
+)
+Array
+(
+    [0] => Array
+        (
+            [id] => 4
+            [type] => Type
+            [indicator] => not_want
+        )
+
+)
+Array
+(
+    [0] => Array
+        (
+            [id] => 4
+            [type] => Type
+            [indicator] => not_want
+        )
+
+)
+Array
+(
+    [0] => Array
+        (
+            [id] => 4
+            [type] => Type
+            [indicator] => not_want
+        )
+
+)

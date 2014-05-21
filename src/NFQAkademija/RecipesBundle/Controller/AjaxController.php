@@ -284,7 +284,6 @@ class AjaxController extends Controller
 
                 for($i = 0; $i < count($data); $i++ ){
                     $indicator = "";
-                    //form indicator
                     foreach($selected_filters as $selected_filter){
                         $type = $selected_filter["type"];
                         $id = $selected_filter["id"];
@@ -305,24 +304,32 @@ class AjaxController extends Controller
                 break;
 
             case "ingredients":
-                $category_ID = $category;
-
+                $category = str_replace("Category-", "", $category);
                 $repository = $this->getDoctrine()->getRepository('NFQAkademijaBaseBundle:Product');
                 $query = $repository->createQueryBuilder('f')
-                    //select data
                     ->select('f.id, f.name, f.photo')
-                    ->where('f.category_id = :cat_id')
-                    ->setParameter('cat_id', $category_ID)
+                    ->where('f.category = :cat_id')
+                    ->setParameter('cat_id', $category)
                     ->orderBy('f.name', 'ASC')
                     ->getQuery();
                 $data = $query->getResult();
 
                 for($i = 0; $i < count($data); $i++ ){
+                    $indicator = "";
+                    foreach($selected_filters as $selected_filter){
+                        $type = $selected_filter["type"];
+                        $id = $selected_filter["id"];
+                        if($type == "Product" && $id == $data[$i]['id']) {
+                            $indicator = $selected_filter["indicator"];
+                            break;
+                        }
+                    }
+
                     $filters_data[$i] = [
-                        'id' => $data[$i]['id'],
+                        'id' => "Product-".$data[$i]['id'],
                         'title' => $data[$i]['name'],
                         'imageUrl' => $data[$i]['photo'],
-                        'indicator' => '',
+                        'indicator' =>  $indicator,
                         'twig' => 'FilterInside'
                     ];
                 }

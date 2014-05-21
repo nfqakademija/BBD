@@ -634,7 +634,7 @@ function filter_go_back(type){
             filters_show('categories','');
             break;
         case 2:
-            filters_show('inside_category','ingredients_categories');
+            filters_show('inside_category','Category');
             break;
     }
 }
@@ -847,7 +847,7 @@ function shoppinglist_delete(ID){
 }
 
 function filter_search_add(ID, indicator){
-    var id = ID.replace('search-','');
+    var id = ID.replace('search-', '');
     var filter_data = id.split('-');
     var filter_type = filter_data[0];
     var filter_id = filter_data[1];
@@ -867,7 +867,7 @@ function filter_search_add(ID, indicator){
         setTimeout(function(){scroll_filters.refresh()}, 100);
     }
 
-    filter_send_indicator_changes(filter_id, filter_type, indicator);
+    filter_send_indicator_changes(filter_type, filter_id, indicator);
 }
 
 
@@ -972,15 +972,20 @@ function search(type){
             data: formData,
             dataType: 'json',
             beforeSend: function () {
+                loading('search_container_inside','show');
             },
             processData: false,
             contentType: false,
             success: function (data) {
                 if (data.status == "good") {
                     var search_data = data.search_data;
-
-                    for(i = 0; i < search_data.length; i++){
-                        $("#search_container_inside").append(search_data[i]);
+                    loading('search_container_inside','hide');
+                    if(search_data.length != 0){
+                        for(i = 0; i < search_data.length; i++){
+                            $("#search_container_inside").append(search_data[i]);
+                        }
+                    }else{
+                        $("#search_container_inside").append('Neranda');
                     }
                 }
             },

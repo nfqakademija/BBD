@@ -674,53 +674,103 @@ class AjaxController extends Controller
 
     public function recipe_right_sidebarAction(Request $request)
     {
+        //info apie recipe
+        //title, like_status, id, like_amount, author, cooking_time, country, main_cooking_method,
+        //type, properties, celebration, ingredients(imageUrl, title, amount, unit), imageUrl,
         $request_data = $request->request;
-        $recipe_ID = $request_data->get('recipe_ID');
+        $recipe_ID = '2';//$request_data->get('recipe_ID');
 
-        /*
-        $repository = $this->getDoctrine()->getRepository('NFQAkademijaBaseBundle:Recipe');
-        $recipe = $repository->find('1');
+        $em = $this->getDoctrine()->getManager();
+        $recipe = $em->getRepository('NFQAkademijaBaseBundle:Recipe')->find($recipe_ID);
+        $title = $recipe->getName();
+        $imageUrl = $recipe->getPhoto();
 
-        $products = $recipe->getProducts();
-        $name = $recipe->getName();
-        file_put_contents('log.log', print_r($products, true), FILE_APPEND);
-        */
-        //from recipe_ID get all ingredients:id, imageUrl, title, amount, unit
-        //from current shoppinglist and current filters session get
+        $cooking_time = $recipe->getCookingTime();
+        if($cooking_time){
+            $cooking_time = $cooking_time->getName();
+        }else{
+            $cooking_time = "";
+        }
+
+        $author = $recipe->getUser();
+        if($author){
+            $author = $author->getName();
+        }else{
+            $author = "Foodex";
+        }
+
+        $celebration = $recipe->getCelebration();
+        if($celebration){
+            $celebration = $celebration->getName();
+        }else{
+            $celebration = "";
+        }
+
+        $country = $recipe->getCountry();
+        if($country){
+            $country = $country->getName();
+        }else{
+            $country = "";
+        }
+
+        $main_cooking_method = $recipe->getMainCookingMethod();
+        if($main_cooking_method){
+            $main_cooking_method = $main_cooking_method->getName();
+        }else{
+            $main_cooking_method = "";
+        }
+
+        $type = $recipe->getType();
+        if($type){
+            $type = $type->getName();
+        }else{
+            $type = "";
+        }
+
+        $like_amount = $recipe->getLikes();
+        if($like_amount){
+            $like_amount = count($like_amount);
+        }else{
+            $like_amount = 0;
+        }
+
+        // 2 user id
+        $user = $em->getRepository('NFQAkademijaBaseBundle:User')->find('2');
+        $like_status = $em->getRepository("NFQAkademijaBaseBundle:Like")->findBy(array('user' => $user));
+        if($like_status){
+            $like_status = "liked";
+        }else{
+            $like_status = "not_liked";
+        }
+
+        $properties_data = $recipe->getProperties();
+        $properties = "";
+        if($properties_data){
+            foreach($properties_data as $property){
+                $properties .= $property->getName().", ";
+            }
+            $properties = substr($properties, 0, strlen($properties) - 2);
+        }
+
+        $ingredients_data = $em->getRepository("NFQAkademijaBaseBundle:RecipeProduct")->findBy(array('recipe' => $recipe_ID));
         $ingredients = "";
-        $ingredient_ID = '2';
-        $ingredient_imageUrl = "/images/food (5).jpg";
-        $ingredient_title = "Bananas";
-        $ingredient_quantity = "5";
-        $ingredient_unit = "vnt";
-        $ingredient_indicator = "have"; // have, shoppinglist, undefined
+        foreach($ingredients_data as $ingredient){
+            $product = $ingredient->getProduct();
+            $indicator = "";
+            $single_ingredient = $this->render('NFQAkademijaRecipesBundle:AjaxViews:Ingredient.html.twig',
+                array(
+                    'id' => "Product-".$product->getId(),
+                    'title' => $product->getName(),
+                    'imageUrl' => $product->getPhoto(),
+                    'quantity' => $ingredient->getQuantity(),
+                    'unit' => $product->getUnit()->getName(),
+                    'indicator' => $indicator,
+                ));
+            $single_ingredient = $single_ingredient->getContent();
 
-        $ingredient = $this->render('NFQAkademijaRecipesBundle:AjaxViews:Ingredient.html.twig',
-            array(
-                'id' => $ingredient_ID,
-                'title' => $ingredient_title,
-                'imageUrl' => $ingredient_imageUrl,
-                'quantity' => $ingredient_quantity,
-                'unit' => $ingredient_unit,
-                'indicator' => $ingredient_indicator,
-            ));
-        $ingredient = $ingredient->getContent();
-        $ingredients .= $ingredient;
-        $ingredients .= $ingredient;
-        $ingredients .= $ingredient;
+            $ingredients .= $single_ingredient;
+        }
 
-
-        $title = "bla";
-        $imageUrl = "/images/food (5).jpg";
-        $like_status = "not_liked";
-        $like_count = "59";
-        $author = "autorius";
-        $time = "25 min";
-        $country = "Lenkija";
-        $type = "Antrijie";
-        $main_cooking_method = "Virimas";
-        $properties = "Aštru, sūru";
-        $celebration = "Kalėdos";
 
         $recipe_data = $this->render('NFQAkademijaRecipesBundle:AjaxViews:RecipeRightSidebar.html.twig',
             array(
@@ -728,9 +778,9 @@ class AjaxController extends Controller
                 'title' => $title,
                 'imageUrl' => $imageUrl,
                 'like_status' => $like_status,
-                'like_count' => $like_count,
+                'like_amount' => $like_amount,
                 'author' => $author,
-                'time' => $time,
+                'cooking_time' => $cooking_time,
                 'country' => $country,
                 'type' => $type,
                 'main_cooking_method' => $main_cooking_method,

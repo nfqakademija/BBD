@@ -1,12 +1,12 @@
 <div id='sidebar_right_image' style='background-image:url("{{ imageUrl }}");'></div>
 <div id='sidebar_right_title'>{{ title }}</div>
 <div id='sidebar_right_info'>
-    <div class='sidebar_right_info_item untouchable {{ like_status }}' id='sidebar_right_like' onclick="recipe_like('{{ id }}', this.id)">{{ like_count }}</div>
+    <div class='sidebar_right_info_item untouchable {{ like_status }}' id='sidebar_right_like' onclick="recipe_like('{{ id }}', this.id)">{{ like_amount }}</div>
 <div class='sidebar_right_info_item' id='sidebar_right_author'>{{ author }}</div>
-<div class='sidebar_right_info_item' id='sidebar_right_time'>{{ time }}</div>
+<div class='sidebar_right_info_item' id='sidebar_right_time'>{{ cooking_time }}</div>
 <div class='sidebar_right_info_item' id='sidebar_right_country'>{{ country }}</div>
 <div class='sidebar_right_info_item' id='sidebar_right_type'>{{ type }}</div>
-<div class='sidebar_right_info_item' id='sidebar_right_characteristics'>{{ properties }}</div>
+<div class='sidebar_right_info_item' id='sidebar_right_properties'>{{ properties }}</div>
 <div class='sidebar_right_info_item' id='sidebar_right_main_cooking_method'>{{ main_cooking_method }}</div>
 <div class='sidebar_right_info_item' id='sidebar_right_celebration'>{{ celebration }}</div>
 </div>

@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use NFQAkademija\BaseBundle\Entity\Fact;
+use NFQAkademija\BaseBundle\Entity\Like;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -224,7 +225,6 @@ class AjaxController extends Controller
             $selected_filters = $session->get('filters');
         }
 
-        file_put_contents('log.log', print_r($selected_filters, true), FILE_APPEND);
         //selected, selected_personal, categories, inside_category, ingredients
         switch($type){
             case "selected":
@@ -427,9 +427,7 @@ class AjaxController extends Controller
                 //if filter is already existing
                 if($type == $filter_type && $id == $filter_id){
                     if($filter_indicator == "none"){
-                        file_put_contents('log.log', print_r($filters, true), FILE_APPEND);
                         unset($filters[$i]);
-                        file_put_contents('log.log', print_r($filters, true), FILE_APPEND);
                     }else{
                         $filters[$i]["indicator"] = $filter_indicator;
                     }
@@ -678,120 +676,127 @@ class AjaxController extends Controller
         //title, like_status, id, like_amount, author, cooking_time, country, main_cooking_method,
         //type, properties, celebration, ingredients(imageUrl, title, amount, unit), imageUrl,
         $request_data = $request->request;
-        $recipe_ID = '2';//$request_data->get('recipe_ID');
+        $recipe_ID = $request_data->get('recipe_ID');
 
         $em = $this->getDoctrine()->getManager();
         $recipe = $em->getRepository('NFQAkademijaBaseBundle:Recipe')->find($recipe_ID);
-        $title = $recipe->getName();
-        $imageUrl = $recipe->getPhoto();
 
-        $cooking_time = $recipe->getCookingTime();
-        if($cooking_time){
-            $cooking_time = $cooking_time->getName();
-        }else{
-            $cooking_time = "";
-        }
+        if($recipe) {
+            $title = $recipe->getName();
+            $imageUrl = $recipe->getPhoto();
 
-        $author = $recipe->getUser();
-        if($author){
-            $author = $author->getName();
-        }else{
-            $author = "Foodex";
-        }
-
-        $celebration = $recipe->getCelebration();
-        if($celebration){
-            $celebration = $celebration->getName();
-        }else{
-            $celebration = "";
-        }
-
-        $country = $recipe->getCountry();
-        if($country){
-            $country = $country->getName();
-        }else{
-            $country = "";
-        }
-
-        $main_cooking_method = $recipe->getMainCookingMethod();
-        if($main_cooking_method){
-            $main_cooking_method = $main_cooking_method->getName();
-        }else{
-            $main_cooking_method = "";
-        }
-
-        $type = $recipe->getType();
-        if($type){
-            $type = $type->getName();
-        }else{
-            $type = "";
-        }
-
-        $like_amount = $recipe->getLikes();
-        if($like_amount){
-            $like_amount = count($like_amount);
-        }else{
-            $like_amount = 0;
-        }
-
-        // 2 user id
-        $user = $em->getRepository('NFQAkademijaBaseBundle:User')->find('2');
-        $like_status = $em->getRepository("NFQAkademijaBaseBundle:Like")->findBy(array('user' => $user));
-        if($like_status){
-            $like_status = "liked";
-        }else{
-            $like_status = "not_liked";
-        }
-
-        $properties_data = $recipe->getProperties();
-        $properties = "";
-        if($properties_data){
-            foreach($properties_data as $property){
-                $properties .= $property->getName().", ";
+            $cooking_time = $recipe->getCookingTime();
+            if($cooking_time){
+                $cooking_time = $cooking_time->getName();
+            }else{
+                $cooking_time = "";
             }
-            $properties = substr($properties, 0, strlen($properties) - 2);
-        }
 
-        $ingredients_data = $em->getRepository("NFQAkademijaBaseBundle:RecipeProduct")->findBy(array('recipe' => $recipe_ID));
-        $ingredients = "";
-        foreach($ingredients_data as $ingredient){
-            $product = $ingredient->getProduct();
-            $indicator = "";
-            $single_ingredient = $this->render('NFQAkademijaRecipesBundle:AjaxViews:Ingredient.html.twig',
+            $author = $recipe->getUser();
+            if($author){
+                $author = $author->getName();
+            }else{
+                $author = "Foodex";
+            }
+
+            $celebration = $recipe->getCelebration();
+            if($celebration){
+                $celebration = $celebration->getName();
+            }else{
+                $celebration = "";
+            }
+
+            $country = $recipe->getCountry();
+            if($country){
+                $country = $country->getName();
+            }else{
+                $country = "";
+            }
+
+            $main_cooking_method = $recipe->getMainCookingMethod();
+            if($main_cooking_method){
+                $main_cooking_method = $main_cooking_method->getName();
+            }else{
+                $main_cooking_method = "";
+            }
+
+            $type = $recipe->getType();
+            if($type){
+                $type = $type->getName();
+            }else{
+                $type = "";
+            }
+
+            $like_amount = $recipe->getLikes();
+            if($like_amount){
+                $like_amount = count($like_amount);
+            }else{
+                $like_amount = 0;
+            }
+            // 4 user id
+            $user_ID = '4';
+            $like_status = $em->getRepository("NFQAkademijaBaseBundle:Like")->find(array("user" => $user_ID, "recipe" => $recipe_ID));
+
+            if($like_status){
+                $like_status = "liked";
+            }else{
+                $like_status = "not_liked";
+            }
+
+            $properties_data = $recipe->getProperties();
+            $properties = "";
+            if($properties_data){
+                foreach($properties_data as $property){
+                    $properties .= $property->getName().", ";
+                }
+                $properties = substr($properties, 0, strlen($properties) - 2);
+            }
+
+            $ingredients_data = $em->getRepository("NFQAkademijaBaseBundle:RecipeProduct")->findBy(array('recipe' => $recipe_ID));
+            $ingredients = "";
+            foreach($ingredients_data as $ingredient){
+                $product = $ingredient->getProduct();
+                $indicator = "";
+                $single_ingredient = $this->render('NFQAkademijaRecipesBundle:AjaxViews:Ingredient.html.twig',
+                    array(
+                        'id' => "Product-".$product->getId(),
+                        'title' => $product->getName(),
+                        'imageUrl' => $product->getPhoto(),
+                        'quantity' => $ingredient->getQuantity(),
+                        'unit' => $product->getUnit()->getName(),
+                        'indicator' => $indicator,
+                    ));
+                $single_ingredient = $single_ingredient->getContent();
+
+                $ingredients .= $single_ingredient;
+            }
+
+
+            $recipe_data = $this->render('NFQAkademijaRecipesBundle:AjaxViews:RecipeRightSidebar.html.twig',
                 array(
-                    'id' => "Product-".$product->getId(),
-                    'title' => $product->getName(),
-                    'imageUrl' => $product->getPhoto(),
-                    'quantity' => $ingredient->getQuantity(),
-                    'unit' => $product->getUnit()->getName(),
-                    'indicator' => $indicator,
+                    'id' => $recipe_ID,
+                    'title' => $title,
+                    'imageUrl' => $imageUrl,
+                    'like_status' => $like_status,
+                    'like_amount' => $like_amount,
+                    'author' => $author,
+                    'cooking_time' => $cooking_time,
+                    'country' => $country,
+                    'type' => $type,
+                    'main_cooking_method' => $main_cooking_method,
+                    'properties' => $properties,
+                    'celebration' => $celebration,
+                    'ingredients' => $ingredients,
                 ));
-            $single_ingredient = $single_ingredient->getContent();
-
-            $ingredients .= $single_ingredient;
+            $recipe_data = $recipe_data->getContent();
+            $status = "good";
+        }else{
+            $recipe_data = "";
+            $status = "bad";
         }
-
-
-        $recipe_data = $this->render('NFQAkademijaRecipesBundle:AjaxViews:RecipeRightSidebar.html.twig',
-            array(
-                'id' => $recipe_ID,
-                'title' => $title,
-                'imageUrl' => $imageUrl,
-                'like_status' => $like_status,
-                'like_amount' => $like_amount,
-                'author' => $author,
-                'cooking_time' => $cooking_time,
-                'country' => $country,
-                'type' => $type,
-                'main_cooking_method' => $main_cooking_method,
-                'properties' => $properties,
-                'celebration' => $celebration,
-                'ingredients' => $ingredients,
-            ));
-        $recipe_data = $recipe_data->getContent();
 
         $response = array(
-            'status' => 'good',
+            'status' => $status,
             'recipe_data' => $recipe_data,
         );
 
@@ -901,10 +906,34 @@ class AjaxController extends Controller
     {
         $request_data = $request->request;
         $recipe_ID = $request_data->get('recipe_ID');
+        $em = $this->getDoctrine()->getManager();
 
-        //add to user that he liked this recipe
+        // 4 user id need from session
+        $user_ID = 4;
+
+        $like_status = $em->getRepository("NFQAkademijaBaseBundle:Like")->find(array("user" => $user_ID, "recipe" => $recipe_ID));
+        //file_put_contents('log.log', "X".print_r($like_status, true)."X", FILE_APPEND);
+        if($like_status){
+            $new_like_status = "not_liked";
+            //update to not like
+            $em->remove($like_status);
+        }else{
+            $new_like_status = "liked";
+            //update to like
+            $data = new Like();
+            $user = $em->getRepository("NFQAkademijaBaseBundle:User")->find($user_ID);
+            $recipe = $em->getRepository("NFQAkademijaBaseBundle:Recipe")->find($recipe_ID);
+            $data->setUser($user);
+            $data->setRecipe($recipe);
+            $em->persist($data);
+        }
+
+        $em->flush();
+
+
         $response = array(
             'status' => 'good',
+            'like_status' => $new_like_status,
         );
 
         $jsonResponse = new Response(json_encode($response));
@@ -1265,3 +1294,4 @@ $dql = "SELECT f FROM NFQAkademijaBaseBundle:Fact f ORDER BY f.id DESC LIMIT 1";
 $query = $em->createQuery($dql);
 */
 //file_put_contents('log.log', print_r($latest_data, true), FILE_APPEND);
+//find grazina entity, visi kiti arrejus

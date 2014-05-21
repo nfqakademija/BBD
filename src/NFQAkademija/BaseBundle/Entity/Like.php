@@ -8,8 +8,9 @@ use Doctrine\ORM\Mapping as ORM;
  * Like
  *
  * @ORM\Table(name="likes")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="NFQAkademija\BaseBundle\Entity\LikeRepository")
  */
+
 class Like
 {
     /**

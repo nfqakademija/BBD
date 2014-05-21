@@ -145,6 +145,17 @@ function loading(id, display) {
     }
 }
 
+function loading_icons(id, display){
+    if(display == "show"){
+        $("#" + id).append("<div class='loader'></div>");
+        $("#" + id + " .loader").fadeIn(transition_time * 2);
+    }else if (display == "hide") {
+        $("#" + id + " .loader").fadeOut(transition_time * 2, function(){
+            $("#" + id + " .loader").remove();
+        });
+    }
+}
+
 function append_recipe(data){
     var id = data[0];
     var image = data[1];
@@ -1043,16 +1054,19 @@ function show_recipe(recipe_ID){
                         $("#recipe_" + recipe_ID).addClass('recipe_active');
                         scroll_sidebar_right.refresh();
                         scroll_sidebar_right.scrollTo(0,0);
-                        loading("recipe_" + recipe_ID, 'hide');
+                    }else{
+                        hide_recipe();
+                        toast('Tokio recepto nėra','bad','logo');
                     }
+                    loading("recipe_" + recipe_ID, 'hide');
                 },
                 error: function (xhr, ajaxOptions, thrownError) {
                     toast('Įvyko klaida. Perkraukite puslapį','bad','logo');
+                    loading("recipe_" + recipe_ID, 'hide');
+                    hide_recipe();
                     console.log(xhr.responseText);
                 }
-
             });
-
         }else{
             hide_recipe();
             setTimeout(function(){
@@ -1587,8 +1601,6 @@ function previous_step(){
 function recipe_like(recipe_ID, box_ID){
 
     if(check_if_user_is_loged()){
-        //ajax to change status and get new status
-
         var formData = new FormData();
         formData.append('recipe_ID', recipe_ID);
         $.ajax({
@@ -1602,8 +1614,7 @@ function recipe_like(recipe_ID, box_ID){
             contentType: false,
             success: function (data) {
                 if (data.status == "good") {
-                    var like_status = true;
-                    if(like_status){
+                    if(data.like_status == "liked"){
                         //make liked
                         $("#" + box_ID).removeClass('not_liked').addClass('liked');
                         if(box_ID == "sidebar_right_like"){
@@ -1626,6 +1637,10 @@ function recipe_like(recipe_ID, box_ID){
                         toast('Receptas pašalintas iš mėgstamiausių','bad', 'not_liked');
                     }
                 }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                toast('Įvyko klaida. Perkraukite puslapį','bad','logo');
+                console.log(xhr.responseText);
             }
         });
     }else{

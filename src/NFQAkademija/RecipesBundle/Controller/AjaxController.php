@@ -113,16 +113,26 @@ class AjaxController extends Controller
     public function load_recipesAction(Request $request)
     {
         $request_data = $request->request;
+        $session = $request->getSession();
         $reset = $request_data->get('reset');
+        $end = false;
+
         $limit = 20;
-        $offset = 0; //get offset from session
+        $offset = 0;
+        if($session->has('load_recipes_offset')){
+            $offset = $session->get('load_recipes_offset');
+        }else{
+            $session->set('load_recipes_offset', $offset);
+        }
 
         if($reset == "true"){
             //reset limit to 0 - LIMIT 10, 0;
             $offset = 0;
-
+            $session->set('load_recipes_offset', $offset);
         }
 
+        //ADD FILTERS
+        $recipes = [];
         $repository = $this->getDoctrine()->getRepository('NFQAkademijaBaseBundle:Recipe');
         $query = $repository->createQueryBuilder('f')
             ->select('f.id, f.name, f.photo')
@@ -130,32 +140,24 @@ class AjaxController extends Controller
             ->setFirstResult($offset)
             ->setMaxResults($limit)
             ->getQuery();
+        $recipes = $query->getResult();
 
-        $data = $query->getResult();
-
-        //increase in session
-        $offset += 10;
-
-        //get recipe_ID, image_url, title and limit and form recipes array
-        //[id, imageUrl, title]
-        //WHERE filters occur
-        $recipes = [];
-        $recipes[0] = ["0","/images/food (0).jpg", "title0"];
-        $recipes[1] = ["1","/images/food (1).png", "title0"];
-        $recipes[2] = ["2","/images/food (2).jpg", "title0"];
-        $recipes[3] = ["3","/images/food (3).jpg", "title0"];
-        $recipes[4] = ["4","/images/food (4).jpg", "title0"];
-        $recipes[5] = ["5","/images/food (5).jpg", "title0"];
-        $recipes[6] = ["6","/images/food (6).jpg", "title0"];
-        $recipes[7] = ["7","/images/food (7).jpg", "title0"];
-        $recipes[8] = ["8","/images/food (8).jpg", "title0"];
-        $recipes[9] = ["9","/images/food (9).jpg", "title0"];
-        $recipes[10] = ["10","/images/food (10).jpg", "title0"];
-        $recipes[11] = ["11","/images/food (11).jpg", "title0"];
+        $recipes_loaded = count($recipes);
+        //jei rado receptu
+        if($recipes_loaded != 0 ){
+            if($recipes_loaded < $limit){
+                //jei receptu rado ne pilnai = reiskia daugiau receptu nebebus todel offset nedidint
+                $end = true;
+            }else{
+                //receptu rado tiek koks yra limitas. Reiskias gali buti ir daugaiu pagal sia uzklausa. Offset didint
+                $session->set('load_recipes_offset', $offset + $limit);
+            }
+        }
 
         $response = array(
             'status' => 'good',
             'recipes' => $recipes,
+            'end' => $end,
         );
 
         $jsonResponse = new Response(json_encode($response));
@@ -376,7 +378,6 @@ class AjaxController extends Controller
         //tada kita karta iskvietus show_loading_screen susikurs sesija su random faktu ir jy rodys kol
         //uzkraus psulapy ir kai uzkraus kol iskvies hide_loading_screen
 
-
         if($status == "start"){
             //create session with random fact
             $repository = $this->getDoctrine()->getRepository('NFQAkademijaBaseBundle:Fact');
@@ -392,7 +393,6 @@ class AjaxController extends Controller
             //delete session
             $session->remove('fact');
         }
-
 
         $response = array(
             'status' => 'good',
@@ -874,13 +874,12 @@ class AjaxController extends Controller
     public function coop_infoAction(Request $request)
     {
         $request_data = $request->request;
-
         $recipe_ID = $request_data->get('recipe_ID');
+        //add info that user cooperated
 
         $response = array(
             'status' => 'good',
         );
-
         $jsonResponse = new Response(json_encode($response));
         $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
         return $jsonResponse;
@@ -1297,3 +1296,21 @@ $query = $em->createQuery($dql);
 */
 //file_put_contents('log.log', print_r($latest_data, true), FILE_APPEND);
 //find grazina entity, visi kiti arrejus
+//get recipe_ID, image_url, title and limit and form recipes array
+//[id, imageUrl, title]
+//WHERE filters occur
+
+/*
+$recipes[0] = ["0","/images/food (0).jpg", "title0"];
+$recipes[1] = ["1","/images/food (1).png", "title0"];
+$recipes[2] = ["2","/images/food (2).jpg", "title0"];
+$recipes[3] = ["3","/images/food (3).jpg", "title0"];
+$recipes[4] = ["4","/images/food (4).jpg", "title0"];
+$recipes[5] = ["5","/images/food (5).jpg", "title0"];
+$recipes[6] = ["6","/images/food (6).jpg", "title0"];
+$recipes[7] = ["7","/images/food (7).jpg", "title0"];
+$recipes[8] = ["8","/images/food (8).jpg", "title0"];
+$recipes[9] = ["9","/images/food (9).jpg", "title0"];
+$recipes[10] = ["10","/images/food (10).jpg", "title0"];
+$recipes[11] = ["11","/images/food (11).jpg", "title0"];
+*/

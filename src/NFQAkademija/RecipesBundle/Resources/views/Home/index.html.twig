@@ -3,11 +3,11 @@
 {% block title %}Foodex{% endblock %}
 
  {% block divider %}
-     <div id="divider" class="middle_divider" onclick="full_sidebar()"></div>
+     <div id="divider" class="middle_divider"></div>
  {% endblock %}
 
  {% block filters_zone %}
-    <div id='filters_zone' onclick="full_sidebar()">
+    <div id='filters_zone'>
         <div class="scroller" id="scroller_filters"></div>
     </div>
  {% endblock %}
@@ -73,43 +73,6 @@
              $("#sidebar_right_wrapper").click(function(){ $("#search_input").blur();});
              $("#filters_zone").click(function(){ $("#search_input").blur();});
              $("#content_wrapper").click(function(){ $("#search_input").blur();});
-
-
-         }
-
-         var load_more_end = false;
-         var loading_more_status = false;
-         function load_more(){
-             if(!loading_more_status && !load_more_end){
-                 loading_more_status = true;
-                 recipe_size = calculate_recipe_size();
-
-                 var formData = new FormData();
-                 formData.append('load_more', 'true');
-                 $.ajax({
-                     type: 'POST',
-                     url: '/ajax/load_more',
-                     data: formData,
-                     dataType: 'json',
-                     beforeSend: function () {
-                         show_loading_recipe();
-                     },
-                     processData: false,
-                     contentType: false,
-                     success: function (data) {
-                         if (data.status == "good") {
-                             loading_more_status = false;
-                             if(data.end){
-                                 load_more_end = true;
-                             }
-                             load_recipes('false', function(){hide_loading_recipe();});
-                             setTimeout(function(){
-                                 scroll_content.refresh();
-                             },0);
-                         }
-                     }
-                 });
-             }
          }
 
          function key_check(event){}

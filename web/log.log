@@ -179,4 +179,20 @@ Array
         )
 
 )
-Raudonos arba rožinės spalvos greipfrutuose vitamino C yra daugiau negu įprastuose (geltonos spalvos).Du tūkstančius metų šokoladas buvo žinomas tik kaip gėrimas. Pirmoji šokolado plytelė buvo parduota tik 1849 metais.
+Raudonos arba rožinės spalvos greipfrutuose vitamino C yra daugiau negu įprastuose (geltonos spalvos).Du tūkstančius metų šokoladas buvo žinomas tik kaip gėrimas. Pirmoji šokolado plytelė buvo parduota tik 1849 metais.Array
+(
+    [0] => Array
+        (
+            [id] => 2
+            [name] => Kiauliena
+            [photo] => /images/food (15).jpg
+        )
+
+    [1] => Array
+        (
+            [id] => 3
+            [name] => safaaa
+            [photo] => /images/food (14).jpg
+        )
+
+)

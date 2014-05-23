@@ -28,6 +28,8 @@ var scroll_steps_others_like_box;
 var scroll_step_comment_answers_box;
 var clickable = true;
 var user_login_status = false;
+var load_more_end = false;
+var loading_more_status = false;
 
 document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
 
@@ -102,6 +104,18 @@ function profile_recipes(type){
     });
 }
 
+
+function load_more(){
+    if(!loading_more_status && !load_more_end){
+        loading_more_status = true;
+        show_loading_recipe();
+        load_recipes('false', function(){
+            hide_loading_recipe();
+            loading_more_status = false;
+        });
+    }
+}
+
 function load_recipes(reset, callback){
     callback = callback || function(){};
     var formData = new FormData();
@@ -117,18 +131,27 @@ function load_recipes(reset, callback){
         contentType: false,
         success: function (data) {
             if (data.status == "good") {
-                if(reset == "true"){
-                    $("#scroller_content").html('');
-                    load_more_end = false;
-                    setTimeout(function(){scroll_content.scrollTo(0, 0)},0);
-                }
                 var recipes = data.recipes;
-                for(i = 0; i < recipes.length; i++){
-                    append_recipe(recipes[i]);
+                if(recipes.length == 0){
+                    toast('Atsiprašome, bet tokių receptų neturime','bad','logo');
+                }else{
+                    if(reset == "true"){
+                        $("#scroller_content").html('');
+                        setTimeout(function(){scroll_content.scrollTo(0, 0)},0);
+                    }
+                    load_more_end = data.end;
+                    recipe_size = calculate_recipe_size();
+                    for(i = 0; i < recipes.length; i++){
+                        append_recipe(recipes[i]);
+                    }
+                    setTimeout(function(){scroll_content.refresh()},0);
                 }
-                setTimeout(function(){scroll_content.refresh()},0);
-                callback();
             }
+            callback();
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            toast('Įvyko klaida. Perkraukite puslapį','bad','logo');
+            console.log(xhr.responseText);
         }
     });
 }
@@ -145,21 +168,18 @@ function loading(id, display) {
     }
 }
 
-function loading_icons(id, display){
+function loading_icon(id, display){
     if(display == "show"){
-        $("#" + id).append("<div class='loader'></div>");
-        $("#" + id + " .loader").fadeIn(transition_time * 2);
+        $("#" + id).addClass('loading_icon');
     }else if (display == "hide") {
-        $("#" + id + " .loader").fadeOut(transition_time * 2, function(){
-            $("#" + id + " .loader").remove();
-        });
+        $("#" + id).removeClass('loading_icon');
     }
 }
 
 function append_recipe(data){
-    var id = data[0];
-    var image = data[1];
-    var title = data[2];
+    var id = data["id"];
+    var image = data["photo"];
+    var title = data["name"];
 
     var appendable_data = "<div class='recipe_box' id='recipe_" + id + "' style=\"background-image: url('" + image + "');width:" + recipe_size + "px;height:" + recipe_size +  "px;\" onclick=\"show_recipe('" + id + "')\"><div class='recipe_box_info'>" + title + "</div></div>";
     $("#scroller_content").append(appendable_data);
@@ -1188,6 +1208,7 @@ function add_to_shopping_list(recipe_ID){
             data: formData,
             dataType: 'json',
             beforeSend: function () {
+                loading('sidebar_right_ingredients_shoppinglist','show');
             },
             processData: false,
             contentType: false,
@@ -1195,30 +1216,18 @@ function add_to_shopping_list(recipe_ID){
                 if (data.status == "good") {
                     $('.ingredient_indicator').removeClass('ingredient_indicator_have').removeClass('ingredient_indicator_undefined').removeClass('ingredient_indicator_shoppinglist').addClass('ingredient_indicator_shoppinglist');
                     toast('Produktai sudėti į pirkinių krepšį','good', 'shoppinglist');
+                    loading('sidebar_right_ingredients_shoppinglist','hide');
                 }
             }
         });
-
-
     }else{
         show_top_layer('account');
     }
 }
 
 
-
-
-
 function coop(recipe_ID){
     if(check_if_user_is_loged()){
-        var have = [];
-        var need = [];
-
-        //get title, foto, cook link
-        var title = "Šiškebabas";
-        var image = "http://www.foodex.lt/images/food (5).jpg";
-        var link = "http://www.foodex.lt/cook/1/";
-
         var formData = new FormData();
         formData.append('recipe_ID', recipe_ID);
         $.ajax({
@@ -1227,60 +1236,67 @@ function coop(recipe_ID){
             data: formData,
             dataType: 'json',
             beforeSend: function () {
+                loading('sidebar_right_ingredients_coop','show');
             },
             processData: false,
             contentType: false,
             success: function (data) {
                 if (data.status == "good") {
+                    var have = [];
+                    var need = [];
+                    //get title, foto, cook link
+                    var title = $("#sidebar_right_title").html();
+                    var image = $("#sidebar_right_image").css('background-image');
+                    image = image.replace('"', "'");
+                    var link = "http://www.foodex.lt/cook/" + recipe_ID + "/";
+                    var about = "Gaminkite kartu su Foodex";
+
+                    //use facebook API to share on wall to cook together with missing ingredients
+                    $(".ingredient").each(function(){
+                        var id = "#" + this.id;
+                        var classes = $(id + " .ingredient_indicator").attr('class').split(" ");
+                        var indicator = classes[1];
+                        var title = $(id + " .ingredient_text").html();
+                        var size = $(id + " .ingredient_size").html();
+                        var element = [title, size];
+
+                        if(indicator == "ingredient_indicator_have"){
+                            have.push(element);
+                        }else{
+                            need.push(element);
+                        }
+                    });
+
+                    var message = "Kas norit kartu pasigaminti '" + title + "'\n";
+                    message += "\n";
+                    message += "Turiu:\n";
+                    for(i = 0; i < have.length; i++){
+                        message += "+ " + have[i][0] + " " + have[i][1] + "\n";
+                    }
+                    message += "\n";
+                    message += "Trūksta:\n";
+                    for(i = 0; i < need.length; i++) {
+                        message += "- " + need[i][0] + " " + need[i][1] + "\n";
+                    }
+
+                    FB.api('/me/feed', 'post', {
+                        message: message,
+                        name: 'Foodex',
+                        caption: 'Gaminkite kartu su Foodex',
+                        description: about,
+                        link: link,
+                        picture: image
+                    }, function(response) {
+                        if (!response || response.error) {
+                            toast('Jūs nesuteikėte privilegijos rašyti ant jūsų laiko juostos','bad', 'coop');
+                        } else {
+                            toast('Žinutė Jūsų draugams pasiųsta sėkmingai','good', 'coop');
+                        }
+                        loading('sidebar_right_ingredients_coop','hide');
+                    });
                 }
             }
         });
-
-
-        //use facebook API to share on wall to cook together with missing ingredients
-        $(".ingredient").each(function(){
-            var id = "#" + this.id;
-            var classes = $(id + " .ingredient_indicator").attr('class').split(" ");
-            var indicator = classes[1];
-            var title = $(id + " .ingredient_text").html();
-            var size = $(id + " .ingredient_size").html();
-            var element = [title, size];
-
-            if(indicator == "ingredient_indicator_have"){
-                have.push(element);
-            }else{
-                need.push(element);
-            }
-        });
-
-        var message = "Kas norit kartu pasigaminti '" + title + "'\n";
-        message += "\n";
-        message += "Turiu:\n";
-        for(i = 0; i < have.length; i++){
-            message += "+ " + have[i][0] + " " + have[i][1] + "\n";
-        }
-        message += "\n";
-        message += "Trūksta:\n";
-        for(i = 0; i < need.length; i++) {
-            message += "- " + need[i][0] + " " + need[i][1] + "\n";
-        }
-
-
-        FB.api('/me/feed', 'post', {
-            message: message,
-            name: 'Foodex',
-            caption: 'Gaminkite kartu su Foodex',
-            description: 'Maistas svarbiausia',
-            link: link,
-            picture: image
-        }, function(response) {
-            if (!response || response.error) {
-                toast('Jūs nesuteikėte privilegijos rašyti ant jūsų laiko juostos','bad', 'coop');
-            } else {
-                toast('Žinutė Jūsų draugams pasiųsta sėkmingai','good', 'coop');
-            }
-        });
-
     }else{
         show_top_layer('account');
     }
@@ -1593,7 +1609,6 @@ function previous_step(){
 }
 
 function recipe_like(recipe_ID, box_ID){
-
     if(check_if_user_is_loged()){
         var formData = new FormData();
         formData.append('recipe_ID', recipe_ID);
@@ -1603,6 +1618,7 @@ function recipe_like(recipe_ID, box_ID){
             data: formData,
             dataType: 'json',
             beforeSend: function () {
+                loading_icon(box_ID, 'show');
             },
             processData: false,
             contentType: false,
@@ -1631,6 +1647,7 @@ function recipe_like(recipe_ID, box_ID){
                         toast('Receptas pašalintas iš mėgstamiausių','bad', 'not_liked');
                     }
                 }
+                loading_icon(box_ID, 'hide');
             },
             error: function (xhr, ajaxOptions, thrownError) {
                 toast('Įvyko klaida. Perkraukite puslapį','bad','logo');

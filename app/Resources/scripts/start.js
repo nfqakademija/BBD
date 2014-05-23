@@ -429,13 +429,11 @@ function check_if_user_is_loged(){
 function content_navigation(type){
     switch(type){
         case "home":
-            show_loading_screen();
-            location.href = "/";
+            show_loading_screen("/");
             break;
         case "profile":
             if(check_if_user_is_loged()){
-                show_loading_screen();
-                location.href = "/profile";
+                show_loading_screen("/profile");
             }else{
                 show_top_layer('account');
             }
@@ -444,21 +442,18 @@ function content_navigation(type){
 
         case "shoppinglist":
             if(check_if_user_is_loged()){
-                show_loading_screen();
-                location.href = "/shoppinglist";
+                show_loading_screen("/shoppinglist");
             }else{
                 show_top_layer('account');
             }
             break;
 
         case "places":
-            show_loading_screen();
-            location.href = "/places";
+            show_loading_screen("/places");
             break;
 
         default:
-            show_loading_screen();
-            location.href = "/";
+            show_loading_screen("/");
             break;
     }
 }
@@ -587,10 +582,10 @@ function hide_loading_screen(){
             toast('Įvyko klaida. Perkraukite puslapį','bad','logo');
         }
     });
-
 }
 
-function show_loading_screen(){
+function show_loading_screen(url){
+    $("#loading_screen_info").css('display','none');
     $("#loading_screen").fadeIn(transition_time * 2);
 
     var formData = new FormData();
@@ -607,6 +602,8 @@ function show_loading_screen(){
         success: function (data) {
             if (data.status == "good") {
                 $("#loading_screen_info").html(data.fact);
+                $("#loading_screen_info").fadeIn(transition_time);
+                location.href = url;
             }
         },
         error: function (xhr, ajaxOptions, thrownError) {
@@ -1082,7 +1079,8 @@ function hide_recipe(){
 }
 
 function cook(recipe_ID){
-    show_loading_screen();
+    show_loading_screen("/cook/" + recipe_ID);
+
     var formData = new FormData();
     formData.append('recipe_ID', recipe_ID);
     $.ajax({
@@ -1095,9 +1093,7 @@ function cook(recipe_ID){
         processData: false,
         contentType: false,
         success: function (data) {
-            if (data.status == "good") {
-                location.href = "/cook/" + recipe_ID;
-            }
+            if (data.status == "good") {}
         }
     });
 }
@@ -1535,14 +1531,12 @@ function facebook_login(){
         if (response.status === 'connected') {
             // connected
             toast('Jūs jau prisijungęs','bad','login');
-            show_loading_screen();
-            document.location = "http://bbd.dev/login/facebook";
+            show_loading_screen("/login/facebook");
         } else {
             // not_authorized
             FB.login(function(response) {
                 if (response.authResponse) {
-                    show_loading_screen();
-                    document.location = "http://bbd.dev/login/facebook";
+                    show_loading_screen("/login/facebook");
                 } else {
                     toast('Prisijungimas nepavyko','bad','login');
                 }

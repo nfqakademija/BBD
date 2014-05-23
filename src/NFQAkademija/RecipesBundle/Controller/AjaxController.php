@@ -369,26 +369,28 @@ class AjaxController extends Controller
     {
         $request_data = $request->request;
         $status = $request_data->get('status');
+        $session = $request->getSession();
+        $fact = "";
 
         //hide_loading_screen sunaikina sesija
         //tada kita karta iskvietus show_loading_screen susikurs sesija su random faktu ir jy rodys kol
         //uzkraus psulapy ir kai uzkraus kol iskvies hide_loading_screen
-        $fact = "";
+
 
         if($status == "start"){
             //create session with random fact
             $repository = $this->getDoctrine()->getRepository('NFQAkademijaBaseBundle:Fact');
             $query = $repository->createQueryBuilder('f')
                 ->select('f.text')
-                //->orderBy('RAND()')
                 ->getQuery();
-            $data = $query->getSingleResult();
-            $fact = $data["text"];
 
-            $session = $request->getSession();
-            $session->set('loading_screen', $fact);
+            $all_data = $query->getResult();
+            $random_id = mt_rand(0, count($all_data) - 1);
+            $fact = $all_data[$random_id]["text"];
+            $session->set('fact', $fact);
         }else{
             //delete session
+            $session->remove('fact');
         }
 
 

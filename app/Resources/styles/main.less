@@ -1134,18 +1134,16 @@ textarea{
 }
 
 #content_wrapper{
-  //height:100%;
   position:fixed;
   left:231px;
   right:-30px;
   bottom:0px;
   top:0px;
   overflow: hidden;
- // overflow-x:hidden;
-  //overflow-y:scroll;
   background-repeat:no-repeat;
   background-size:cover;
   background-position:50% 50%;
+  background-color:rgb(240, 240, 240);
 }
 
 .content_recipe{
@@ -1171,6 +1169,9 @@ textarea{
   margin-left:10px;
   margin-top:10px;
   position:relative;
+  box-shadow: 2px 2px 2px @black;
+  outline: 1px solid rgb(197, 197, 197);
+  .transition;
 }
 
 .recipe_box_info{
@@ -1188,26 +1189,29 @@ textarea{
   overflow: hidden;
   white-space: nowrap;
   word-break: break-word;
-  background:rgba(255, 112, 0, 0.62);
-  background: -webkit-linear-gradient(top, rgba(255, 255, 255, 0),rgba(255, 112, 0, 0.62), #FF7000);
-  background: -moz-linear-gradient(top, rgba(255, 255, 255, 0),rgba(255, 112, 0, 0.62), #FF7000);
-  background: -ms-linear-gradient(top, rgba(255, 255, 255, 0),rgba(255, 112, 0, 0.62), #FF7000);
-  background: -o-linear-gradient(top, rgba(255, 255, 255, 0),rgba(255, 112, 0, 0.62), #FF7000);
-  display:none;
+  background:rgba(88, 88, 88, 0.66);
+  background: -webkit-linear-gradient(top, rgba(255, 255, 255, 0), rgba(88, 88, 88, 0.66), #1B1B1B);
+  background: -moz-linear-gradient(top, rgba(255, 255, 255, 0), rgba(88, 88, 88, 0.66), #1B1B1B);
+  background: -ms-linear-gradient(top, rgba(255, 255, 255, 0), rgba(88, 88, 88, 0.66), #1B1B1B);
+  background: -o-linear-gradient(top, rgba(255, 255, 255, 0), rgba(88, 88, 88, 0.66), #1B1B1B);
+
+  //background:rgba(255, 112, 0, 0.62);
+  //background: -webkit-linear-gradient(top, rgba(255, 255, 255, 0),rgba(255, 112, 0, 0.62), #FF7000);
+  //background: -moz-linear-gradient(top, rgba(255, 255, 255, 0),rgba(255, 112, 0, 0.62), #FF7000);
+  //background: -ms-linear-gradient(top, rgba(255, 255, 255, 0),rgba(255, 112, 0, 0.62), #FF7000);
+  //background: -o-linear-gradient(top, rgba(255, 255, 255, 0),rgba(255, 112, 0, 0.62), #FF7000);
+  //display:none;
 }
 
-.recipe_box:hover .recipe_box_info{
-  display:block;
-}
-
-.recipe_active .recipe_box_info{
-  display:block;
+.recipe_box:hover{
+  opacity:0.9;
 }
 
 .recipe_active{
   box-shadow: 0px 0px 60px black inset;
   z-index:2;
-  outline:5px solid white;
+  opacity:0.9;
+  outline:5px solid @black;
   &:hover{
     box-shadow: 0px 0px 60px black inset;
   }

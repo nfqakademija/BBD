@@ -131,15 +131,148 @@ class AjaxController extends Controller
             $session->set('load_recipes_offset', $offset);
         }
 
-        //ADD FILTERS
         $recipes = [];
-        $repository = $this->getDoctrine()->getRepository('NFQAkademijaBaseBundle:Recipe');
-        $query = $repository->createQueryBuilder('f')
-            ->select('f.id, f.name, f.photo')
-            ->orderBy('f.name', 'ASC')
-            ->setFirstResult($offset)
+        $recipe_repository = $this->getDoctrine()->getRepository('NFQAkademijaBaseBundle:Recipe');
+        $property_repository = $this->getDoctrine()->getRepository('NFQAkademijaBaseBundle:Property');
+
+
+        //QUERYING AND FILTERING
+        $filters = [];
+        if($session->has('filters')){
+            $filters = $session->get('filters');
+        }
+
+
+        $filters_for_type_want = [];
+        $filters_for_type_not_want = [];
+
+        $filters_for_property_want = [];
+        $filters_for_property_not_want = [];
+
+        $filters_for_time_want = [];
+        $filters_for_time_not_want = [];
+
+        $filters_for_country_want = [];
+        $filters_for_country_not_want = [];
+
+        $filters_for_ingredients_want = [];
+        $filters_for_ingredients_not_want = [];
+
+        $filters_for_celebration_want = [];
+        $filters_for_celebration_not_want = [];
+
+        $filters_for_main_cooking_method_want = [];
+        $filters_for_main_cooking_method_not_want = [];
+
+        foreach($filters as $filter){
+            $filter_type = $filter["type"];
+            if($filter_type == "Type" && $filter["indicator"] == "want") {
+                $filters_for_type_want [] = $filter["id"];
+            }else if($filter_type == "Type" && $filter["indicator"] == "not_want"){
+                $filters_for_type_not_want [] = $filter["id"];
+            }
+
+            if($filter_type == "Property" && $filter["indicator"] == "want") {
+                $filters_for_property_want [] = $filter["id"];
+            }else if($filter_type == "Property" && $filter["indicator"] == "not_want"){
+                $filters_for_property_not_want [] = $filter["id"];
+            }
+
+            if($filter_type == "CookingTime" && $filter["indicator"] == "want") {
+                $filters_for_time_want [] = $filter["id"];
+            }else if($filter_type == "CookingTime" && $filter["indicator"] == "not_want"){
+                $filters_for_time_not_want [] = $filter["id"];
+            }
+
+            if($filter_type == "Country" && $filter["indicator"] == "want") {
+                $filters_for_country_want [] = $filter["id"];
+            }else if($filter_type == "Country" && $filter["indicator"] == "not_want"){
+                $filters_for_country_not_want [] = $filter["id"];
+            }
+
+            if($filter_type == "Product" && $filter["indicator"] == "want") {
+                $filters_for_ingredients_want [] = $filter["id"];
+            }else if($filter_type == "Product" && $filter["indicator"] == "not_want"){
+                $filters_for_ingredients_not_want [] = $filter["id"];
+            }
+
+            if($filter_type == "Celebration" && $filter["indicator"] == "want") {
+                $filters_for_celebration_want [] = $filter["id"];
+            }else if($filter_type == "Celebration" && $filter["indicator"] == "not_want"){
+                $filters_for_celebration_not_want [] = $filter["id"];
+            }
+
+            if($filter_type == "MainCookingMethod" && $filter["indicator"] == "want") {
+                $filters_for_main_cooking_method_want [] = $filter["id"];
+            }else if($filter_type == "MainCookingMethod" && $filter["indicator"] == "not_want"){
+                $filters_for_main_cooking_method_not_want [] = $filter["id"];
+            }
+        }
+
+        file_put_contents('log.log', print_r($filters_for_time_not_want, true), FILE_APPEND);
+        //filter types: type, property, time, country, ingredients, celebration, main_cooking_method
+        $query = $recipe_repository->createQueryBuilder('f');
+        $query->select('f.id, f.name, f.photo')
+            ->leftJoin('f.products', 'p')
+            ->leftJoin('f.properties', 's')
+            ->distinct()
+            ->orderBy('f.name', 'ASC');
+
+        //type
+        if(count($filters_for_type_want) > 0)
+            $query = $query->andWhere("f.type IN (:filters_for_type_want)")->setParameter('filters_for_type_want', $filters_for_type_want);
+        if(count($filters_for_type_not_want) > 0)
+            $query = $query->andWhere("f.type NOT IN (:filters_for_type_not_want)")->setParameter('filters_for_type_not_want', $filters_for_type_not_want);
+
+        //country
+        if(count($filters_for_country_want) > 0)
+            $query = $query->andWhere("f.country IN (:filters_for_country_want)")->setParameter('filters_for_country_want', $filters_for_country_want);
+        if(count($filters_for_country_not_want) > 0)
+            $query = $query->andWhere("f.country NOT IN (:filters_for_country_not_want)")->setParameter('filters_for_country_not_want', $filters_for_country_not_want);
+
+        //celebration
+        if(count($filters_for_celebration_want) > 0)
+            $query = $query->andWhere("f.celebration IN (:filters_for_celebration_want)")->setParameter('filters_for_celebration_want', $filters_for_celebration_want);
+        if(count($filters_for_celebration_not_want) > 0)
+            $query = $query->andWhere("f.celebration NOT IN (:filters_for_celebration_not_want)")->setParameter('filters_for_celebration_not_want', $filters_for_celebration_not_want);
+
+        //main_cooking_method
+        if(count($filters_for_main_cooking_method_want) > 0)
+            $query = $query->andWhere("f.mainCookingMethod IN (:filters_for_main_cooking_method_want)")->setParameter('filters_for_main_cooking_method_want', $filters_for_main_cooking_method_want);
+        if(count($filters_for_main_cooking_method_not_want) > 0)
+            $query = $query->andWhere("f.mainCookingMethod NOT IN (:filters_for_main_cooking_method_not_want)")->setParameter('filters_for_main_cooking_method_not_want', $filters_for_main_cooking_method_not_want);
+
+        //ingredients
+        //gaunasi kad arba tas ingredientas arba tas gali buti
+        if(count($filters_for_ingredients_want) > 0){
+            $query = $query->andWhere("p.product IN (:filters_for_ingredients_want)")->setParameter('filters_for_ingredients_want', $filters_for_ingredients_want);
+        }
+
+        if(count($filters_for_ingredients_not_want) > 0){
+            $query = $query->andWhere("p.product NOT IN (:filters_for_ingredients_not_want)")->setParameter('filters_for_ingredients_not_want', $filters_for_ingredients_not_want);
+        }
+
+        //time
+        //reik pridet kad rodytu IKI to pasirinkto laiko, ta laika ir mazesnius
+        if(count($filters_for_time_want) > 0)
+            $query = $query->andWhere("f.cookingTime IN (:filters_for_time_want)")->setParameter('filters_for_time_want', $filters_for_time_want);
+        if(count($filters_for_time_not_want) > 0)
+            $query = $query->andWhere("f.cookingTime NOT IN (:filters_for_time_not_want)")->setParameter('filters_for_time_not_want', $filters_for_time_not_want);
+
+        //properties
+        //gaunasi kad arba tas property arba tas gali buti
+        if(count($filters_for_property_want) > 0){
+            $query = $query->andWhere("s.id IN (:filters_for_property_want)")->setParameter('filters_for_property_want', $filters_for_property_want);
+        }
+        if(count($filters_for_property_not_want) > 0){
+            $query = $query->andWhere("s.id NOT IN (:filters_for_property_not_want)")->setParameter('filters_for_property_not_want', $filters_for_property_not_want);
+        }
+
+        $query = $query->setFirstResult($offset)
             ->setMaxResults($limit)
             ->getQuery();
+
+
         $recipes = $query->getResult();
 
         $recipes_loaded = count($recipes);
@@ -430,6 +563,7 @@ class AjaxController extends Controller
                 if($type == $filter_type && $id == $filter_id){
                     if($filter_indicator == "none"){
                         unset($filters[$i]);
+                        $filters = array_values($filters);
                     }else{
                         $filters[$i]["indicator"] = $filter_indicator;
                     }
@@ -1313,4 +1447,12 @@ $recipes[8] = ["8","/images/food (8).jpg", "title0"];
 $recipes[9] = ["9","/images/food (9).jpg", "title0"];
 $recipes[10] = ["10","/images/food (10).jpg", "title0"];
 $recipes[11] = ["11","/images/food (11).jpg", "title0"];
-*/
+*/// 'WITH', 'p.product = ?filters_for_ingredients_want')->setParameter('filters_for_ingredients_want', $filters_for_ingredients_want);
+//if(count($filters_for_property_want) > 0)
+    //$query = $query->join('f.properties', 's', 'WITH', 's.id = :filters_for_property_want')->setParameter('filters_for_property_want', $filters_for_property_want);
+/*
+       SELECT recipes.id, recipes.name, recipes.photo, recipe_property.property_id
+       FROM recipes
+       INNER JOIN recipe_property ON recipes.id = recipe_property.recipe_id
+       WHERE recipe_property.property_id = 1
+        */

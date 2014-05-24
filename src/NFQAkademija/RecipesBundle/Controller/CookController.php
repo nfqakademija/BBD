@@ -130,15 +130,16 @@ class CookController extends Controller
         $comments_data = $em->getRepository("NFQAkademijaBaseBundle:Comment")->findBy(array('recipe' => $id));
         $comments = [];
         foreach($comments_data as $comment){
+            //$user->getPhoto()
             $comments [] = [
                 $user = $comment->getUser(),
-                "imageUrl" => $user->getPhoto(),
+                "imageUrl" => '/images/profile.png',
                 "text" => $comment->getText(),
             ];
         }
 
 
-        $similar_recipes_data = $em->getRepository("NFQAkademijaBaseBundle:Recipe")->findAll();
+        $similar_recipes_data = $em->getRepository("NFQAkademijaBaseBundle:Recipe")->findBy(array('type' => $recipe->getType()));
         $similar_recipes = [];
         foreach($similar_recipes_data as $similar_recipe){
             $similar_recipes [] = [

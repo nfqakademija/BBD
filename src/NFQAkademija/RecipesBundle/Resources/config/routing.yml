@@ -123,10 +123,6 @@ nfq_akademija_comment:
     pattern:  /ajax/comment
     defaults: { _controller: NFQAkademijaRecipesBundle:Ajax:comment}
 
-nfq_akademija_load_more:
-    pattern:  /ajax/load_more
-    defaults: { _controller: NFQAkademijaRecipesBundle:Ajax:load_more}
-
 nfq_akademija_nearest_place:
     pattern:  /ajax/nearest_place
     defaults: { _controller: NFQAkademijaRecipesBundle:Ajax:nearest_place}

@@ -1383,10 +1383,7 @@ function sidebar_manipulation(){
         $('#header').css('display','none');
         $('#content_wrapper').css('top','0px');
         $("#steps_sidebar").css('top','0px');
-        if(get_sidebar_state() == "squeeze")
-            squeeze_sidebar();
-        else
-            full_sidebar();
+        full_sidebar();
     }
 }
 
@@ -1697,12 +1694,6 @@ function recipe_like(recipe_ID, box_ID){
 function share_food(recipe_ID){
     if(check_if_user_is_loged()){
         //take picture of food and upload to facebook
-
-        var link = location.href;
-        var image = "http://bbd.dev/images/food (5).jpg";
-        var title = "Šiškebabas";
-        var about = "Šiškebabas labai skanus ir geras patiekalas";
-
         var formData = new FormData();
         formData.append('recipe_ID', recipe_ID);
         $.ajax({
@@ -1711,37 +1702,36 @@ function share_food(recipe_ID){
             data: formData,
             dataType: 'json',
             beforeSend: function () {
+                loading_icon('step_share','show');
             },
             processData: false,
             contentType: false,
             success: function (data) {
                 if (data.status == "good") {
+                    var link = "http://www.foodex.lt/cook/" + recipe_ID + "/";;
+                    var image = $("#step_0").css('background-image');
+                    image = image.replace('"', "'");
+                    var title = $("#step_0 .step_title").html();
+                    var about = $(".step_about").html();
 
+                    FB.api('/me/feed', 'post', {
+                        message: title,
+                        name: 'Foodex',
+                        caption: 'Gaminkite kartu su Foodex',
+                        description: about,
+                        link: link,
+                        picture: image
+                    }, function(response) {
+                        if (!response || response.error) {
+                            toast('Jūs nesuteikėte privilegijos rašyti ant jūsų laiko juostos','bad', 'login');
+                        } else {
+                            toast('Pasidalinta','good', 'login');
+                        }
+                    });
                 }
+                loading_icon('step_share','hide');
             }
         });
-
-
-        FB.api('/me/feed', 'post', {
-            message: title,
-            name: 'Foodex',
-            caption: 'Gaminkite kartu su Foodex',
-            description: about,
-            link: link,
-            picture: image
-        }, function(response) {
-            if (!response || response.error) {
-                toast('Jūs nesuteikėte privilegijos rašyti ant jūsų laiko juostos','bad', 'login');
-            } else {
-                toast('Pasidalinta','good', 'login');
-            }
-        });
-        /*
-         FB.ui({
-         method: 'share',
-         href: 'https://developers.facebook.com/docs/dialogs/',
-         }, function(response){});
-         */
     }else{
         show_top_layer('account');
     }
@@ -1760,14 +1750,21 @@ function add_comment(recipe_ID){
                 data: formData,
                 dataType: 'json',
                 beforeSend: function () {
+                    loading_icon('step_comment','show');
                 },
                 processData: false,
                 contentType: false,
                 success: function (data) {
                     if (data.status == "good") {
+                        loading_icon('step_comment','hide');
                         squeeze_comment_box();
                         toast('Atsiliepimas įrašytas','good','write');
+                        show_comment(data.comment_html);
                     }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    toast('Įvyko klaida. Perkraukite puslapį','bad','logo');
+                    console.log(xhr.responseText);
                 }
             });
 
@@ -1778,6 +1775,12 @@ function add_comment(recipe_ID){
     }else{
         show_top_layer('account');
     }
+}
+
+function show_comment(data){
+    $("#step_comment_answers_box_scroller").append(data);
+    setTimeout(function(){scroll_step_comment_answers_box.refresh();},0);
+
 }
 
 function squeeze_comment_box(){

@@ -14,11 +14,26 @@
             }
         }
 
+        function recalculate_width_for_similar_recipes(){
+            var content_width = parseInt(($("#steps_others_like_box").css('width')).replace("px", "")) - recipe_box_margin_size;
+            var size_per_item = content_width / 4 - recipe_box_margin_size;
+            if(size_per_item < minimum_recipe_size){
+                size_per_item = content_width - recipe_box_margin_size;
+                $(".recipe_box").css("font-size","30px");
+            }else{
+                $(".recipe_box").css("font-size","");
+            }
+
+            $(".recipe_box").css('width', size_per_item + "px");
+            $(".recipe_box").css('height', size_per_item + "px");
+            $(".recipe_box").css('line-height', size_per_item + "px");
+        }
+
         function loader() {
             sidebar_manipulation();
             //get steps amount
             steps_amount = {{ steps_amount }};
-
+            recalculate_width_for_similar_recipes();
             steps_sidebar_initialize();
             $(window).resize(function () {
                 sidebar_manipulation();
@@ -26,6 +41,8 @@
                 $(window).bind('resizeEnd', function () {
                     step_go(current_step);
                 });
+                setTimeout(function(){scroll_steps_others_like_box.refresh()},0)
+                recalculate_width_for_similar_recipes();
             });
 
             $("#content_wrapper").scroll(function () {
@@ -134,15 +151,17 @@
             $("#step_comment_answers_box").click(function(){ $("#search_input").blur();});
 
             hide_loading_screen();
+
+            setTimeout(function(){scroll_steps_others_like_box.refresh()},1000);
         }
     </script>
 {% endblock %}
 
 {% block search_zone %}
-    <div id="divider" class="top_divider" style="margin-top:10px;margin-left:10px;" onclick="full_sidebar()"></div>
+    <div id="divider" class="top_divider" style="margin-top:10px;margin-left:10px;"></div>
     <div id="cook_left_sidebar_wrapper">
         <div class="scroller" id="cook_left_sidebar_wrapper_scroller">
-            <div id="search_zone" class='cook_ingredients_zone' style="background:transparent !important;border:1px solid transparent !important;box-shadow:0px 0px 0px transparent !important;height:auto;" onclick="full_sidebar()">
+            <div id="search_zone" class='cook_ingredients_zone' style="background:transparent !important;border:1px solid transparent !important;box-shadow:0px 0px 0px transparent !important;height:auto;">
                 <div id="cook_ingredients">
                     <div class="sidebar_right_info_item untouchable {{ like_status }} cook_like" id="sidebar_cook_like" onclick="recipe_like('{{ id }}', this.id)">{{ like_amount }}</div>
                     <div class="sidebar_right_info_item" id="sidebar_right_author">{{ author }}</div>
@@ -157,11 +176,11 @@
 {% endblock %}
 
  {% block divider %}
-        <div id="divider" class="middle_divider" style='margin-left:10px;' onclick="full_sidebar()"></div>
+        <div id="divider" class="middle_divider" style='margin-left:10px;'></div>
  {% endblock %}
 
 {% block filters_zone %}
-        <div id='filters_zone' style="position:relative !important;top:0px !important;bottom:0px !important;height:auto !important;float:left;" onclick="full_sidebar()">
+        <div id='filters_zone' style="position:relative !important;top:0px !important;bottom:0px !important;height:auto !important;float:left;">
             {% for ingredient in ingredients %}
                 <div class="ingredient untouchable">
                     <div class="ingredient_image" style="background-image:url('{{ ingredient.imageUrl }}')"></div>
@@ -184,6 +203,10 @@
         #content_wrapper{
             background-image:url('{{ imageUrl }}');
             right:-30px;
+        }
+
+        #steps_others_like_box_scroller{
+            padding-bottom:10px;
         }
     </style>
 {% endblock %}
@@ -233,7 +256,7 @@
             </div>
 
             <div id="step_others_like">
-                <div id="steps_others_like_title">Kuriem patiko šis patiekalas taip pat patiko:</div>
+                <div id="steps_others_like_title">Panašūs patiekalai:</div>
                 <div id="steps_others_like_box">
                     <div class="scroller" id="steps_others_like_box_scroller">
                         {% for similar_recipe in similar_recipes %}

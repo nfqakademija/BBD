@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use NFQAkademija\BaseBundle\Entity\Fact;
 use NFQAkademija\BaseBundle\Entity\Like;
+use NFQAkademija\BaseBundle\Entity\Comment;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -1115,11 +1116,35 @@ class AjaxController extends Controller
         $request_data = $request->request;
         $recipe_ID = $request_data->get('recipe_ID');
         $comment = $request_data->get('comment');
+        $user_ID = 4;
+        $em = $this->getDoctrine()->getManager();
+        $user = $em->getRepository("NFQAkademijaBaseBundle:User")->find($user_ID);
+        $recipe = $em->getRepository("NFQAkademijaBaseBundle:Recipe")->find($recipe_ID);
+        //$image_url = $user->getPhoto();
+        $image_url = "/images/profile.png";
 
-        //add comment to recipe
+
+        $date = new \DateTime("now");
+
+        $data = new Comment();
+
+        $data->setUser($user);
+        $data->setRecipe($recipe);
+        $data->setDate($date);
+        $data->setText($comment);
+        $em->persist($data);
+        $em->flush();
+
+        $comment_html = $this->render('NFQAkademijaRecipesBundle:AjaxViews:Comment.html.twig',
+            array(
+                'text' => $comment,
+                'imageUrl' => $image_url,
+            ));
+        $comment_html = $comment_html->getContent();
 
         $response = array(
             'status' => 'good',
+            'comment_html' => $comment_html,
         );
 
         $jsonResponse = new Response(json_encode($response));
@@ -1151,22 +1176,6 @@ class AjaxController extends Controller
 
         $response = array(
             'status' => 'good',
-        );
-
-        $jsonResponse = new Response(json_encode($response));
-        $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
-        return $jsonResponse;
-    }
-
-    public function load_moreAction(Request $request)
-    {
-        $request_data = $request->request;
-        //check if there is results to retreive and increase limit session by 10
-        //if no results send 'end' => true else 'end' => false
-
-        $response = array(
-            'status' => 'good',
-            'end' => true,
         );
 
         $jsonResponse = new Response(json_encode($response));

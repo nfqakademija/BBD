@@ -3,6 +3,7 @@
 namespace NFQAkademija\RecipesBundle\Controller;
 
 use Doctrine\ORM\EntityManager;
+use NFQAkademija\BaseBundle\Entity\ProducedRecipe;
 use NFQAkademija\BaseBundle\Entity\Recipe;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
@@ -67,42 +68,82 @@ class AjaxController extends Controller
         return $jsonResponse;
     }
 
-    public function profile_recipesAction(Request $request)
+    public function load_profile_recipesAction(Request $request)
     {
         $request_data = $request->request;
-
         $type = $request_data->get('type');
+        $reset = $request_data->get('reset');
+        $session = $request->getSession();
+        $end = false;
+        $em = $this->getDoctrine()->getManager();
+        //get user ID
+        $user_ID = 4;
 
-        //get recipe_ID, image_url, title which user cooked, liked or created TYPE
-        //[id, imageUrl, title]
+        $limit = 20;
+        $offset = 0;
+        if($session->has('load_recipes_offset')){
+            $offset = $session->get('load_recipes_offset');
+        }else{
+            $session->set('load_recipes_offset', $offset);
+        }
 
-        $repository = $this->getDoctrine()->getRepository('NFQAkademijaBaseBundle:Recipe');
-        $query = $repository->createQueryBuilder('f')
-            ->select('f.id, f.name, f.photo')
-            ->orderBy('f.name', 'ASC')
-            ->getQuery();
+        if($reset == "true"){
+            //reset limit to 0 - LIMIT 10, 0;
+            $offset = 0;
+            $session->set('load_recipes_offset', $offset);
+        }
 
-        $data = $query->getResult();
-
+        //types: created, cooked, liked
+        $recipe_ids = [];
+        switch($type){
+            case "liked":
+                $liked_recipes = $em->getRepository("NFQAkademijaBaseBundle:Like")->findBy(array("user" => $user_ID));
+                foreach ($liked_recipes as $liked_recipe) {
+                    $recipe_ids[] = $liked_recipe->getRecipe()->getId();
+                }
+                break;
+            case "cooked":
+                $cooked_recipes = $em->getRepository("NFQAkademijaBaseBundle:ProducedRecipe")->findBy(array("user" => $user_ID));
+                foreach ($cooked_recipes as $cooked_recipe) {
+                    $recipe_ids[] = $cooked_recipe->getRecipe()->getId();
+                }
+                break;
+            case "created":
+                $created_recipes = $em->getRepository("NFQAkademijaBaseBundle:Recipe")->findBy(array("user" => $user_ID));
+                foreach ($created_recipes as $created_recipe) {
+                    $recipe_ids[] = $created_recipe->getId();
+                }
+                break;
+        }
 
         $recipes = [];
+        $recipe_repository = $this->getDoctrine()->getRepository('NFQAkademijaBaseBundle:Recipe');
+        $query = $recipe_repository->createQueryBuilder('f');
+        $query = $query->select('f.id, f.name, f.photo')
+            ->orderBy('f.name', 'ASC')
+            ->where('f.id IN (:recipe_ids)')
+            ->setParameter('recipe_ids', $recipe_ids)
+            ->setFirstResult($offset)
+            ->setMaxResults($limit)
+            ->getQuery();
 
-        $recipes[0] = ["0","/images/food (0).jpg", "title0"];
-        $recipes[1] = ["1","/images/food (1).png", "title0"];
-        $recipes[2] = ["2","/images/food (2).jpg", "title0"];
-        $recipes[3] = ["3","/images/food (3).jpg", "title0"];
-        $recipes[4] = ["4","/images/food (4).jpg", "title0"];
-        $recipes[5] = ["5","/images/food (5).jpg", "title0"];
-        $recipes[6] = ["6","/images/food (6).jpg", "title0"];
-        $recipes[7] = ["7","/images/food (7).jpg", "title0"];
-        $recipes[8] = ["8","/images/food (8).jpg", "title0"];
-        $recipes[9] = ["9","/images/food (9).jpg", "title0"];
-        $recipes[10] = ["10","/images/food (10).jpg", "title0"];
-        $recipes[11] = ["11","/images/food (11).jpg", "title0"];
+        $recipes = $query->getResult();
+        $recipes_loaded = count($recipes);
+        //jei rado receptu
+        if($recipes_loaded != 0 ){
+            if($recipes_loaded < $limit){
+                //jei receptu rado ne pilnai = reiskia daugiau receptu nebebus todel offset nedidint
+                $end = true;
+            }else{
+                //receptu rado tiek koks yra limitas. Reiskias gali buti ir daugaiu pagal sia uzklausa. Offset didint
+                $session->set('load_recipes_offset', $offset + $limit);
+            }
+        }
 
         $response = array(
             'status' => 'good',
             'recipes' => $recipes,
+            'end' => $end,
         );
 
         $jsonResponse = new Response(json_encode($response));
@@ -209,7 +250,6 @@ class AjaxController extends Controller
             }
         }
 
-        file_put_contents('log.log', print_r($filters_for_time_not_want, true), FILE_APPEND);
         //filter types: type, property, time, country, ingredients, celebration, main_cooking_method
         $query = $recipe_repository->createQueryBuilder('f');
         $query->select('f.id, f.name, f.photo')
@@ -267,7 +307,6 @@ class AjaxController extends Controller
         if(count($filters_for_property_not_want) > 0){
             $query = $query->andWhere("s.id NOT IN (:filters_for_property_not_want)")->setParameter('filters_for_property_not_want', $filters_for_property_not_want);
         }
-
         $query = $query->setFirstResult($offset)
             ->setMaxResults($limit)
             ->getQuery();
@@ -941,23 +980,6 @@ class AjaxController extends Controller
         return $jsonResponse;
     }
 
-    public function user_cookingAction(Request $request)
-    {
-        $request_data = $request->request;
-
-        $recipe_ID = $request_data->get('recipe_ID');
-        //add to user that he is cooking this recipe
-
-
-        $response = array(
-            'status' => 'good',
-        );
-
-        $jsonResponse = new Response(json_encode($response));
-        $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
-        return $jsonResponse;
-    }
-
     public function ingredient_addAction(Request $request)
     {
         $request_data = $request->request;
@@ -1047,7 +1069,6 @@ class AjaxController extends Controller
         $user_ID = 4;
 
         $like_status = $em->getRepository("NFQAkademijaBaseBundle:Like")->find(array("user" => $user_ID, "recipe" => $recipe_ID));
-        //file_put_contents('log.log', "X".print_r($like_status, true)."X", FILE_APPEND);
         if($like_status){
             $new_like_status = "not_liked";
             //update to not like

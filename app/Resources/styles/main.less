@@ -313,6 +313,24 @@ textarea{
   margin-bottom: 2px;
 }
 
+#sidebar_cook_like {
+  border: 1px solid transparent;
+  width: auto;
+  margin-left: -4px;
+  margin-bottom: 1px;
+  padding-left: 3px;
+  padding-right: 3px;
+  &:hover{
+    border:1px solid black;
+    box-shadow:0px 0px 2px black;
+    background-color:@grey_background;
+  }
+  &:active{
+    background-color:rgba(255, 255, 255, 0.2);
+    border:1px solid black;
+    box-shadow:0px 0px 2px black;
+  }
+}
 
 #sidebar_right_like {
   border: 1px solid transparent;
@@ -1530,8 +1548,8 @@ p{
   margin-bottom:74px;
   margin-left:20px;
   margin-right:20px;
-  border:1px solid black;
-  box-shadow:0px 0px 2px black;
+  box-shadow: 2px 2px 2px #201f1d;
+  outline: 1px solid #c5c5c5;
   background-size:cover;
   background-position:50% 50%;
   background-repeat:no-repeat;
@@ -1595,8 +1613,8 @@ p{
 }
 
 .profile_line_box_cooked_active .profile_line_box_bottom{
-  padding-bottom:2px;
-  border-bottom: 5px solid rgb(224, 98, 27);
+  padding-bottom:5px;
+  border-bottom: 2px solid rgb(224, 98, 27);
 }
 
 .profile_line_box_liked_active{
@@ -1604,8 +1622,8 @@ p{
 }
 
 .profile_line_box_liked_active .profile_line_box_bottom{
-  padding-bottom:2px;
-  border-bottom: 5px solid rgb(216, 27, 27);
+  padding-bottom:5px;
+  border-bottom: 2px solid rgb(216, 27, 27);
 }
 
 .profile_line_box_created_active{
@@ -1613,18 +1631,18 @@ p{
 }
 
 .profile_line_box_created_active .profile_line_box_bottom{
-  padding-bottom:2px;
-  border-bottom: 5px solid rgb(15, 180, 28);
+  padding-bottom:5px;
+  border-bottom: 2px solid rgb(15, 180, 28);
 }
 
 #profile_line_box_cooked:hover {background-color:rgba(211, 109, 52, 0.1);}
-#profile_line_box_cooked:hover .profile_line_box_bottom{ padding-bottom:2px; border-bottom: 5px solid rgb(224, 98, 27); }
+#profile_line_box_cooked:hover .profile_line_box_bottom{ padding-bottom:5px; border-bottom: 2px solid rgb(224, 98, 27); }
 
 #profile_line_box_liked:hover {background-color:rgba(241, 81, 81, 0.1);}
-#profile_line_box_liked:hover .profile_line_box_bottom{ padding-bottom:2px; border-bottom: 5px solid rgb(216, 27, 27); }
+#profile_line_box_liked:hover .profile_line_box_bottom{ padding-bottom:5px; border-bottom: 2px solid rgb(216, 27, 27); }
 
 #profile_line_box_created:hover {background-color:rgba(15, 180, 28, 0.1);}
-#profile_line_box_created:hover .profile_line_box_bottom{ padding-bottom:2px; border-bottom: 5px solid rgb(15, 180, 28); }
+#profile_line_box_created:hover .profile_line_box_bottom{ padding-bottom:5px; border-bottom: 2px solid rgb(15, 180, 28); }
 
 #profile_line_box_cooked{
   margin-left: 10px;

@@ -30,6 +30,7 @@ var clickable = true;
 var user_login_status = false;
 var load_more_end = false;
 var loading_more_status = false;
+var profile_recipes_type;
 
 document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
 
@@ -58,16 +59,26 @@ function toast(text, status, type){
     },toast_show_time);
 }
 
-function profile_recipes(type){
+function profile_recipes(reset, type){
+    loading('profile_recipes','show');
+    load_profile_recipes(reset, type, function(){
+        loading('profile_recipes','hide');
+    });
+}
+
+function load_profile_recipes(reset, type, callback){
     $(".profile_line_box").removeClass().addClass('profile_line_box');
     $("#profile_line_box_" + type).addClass('profile_line_box_' + type + '_active');
     recipe_size = calculate_recipe_size();
-
+    callback = callback || function(){};
     var formData = new FormData();
+    formData.append('reset', reset);
     formData.append('type',type);
+    profile_recipes_type = type;
+
     $.ajax({
         type: 'POST',
-        url: '/ajax/profile_recipes',
+        url: '/ajax/load_profile_recipes',
         data: formData,
         dataType: 'json',
         beforeSend: function () {
@@ -77,29 +88,40 @@ function profile_recipes(type){
         success: function (data) {
             if (data.status == "good") {
                 var recipes = data.recipes;
+                if(recipes.length == 0){
+                    toast('Atsiprašome, bet tokių receptų neturime','bad','logo');
+                    $("#profile_recipes").html('');
+                }else{
+                    if(reset == "true"){
+                        $("#profile_recipes").html('');
 
-                $('#profile_recipes').fadeOut(transition_time,function(){
-                    $('#profile_recipes').html('');
+                        if(type == "created"){
+                            var appendable_data = "<div class='recipe_box' style=\"background-color:white;background-size:70% 70%;background-image: url('/images/new_recipe.png');width:" + recipe_size + "px;height:" + recipe_size +  "px;\" onclick='go_to_new_recipe()'><div class='recipe_box_info'>Sukurti naują receptą</div></div>";
+                            $("#profile_recipes").append(appendable_data);
+                        }
 
-                    if(type == "created"){
-                        var appendable_data = "<div class='recipe_box' style=\"background-color:white;background-size:70% 70%;background-image: url('/images/new_recipe.png');width:" + recipe_size + "px;height:" + recipe_size +  "px;\" onclick='go_to_new_recipe()'><div class='recipe_box_info'>Sukurti naują receptą</div></div>";
-                        $("#profile_recipes").append(appendable_data);
+                        setTimeout(function(){scroll_content.scrollTo(0, 0)},0);
                     }
+
+                    load_more_end = data.end;
+                    recipe_size = calculate_recipe_size();
 
                     for(i = 0; i < recipes.length; i++){
                         var data = recipes[i];
-                        var id = data[0];
-                        var image = data[1];
-                        var title = data[2];
+                        var id = data["id"];
+                        var image = data["photo"];
+                        var title = data["name"];
                         var appendable_data = "<div class='recipe_box' id='recipe_" + id + "' style=\"background-image: url('" + image + "');width:" + recipe_size + "px;height:" + recipe_size +  "px;\" onclick=\"show_recipe('" + id + "')\"><div class='recipe_box_info'>" + title + "</div></div>";
                         $("#profile_recipes").append(appendable_data);
                     }
-
-                    $('#profile_recipes').fadeIn(transition_time);
-                    setTimeout(function(){scroll_content.refresh();},0);
-                });
-
+                    setTimeout(function(){scroll_content.refresh()},0);
+                }
             }
+            callback();
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            toast('Įvyko klaida. Perkraukite puslapį','bad','logo');
+            console.log(xhr.responseText);
         }
     });
 }
@@ -110,6 +132,18 @@ function load_more(){
         loading_more_status = true;
         show_loading_recipe();
         load_recipes('false', function(){
+            hide_loading_recipe();
+            loading_more_status = false;
+        });
+    }
+}
+
+
+function load_profile_more(){
+    if(!loading_more_status && !load_more_end){
+        loading_more_status = true;
+        show_loading_recipe();
+        load_profile_recipes('false', profile_recipes_type, function(){
             hide_loading_recipe();
             loading_more_status = false;
         });
@@ -1100,24 +1134,7 @@ function hide_recipe(){
 
 function cook(recipe_ID){
     show_loading_screen("/cook/" + recipe_ID);
-
-    var formData = new FormData();
-    formData.append('recipe_ID', recipe_ID);
-    $.ajax({
-        type: 'POST',
-        url: '/ajax/user_cooking',
-        data: formData,
-        dataType: 'json',
-        beforeSend: function () {
-        },
-        processData: false,
-        contentType: false,
-        success: function (data) {
-            if (data.status == "good") {}
-        }
-    });
 }
-
 
 
 //tracks down mouse click
@@ -1608,6 +1625,45 @@ function previous_step(){
     }
 }
 
+
+function like_indicator(status, box_ID){
+    if(box_ID == "sidebar_right_like"){
+        switch(status){
+            case "liked":
+                $("#sidebar_right_like").removeClass('not_liked').addClass('liked');
+                var current_likes = parseInt($("#sidebar_right_like").html()) + 1;
+                $("#sidebar_right_like").html(current_likes);
+                toast('Receptas pridėtas prie mėgstamiausių','good', 'liked');
+                break;
+            case "not_liked":
+                $("#sidebar_right_like").removeClass('liked').addClass('not_liked');
+                var current_likes = parseInt($("#sidebar_right_like").html()) - 1;
+                $("#sidebar_right_like").html(current_likes);
+                toast('Receptas pašalintas iš mėgstamiausių','bad', 'liked');
+                break;
+        }
+    }else if(box_ID == "sidebar_cook_like" || box_ID == "step_like"){
+        switch(status){
+            case "liked":
+                $("#step_like").html("Patinka");
+                $("#sidebar_cook_like").removeClass('not_liked').addClass('liked');
+                $("#step_like").removeClass('not_liked').addClass('liked');
+                var current_likes = parseInt($("#sidebar_cook_like").html()) + 1;
+                $("#sidebar_cook_like").html(current_likes);
+                toast('Receptas pridėtas prie mėgstamiausių','good', 'liked');
+                break;
+            case "not_liked":
+                $("#step_like").html("Patiko?");
+                $("#sidebar_cook_like").removeClass('liked').addClass('not_liked');
+                $("#step_like").removeClass('liked').addClass('not_liked');
+                var current_likes = parseInt($("#sidebar_cook_like").html()) - 1;
+                $("#sidebar_cook_like").html(current_likes);
+                toast('Receptas pašalintas iš mėgstamiausių','bad', 'liked');
+                break;
+        }
+    }
+}
+
 function recipe_like(recipe_ID, box_ID){
     if(check_if_user_is_loged()){
         var formData = new FormData();
@@ -1624,28 +1680,7 @@ function recipe_like(recipe_ID, box_ID){
             contentType: false,
             success: function (data) {
                 if (data.status == "good") {
-                    if(data.like_status == "liked"){
-                        //make liked
-                        $("#" + box_ID).removeClass('not_liked').addClass('liked');
-                        if(box_ID == "sidebar_right_like"){
-                            var current_likes = parseInt($("#sidebar_right_like").html()) + 1
-                            $("#sidebar_right_like").html(current_likes);
-                        }else if(box_ID == "step_like"){
-                            $("#" + box_ID).html("Patinka");
-                        }
-
-                        toast('Receptas pridėtas prie mėgstamiausių','good', 'liked');
-                    }else{
-                        //make not liked
-                        $("#" + box_ID).removeClass('liked').addClass('not_liked');
-                        if(box_ID == "sidebar_right_like") {
-                            var current_likes = parseInt($("#sidebar_right_like").html()) - 1;
-                            $("#sidebar_right_like").html(current_likes);
-                        }else if(box_ID == "step_like"){
-                            $("#" + box_ID).html("Patinka");
-                        }
-                        toast('Receptas pašalintas iš mėgstamiausių','bad', 'not_liked');
-                    }
+                    like_indicator(data.like_status, box_ID)
                 }
                 loading_icon(box_ID, 'hide');
             },

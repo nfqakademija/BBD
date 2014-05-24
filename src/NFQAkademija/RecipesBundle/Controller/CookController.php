@@ -3,11 +3,31 @@
 namespace NFQAkademija\RecipesBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use NFQAkademija\BaseBundle\Entity\ProducedRecipe;
 
 class CookController extends Controller
 {
     public function indexAction($id)
     {
+        $em = $this->getDoctrine()->getManager();
+
+        //get user id
+        $user_ID = 4;
+        $user = $em->getRepository('NFQAkademijaBaseBundle:User')->find($user_ID);
+
+        $cook_status = $em->getRepository("NFQAkademijaBaseBundle:ProducedRecipe")->find(array("user" => $user_ID, "recipe" => $id));
+        if(!$cook_status){
+            //add to user that he has cooked this recipe
+            $data = new ProducedRecipe();
+            $user = $em->getRepository("NFQAkademijaBaseBundle:User")->find($user_ID);
+            $recipe = $em->getRepository("NFQAkademijaBaseBundle:Recipe")->find($id);
+            $data->setUser($user);
+            $data->setRecipe($recipe);
+            $em->persist($data);
+            $em->flush();
+        }
+
+
         //info apie recipe
         //title, steps_amount, like_status, id, like_amount, author, cooking_time, country, main_cooking_method,
         //type, properties, celebration, ingredients(imageUrl, title, amount, unit), imageUrl,
@@ -19,7 +39,15 @@ class CookController extends Controller
 
         $title = $recipe->getName();
         $about = $recipe->getDescription();
-        $cooking_time = $recipe->getCookingTime()->getName();
+        $imageUrl = $recipe->getPhoto();
+
+        $cooking_time = $recipe->getCookingTime();
+        if($cooking_time){
+            $cooking_time = $cooking_time->getName();
+        }else{
+            $cooking_time = "";
+        }
+
         $author = $recipe->getUser();
         if($author){
             $author = $author->getName();
@@ -27,11 +55,35 @@ class CookController extends Controller
             $author = "Foodex";
         }
 
-        $celebration = $recipe->getCelebration()->getName();
-        $imageUrl = $recipe->getPhoto();
-        $country = $recipe->getCountry()->getName();
-        $main_cooking_method = $recipe->getMainCookingMethod()->getName();
-        $type = $recipe->getType()->getName();
+        $celebration = $recipe->getCelebration();
+        if($celebration){
+            $celebration = $celebration->getName();
+        }else{
+            $celebration = "";
+        }
+
+        $country = $recipe->getCountry();
+        if($country){
+            $country = $country->getName();
+        }else{
+            $country = "";
+        }
+
+        $main_cooking_method = $recipe->getMainCookingMethod();
+        if($main_cooking_method){
+            $main_cooking_method = $main_cooking_method->getName();
+        }else{
+            $main_cooking_method = "";
+        }
+
+        $type = $recipe->getType();
+        if($type){
+            $type = $type->getName();
+        }else{
+            $type = "";
+        }
+
+
         $steps_data = $em->getRepository("NFQAkademijaBaseBundle:Step")->findBy(array('recipe' => $id));
         $steps = [];
         foreach($steps_data as $step){
@@ -46,10 +98,7 @@ class CookController extends Controller
             $like_amount = 0;
         }
 
-
-        // 2 user id
-        $user = $em->getRepository('NFQAkademijaBaseBundle:User')->find('2');
-        $like_status = $em->getRepository("NFQAkademijaBaseBundle:Like")->findBy(array('user' => $user));
+        $like_status = $em->getRepository("NFQAkademijaBaseBundle:Like")->findBy(array('user' => $user, 'recipe' => $id));
         if($like_status){
             $like_status = "liked";
             $like_word = "Patinka";

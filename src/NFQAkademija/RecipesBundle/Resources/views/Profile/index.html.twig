@@ -1,7 +1,7 @@
 {% extends "::base.html.twig" %}
 
 
-{% block title %}Profilis | Foodex{% endblock %}
+{% block title %}{{ profile_name }} | Foodex{% endblock %}
 
 {% block specific_styles %}
     <style type="text/css">
@@ -9,9 +9,10 @@
             padding-bottom:10px;
         }
 
-        #scroller_content_profile{
+        #scroller_content{
             padding-bottom:10px;
             right:31px;
+            left:0px;
         }
 
         #profile_image{
@@ -33,8 +34,12 @@
                 recalculate_width();
                 sidebar_manipulation();
             });
-            profile_recipes('cooked');
-            filters_show('selected_personal','');
+
+            load_profile_recipes('true', 'cooked', function(){
+                filters_show('selected_personal','', function(){
+                    hide_loading_screen();
+                });
+            });
 
             if(browser == 'firefox'){
                 $("#search_container").css('box-shadow','none');
@@ -62,21 +67,23 @@
                 interactiveScrollbars: true,
                 shrinkScrollbars: 'scale',
                 fadeScrollbars: true,
+                probeType: 2
             });
 
             scroll_content.on('scrollStart', function(){ clickable = false; });
             scroll_content.on('scrollEnd', function(){ clickable = true; });
 
+            scroll_content.on('scroll', function(){
+                if (this.y + 200 >= this.maxScrollY)
+                    load_profile_more();
+            });
+
             $("#sidebar_right_wrapper").click(function(){ $("#search_input").blur();});
             $("#filters_zone").click(function(){ $("#search_input").blur();});
             $("#content_wrapper").click(function(){ $("#search_input").blur();});
-
-            hide_loading_screen();
         }
 
-        function key_check(event){
-
-        }
+        function key_check(event){}
     </script>
 {% endblock %}
 
@@ -85,7 +92,7 @@
 {% endblock %}
 
  {% block filters_zone %}
-     <div id='filters_zone' onclick="full_sidebar()">
+     <div id='filters_zone'>
          <div class="scroller" id="scroller_filters" ></div>
      </div>
  {% endblock %}
@@ -95,21 +102,21 @@
 
 {% block content %}
 <div id="content_wrapper">
-    <div class="scroller" id="scroller_content_profile">
+    <div class="scroller" id="scroller_content">
         <div id="profile_cover">
             <div id="profile_image"></div>
             <div id="profile_name">{{ profile_name }}</div>
         </div>
         <div id="profile_line">
-            <div class="profile_line_box transition" id="profile_line_box_cooked" onclick="profile_recipes('cooked')">
+            <div class="profile_line_box transition" id="profile_line_box_cooked" onclick="profile_recipes('true', 'cooked')">
                 <div class="profile_line_box_top">{{ amount_cooked }}</div>
                 <div class="profile_line_box_bottom">Gaminti</div>
             </div>
-            <div class="profile_line_box transition" id="profile_line_box_liked" onclick="profile_recipes('liked')">
+            <div class="profile_line_box transition" id="profile_line_box_liked" onclick="profile_recipes('true', 'liked')">
                 <div class="profile_line_box_top">{{ amount_liked }}</div>
                 <div class="profile_line_box_bottom">Mėgstami</div>
             </div>
-            <div class="profile_line_box transition" id="profile_line_box_created" onclick="profile_recipes('created')">
+            <div class="profile_line_box transition" id="profile_line_box_created" onclick="profile_recipes('true','created')">
                 <div class="profile_line_box_top">{{ amount_created }}</div>
                 <div class="profile_line_box_bottom">Sukurti</div>
             </div>

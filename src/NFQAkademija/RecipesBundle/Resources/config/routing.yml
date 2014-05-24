@@ -34,9 +34,9 @@ nfq_akademija_new_recipe:
     pattern:  /ajax/new_recipe
     defaults: { _controller: NFQAkademijaRecipesBundle:Ajax:new_recipe }
 
-nfq_akademija_profile_recipes:
-    pattern:  /ajax/profile_recipes
-    defaults: { _controller: NFQAkademijaRecipesBundle:Ajax:profile_recipes }
+nfq_akademija_load_profile_recipes:
+    pattern:  /ajax/load_profile_recipes
+    defaults: { _controller: NFQAkademijaRecipesBundle:Ajax:load_profile_recipes }
 
 nfq_akademija_load_recipes:
     pattern:  /ajax/load_recipes
@@ -90,10 +90,6 @@ nfq_akademija_search_places:
 nfq_akademija_recipe_right_sidebar:
     pattern:  /ajax/recipe_right_sidebar
     defaults: { _controller: NFQAkademijaRecipesBundle:Ajax:recipe_right_sidebar}
-
-nfq_akademija_user_cooking:
-    pattern:  /ajax/user_cooking
-    defaults: { _controller: NFQAkademijaRecipesBundle:Ajax:user_cooking}
 
 nfq_akademija_ingredient_add:
     pattern:  /ajax/ingredient_add

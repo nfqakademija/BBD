@@ -20,8 +20,6 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 class AjaxController extends Controller
 {
-
-
     public function load_profile_recipesAction(Request $request)
     {
         $request_data = $request->request;
@@ -128,8 +126,6 @@ class AjaxController extends Controller
 
         $recipes = [];
         $recipe_repository = $this->getDoctrine()->getRepository('NFQAkademijaBaseBundle:Recipe');
-        $property_repository = $this->getDoctrine()->getRepository('NFQAkademijaBaseBundle:Property');
-
 
         //QUERYING AND FILTERING
         $filters = [];
@@ -137,71 +133,27 @@ class AjaxController extends Controller
             $filters = $session->get('filters');
         }
 
-
-        $filters_for_type_want = [];
-        $filters_for_type_not_want = [];
-
-        $filters_for_property_want = [];
-        $filters_for_property_not_want = [];
-
-        $filters_for_time_want = [];
-        $filters_for_time_not_want = [];
-
-        $filters_for_country_want = [];
-        $filters_for_country_not_want = [];
-
-        $filters_for_ingredients_want = [];
-        $filters_for_ingredients_not_want = [];
-
-        $filters_for_celebration_want = [];
-        $filters_for_celebration_not_want = [];
-
-        $filters_for_main_cooking_method_want = [];
-        $filters_for_main_cooking_method_not_want = [];
+        $filtering = [];
+        $filtering["Type_want"] = [];
+        $filtering["Type_not_want"] = [];
+        $filtering["Property_want"] = [];
+        $filtering["Property_not_want"] = [];
+        $filtering["Time_want"] = [];
+        $filtering["Time_not_want"] = [];
+        $filtering["Country_want"] = [];
+        $filtering["Country_not_want"] = [];
+        $filtering["Product_want"] = [];
+        $filtering["Product_not_want"] = [];
+        $filtering["Celebration_want"] = [];
+        $filtering["Celebration_not_want"] = [];
+        $filtering["Main_cooking_method_want"] = [];
+        $filtering["Main_cooking_method_not_want"] = [];
 
         foreach($filters as $filter){
             $filter_type = $filter["type"];
-            if($filter_type == "Type" && $filter["indicator"] == "want") {
-                $filters_for_type_want [] = $filter["id"];
-            }else if($filter_type == "Type" && $filter["indicator"] == "not_want"){
-                $filters_for_type_not_want [] = $filter["id"];
-            }
-
-            if($filter_type == "Property" && $filter["indicator"] == "want") {
-                $filters_for_property_want [] = $filter["id"];
-            }else if($filter_type == "Property" && $filter["indicator"] == "not_want"){
-                $filters_for_property_not_want [] = $filter["id"];
-            }
-
-            if($filter_type == "CookingTime" && $filter["indicator"] == "want") {
-                $filters_for_time_want [] = $filter["id"];
-            }else if($filter_type == "CookingTime" && $filter["indicator"] == "not_want"){
-                $filters_for_time_not_want [] = $filter["id"];
-            }
-
-            if($filter_type == "Country" && $filter["indicator"] == "want") {
-                $filters_for_country_want [] = $filter["id"];
-            }else if($filter_type == "Country" && $filter["indicator"] == "not_want"){
-                $filters_for_country_not_want [] = $filter["id"];
-            }
-
-            if($filter_type == "Product" && $filter["indicator"] == "want") {
-                $filters_for_ingredients_want [] = $filter["id"];
-            }else if($filter_type == "Product" && $filter["indicator"] == "not_want"){
-                $filters_for_ingredients_not_want [] = $filter["id"];
-            }
-
-            if($filter_type == "Celebration" && $filter["indicator"] == "want") {
-                $filters_for_celebration_want [] = $filter["id"];
-            }else if($filter_type == "Celebration" && $filter["indicator"] == "not_want"){
-                $filters_for_celebration_not_want [] = $filter["id"];
-            }
-
-            if($filter_type == "MainCookingMethod" && $filter["indicator"] == "want") {
-                $filters_for_main_cooking_method_want [] = $filter["id"];
-            }else if($filter_type == "MainCookingMethod" && $filter["indicator"] == "not_want"){
-                $filters_for_main_cooking_method_not_want [] = $filter["id"];
-            }
+            $filter_indicator = $filter["indicator"];
+            $filter_tag = $filter_type."_".$filter_indicator;
+            $filtering[$filter_tag][] = $filter["id"];
         }
 
         //filter types: type, property, time, country, ingredients, celebration, main_cooking_method
@@ -213,53 +165,53 @@ class AjaxController extends Controller
             ->orderBy('f.name', 'ASC');
 
         //type
-        if(count($filters_for_type_want) > 0)
-            $query = $query->andWhere("f.type IN (:filters_for_type_want)")->setParameter('filters_for_type_want', $filters_for_type_want);
-        if(count($filters_for_type_not_want) > 0)
-            $query = $query->andWhere("f.type NOT IN (:filters_for_type_not_want)")->setParameter('filters_for_type_not_want', $filters_for_type_not_want);
+        if(count($filtering["Type_want"]) > 0)
+            $query = $query->andWhere("f.type IN (:filters_for_type_want)")->setParameter('filters_for_type_want', $filtering["Type_want"]);
+        if(count($filtering["Type_not_want"]) > 0)
+            $query = $query->andWhere("f.type NOT IN (:filters_for_type_not_want)")->setParameter('filters_for_type_not_want', $filtering["Type_not_want"]);
 
         //country
-        if(count($filters_for_country_want) > 0)
-            $query = $query->andWhere("f.country IN (:filters_for_country_want)")->setParameter('filters_for_country_want', $filters_for_country_want);
-        if(count($filters_for_country_not_want) > 0)
-            $query = $query->andWhere("f.country NOT IN (:filters_for_country_not_want)")->setParameter('filters_for_country_not_want', $filters_for_country_not_want);
+        if(count($filtering["Country_want"]) > 0)
+            $query = $query->andWhere("f.country IN (:filters_for_country_want)")->setParameter('filters_for_country_want', $filtering["Country_want"]);
+        if(count($filtering["Country_not_want"]) > 0)
+            $query = $query->andWhere("f.country NOT IN (:filters_for_country_not_want)")->setParameter('filters_for_country_not_want', $filtering["Country_not_want"]);
 
         //celebration
-        if(count($filters_for_celebration_want) > 0)
-            $query = $query->andWhere("f.celebration IN (:filters_for_celebration_want)")->setParameter('filters_for_celebration_want', $filters_for_celebration_want);
-        if(count($filters_for_celebration_not_want) > 0)
-            $query = $query->andWhere("f.celebration NOT IN (:filters_for_celebration_not_want)")->setParameter('filters_for_celebration_not_want', $filters_for_celebration_not_want);
+        if(count($filtering["Celebration_want"]) > 0)
+            $query = $query->andWhere("f.celebration IN (:filters_for_celebration_want)")->setParameter('filters_for_celebration_want', $filtering["Celebration_want"]);
+        if(count($filtering["Celebration_not_want"]) > 0)
+            $query = $query->andWhere("f.celebration NOT IN (:filters_for_celebration_not_want)")->setParameter('filters_for_celebration_not_want', $filtering["Celebration_not_want"]);
 
         //main_cooking_method
-        if(count($filters_for_main_cooking_method_want) > 0)
-            $query = $query->andWhere("f.mainCookingMethod IN (:filters_for_main_cooking_method_want)")->setParameter('filters_for_main_cooking_method_want', $filters_for_main_cooking_method_want);
-        if(count($filters_for_main_cooking_method_not_want) > 0)
-            $query = $query->andWhere("f.mainCookingMethod NOT IN (:filters_for_main_cooking_method_not_want)")->setParameter('filters_for_main_cooking_method_not_want', $filters_for_main_cooking_method_not_want);
+        if(count($filtering["Main_cooking_method_want"]) > 0)
+            $query = $query->andWhere("f.mainCookingMethod IN (:filters_for_main_cooking_method_want)")->setParameter('filters_for_main_cooking_method_want', $filtering["Main_cooking_method_want"]);
+        if(count($filtering["Main_cooking_method_not_want"]) > 0)
+            $query = $query->andWhere("f.mainCookingMethod NOT IN (:filters_for_main_cooking_method_not_want)")->setParameter('filters_for_main_cooking_method_not_want', $filtering["Main_cooking_method_not_want"]);
 
         //ingredients
         //gaunasi kad arba tas ingredientas arba tas gali buti
-        if(count($filters_for_ingredients_want) > 0){
-            $query = $query->andWhere("p.product IN (:filters_for_ingredients_want)")->setParameter('filters_for_ingredients_want', $filters_for_ingredients_want);
+        if(count($filtering["Product_want"]) > 0){
+            $query = $query->andWhere("p.product IN (:filters_for_ingredients_want)")->setParameter('filters_for_ingredients_want', $filtering["Product_want"]);
         }
 
-        if(count($filters_for_ingredients_not_want) > 0){
-            $query = $query->andWhere("p.product NOT IN (:filters_for_ingredients_not_want)")->setParameter('filters_for_ingredients_not_want', $filters_for_ingredients_not_want);
+        if(count($filtering["Product_not_want"]) > 0){
+            $query = $query->andWhere("p.product NOT IN (:filters_for_ingredients_not_want)")->setParameter('filters_for_ingredients_not_want', $filtering["Product_not_want"]);
         }
 
         //time
         //reik pridet kad rodytu IKI to pasirinkto laiko, ta laika ir mazesnius
-        if(count($filters_for_time_want) > 0)
-            $query = $query->andWhere("f.cookingTime IN (:filters_for_time_want)")->setParameter('filters_for_time_want', $filters_for_time_want);
-        if(count($filters_for_time_not_want) > 0)
-            $query = $query->andWhere("f.cookingTime NOT IN (:filters_for_time_not_want)")->setParameter('filters_for_time_not_want', $filters_for_time_not_want);
+        if(count($filtering["Time_want"]) > 0)
+            $query = $query->andWhere("f.cookingTime IN (:filters_for_time_want)")->setParameter('filters_for_time_want', $filtering["Time_want"]);
+        if(count($filtering["Time_not_want"]) > 0)
+            $query = $query->andWhere("f.cookingTime NOT IN (:filters_for_time_not_want)")->setParameter('filters_for_time_not_want', $filtering["Time_not_want"]);
 
         //properties
         //gaunasi kad arba tas property arba tas gali buti
-        if(count($filters_for_property_want) > 0){
-            $query = $query->andWhere("s.id IN (:filters_for_property_want)")->setParameter('filters_for_property_want', $filters_for_property_want);
+        if(count($filtering["Property_want"]) > 0){
+            $query = $query->andWhere("s.id IN (:filters_for_property_want)")->setParameter('filters_for_property_want', $filtering["Property_want"]);
         }
-        if(count($filters_for_property_not_want) > 0){
-            $query = $query->andWhere("s.id NOT IN (:filters_for_property_not_want)")->setParameter('filters_for_property_not_want', $filters_for_property_not_want);
+        if(count($filtering["Property_not_want"]) > 0){
+            $query = $query->andWhere("s.id NOT IN (:filters_for_property_not_want)")->setParameter('filters_for_property_not_want', $filtering["Property_not_want"]);
         }
         $query = $query->setFirstResult($offset)
             ->setMaxResults($limit)

@@ -24,14 +24,14 @@ class Country
     /**
      * @var string
      *
-     * @ORM\Column(name="Name", type="string", length=255)
+     * @ORM\Column(name="name", type="string", length=255)
      */
     private $Name;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="Flag", type="string", length=255)
+     * @ORM\Column(name="photo", type="string", length=255)
      */
     private $Flag;
     /**

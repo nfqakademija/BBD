@@ -7,7 +7,6 @@
     <script type="text/javascript">
         var productsContainer = [];
         $("#addProductToRecipe").on("click", function(e) {
-            e.preventDefault();
             var item = $("#recipeProduct").val();
             var quantity = $("#productQuantity").val();
             var itemName = $("#recipeProduct").find(":selected").text();
@@ -118,15 +117,8 @@
                 </table></div>
             <div id="content_new_recipe">
 
-
-
-
-
-
-
-
-
             </div>
         </div>
     </div>
 {% endblock %}
+

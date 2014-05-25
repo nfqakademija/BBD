@@ -30,9 +30,9 @@ class Celebration
     /**
      * @var string
      *
-     * @ORM\Column(name="icon", type="string", length=255)
+     * @ORM\Column(name="photo", type="string", length=255)
      */
-    private $icon;
+    private $photo;
     /**
      * @ORM\OneToMany(targetEntity="\NFQAkademija\BaseBundle\Entity\Recipe", mappedBy="name")
      */
@@ -137,5 +137,28 @@ class Celebration
     public function getRecipes()
     {
         return $this->recipes;
+    }
+
+    /**
+     * Set photo
+     *
+     * @param string $photo
+     * @return Celebration
+     */
+    public function setPhoto($photo)
+    {
+        $this->photo = $photo;
+
+        return $this;
+    }
+
+    /**
+     * Get photo
+     *
+     * @return string 
+     */
+    public function getPhoto()
+    {
+        return $this->photo;
     }
 }

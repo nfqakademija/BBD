@@ -190,18 +190,6 @@ textarea{
   background-position:50% 50%;
 }
 
-#map_button_center .filter_element_image{background-image:url('/images/center.png');}
-#map_button_random .filter_element_image{background-image:url('/images/random.png');}
-#map_button_maxima .filter_element_image{ background-image:url('/images/maxima.png');}
-#map_button_norfa .filter_element_image{ background-image:url('/images/norfa.png');}
-#map_button_iki .filter_element_image{background-image:url('/images/iki.png');}
-#map_button_hesburger .filter_element_image{ background-image:url('/images/hesburger.png');}
-#map_button_kebab .filter_element_image{background-image:url('/images/kebab.png');}
-#map_button_mcdonalds .filter_element_image{background-image:url('/images/mcdonalds.png');}
-#map_button_pizza .filter_element_image{background-image:url('/images/pizza.png');}
-#map_button_rimi .filter_element_image{background-image:url('/images/rimi.png');}
-
-
 .recipe_box_button{
   position:absolute;
   margin-top:10px;
@@ -634,6 +622,17 @@ textarea{
 
 .squeeze #nav_zone_element_logo_text{
   display:none;
+}
+
+#search_not_found{
+  width:186px;
+  height:43px;
+  font-size:15px;
+  float:left;
+  position:relative;
+  border:1px solid transparent;
+  color:white;
+  text-align:center;
 }
 
 #search_zone{
@@ -1090,6 +1089,7 @@ textarea{
   background-position:50% 50%;
   background-size:90% 90%;
   background-repeat:no-repeat;
+  position:relative;
 }
 
 .filter_element_text{
@@ -2320,6 +2320,16 @@ p{
   //background-image:url('/images/drive.png');
 }
 
+.google_map_tooltip_street{
+  color: @black;
+  height: 20px;
+  line-height: 20px;
+  width: auto;
+  font-size: 13px;
+  float:left;
+  margin-top:10px;
+}
+
 .google_map_tooltip_text{
   color: @black;
   height: 20px;
@@ -2925,8 +2935,65 @@ p{
   background-size:80% 57% !important;
 }
 
-
-
 .loading_icon:before{
   background-image:url('/images/loading.gif') !important;
+}
+
+#place_navigation:hover{
+  opacity:1;
+}
+
+#place_navigation{
+  position:absolute;
+  bottom:40px;
+  left:40px;
+  width:253px;
+  height:45px;
+  border:1px solid transparent;
+  background:@black;
+  opacity:0.5;
+  z-index:10;
+  display:none;
+}
+
+#place_navigation_image{
+  width:43px;
+  height:43px;
+  background-size:90% 90%;
+  background-position:50% 50%;
+  background-repeat:no-repeat;
+  float:left;
+  margin-right:10px;
+}
+
+#place_navigation_distance{
+  width:100px;
+  height:43px;
+  margin-right:10px;
+  float:left;
+  color:white;
+  font-size:15px;
+  line-height:43px;
+}
+
+.place_navigation_go{
+  width:43px;
+  height:43px;
+  float:left;
+  text-align:center;
+  font-weight:bold;
+  font-size:25px;
+  color:white;
+  line-height:43px;
+  border:1px solid transparent;
+  &:hover{
+    background-color:rgba(255, 255, 255, 0.12);
+    border:1px solid black;
+    box-shadow:0px 0px 2px black;
+  }
+  &:active{
+    background-color:rgba(255, 255, 255, 0.2);
+    border:1px solid black;
+    box-shadow:0px 0px 2px black;
+  }
 }

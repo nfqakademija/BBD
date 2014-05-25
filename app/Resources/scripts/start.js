@@ -191,7 +191,9 @@ function load_recipes(reset, callback){
 }
 
 
-function loading(id, display) {
+function loading(id, display, size) {
+    size = size || "";
+
     if(display == "show"){
         $("#" + id).append("<div class='loader'></div>");
         $("#" + id + " .loader").fadeIn(transition_time * 2);
@@ -199,6 +201,11 @@ function loading(id, display) {
         $("#" + id + " .loader").fadeOut(transition_time * 2, function(){
             $("#" + id + " .loader").remove();
         });
+    }
+    if(size == ""){
+        $(".loader").css('background-size','100px 71px');
+    }else{
+        $(".loader").css('background-size', size);
     }
 }
 
@@ -1047,7 +1054,8 @@ function search(type){
                             $("#search_container_inside").append(search_data[i]);
                         }
                     }else{
-                        $("#search_container_inside").append('Neranda');
+                        var not_found_data = "<div id='search_not_found'>Nėra duomenų</div>";
+                        $("#search_container_inside").append(not_found_data);
                     }
                 }
             },

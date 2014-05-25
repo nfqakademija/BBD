@@ -1,1 +1,48 @@
-44417:41:15417:42:10good417:46:40good
+Array
+(
+    [0] => Array
+        (
+            [brand] => maxima
+            [title] => Maxima
+            [icon] => /images/maxima.png
+        )
+
+    [1] => Array
+        (
+            [brand] => mcdonalds
+            [title] => McDonalds
+            [icon] => /images/mcdonalds.png
+        )
+
+    [2] => Array
+        (
+            [brand] => rimi
+            [title] => Rimi
+            [icon] => /images/rimi.png
+        )
+
+)
+Array
+(
+    [0] => Array
+        (
+            [brand] => maxima
+            [title] => Maxima
+            [imageUrl] => /images/maxima.png
+        )
+
+    [1] => Array
+        (
+            [brand] => mcdonalds
+            [title] => McDonalds
+            [imageUrl] => /images/mcdonalds.png
+        )
+
+    [2] => Array
+        (
+            [brand] => rimi
+            [title] => Rimi
+            [imageUrl] => /images/rimi.png
+        )
+
+)

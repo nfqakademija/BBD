@@ -825,20 +825,37 @@ class AjaxController extends Controller
     {
         $request_data = $request->request;
         $value = $request_data->get('search');
+
         //from search value get places.
-        //get title, imageUrl, type
+        //get title, imageUrl, brand, type
 
         $search_data = [];
-        $search_data[0] =
-            "<div class='s_e search_item untouchable' id='search-maxima' onclick=\"show_nearest('maxima');\">".
-                "<div class='s_e search_item_image' style=\"background-image:url('/images/maxima.png')\"></div>".
-                "<div class='s_e search_item_title'>Maxima</div>".
-                "<div class='s_e search_item_bottom_info'>Parduotuvė</div>".
-            "</div>";
+        $repository = $this->getDoctrine()->getRepository('NFQAkademijaBaseBundle:Location');
+        $query = $repository->createQueryBuilder('f')
+            ->select('f.brand, f.title, f.icon, f.type')
+            ->where('f.title LIKE :title')
+            ->setParameter('title', $value.'%')
+            ->orderBy('f.title', 'ASC')
+            ->groupBy('f.brand')
+            ->getQuery();
+        $search_data = $query->getResult();
+
+        $places = [];
+        foreach($search_data as $data){
+            $single_place = $this->render('NFQAkademijaRecipesBundle:AjaxViews:SearchPlace.html.twig',
+                array(
+                    'brand' => $data["brand"],
+                    'title' => $data["title"],
+                    'imageUrl' => $data["icon"],
+                    'type' => $data["type"],
+            ));
+        $places[] = $single_place->getContent();
+        }
+
 
         $response = array(
             'status' => 'good',
-            'search_data' => $search_data,
+            'search_data' => $places,
         );
 
         $jsonResponse = new Response(json_encode($response));
@@ -1486,3 +1503,25 @@ $recipes[11] = ["11","/images/food (11).jpg", "title0"];
        INNER JOIN recipe_property ON recipes.id = recipe_property.recipe_id
        WHERE recipe_property.property_id = 1
         */
+
+
+/*
+       //create brands_array
+       //$brands_array = ["maxima"][["id"=>1,"type"='bla'...],[],[],[]]
+       $brands_array = [];
+       for($i = 0; $i < count($places_array); $i++){
+           $brand = $places_array[$i]["brand"];
+           $j = $i;
+           while($j != count($places_array) && $places_array[$j]["brand"] == $brand){
+               $brands_array[$brand][] = [
+                   "id" => $places_array[$j]["id"],
+                   "title" => $places_array[$j]["title"],
+                   "imageUrl" => $places_array[$j]["imageUrl"],
+                   "latitude" => $places_array[$j]["latitude"],
+                   "longitude" => $places_array[$j]["longitude"],
+               ];
+               $j++;
+           }
+           $i = $j - 1;
+       }
+       */

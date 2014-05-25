@@ -34,6 +34,12 @@ class Location
      */
     private $type;
     /**
+     * @var string
+     *
+     * @ORM\Column(name="brand", type="string", length=255)
+     */
+    private $brand;
+    /**
      * @var float
      *
      * @ORM\Column(name="latitude", type="float")
@@ -206,5 +212,28 @@ class Location
     public function getLongitude()
     {
         return $this->longitude;
+    }
+
+    /**
+     * Set brand
+     *
+     * @param string $brand
+     * @return Location
+     */
+    public function setBrand($brand)
+    {
+        $this->brand = $brand;
+
+        return $this;
+    }
+
+    /**
+     * Get brand
+     *
+     * @return string 
+     */
+    public function getBrand()
+    {
+        return $this->brand;
     }
 }

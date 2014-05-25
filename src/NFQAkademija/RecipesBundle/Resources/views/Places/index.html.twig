@@ -3,17 +3,33 @@
 {% block specific_scripts %}
     <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?v=3&libraries=places,geometry&sensor=true"></script>
     <script>
+        //NFQ coordinates will be used if your location is unavailable
+        var your_X = 54.903431;
+        var your_Y = 23.88197;
+        var my_location = new google.maps.LatLng(your_X, your_Y);
+        var info_window;
+        var map;
+        var your_position;
+        var directionsDisplay;
+        var directionsService = new google.maps.DirectionsService();
+        var geocoder = new google.maps.Geocoder();
+        var selected_place = "";
+        var places_array = {{ places_array | json_encode | raw }};
+        var markers_array = [];
+        var current_position = 0;
+        var current_place_array = [];
+
         function key_check(event){}
 
         function loader(){
-            getLocation();
+            initialize();
             sidebar_manipulation();
             $( window ).resize(function() {
                 sidebar_manipulation();
             });
 
             $(window).bind('resizeEnd', function() {
-                show_center();
+                show_your_location();
             });
 
             if(browser == 'firefox'){
@@ -31,58 +47,31 @@
                 shrinkScrollbars: 'scale',
                 fadeScrollbars: true
             });
-            hide_loading_screen();
-
             $("#filters_zone").click(function(){ $("#search_input").blur();});
         }
 
-        //NFQ coordinates will be used if your location is unavailable
-        var your_X = 54.903431;
-        var your_Y = 23.88197;
-        var my_location = new google.maps.LatLng(your_X, your_Y);
-        var markersArray = [];
-        var infowindow;
-        var map;
-        var your_position;
-        var directionsDisplay;
-        var directionsService = new google.maps.DirectionsService();
-
-        function getLocation(){
+        function initialize(){
             if (navigator.geolocation){
-                navigator.geolocation.getCurrentPosition(showPosition, showError);
+                navigator.geolocation.getCurrentPosition(load_current_position, show_error);
             }else{
                //Geolocation is not supported by this browser.
-                maps_initialize();
+                load_map();
             }
         }
 
-        function showPosition(position){
+        function load_current_position(position){
             your_X = position.coords.latitude;
             your_Y = position.coords.longitude;
             my_location = new google.maps.LatLng(your_X, your_Y);
-            maps_initialize();
+            load_map();
         }
 
-        function showError(error){
-            switch(error.code){
-                case error.PERMISSION_DENIED:
-                    //User denied the request for Geolocation."
-                    break;
-                case error.POSITION_UNAVAILABLE:
-                   //Location information is unavailable."
-                    break;
-                case error.TIMEOUT:
-                    //The request to get user location timed out."
-                    break;
-                case error.UNKNOWN_ERROR:
-                    //An unknown error occurred."
-                    break;
-            }
+        function show_error(error){
             toast('Įvyko klaida nustatant vietą','bad','places')
-            maps_initialize();
+            load_map();
         }
 
-        function maps_initialize() {
+        function load_map() {
             var map_canvas = document.getElementById('map_canvas');
             var map_options = {
                 center: my_location,
@@ -100,116 +89,109 @@
                 title: "Tu esi čia"
             });
 
-            infowindow = new google.maps.InfoWindow();
+            info_window = new google.maps.InfoWindow();
 
             google.maps.event.addListener(your_position, 'click', function () {
-                infowindow.setContent("Tu esi čia");
-                infowindow.open(map, this);
+                info_window.setContent("Tu esi čia");
+                info_window.open(map, this);
             });
 
             directionsDisplay = new google.maps.DirectionsRenderer();
             directionsDisplay.setMap(map);
 
-            add_controllers();
-            show_places('custom','all', 2000);
+            load_markers();
+            hide_loading_screen();
         }
 
-        function add_controllers(){
-            //add_center_controller();
-        }
-
-        function show_places(operator, type, radius){
-            //from google API
-            if(operator == "google"){
-                //show_on_map('Kebabinė', false);
-            }else if(operator == "custom"){
-                //from local DB
-                //traukti is DB vietu lat, long image_url, title ir sukti cikla ir atvaizduoti
-                //title, type, lat, long, image_url
-                //add_custom_place('Title', 'tipas', '54.909933', '23.983622' , '/images/add.png');
-                //kebabinė, picerija(pizza express, pica pica, charlie pica, can can), načnykas, greito maisto, hesburger, mcdonalds,
-                //restoranus, kavines, užkandinės, bandelinės, prekybos centrai (Savas, Molas, Urmas, Mega, Akropolis), maxima, norfa, iki, samsonas, fresh market
-                //aibė, express market, krautuvės
-
-                get_custom_places(type, radius, function(places){
-                    var title, type, lat, long, icon;
-                    for(i = 0; i < places.length; i++){
-                        title = places[i][0];
-                        type = places[i][1];
-                        lat = places[i][2];
-                        long = places[i][3];
-                        icon = places[i][4];
-                        add_custom_place(title, type, lat, long , icon);
-                    }
-                });
-
-
+        function load_markers(){
+            for(i = 0; i < places_array.length; i++){
+                var id = places_array[i]["id"];
+                var title = places_array[i]["title"];
+                var type = places_array[i]["type"];
+                var brand = places_array[i]["brand"];
+                var lat = places_array[i]["latitude"];
+                var long = places_array[i]["longitude"];
+                var imageUrl = places_array[i]["imageUrl"];
+                create_marker(id, title, brand, type, lat, long, imageUrl);
             }
         }
 
-        function get_custom_places(type, radius, callback){
-            var formData = new FormData();
-            formData.append('type', type);
-            formData.append('radius', radius);
-            $.ajax({
-                type: 'POST',
-                url: '/ajax/custom_place',
-                data: formData,
-                dataType: 'json',
-                beforeSend: function () {
-                },
-                processData: false,
-                contentType: false,
-                success: function (data) {
-                    if (data.status == "good") {
-                        var places = data.places;
+        function create_marker(id, place_title, brand, type, lat, long, imageUrl){
+            var placeLocation = new google.maps.LatLng(lat, long);
+            var placeImage = {
+                url: imageUrl,
+                size: new google.maps.Size(25, 25),
+                origin: new google.maps.Point(0, 0),
+                anchor: new google.maps.Point(17, 34),
+                scaledSize: new google.maps.Size(25, 25)
+            };
 
-                        //-----------
-                        var center_lat = your_X;
-                        var center_long = your_Y;
-                        var center_location = new google.maps.LatLng(center_lat, center_long);
-                        var distance;
-                        var place_location;
-                        var shownable_places = [];
+            var marker = new google.maps.Marker({
+                position: placeLocation,
+                map: map,
+                icon: placeImage,
+                animation: google.maps.Animation.DROP,
+                title: place_title
+            });
 
-                        //select places to be shown in radius
-                        for(i = 0; i < places.length; i++){
-                            place_location = new google.maps.LatLng(places[i][2], places[i][3]);
-                            distance = google.maps.geometry.spherical.computeDistanceBetween (center_location, place_location);
-                            distance = distance.toFixed(0);
-                            if(distance <= radius){
-                                shownable_places.push(places[i]);
-                            }
-                        }
+            markers_array[id] = marker;
 
-                        callback(shownable_places);
+            var street = "";
+            geocoder.geocode({'latLng': placeLocation}, function(results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+                    if (results[1]) {
+                        street = results[0].address_components[1].long_name + " " + results[0].address_components[0].short_name;
                     }
                 }
             });
-        }
 
-        function get_nearest_place(title, callback){
-            var formData = new FormData();
-            formData.append('title',title);
-            $.ajax({
-                type: 'POST',
-                url: '/ajax/nearest_place',
-                data: formData,
-                dataType: 'json',
-                beforeSend: function () {
-                },
-                processData: false,
-                contentType: false,
-                success: function (data) {
-                    if (data.status == "good") {
-                        var place = data.place;
-                        callback(place);
-                    }
-                }
+            google.maps.event.addListener(marker, 'click', function() {
+                var distance = google.maps.geometry.spherical.computeDistanceBetween (my_location, marker.position);
+                distance = distance_converter(distance.toFixed(0));
+                var placeContent =
+                        "<image class='google_map_tooltip_image' src='" + imageUrl + "' />" +
+                        "<div class='google_map_tooltip_title'>" + place_title + "</div>" +
+                        "<div style='clear:both;'></div>" +
+                        "<div class='google_map_tooltip_street'>" + street + "</div>" +
+                        "<div style='clear:both;'></div>" +
+                        "<div id='walk_button' class='google_map_tooltip_button' onclick=\"show_route('" + marker.position + "','walk')\">Eiti</div>" +
+                        "<div id='drive_button' class='google_map_tooltip_button' onclick=\"show_route('" + marker.position + "','drive')\">Važiuoti</div>" +
+                        "<div class='google_map_tooltip_text'>Atstumas " + distance + "</div>";
+
+
+                info_window.setContent(placeContent);
+                info_window.open(map, this);
             });
         }
 
-        function calcRoute(end, type){
+        function show_your_location(){
+            refresh_location();
+            map.panTo(my_location);
+        }
+
+        function refresh_location(){
+            if (navigator.geolocation){
+                navigator.geolocation.getCurrentPosition(function(position){
+                    your_X = position.coords.latitude;
+                    your_Y = position.coords.longitude;
+                    my_location = new google.maps.LatLng(your_X, your_Y);
+                    your_position.setPosition(my_location);
+                }, show_error);
+            }
+        }
+
+        function distance_converter(distance){
+            if (distance < 0){
+                distance = 0 + " m";
+            }else if (distance < 1000){
+                distance = distance + " m";
+            }else if (distance >= 1000){
+                distance = distance / 1000 + " km";
+            }
+            return distance;
+        }
+
+        function show_route(end, type){
             var start = my_location;
             var travel_mode;
             switch(type){
@@ -230,203 +212,120 @@
             });
         }
 
-        function initializeMarkers(results, status, pagination){
-            if (status == google.maps.places.PlacesServiceStatus.OK) {
-                for (var i = 0; i < results.length; i++) {
-                    createMarker(results[i]);
-                }
-                if (pagination.hasNextPage) {
-                    pagination.nextPage();
-                }
-            }
-        }
-
-        function createMarker(place) {
-            var placeLocation = place.geometry.location;
-            var placeName = place.name;
-            var placeReference = place.reference;
-            var placePhoto = place.photos;
-            if(placePhoto){
-                placePhoto = placePhoto[0].getUrl({'maxWidth': 25, 'maxHeight': 25});
+        function select_place(brand, overide){
+            overide = overide || false;
+            if(selected_place == ""){
+                //make place active
+                selected_place = brand;
+                $("#place_" + brand).addClass('selected');
+                show_place_navigation(brand);
+            }else if(selected_place == brand && !overide){
+                //make selected place unactive
+                selected_place = "";
+                $("#place_" + brand).removeClass('selected');
+                hide_place_navigation();
             }else{
-                placePhoto = place.icon;
+                //make selected place active and other unactive
+                selected_place = brand;
+                $(".filter_element").removeClass('selected');
+                $("#place_" + brand).addClass('selected');
+                show_place_navigation(brand);
             }
-
-            var placeImage = {
-                url: place.icon,
-                size: new google.maps.Size(25, 25),
-                origin: new google.maps.Point(0, 0),
-                anchor: new google.maps.Point(17, 34),
-                scaledSize: new google.maps.Size(25, 25)
-            };
-
-            var marker = new google.maps.Marker({
-                position: placeLocation,
-                map: map,
-                icon: placeImage,
-                animation: google.maps.Animation.DROP,
-                title: placeName
-            });
-            markersArray.push(marker);
-
-            google.maps.event.addListener(marker, 'click', function() {
-                //this.setAnimation(google.maps.Animation.BOUNCE);
-                //var distance = my_location.distanceTo(marker.position);
-                var distance = google.maps.geometry.spherical.computeDistanceBetween (my_location, marker.position);
-                distance = distanceConverter(distance.toFixed(0));
-                var placeContent =
-                "<image class='google_map_tooltip_image' src='" + placePhoto + "' />" +
-                "<div class='google_map_tooltip_title'>" + placeName + "</div>" +
-                "<div style='clear:both;'></div>" +
-                "<div id='walk_button' class='google_map_tooltip_button' onclick=\"calcRoute('" + marker.position + "','walk')\">Eiti</div>" +
-                "<div id='drive_button' class='google_map_tooltip_button' onclick=\"calcRoute('" + marker.position + "','drive')\">Važiuoti</div>" +
-                "<div class='google_map_tooltip_text'>Atstumas ~" + distance + "</div>";
-
-                infowindow.setContent(placeContent);
-                infowindow.open(map, this);
-            });
-        }
-
-        function distanceConverter(distance){
-            if (distance < 0){
-                distance = 0 + " m";
-            }else if (distance < 1000){
-                distance = distance + " m";
-            }else if (distance >= 1000){
-                distance = distance / 1000 + " km";
-            }
-            return distance;
+            $("#search_input").val('');
+            input_blur();
         }
 
 
-        function show_on_map(type, delete_index){
-            if(delete_index){
-                //prevuos markers delete
-                for(i = 0; i < markersArray.length; i++){
-                    markersArray[i].setMap(null);
-                }
-                markersArray = [];
-            }
-
-
-            var request = {
-                location: my_location,
-                rankBy: google.maps.places.RankBy.DISTANCE,
-                keyword: type,
-                //types: ['bar', 'restaurant', 'cafe', 'grocery_or_supermarket', 'shopping_mall', 'food']
-            };
-
-            var service = new google.maps.places.PlacesService(map);
-            service.nearbySearch(request, initializeMarkers);
-        }
-
-
-        function add_center_controller(){
-            var controller = document.createElement('div');
-            controller.id = "map_center_controller";
-            controller.index = 1;
-
-            google.maps.event.addDomListener(controller, 'click', function() {
-                show_center();
-            });
-
-            map.controls[google.maps.ControlPosition.TOP_LEFT].push(controller);
-        }
-
-
-        function show_center(){
-            refresh_location();
-            map.panTo(my_location);
-        }
-
-        function show_nearest(title){
-            var place_location = "";
-
-            //checks for nearest in created on map in radius
-            for (i = 0; i < markersArray.length; i++){
-                var marker = markersArray[i];
-                var marker_title = marker.title;
-                if(marker_title.toLowerCase() == title.toLowerCase()){
-                    var marker_location = marker.position;
-                    place_location = marker_location;
-                    google.maps.event.trigger(marker, 'click');
-                    map.panTo(place_location);
-                    break;
-                }
-            }
-
-            //if the nearest does not exsist so add it to map
-            if(place_location == ""){
-                get_nearest_place(title.toLowerCase(),function(nearest_place){
-                    add_custom_place(nearest_place[0], nearest_place[1], nearest_place[2], nearest_place[3] , nearest_place[4]);
-                    place_location = new google.maps.LatLng(nearest_place[2], nearest_place[3]);
-                    google.maps.event.trigger(markersArray[markersArray.length - 1], 'click');
-                    map.panTo(place_location);
-                });
-
-            }
-
+        function show_place_navigation(brand){
+            loading('place_' + brand + ' .filter_element_image', 'show', '26px 18px');
+            current_position = 0;
+            current_place_array = [];
+            current_place_array = extract_places('brand', brand);
+            show_current_place();
+            $("#place_navigation").fadeIn(transition_time);
+            loading('place_' + brand + ' .filter_element_image', 'hide', '26px 18px');
             if(mobile_state){
                 empty_sidebar_slide();
             }
-            $("#search_input").val('');
-            $('#search_input').blur();
         }
 
-        function refresh_location(){
-            if (navigator.geolocation){
-                navigator.geolocation.getCurrentPosition(getNewPosition, showError);
+        function hide_place_navigation(){
+            $("#place_navigation").fadeOut(transition_time);
+            current_position = 0;
+            current_place_array = [];
+
+            info_window.close();
+            directionsDisplay.setDirections({routes: []});
+            show_your_location();
+        }
+
+        function extract_places(type, item){
+            var places = [];
+            for(i = 0; i < places_array.length; i++){
+                var type_index = places_array[i][type];
+                if(type_index == item){
+                    places.push(places_array[i]);
+                }
             }
+            places = order_places(places);
+            return places;
         }
 
-        function getNewPosition(position){
-            your_X = position.coords.latitude;
-            your_Y = position.coords.longitude;
-            my_location = new google.maps.LatLng(your_X, your_Y);
-            your_position.setPosition(my_location);
+        function order_places(places){
+            for(i = 0; i < places.length; i++){
+
+                var place = places[i];
+                var place_location = new google.maps.LatLng(place["latitude"], place["longitude"]);
+                var distance = google.maps.geometry.spherical.computeDistanceBetween (my_location, place_location);
+                distance = distance.toFixed(0);
+
+                for(j = i + 1; j < places.length; j++){
+                    var other_place = places[j];
+                    var other_place_location = new google.maps.LatLng(other_place["latitude"], other_place["longitude"]);
+                    var other_distance = google.maps.geometry.spherical.computeDistanceBetween (my_location, other_place_location);
+                    other_distance = other_distance.toFixed(0);
+
+                    if(distance > other_distance){
+                        var temporary = places[j];
+                        places[j] = places[i]
+                        places[i] = temporary;
+                    }
+                }
+            }
+            return places;
         }
 
-        function show_marker(type){
-            //show marker when looking for prices. nearest shop with that name pvz IKI
-            var marker_location = my_location;
-            map.panTo(marker_location);
+        function show_current_place(){
+            var current_place = current_place_array[current_position];
+            var imageUrl = current_place['imageUrl'];
+            $("#place_navigation_image").css('background-image',"url('" + imageUrl + "')");
+            var place_location = new google.maps.LatLng(current_place['latitude'], current_place['longitude']);
+            var distance = google.maps.geometry.spherical.computeDistanceBetween (my_location, place_location);
+            distance = distance_converter(distance.toFixed(0));
+            $("#place_navigation_distance").html(distance);
+            var id = current_place['id'];
+            google.maps.event.trigger(markers_array[id], 'click');
+            directionsDisplay.setDirections({routes: []});
+            map.panTo(place_location);
         }
 
-    function add_custom_place(placeName, placeType, lat, long, placeIcon){
-        var placeLocation = new google.maps.LatLng(lat, long);
-        var placeImage = {
-            url: placeIcon,
-            size: new google.maps.Size(25, 25),
-            origin: new google.maps.Point(0, 0),
-            anchor: new google.maps.Point(17, 34),
-            scaledSize: new google.maps.Size(25, 25)
-        };
+        function place_go(type){
+            var working_position = current_position;
+            if(type == "back"){
+                working_position--;
+            }else{
+                working_position++;
+            }
 
-        var marker = new google.maps.Marker({
-            position: placeLocation,
-            map: map,
-            icon: placeImage,
-            animation: google.maps.Animation.DROP,
-            title: placeName
-        });
+            if(working_position < 0){
+                working_position = current_place_array.length - 1;
+            }else if(working_position > current_place_array.length - 1){
+                working_position = 0;
+            }
 
-        markersArray.push(marker);
-
-        google.maps.event.addListener(marker, 'click', function() {
-            var distance = google.maps.geometry.spherical.computeDistanceBetween (my_location, marker.position);
-            distance = distanceConverter(distance.toFixed(0));
-            var placeContent =
-                "<image class='google_map_tooltip_image' src='" + placeIcon + "' />" +
-                "<div class='google_map_tooltip_title'>" + placeName + "</div>" +
-                "<div style='clear:both;'></div>" +
-                "<div id='walk_button' class='google_map_tooltip_button' onclick=\"calcRoute('" + marker.position + "','walk')\">Eiti</div>" +
-                "<div id='drive_button' class='google_map_tooltip_button' onclick=\"calcRoute('" + marker.position + "','drive')\">Važiuoti</div>" +
-                "<div class='google_map_tooltip_text'>Atstumas ~" + distance + "</div>";
-
-            infowindow.setContent(placeContent);
-            infowindow.open(map, this);
-        });
-    }
+            current_position = working_position;
+            show_current_place();
+        }
 
     </script>
 {% endblock %}
@@ -434,7 +333,7 @@
 {% block title %}Vietos | Foodex{% endblock %}
 
 {% block search_zone %}
-    <div id="search_zone" onclick="full_sidebar()">
+    <div id="search_zone">
         <div id='search_index' onclick="focus_input('search_input')" ></div>
         <input id='search_input' placeholder='Ieškoti vietų' onkeyup="search('places')" onfocus="input_focus('places')" onblur="input_blur()"/>
         <div id='search_container'>
@@ -444,21 +343,16 @@
 {% endblock %}
 
  {% block divider %}
-     <div id="divider" class="middle_divider" style="margin-left:10px;margin-top:0px;" onclick="full_sidebar()"></div>
+     <div id="divider" class="middle_divider" style="margin-left:10px;margin-top:0px;"></div>
  {% endblock %}
 
 {% block filters_zone %}
 <div id='filters_zone' style="top:285px;bottom:10px;">
     <div class="scroller" id="scroller_filters">
-       <div class='filter_element untouchable' id='map_button_center' onclick="show_center()"><div class='filter_element_image'></div><div class='filter_element_text'>Tavo vieta</div></div>
-       <div class='filter_element untouchable' id='map_button_maxima' onclick="show_nearest('maxima')"><div class='filter_element_image'></div><div class='filter_element_text'>Maxima</div></div>
-       <div class='filter_element untouchable' id='map_button_norfa' onclick="show_nearest('norfa')"><div class='filter_element_image'></div><div class='filter_element_text'>Norfa</div></div>
-       <div class='filter_element untouchable' id='map_button_iki' onclick="show_nearest('iki')"><div class='filter_element_image'></div><div class='filter_element_text'>Iki</div></div>
-       <div class='filter_element untouchable' id='map_button_hesburger' onclick="show_nearest('hesburger')"><div class='filter_element_image'></div><div class='filter_element_text'>Hesburger</div></div>
-       <div class='filter_element untouchable' id='map_button_kebab' onclick="show_nearest('kebab')"><div class='filter_element_image'></div><div class='filter_element_text'>Kebabai</div></div>
-       <div class='filter_element untouchable' id='map_button_rimi' onclick="show_nearest('rimi')"><div class='filter_element_image' ></div><div class='filter_element_text'>Rimi</div></div>
-       <div class='filter_element untouchable' id='map_button_pizza' onclick="show_nearest('pizza')"><div class='filter_element_image'></div><div class='filter_element_text'>Picerija</div></div>
-       <div class='filter_element untouchable' id='map_button_mcdonalds' onclick="show_nearest('mcdonalds')"><div class='filter_element_image'></div><div class='filter_element_text'>McDonalds</div></div>
+        <div class='filter_element untouchable' id='place_your_position' onclick="show_your_location()"><div class='filter_element_image' style="background-image:url('/images/center.png')"></div><div class='filter_element_text'>Tavo vieta</div></div>
+        {% for place in places %}
+        <div class='filter_element untouchable' id="place_{{ place.brand }}" onclick="select_place('{{ place.brand }}')"><div class='filter_element_image' style="background-image:url('{{ place.imageUrl }}')"></div><div class='filter_element_text'>{{ place.title }}</div></div>
+        {% endfor %}
     </div>
 </div>
 
@@ -468,6 +362,12 @@
 
 {% block content %}
     <div id="content_wrapper" style="right:0px;background-color:rgb(229, 227, 223);">
+        <div id="place_navigation">
+            <div id="place_navigation_image"></div>
+            <div id="place_navigation_distance"></div>
+            <div class="place_navigation_go" onclick="place_go('back')"><</div>
+            <div class="place_navigation_go" onclick="place_go('forward')">></div>
+        </div>
         <div id="map_canvas"></div>
     </div>
 {% endblock %}

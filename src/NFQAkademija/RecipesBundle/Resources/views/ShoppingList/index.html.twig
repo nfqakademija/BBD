@@ -2,15 +2,15 @@
 
 {% block specific_scripts %}
     <script>
-        function key_check(event){
-            if(event.keyCode == 13 && $('#search_input').val() != "" && $("#search_input").is(":focus")){
-                shoppinglist_add_enter();
-            }
-        }
+        function key_check(event){}
 
         function loader(){
             sidebar_manipulation();
             recipe_size = calculate_recipe_size();
+            load_products('true', function(){
+                hide_loading_screen();
+            });
+
             $( window ).resize(function() {
                 sidebar_manipulation();
                 recalculate_width();
@@ -34,6 +34,12 @@
                 interactiveScrollbars: true,
                 shrinkScrollbars: 'scale',
                 fadeScrollbars: true,
+                probeType: 2
+            });
+
+            scroll_content.on('scroll', function(){
+                if (this.y + 200 >= this.maxScrollY)
+                    load_products_more();
             });
 
             scroll_content.on('scrollStart', function(){ clickable = false; });
@@ -41,11 +47,6 @@
 
             $("#filters_zone").click(function(){ $("#search_input").blur();});
             $("#content_wrapper").click(function(){ $("#search_input").blur();});
-
-            load_products('true');
-            load_shoppinglist();
-
-            hide_loading_screen();
         }
     </script>
 {% endblock %}
@@ -53,7 +54,7 @@
 {% block title %}Pirkiniai | Foodex{% endblock %}
 
 {% block search_zone %}
-    <div id="search_zone" onclick="full_sidebar()">
+    <div id="search_zone">
         <div id='search_index' onclick="focus_input('search_input')" ></div>
         <input id='search_input' placeholder='Pridėti prekių' onkeyup="search('shoppinglist')" onfocus="input_focus('shoppinglist')" onblur="input_blur()"/>
         <div id='search_container'>
@@ -63,12 +64,16 @@
 {% endblock %}
 
  {% block divider %}
-     <div id="divider" class="middle_divider" style="margin-left:10px;margin-top:0px;" onclick="full_sidebar()"></div>
+     <div id="divider" class="middle_divider" style="margin-left:10px;margin-top:0px;"></div>
  {% endblock %}
 
 {% block filters_zone %}
-<div id='filters_zone' style="top:285px;bottom:10px;" onclick="full_sidebar()">
-    <div class="scroller" id="scroller_filters"></div>
+<div id='filters_zone' style="top:285px;bottom:10px;">
+    <div class="scroller" id="scroller_filters">
+        {% for shoppinglist_item in shoppinglist_items %}
+            <div class='filter_element untouchable' id='shoppinglist_item_{{ shoppinglist_item.id }}' onclick='shoppinglist_item_selected(this.id)'><div class='filter_element_image' style="background-image:url('{{ shoppinglist_item.imageUrl }}');"></div><div class='filter_element_text'>{{ shoppinglist_item.title }}</div><div class='filter_element_delete' id='delete_{{ shoppinglist_item.id }}' onclick="remove_from_shoppinglist('{{ shoppinglist_item.id }}')"></div></div>
+        {% endfor %}
+    </div>
 </div>
 
 {% endblock %}

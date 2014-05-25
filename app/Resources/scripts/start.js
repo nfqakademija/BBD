@@ -31,6 +31,10 @@ var user_login_status = false;
 var load_more_end = false;
 var loading_more_status = false;
 var profile_recipes_type;
+var current_filters_scroll;
+var clock;
+var chronometer_time = 0;
+var step_going = false;
 
 document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
 
@@ -126,7 +130,6 @@ function load_profile_recipes(reset, type, callback){
     });
 }
 
-
 function load_more(){
     if(!loading_more_status && !load_more_end){
         loading_more_status = true;
@@ -138,12 +141,22 @@ function load_more(){
     }
 }
 
-
 function load_profile_more(){
     if(!loading_more_status && !load_more_end){
         loading_more_status = true;
         show_loading_recipe();
         load_profile_recipes('false', profile_recipes_type, function(){
+            hide_loading_recipe();
+            loading_more_status = false;
+        });
+    }
+}
+
+function load_products_more(){
+    if(!loading_more_status && !load_more_end){
+        loading_more_status = true;
+        show_loading_recipe();
+        load_products('false', function(){
             hide_loading_recipe();
             loading_more_status = false;
         });
@@ -190,6 +203,45 @@ function load_recipes(reset, callback){
     });
 }
 
+function load_products(reset, callback){
+    callback = callback || function(){};
+    var formData = new FormData();
+    formData.append('reset', reset);
+    $.ajax({
+        type: 'POST',
+        url: '/ajax/load_products',
+        data: formData,
+        dataType: 'json',
+        beforeSend: function () {
+        },
+        processData: false,
+        contentType: false,
+        success: function (data) {
+            if (data.status == "good") {
+                var products = data.products;
+                if(products.length == 0){
+                    toast('Atsiprašome, bet daugiau prekių nebeturime','bad','logo');
+                }else{
+                    if(reset == "true"){
+                        $("#scroller_content").html('');
+                        setTimeout(function(){scroll_content.scrollTo(0, 0)},0);
+                    }
+                    load_more_end = data.end;
+                    recipe_size = calculate_recipe_size();
+                    for(i = 0; i < products.length; i++){
+                        append_product(products[i]);
+                    }
+                    setTimeout(function(){scroll_content.refresh()},0);
+                }
+            }
+            callback();
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            toast('Įvyko klaida. Perkraukite puslapį','bad','logo');
+            console.log(xhr.responseText);
+        }
+    });
+}
 
 function loading(id, display, size) {
     size = size || "";
@@ -226,87 +278,13 @@ function append_recipe(data){
     $("#scroller_content").append(appendable_data);
 }
 
-function load_products(reset){
-    if(reset == "true"){
-        $("#scroller_content").html('');
-        setTimeout(function(){scroll_content.refresh()},0);
-        setTimeout(function(){scroll_content.scrollTo(0, 0)},0);
-    }
-
-
-    var formData = new FormData();
-    formData.append('load_products','true');
-    $.ajax({
-        type: 'POST',
-        url: '/ajax/load_products',
-        data: formData,
-        dataType: 'json',
-        beforeSend: function () {
-        },
-        processData: false,
-        contentType: false,
-        success: function (data) {
-            if (data.status == "good") {
-                var products = data.products;
-                for(i = 0; i < products.length; i++){
-                    append_product(products[i]);
-                }
-                setTimeout(function(){scroll_content.refresh()},0);
-            }
-        }
-    });
-}
-
-
-
 function append_product(data){
-    var id = data[0];
-    var image = data[1];
-    var title = data[2];
-    var appendable_data = "<div class='recipe_box' id='product_" + id + "' style=\"background-image: url('" + image + "');width:" + recipe_size + "px;height:" + recipe_size +  "px;\"><div class='recipe_box_info'>" + title + "</div><div class='recipe_box_button' id='recipe_box_button_add_to_shoppinglist' onclick=\"add_product('" + id + "')\"></div></div>";
+    var id = data["id"];
+    var image = data["imageUrl"];
+    var title = data["title"];
+    var appendable_data = "<div class='recipe_box' id='product_" + id + "' style=\"background-image: url('" + image + "');width:" + recipe_size + "px;height:" + recipe_size +  "px;\" ><div class='recipe_box_info'>" + title + "</div><div class='recipe_box_button' id='recipe_box_button_add_to_shoppinglist' onclick=\"add_to_shoppinglist('" + id + "','from_content')\"></div></div>";
 
     $("#scroller_content").append(appendable_data);
-}
-
-function add_product(ID){
-    var formData = new FormData();
-    formData.append('product_id',ID);
-    $.ajax({
-        type: 'POST',
-        url: '/ajax/shoppinglist_product_add',
-        data: formData,
-        dataType: 'json',
-        beforeSend: function () {
-        },
-        processData: false,
-        contentType: false,
-        success: function (data) {
-            if (data.status == "good") {
-                $('#product_' + ID).fadeOut(transition_time);
-                setTimeout(function(){scroll_content.refresh();}, transition_time);
-            }
-        }
-    });
-}
-
-function load_shoppinglist(){
-    var formData = new FormData();
-    formData.append('load_shoppinglist','true');
-    $.ajax({
-        type: 'POST',
-        url: '/ajax/load_shoppinglist',
-        data: formData,
-        dataType: 'json',
-        beforeSend: function () {
-        },
-        processData: false,
-        contentType: false,
-        success: function (data) {
-            if (data.status == "good") {
-
-            }
-        }
-    });
 }
 
 function show_loading_recipe(){
@@ -322,7 +300,6 @@ function hide_loading_recipe(){
 function refresh(){
     location.href = location.href;
 }
-
 
 function input_click(type){
     $('#input_' + type).trigger('click');
@@ -357,8 +334,6 @@ function check_browser(){
 
     return agent;
 }
-
-
 
 function check(type, amount){
     switch(type){
@@ -401,7 +376,7 @@ function check(type, amount){
             break;
     }
 }
-var current_filters_scroll;
+
 function show_filters(array_of_filters, index){
     $("#scroller_filters").append('<div style="display:block;margin-left:210px;" id="container_appender">' + array_of_filters[index] + '</div>');
     $("#container_appender").animate({marginLeft: 0}, transition_time);
@@ -678,9 +653,8 @@ function show_loading_screen(url){
 }
 
 function go_to_new_recipe(){
-    location.href= "/new";
+    show_loading_screen("/new");
 }
-
 
 function filter_go_back(type){
     //level 0 = selected filters
@@ -729,7 +703,6 @@ function show_config_zone(state){
         });
     }
 }
-
 
 function filter_send_indicator_changes(filter_type, filter_id, indicator_status){
     loading('content_wrapper', 'show');
@@ -809,112 +782,6 @@ function manipulate_filter(ID){
     filter_send_indicator_changes(filter_type, filter_id, new_indicator_status);
 }
 
-function shoppinglist_add(ID){
-    var id = ID.replace('shoppinglist-','');
-    var image = $('#' + ID + " .search_item_image").css('background-image');
-    var title = $('#' + ID + " .search_item_title").html();
-    $("#search_input").val('');
-    input_blur();
-    input_focus('shoppinglist');
-    var shopping_items = [];
-    var data = "<div class='filter_element untouchable' id='" + id + "' onclick='shoppinglist_item_selected(this.id)'><div class='filter_element_image' style=\"background-image:" + image + ";\"></div><div class='filter_element_text'>" + title + "</div><div class='filter_element_delete' id='delete_" + id + "' onclick='shoppinglist_delete(this.id)'></div></div>";
-    shopping_items[0] = data;
-    show_filters(shopping_items, 0);
-    setTimeout(function(){
-        scroll_filters.refresh();
-        //scroll_filters.scrollTo(0, current_filters_scroll);
-        //var scroll_amount =  scroll_filters.maxScrollY - current_filters_scroll;
-        scroll_filters.scrollBy(0, scroll_filters.maxScrollY, 600, IScroll.utils.ease.bounce);
-    },100)
-
-    var formData = new FormData();
-    formData.append('shoppinglist_add_id', id);
-    formData.append('shoppinglist_add_title', title);
-    $.ajax({
-        type: 'POST',
-        url: '/ajax/shoppinglist_add',
-        data: formData,
-        dataType: 'json',
-        beforeSend: function () {
-        },
-        processData: false,
-        contentType: false,
-        success: function (data) {
-            if (data.status == "good") {
-
-            }
-        }
-    });
-}
-
-var shoppinglist_items_ids = 0;
-function shoppinglist_add_enter(){
-    var id = "entered-" + shoppinglist_items_ids++;
-    var image = "url('/images/shoppinglist_item.png')";
-    var title = $("#search_input").val();
-    $("#search_input").val('');
-    input_blur();
-    input_focus('shoppinglist');
-    var shopping_items = [];
-    var data = "<div class='filter_element untouchable' id='" + id + "' onclick='shoppinglist_item_selected(this.id)'><div class='filter_element_image' style=\"background-image:" + image + ";\"></div><div class='filter_element_text'>" + title + "</div><div class='filter_element_delete' id='delete_" + id + "' onclick='shoppinglist_delete(this.id)'></div></div>";
-    shopping_items[0] = data;
-    show_filters(shopping_items, 0);
-    setTimeout(function(){
-        scroll_filters.refresh();
-        //var scroll_amount =  scroll_filters.maxScrollY - scroll_filters.y;
-        scroll_filters.scrollBy(0, scroll_filters.maxScrollY, 600, IScroll.utils.ease.bounce);
-    },100)
-
-    var formData = new FormData();
-    formData.append('shoppinglist_add_id', id);
-    formData.append('shoppinglist_add_title', title);
-    $.ajax({
-        type: 'POST',
-        url: '/ajax/shoppinglist_add',
-        data: formData,
-        dataType: 'json',
-        beforeSend: function () {
-        },
-        processData: false,
-        contentType: false,
-        success: function (data) {
-            if (data.status == "good") {
-
-            }
-        }
-    });
-}
-
-
-function shoppinglist_delete(ID){
-    ID = ID.replace('delete_','');
-    var shoppinglist_data = ID.split('-');
-    var shoppinglist_type = shoppinglist_data[0];
-    var shoppinglist_id = shoppinglist_data[1];
-
-    var formData = new FormData();
-    formData.append('shoppinglist_type', shoppinglist_type);
-    formData.append('shoppinglist_id', shoppinglist_id);
-    $.ajax({
-        type: 'POST',
-        url: '/ajax/shoppinglist_delete',
-        data: formData,
-        dataType: 'json',
-        beforeSend: function () {
-        },
-        processData: false,
-        contentType: false,
-        success: function (data) {
-            if (data.status == "good") {
-                $('#' + ID).remove();
-                setTimeout(function(){
-                    scroll_filters.refresh();
-                }, 100);
-            }
-        }
-    });
-}
-
 function filter_search_add(ID, indicator){
     var id = ID.replace('search-', '');
     var filter_data = id.split('-');
@@ -938,8 +805,6 @@ function filter_search_add(ID, indicator){
 
     filter_send_indicator_changes(filter_type, filter_id, indicator);
 }
-
-
 
 function filter_delete(ID){
     ID = ID.replace('delete_','');
@@ -969,46 +834,6 @@ function filter_selected(ID){
             $("#" + ID + " .filter_element_text").css('line-height','21px');
         }
     }
-}
-
-function shoppinglist_item_selected(ID) {
-    full_sidebar();
-    var classes = ($("#" + ID).attr('class')).split(" ");
-    var selected = classes[2];
-
-    var title = $("#" + ID + " .filter_element_text").html();
-    var symbols_amount = title.length;
-
-    if(selected != "selected"){
-        $(".filter_element").removeClass('selected');
-        $("#" + ID).addClass('selected');
-        if(symbols_amount > 19){
-            $("#" + ID + " .filter_element_text").css('line-height','21px');
-        }
-        //show_prices(ID);
-    }else{
-        $("#" + ID).removeClass('selected');
-        $("#" + ID + " .filter_element_text").css('line-height','43px');
-        //close_prices();
-    }
-}
-
-function show_prices(ID){
-    //pagal id parodo kainas kur kokios parduotuveje ir artmiausias vietas
-    //pagal pavadnima title bando atspeti produkta  parodo kainas kur kokios parduotuveje ir artmiausias vietas
-
-    var product_name = $("#" + ID + " .filter_element_text").html();
-    $("#sidebar_right").removeClass('right_squeeze').addClass('right_full');
-    var height_from_top = $(".ingredients_divider").offset().top + 10;
-    $("#sidebar_right_ingredients_zone").css('top', height_from_top + 'px');
-
-    if(mobile_state){
-        empty_sidebar();
-    }
-}
-
-function close_prices(){
-    $("#sidebar_right").removeClass('right_full').addClass('right_squeeze');
 }
 
 function search(type){
@@ -1144,7 +969,6 @@ function cook(recipe_ID){
     show_loading_screen("/cook/" + recipe_ID);
 }
 
-
 //tracks down mouse click
 $(document).mousedown(function(event){
     if($(event.target).attr("id") == "search_container" || ( typeof $(event.target).attr("class") !== "undefined" && $(event.target).hasClass('s_e'))){
@@ -1169,87 +993,6 @@ function input_blur(){
     $('#search_container_inside').html('');
     $('#search_container').css('display','none');
 }
-
-function ingredient_selected(ingredient_ID){
-    if(check_if_user_is_loged()){
-        var classes = ($("#ingredient_indicator-" + ingredient_ID).attr('class')).split(" ");
-        var indicator = classes[1];
-        if(indicator == "ingredient_indicator_undefined"){
-            $("#ingredient_indicator-" + ingredient_ID).removeClass('ingredient_indicator_undefined').addClass('ingredient_indicator_shoppinglist');
-
-            var formData = new FormData();
-            formData.append('ingredient_ID', ingredient_ID);
-            $.ajax({
-                type: 'POST',
-                url: '/ajax/ingredient_add',
-                data: formData,
-                dataType: 'json',
-                beforeSend: function () {
-                },
-                processData: false,
-                contentType: false,
-                success: function (data) {
-                    if (data.status == "good") {
-
-                    }
-                }
-            });
-
-        }else if(indicator == "ingredient_indicator_shoppinglist"){
-            $("#ingredient_indicator-" + ingredient_ID).removeClass('ingredient_indicator_shoppinglist').addClass('ingredient_indicator_have');
-
-            var formData = new FormData();
-            formData.append('ingredient_delete', ingredient_ID);
-            $.ajax({
-                type: 'POST',
-                url: '/ajax/ingredient_delete',
-                data: formData,
-                dataType: 'json',
-                beforeSend: function () {
-                },
-                processData: false,
-                contentType: false,
-                success: function (data) {
-                    if (data.status == "good") {
-
-                    }
-                }
-            });
-        }else if(indicator == "ingredient_indicator_have"){
-            $("#ingredient_indicator-" + ingredient_ID).removeClass('ingredient_indicator_have').addClass('ingredient_indicator_undefined');
-        }
-    }else{
-        show_top_layer('account');
-    }
-}
-
-function add_to_shopping_list(recipe_ID){
-    if(check_if_user_is_loged()){
-        var formData = new FormData();
-        formData.append('recipe_ID', recipe_ID);
-        $.ajax({
-            type: 'POST',
-            url: '/ajax/ingredient_add_all',
-            data: formData,
-            dataType: 'json',
-            beforeSend: function () {
-                loading('sidebar_right_ingredients_shoppinglist','show');
-            },
-            processData: false,
-            contentType: false,
-            success: function (data) {
-                if (data.status == "good") {
-                    $('.ingredient_indicator').removeClass('ingredient_indicator_have').removeClass('ingredient_indicator_undefined').removeClass('ingredient_indicator_shoppinglist').addClass('ingredient_indicator_shoppinglist');
-                    toast('Produktai sudėti į pirkinių krepšį','good', 'shoppinglist');
-                    loading('sidebar_right_ingredients_shoppinglist','hide');
-                }
-            }
-        });
-    }else{
-        show_top_layer('account');
-    }
-}
-
 
 function coop(recipe_ID){
     if(check_if_user_is_loged()){
@@ -1356,7 +1099,6 @@ function calculate_recipe_size(){
         size_per_item = content_width - recipe_box_margin_size;
     }
     return size_per_item;
-
 }
 
 function recalculate_width(){
@@ -1373,10 +1115,6 @@ function recalculate_width(){
     $(".recipe_box").css('height', size_per_item + "px");
     $(".recipe_box").css('line-height', size_per_item + "px");
 }
-
-
-
-
 
 function sidebar_manipulation(){
     var screen_width = $(window).width();
@@ -1395,136 +1133,16 @@ function sidebar_manipulation(){
     }
 }
 
-function manipulate_map_buttons_zone(){
-    if(mobile_state){
-        $('#map_buttons_zone_locker').css('display','block');
-        $('#map_buttons_zone').css('top','41px');
-        $('#map_buttons_zone_bottom').css('top','171px');
-        $('#map_buttons_zone').addClass('squeezed_buttons');
-        $('#content_wrapper').css('right','0px');
-    }else{
-        $('#map_buttons_zone_locker').css('display','none');
-        $('#map_buttons_zone').css('top','0px');
-        $('#map_buttons_zone_bottom').css('top','131px');
-        $('#map_buttons_zone').removeClass('squeezed_buttons');
-        $('#content_wrapper').css('right','66px');
-        setTimeout(function(){scroll_map_buttons.refresh()},0);
-    }
-}
-
-function show_hide_map_buttons_zone(){
-    if($('#map_buttons_zone').hasClass('squeezed_buttons')){
-        $('#map_buttons_zone').removeClass('squeezed_buttons');
-        setTimeout(function(){scroll_map_buttons.refresh()},0);
-        $('#content_wrapper').css('right','66px');
-    }else{
-        $('#map_buttons_zone').addClass('squeezed_buttons');
-        $('#content_wrapper').css('right','0px');
-    }
-}
-
-function empty_sidebar_slide(){
-    if($("#sidebar").hasClass('full')){
-        $("#sidebar").removeClass('full').removeClass('empty').removeClass('squeeze').addClass('empty');
-        $("#content_wrapper").css('left','0px');
-        $("#header").css('left','0px');
-        $("#sidebar_slider").css('display','block');
-        $("#header_logo").css('display','block');
-        //$("#header_map_buttons_zone_locker").css('display','block');
-        $("#header_options").css('display','block');
-        $("#config_zone").css('display','none');
-        $("#cook_ingredients").css('display','none');
-        $(".next_step").html(">>");
-        //var height_from_top = $(".middle_divider").offset().top;
-        //$("#filters_zone").css('top', height_from_top + 'px');
-
-    }else if($("#sidebar").hasClass('empty')){
-        $("#sidebar").removeClass('full').removeClass('empty').removeClass('squeeze').addClass('full');
-        $("#content_wrapper").css('left','231px');
-        $("#header").css('left','231px');
-        $("#sidebar_slider").css('display','none');
-        $("#header_logo").css('display','none');
-        //$("#header_map_buttons_zone_locker").css('display','none');
-        $("#header_options").css('display','none');
-        $("#config_zone").css('display','block');
-        $("#cook_ingredients").css('display','block');
-        $(".next_step").html("Sekantis");
-        //var height_from_top = $(".middle_divider").offset().top;
-        //$("#filters_zone").css('top', height_from_top + 'px');
-    }
-    hide_recipe();
-}
-
-
-function sidebar_slide(){
-    var sidebar_class = ($("#sidebar").attr('class'));
-    if(sidebar_class == "full"){
-        squeeze_sidebar();
-    }else{
-        full_sidebar();
-    }
-}
-
-function full_sidebar(){
-    $("#sidebar").removeClass('full').removeClass('empty').removeClass('squeeze').addClass('full');
-    $("#content_wrapper").css('left','231px');
-    $("#header").css('left','231px');
-    $("#config_zone").css('display','block');
-    $("#cook_ingredients").css('display','block');
-    $(".next_step").html("Sekantis");
-    //calculate top px for filters zone
-    var height_from_top = $(".middle_divider").offset().top;
-    $("#filters_zone").css('top', height_from_top + 'px');
-    if(!mobile_state){
-        $("#sidebar_slider").css('display','block');
-        recalculate_width();
-        steps_manipulation();
-    }
-
-    set_sidebar_state('full');
-    hide_recipe();
-}
-
-function squeeze_sidebar(){
-    $("#sidebar").removeClass('full').removeClass('empty').addClass('squeeze');
-    $("#content_wrapper").css('left','66px');
-    $("#header").css('left','66px');
-    $("#sidebar_slider").css('display','none');
-    $("#config_zone").css('display','block');
-    $("#cook_ingredients").css('display','none');
-    $(".next_step").html(">>");
-    //calculate top px for filters zone
-    //var height_from_top = $(".middle_divider").offset().top;
-    //$("#filters_zone").css('top', height_from_top + 'px');
-    if(!mobile_state){
-        recalculate_width();
-    }
-    steps_manipulation();
-    set_sidebar_state('squeeze');
-}
-
 function empty_sidebar(){
-    $("#sidebar").removeClass('full').removeClass('squeeze').addClass('empty');
+    $("#sidebar").removeClass('full').addClass('empty');
     $("#content_wrapper").css('left','0px');
     $("#header").css('left','0px');
     $("#header_logo").css('display','block');
     $("#header_map_buttons_zone_locker").css('display','block');
-    $("#sidebar_slider").css('display','none');
     $("#config_zone").css('display','none');
     recalculate_width();
     steps_manipulation();
 }
-
-function get_sidebar_state(){
-    return localStorage["sidebar_state"];
-}
-
-function set_sidebar_state(state){
-    localStorage.setItem('sidebar_state', state);
-    return true;
-}
-
-
 
 function steps_sidebar_initialize(){
     var screen_height = $("#steps_sidebar").height();
@@ -1583,7 +1201,6 @@ function facebook_login(){
     });
 }
 
-var step_going = false;
 function step_go(id){
     if(!step_going){
         step_going = true;
@@ -1629,7 +1246,6 @@ function previous_step(){
         step_go(steps_amount);
     }
 }
-
 
 function like_indicator(status, box_ID){
     if(box_ID == "sidebar_right_like"){
@@ -1788,7 +1404,6 @@ function add_comment(recipe_ID){
 function show_comment(data){
     $("#step_comment_answers_box_scroller").append(data);
     setTimeout(function(){scroll_step_comment_answers_box.refresh();},0);
-
 }
 
 function squeeze_comment_box(){
@@ -1822,8 +1437,6 @@ function logout(){
     });
 }
 
-var clock;
-var chronometer_time = 0;
 function cook_timer(ID){
     var classes = ($("#" + ID).attr('class')).split(" ");
     var selected = classes[2];
@@ -1859,4 +1472,217 @@ String.prototype.toHHMMSS = function () {
 function timer(ID){
     chronometer_time++;
     $("#" + ID).html(chronometer_time.toString().toHHMMSS());
+}
+
+function empty_sidebar_slide(){
+    if($("#sidebar").hasClass('full')){
+        $("#sidebar").removeClass('full').removeClass('empty').addClass('empty');
+        $("#content_wrapper").css('left','0px');
+        $("#header").css('left','0px');
+        $("#header_logo").css('display','block');
+        $("#header_options").css('display','block');
+        $("#config_zone").css('display','none');
+        $("#cook_ingredients").css('display','none');
+        $(".next_step").html(">>");
+    }else if($("#sidebar").hasClass('empty')){
+        $("#sidebar").removeClass('full').removeClass('empty').addClass('full');
+        $("#content_wrapper").css('left','231px');
+        $("#header").css('left','231px');
+        $("#header_logo").css('display','none');
+        $("#header_options").css('display','none');
+        $("#config_zone").css('display','block');
+        $("#cook_ingredients").css('display','block');
+        $(".next_step").html("Sekantis");
+    }
+    hide_recipe();
+}
+
+function full_sidebar(){
+    $("#sidebar").removeClass('full').removeClass('empty').addClass('full');
+    $("#content_wrapper").css('left','231px');
+    $("#header").css('left','231px');
+    $("#config_zone").css('display','block');
+    $("#cook_ingredients").css('display','block');
+    $(".next_step").html("Sekantis");
+    //calculate top px for filters zone
+    var height_from_top = $(".middle_divider").offset().top;
+    $("#filters_zone").css('top', height_from_top + 'px');
+    if(!mobile_state){
+        $("#sidebar_slider").css('display','block');
+        recalculate_width();
+        steps_manipulation();
+    }
+    hide_recipe();
+}
+
+function add_to_shoppinglist(ID, type){
+    if(type == "from_search"){
+        $("#search_input").val('');
+        input_blur();
+        input_focus('shoppinglist');
+        loading('search_index', 'show', '26px 18px');
+    }else if(type == "from_content"){
+        loading('product_' + ID, 'show');
+    }
+
+    var formData = new FormData();
+    formData.append('product_ID', ID);
+    $.ajax({
+        type: 'POST',
+        url: '/ajax/add_to_shoppinglist',
+        data: formData,
+        dataType: 'json',
+        beforeSend: function () {
+        },
+        processData: false,
+        contentType: false,
+        success: function (data) {
+            if (data.status == "good") {
+                var shoppinglist_item = []
+                shoppinglist_item[0] = data.shoppinglist_item;
+                if(shoppinglist_item.length != 0){
+                    show_filters(shoppinglist_item, 0);
+                }
+
+                if(type == "from_search"){
+                    loading('search_index', 'hide', '26px 18px');
+                }else if(type == "from_content"){
+                    loading('product_' + ID, 'hide');
+                    $('#product_' + ID).remove();
+                    setTimeout(function(){scroll_content.refresh();}, 0);
+                }
+            }else{
+                toast('Pirkinys jau krepšyje','bad','shoppinglist')
+            }
+        }
+    });
+}
+
+function remove_from_shoppinglist(product_ID){
+    var formData = new FormData();
+    loading('shoppinglist_item_' + product_ID + ' .filter_element_image', 'show', '26px 18px');
+    formData.append('product_ID', product_ID);
+    $.ajax({
+        type: 'POST',
+        url: '/ajax/remove_from_shoppinglist',
+        data: formData,
+        dataType: 'json',
+        beforeSend: function () {
+        },
+        processData: false,
+        contentType: false,
+        success: function (data) {
+            if (data.status == "good") {
+                loading('shoppinglist_item_' + product_ID + ' .filter_element_image', 'hide', '26px 18px');
+                $('#shoppinglist_item_' + product_ID).remove();
+                setTimeout(function(){
+                    scroll_filters.refresh();
+                }, 100);
+            }
+        }
+    });
+}
+
+function shoppinglist_item_selected(ID) {
+    var title = $("#" + ID + " .filter_element_text").html();
+    var symbols_amount = title.length;
+
+    if((!$("#" + ID).hasClass('selected'))){
+        $(".filter_element").removeClass('selected');
+        $("#" + ID).addClass('selected');
+        if(symbols_amount > 19){
+            $("#" + ID + " .filter_element_text").css('line-height','21px');
+        }
+    }else{
+        $("#" + ID).removeClass('selected');
+        $("#" + ID + " .filter_element_text").css('line-height','43px');
+    }
+}
+
+
+
+
+
+
+
+
+
+function ingredient_selected(ingredient_ID){
+    if(check_if_user_is_loged()){
+        var classes = ($("#ingredient_indicator-" + ingredient_ID).attr('class')).split(" ");
+        var indicator = classes[1];
+        if(indicator == "ingredient_indicator_undefined"){
+            $("#ingredient_indicator-" + ingredient_ID).removeClass('ingredient_indicator_undefined').addClass('ingredient_indicator_shoppinglist');
+
+            var formData = new FormData();
+            formData.append('ingredient_ID', ingredient_ID);
+            $.ajax({
+                type: 'POST',
+                url: '/ajax/ingredient_add',
+                data: formData,
+                dataType: 'json',
+                beforeSend: function () {
+                },
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    if (data.status == "good") {
+
+                    }
+                }
+            });
+
+        }else if(indicator == "ingredient_indicator_shoppinglist"){
+            $("#ingredient_indicator-" + ingredient_ID).removeClass('ingredient_indicator_shoppinglist').addClass('ingredient_indicator_have');
+
+            var formData = new FormData();
+            formData.append('ingredient_delete', ingredient_ID);
+            $.ajax({
+                type: 'POST',
+                url: '/ajax/ingredient_delete',
+                data: formData,
+                dataType: 'json',
+                beforeSend: function () {
+                },
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    if (data.status == "good") {
+
+                    }
+                }
+            });
+        }else if(indicator == "ingredient_indicator_have"){
+            $("#ingredient_indicator-" + ingredient_ID).removeClass('ingredient_indicator_have').addClass('ingredient_indicator_undefined');
+        }
+    }else{
+        show_top_layer('account');
+    }
+}
+
+function add_to_shopping_list(recipe_ID){
+    if(check_if_user_is_loged()){
+        var formData = new FormData();
+        formData.append('recipe_ID', recipe_ID);
+        $.ajax({
+            type: 'POST',
+            url: '/ajax/ingredient_add_all',
+            data: formData,
+            dataType: 'json',
+            beforeSend: function () {
+                loading('sidebar_right_ingredients_shoppinglist','show');
+            },
+            processData: false,
+            contentType: false,
+            success: function (data) {
+                if (data.status == "good") {
+                    $('.ingredient_indicator').removeClass('ingredient_indicator_have').removeClass('ingredient_indicator_undefined').removeClass('ingredient_indicator_shoppinglist').addClass('ingredient_indicator_shoppinglist');
+                    toast('Produktai sudėti į pirkinių krepšį','good', 'shoppinglist');
+                    loading('sidebar_right_ingredients_shoppinglist','hide');
+                }
+            }
+        });
+    }else{
+        show_top_layer('account');
+    }
 }

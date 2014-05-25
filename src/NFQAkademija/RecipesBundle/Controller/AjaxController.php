@@ -5,6 +5,7 @@ namespace NFQAkademija\RecipesBundle\Controller;
 use Doctrine\ORM\EntityManager;
 use NFQAkademija\BaseBundle\Entity\ProducedRecipe;
 use NFQAkademija\BaseBundle\Entity\Recipe;
+use NFQAkademija\BaseBundle\Entity\Shoppinglist;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,55 +20,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 class AjaxController extends Controller
 {
-    public function new_recipeAction(Request $request)
-    {
-        /** @var EntityManager $em */
-        $em = $this->getDoctrine()->getManager();
-        $request_data = $request->request;
-        $request_files = $request->files;
 
-        $title = $request_data->get('new_recipe_title');
-        $about = $request_data->get('new_recipe_about');
-        $time = $request_data->get('new_recipe_time');
-        $country = $request_data->get('new_recipe_country');
-        $main_cooking_method = $request_data->get('new_recipe_main_cooking_method');
-        $celebration = $request_data->get('new_recipe_celebration');
-        $type = $request_data->get('new_recipe_type');
-
-        $propertiesIds = json_decode($request_data->get('new_recipe_properties'));
-        $ingredients = json_decode(json_decode($request_data->get('new_recipe_ingredients')));
-        $steps = json_decode($request_data->get('new_recipe_steps'));
-
-        $image = $request_files->get('new_recipe_image');
-
-        //insert all data into DB in recipes
-        $recipe = new Recipe();
-        $recipe->setName($title); //varchar
-        $recipe->setCelebration($celebration); //id
-        $recipe->setCountry($country); //id
-        $recipe->setDescription($about); //varchar
-        $recipe->setMainCookingMethod($main_cooking_method); //id
-        $recipe->setPhoto('/images/profile.png'); //id
-        $recipe->setCookingTime($time); //id
-        $recipe->setType($type); //id
-
-        $properties = $em->getRepository("NFQAkademijaBaseBundle:Property")->findBy(array('id' => $propertiesIds));
-
-        foreach ($properties as $property) {
-            $recipe->addProperty($property);
-        }
-
-        $em->persist($recipe);
-        $em->flush();
-
-        $response = array(
-            'status' => 'good',
-        );
-
-        $jsonResponse = new Response(json_encode($response));
-        $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
-        return $jsonResponse;
-    }
 
     public function load_profile_recipesAction(Request $request)
     {
@@ -341,42 +294,60 @@ class AjaxController extends Controller
     public function load_productsAction(Request $request)
     {
         $request_data = $request->request;
+        $session = $request->getSession();
+        $reset = $request_data->get('reset');
+        $end = false;
 
-        //get ingredients_ID, image_url, title RANDOM
-        //20 RANDOM ingredientu
-        //later akcijos ir panasiai
+        $limit = 20;
+        $offset = 0;
+        if($session->has('load_products_offset')){
+            $offset = $session->get('load_products_offset');
+        }else{
+            $session->set('load_products_offset', $offset);
+        }
 
-        $products = [];
-        $products[0] = ["0","/images/food (0).jpg", "title0"];
-        $products[1] = ["1","/images/food (1).png", "title0"];
-        $products[2] = ["2","/images/food (2).jpg", "title0"];
-        $products[3] = ["3","/images/food (3).jpg", "title0"];
-        $products[4] = ["4","/images/food (4).jpg", "title0"];
-        $products[5] = ["5","/images/food (5).jpg", "title0"];
-        $products[6] = ["6","/images/food (6).jpg", "title0"];
-        $products[7] = ["7","/images/food (7).jpg", "title0"];
-        $products[8] = ["8","/images/food (8).jpg", "title0"];
-        $products[9] = ["9","/images/food (9).jpg", "title0"];
-        $products[10] = ["10","/images/food (10).jpg", "title0"];
+        if($reset == "true"){
+            $offset = 0;
+            $session->set('load_products_offset', $offset);
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $user_ID = 4;
+        $data = $em->getRepository("NFQAkademijaBaseBundle:Shoppinglist")->findBy(array("user" => $user_ID));
+        $already_in_shoppinglist_ids = [];
+        foreach ($data as $dat){
+            $product = $dat->getProduct();
+            $id = $product->getId();
+            $already_in_shoppinglist_ids[] = $id;
+        }
+
+        $product_repository = $this->getDoctrine()->getRepository('NFQAkademijaBaseBundle:Product');
+        $query = $product_repository->createQueryBuilder('f');
+        $query = $query->select('f.id, f.name AS title, f.photo AS imageUrl')
+            ->orderBy('f.name', 'ASC')
+            ->Where('f.id NOT IN (:already_in_shoppinglist_ids)')
+            ->setParameter('already_in_shoppinglist_ids', $already_in_shoppinglist_ids)
+            ->setFirstResult($offset)
+            ->setMaxResults($limit)
+            ->getQuery();
+        $products = $query->getResult();
+
+        $products_loaded = count($products);
+        //jei rado produktu
+        if($products_loaded != 0 ){
+            if($products_loaded < $limit){
+                //jei produktu rado ne pilnai = reiskia daugiau produktu nebebus todel offset nedidint
+                $end = true;
+            }else{
+                //produktu rado tiek koks yra limitas. Reiskias gali buti ir daugaiu pagal sia uzklausa. Offset didint
+                $session->set('load_products_offset', $offset + $limit);
+            }
+        }
 
         $response = array(
             'status' => 'good',
             'products' => $products,
-        );
-
-        $jsonResponse = new Response(json_encode($response));
-        $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
-        return $jsonResponse;
-    }
-
-    public function load_shoppinglistAction(Request $request)
-    {
-        $request_data = $request->request;
-
-        //from DB get shoppinglist and form shoppinglist_session
-
-        $response = array(
-            'status' => 'good',
+            'end' => $end,
         );
 
         $jsonResponse = new Response(json_encode($response));
@@ -539,7 +510,6 @@ class AjaxController extends Controller
         return $jsonResponse;
     }
 
-
     public function loading_screenAction(Request $request)
     {
         $request_data = $request->request;
@@ -625,59 +595,6 @@ class AjaxController extends Controller
         }
 
         $session->set('filters', $filters);
-
-        $response = array(
-            'status' => 'good',
-        );
-
-        $jsonResponse = new Response(json_encode($response));
-        $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
-        return $jsonResponse;
-    }
-
-    public function shoppinglist_addAction(Request $request)
-    {
-        $request_data = $request->request;
-
-        $id = $request_data->get("shoppinglist_add_id");
-        $title = $request_data->get("shoppinglist_add_title");
-
-        //add to user db and current shoppinglist session
-
-        $response = array(
-            'status' => 'good',
-        );
-
-        $jsonResponse = new Response(json_encode($response));
-        $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
-        return $jsonResponse;
-    }
-
-    public function shoppinglist_product_addAction(Request $request)
-    {
-        $request_data = $request->request;
-
-        $id = $request_data->get("product_id");
-
-        //add to user db and current shoppinglist session
-
-        $response = array(
-            'status' => 'good',
-        );
-
-        $jsonResponse = new Response(json_encode($response));
-        $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
-        return $jsonResponse;
-    }
-
-    public function shoppinglist_deleteAction(Request $request)
-    {
-        $request_data = $request->request;
-
-        $shoppinglist_type = $request_data->get("shoppinglist_type");
-        $shoppinglist_id = $request_data->get("shoppinglist_id");
-
-        //delete from user db and current shopinglist session
 
         $response = array(
             'status' => 'good',
@@ -799,21 +716,44 @@ class AjaxController extends Controller
     {
         $request_data = $request->request;
         $value = $request_data->get('search');
-        //from search value get ingredients. do not show which are in current shoppinglist session
-        //get ingredientID, title, type, imageUrl
-
-
         $search_data = [];
-        $search_data[0] =
-            "<div class='s_e search_item untouchable' id='shoppinglist-ingredient-95' onclick='shoppinglist_add(this.id)'>".
-                "<div class='s_e search_item_image' style=\"background-image:url('images/food (2).jpg')\"></div>".
-                "<div class='s_e search_item_title'>Ananasas</div>".
-                "<div class='s_e search_item_bottom_info'>Ingredientas</div>".
-            "</div>";
+
+        $em = $this->getDoctrine()->getManager();
+        $user_ID = 4;
+        $data = $em->getRepository("NFQAkademijaBaseBundle:Shoppinglist")->findBy(array("user" => $user_ID));
+        $already_in_shoppinglist_ids = [];
+        foreach ($data as $dat){
+            $product = $dat->getProduct();
+            $id = $product->getId();
+            $already_in_shoppinglist_ids[] = $id;
+        }
+
+        $repository = $this->getDoctrine()->getRepository('NFQAkademijaBaseBundle:Product');
+        $query = $repository->createQueryBuilder('f')
+            ->select('f.id, f.name, f.photo')
+            ->where('f.name LIKE :name')
+            ->andWhere('f.id NOT IN (:already_in_shoppinglist_ids)')
+            ->setParameter('name', $value.'%')
+            ->setParameter('already_in_shoppinglist_ids', $already_in_shoppinglist_ids)
+            ->orderBy('f.name', 'ASC')
+            ->getQuery();
+        $search_data = $query->getResult();
+
+        $products = [];
+        foreach($search_data as $data){
+            $single_product = $this->render('NFQAkademijaRecipesBundle:AjaxViews:SearchProduct.html.twig',
+                array(
+                    'id' => $data["id"],
+                    'title' => $data["name"],
+                    'imageUrl' => $data["photo"],
+                    'category' => "Produktas"
+                ));
+            $products[] = $single_product->getContent();
+        }
 
         $response = array(
             'status' => 'good',
-            'search_data' => $search_data,
+            'search_data' => $products,
         );
 
         $jsonResponse = new Response(json_encode($response));
@@ -998,53 +938,6 @@ class AjaxController extends Controller
         return $jsonResponse;
     }
 
-    public function ingredient_addAction(Request $request)
-    {
-        $request_data = $request->request;
-        $ingredient_ID = $request_data->get('ingredient_ID');
-        //add to current shoppinglist session and to users_shoppinglist in database ingredient and quantity
-
-        $response = array(
-            'status' => 'good',
-        );
-
-        $jsonResponse = new Response(json_encode($response));
-        $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
-        return $jsonResponse;
-    }
-
-    public function ingredient_add_allAction(Request $request)
-    {
-        $request_data = $request->request;
-        $recipe_ID = $request_data->get('recipe_ID');
-        //add to current shoppinglist session and to users_shoppinglist in database ingredients and quantities
-        //get ingredients and quantities from recipe_ID
-        //sum up quantities
-        $response = array(
-            'status' => 'good',
-        );
-
-        $jsonResponse = new Response(json_encode($response));
-        $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
-        return $jsonResponse;
-    }
-
-    public function ingredient_deleteAction(Request $request)
-    {
-        $request_data = $request->request;
-
-        $ingredient_ID = $request_data->get('ingredient_ID');
-        //delete ingredient and quantity from current shoppinglist session and users_shoppinglist in database
-
-        $response = array(
-            'status' => 'good',
-        );
-
-        $jsonResponse = new Response(json_encode($response));
-        $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
-        return $jsonResponse;
-    }
-
     public function coop_infoAction(Request $request)
     {
         $request_data = $request->request;
@@ -1169,6 +1062,125 @@ class AjaxController extends Controller
         return $jsonResponse;
     }
 
+    public function add_to_shoppinglistAction(Request $request)
+    {
+        $request_data = $request->request;
+        $product_ID = $request_data->get("product_ID");
+        $em = $this->getDoctrine()->getManager();
+        $user_ID = 4;
+
+        $exists = $em->getRepository("NFQAkademijaBaseBundle:Shoppinglist")->find(array("user" => $user_ID, "product" => $product_ID));
+        if(!$exists) {
+            $data = new Shoppinglist();
+            $user = $em->getRepository("NFQAkademijaBaseBundle:User")->find($user_ID);
+            $product = $em->getRepository("NFQAkademijaBaseBundle:Product")->find($product_ID);
+            $data->setUser($user);
+            $data->setProduct($product);
+            $data->setQuantity(1);
+            $em->persist($data);
+            $em->flush();
+            $status = 'good';
+        }else{
+            $status = 'bad';
+        }
+
+        $product_data = $this->getDoctrine()->getRepository('NFQAkademijaBaseBundle:Product')->find($product_ID);
+        $data = $this->render('NFQAkademijaRecipesBundle:AjaxViews:ShoppinglistItem.html.twig',
+            array(
+                'id' => $product_data->getId(),
+                'title' => $product_data->getName(),
+                'imageUrl' => $product_data->getPhoto(),
+            ));
+        $data = $data->getContent();
+
+        $response = array(
+            'status' => $status,
+            'shoppinglist_item' => $data
+        );
+
+        $jsonResponse = new Response(json_encode($response));
+        $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
+        return $jsonResponse;
+    }
+
+    public function remove_from_shoppinglistAction(Request $request)
+    {
+        $request_data = $request->request;
+        $product_ID = $request_data->get("product_ID");
+        $em = $this->getDoctrine()->getManager();
+        $session = $request->getSession();
+        $user_ID = 4;
+
+        $exists = $em->getRepository("NFQAkademijaBaseBundle:Shoppinglist")->find(array("user" => $user_ID, "product" => $product_ID));
+        if($exists) {
+            $em->remove($exists);
+            $em->flush();
+        }
+
+        $response = array(
+            'status' => 'good',
+        );
+
+        $jsonResponse = new Response(json_encode($response));
+        $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
+        return $jsonResponse;
+    }
+
+
+
+
+
+
+    public function new_recipeAction(Request $request)
+    {
+        /** @var EntityManager $em */
+        $em = $this->getDoctrine()->getManager();
+        $request_data = $request->request;
+        $request_files = $request->files;
+
+        $title = $request_data->get('new_recipe_title');
+        $about = $request_data->get('new_recipe_about');
+        $time = $request_data->get('new_recipe_time');
+        $country = $request_data->get('new_recipe_country');
+        $main_cooking_method = $request_data->get('new_recipe_main_cooking_method');
+        $celebration = $request_data->get('new_recipe_celebration');
+        $type = $request_data->get('new_recipe_type');
+
+        $propertiesIds = json_decode($request_data->get('new_recipe_properties'));
+        $ingredients = json_decode(json_decode($request_data->get('new_recipe_ingredients')));
+        $steps = json_decode($request_data->get('new_recipe_steps'));
+
+        $image = $request_files->get('new_recipe_image');
+
+        //insert all data into DB in recipes
+        $recipe = new Recipe();
+        $recipe->setName($title); //varchar
+        $recipe->setCelebration($celebration); //id
+        $recipe->setCountry($country); //id
+        $recipe->setDescription($about); //varchar
+        $recipe->setMainCookingMethod($main_cooking_method); //id
+        $recipe->setPhoto('/images/profile.png'); //id
+        $recipe->setCookingTime($time); //id
+        $recipe->setType($type); //id
+
+        $properties = $em->getRepository("NFQAkademijaBaseBundle:Property")->findBy(array('id' => $propertiesIds));
+
+        foreach ($properties as $property) {
+            $recipe->addProperty($property);
+        }
+
+        $em->persist($recipe);
+        $em->flush();
+
+        $response = array(
+            'status' => 'good',
+        );
+
+        $jsonResponse = new Response(json_encode($response));
+        $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
+        return $jsonResponse;
+    }
+
     public function admin_logoutAction(Request $request)
     {
         $request_data = $request->request;
@@ -1193,49 +1205,6 @@ class AjaxController extends Controller
 
         $response = array(
             'status' => 'good',
-        );
-
-        $jsonResponse = new Response(json_encode($response));
-        $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
-        return $jsonResponse;
-    }
-
-    public function nearest_placeAction(Request $request)
-    {
-        $request_data = $request->request;
-        $title = $request_data->get('title');
-
-        //from DB get nearest place with that TITLE
-        $place = [$title, $title,'55.909933', '23.983622', '/images/maxima.png'];
-
-        $response = array(
-            'status' => 'good',
-            'place' => $place,
-        );
-
-        $jsonResponse = new Response(json_encode($response));
-        $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
-        return $jsonResponse;
-    }
-
-    public function custom_placeAction(Request $request)
-    {
-        $request_data = $request->request;
-        $type = $request_data->get('type');
-        $radius = $request_data->get('radius');
-
-        //from DB get all places with TYPE and in that RADIUS
-        $places = [];
-        $places[0] = ['Maxima','tipas0','54.909933', '23.983622', '/images/maxima.png'];
-        $places[1] = ['Norfa','tipas0','54.910833', '23.976841', '/images/norfa.png'];
-        $places[2] = ['Iki','tipas0','54.907780', '23.983622', '/images/iki.png'];
-        $places[3] = ['Hesburger','tipas0','54.906690', '23.983640', '/images/hesburger.png'];
-        $places[4] = ['McDonalds','tipas0','54.907000', '23.983648', '/images/mcdonalds.png'];
-        $places[5] = ['Rimi','tipas0','54.909933', '23.983670', '/images/rimi.png'];
-
-        $response = array(
-            'status' => 'good',
-            'places' => $places,
         );
 
         $jsonResponse = new Response(json_encode($response));

@@ -42,10 +42,9 @@ class User extends BaseUser
     protected $surname;
 
     /**
-     * @var \NFQAkademija\BaseBundle\Entity\ShoppingList
-     * @ORM\OneToMany(targetEntity="\NFQAkademija\BaseBundle\Entity\ShoppingList", mappedBy="user")
+     * @var \NFQAkademija\BaseBundle\Entity\Shoppinglist
+     * @ORM\OneToMany(targetEntity="\NFQAkademija\BaseBundle\Entity\Shoppinglist", mappedBy="user")
      */
-
     protected $shoppingList;
     /**
      * @ORM\OneToMany(targetEntity="\NFQAkademija\BaseBundle\Entity\Recipe", mappedBy="user")
@@ -204,7 +203,7 @@ class User extends BaseUser
     /**
      * Get shoppingList
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getShoppingList()
     {

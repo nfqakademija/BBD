@@ -95,8 +95,12 @@ hwi_oauth:
             client_id:           "%facebook_app_id%"
             client_secret:       "%facebook_app_secret%"
             scope:               "publish_actions, email, public_profile, user_friends"
+            infos_url:     "https://graph.facebook.com/me?fields=username,name,email,picture.type(square)"
+            paths:
+                email:          email
+                profilepicture: picture.data.url
             options:
-              display: popup
+                display: popup
         google:
             type:                google
             client_id:           "%google_app_id%"

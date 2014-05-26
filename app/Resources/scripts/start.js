@@ -919,7 +919,7 @@ function show_recipe(recipe_ID){
             formData.append('recipe_ID', recipe_ID);
             $.ajax({
                 type: 'POST',
-                url: '/ajax/recipe_right_sidebar',
+                url: '/ajax/load_recipe_in_sidebar',
                 data: formData,
                 dataType: 'json',
                 beforeSend: function () {

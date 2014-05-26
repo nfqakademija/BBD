@@ -18,74 +18,79 @@ nfq_akademija_places:
     pattern:  /places
     defaults: { _controller: NFQAkademijaRecipesBundle:Places:index }
 
-nfq_akademija_load_profile_recipes:
-    pattern:  /ajax/load_profile_recipes
-    defaults: { _controller: NFQAkademijaRecipesBundle:Ajax:load_profile_recipes }
-
-nfq_akademija_load_recipes:
-    pattern:  /ajax/load_recipes
-    defaults: { _controller: NFQAkademijaRecipesBundle:Ajax:load_recipes }
-
-nfq_akademija_load_products:
-    pattern:  /ajax/load_products
-    defaults: { _controller: NFQAkademijaRecipesBundle:Ajax:load_products}
-
-nfq_akademija_filters_show:
-    pattern:  /ajax/filters_show
-    defaults: { _controller: NFQAkademijaRecipesBundle:Ajax:filters_show}
-
-nfq_akademija_filter_indicator_change:
-    pattern:  /ajax/filter_indicator_change
-    defaults: { _controller: NFQAkademijaRecipesBundle:Ajax:filter_indicator_change}
-
-nfq_akademija_loading_screen:
-    pattern:  /ajax/loading_screen
-    defaults: { _controller: NFQAkademijaRecipesBundle:Ajax:loading_screen}
-
-
 nfq_akademija_search:
     pattern:  /ajax/search
-    defaults: { _controller: NFQAkademijaRecipesBundle:Ajax:search}
+    defaults: { _controller: NFQAkademijaRecipesBundle:AjaxSearch:search}
 
 nfq_akademija_search_shoppinglist:
     pattern:  /ajax/search_shoppinglist
-    defaults: { _controller: NFQAkademijaRecipesBundle:Ajax:search_shoppinglist}
+    defaults: { _controller: NFQAkademijaRecipesBundle:AjaxSearch:search_shoppinglist}
 
 nfq_akademija_search_places:
     pattern:  /ajax/search_places
-    defaults: { _controller: NFQAkademijaRecipesBundle:Ajax:search_places}
+    defaults: { _controller: NFQAkademijaRecipesBundle:AjaxSearch:search_places}
 
-nfq_akademija_recipe_right_sidebar:
-    pattern:  /ajax/recipe_right_sidebar
-    defaults: { _controller: NFQAkademijaRecipesBundle:Ajax:recipe_right_sidebar}
+nfq_akademija_filters_show:
+    pattern:  /ajax/filters_show
+    defaults: { _controller: NFQAkademijaRecipesBundle:AjaxFilters:filters_show}
 
-nfq_akademija_coop_info:
-    pattern:  /ajax/coop_info
-    defaults: { _controller: NFQAkademijaRecipesBundle:Ajax:coop_info}
-
-nfq_akademija_login:
-    pattern:  /ajax/login
-    defaults: { _controller: NFQAkademijaRecipesBundle:Ajax:login}
-
-nfq_akademija_like:
-    pattern:  /ajax/like
-    defaults: { _controller: NFQAkademijaRecipesBundle:Ajax:like}
-
-nfq_akademija_share:
-    pattern:  /ajax/share
-    defaults: { _controller: NFQAkademijaRecipesBundle:Ajax:share}
-
-nfq_akademija_comment:
-    pattern:  /ajax/comment
-    defaults: { _controller: NFQAkademijaRecipesBundle:Ajax:comment}
+nfq_akademija_filter_indicator_change:
+    pattern:  /ajax/filter_indicator_change
+    defaults: { _controller: NFQAkademijaRecipesBundle:AjaxFilters:filter_indicator_change}
 
 nfq_akademija_add_to_shoppinglist:
     pattern:  /ajax/add_to_shoppinglist
-    defaults: { _controller: NFQAkademijaRecipesBundle:Ajax:add_to_shoppinglist}
+    defaults: { _controller: NFQAkademijaRecipesBundle:AjaxShoppinglist:add_to_shoppinglist}
 
 nfq_akademija_remove_from_shoppinglist:
     pattern:  /ajax/remove_from_shoppinglist
-    defaults: { _controller: NFQAkademijaRecipesBundle:Ajax:remove_from_shoppinglist}
+    defaults: { _controller: NFQAkademijaRecipesBundle:AjaxShoppinglist:remove_from_shoppinglist}
+
+nfq_akademija_load_profile_recipes:
+    pattern:  /ajax/load_profile_recipes
+    defaults: { _controller: NFQAkademijaRecipesBundle:AjaxLoad:load_profile_recipes }
+
+nfq_akademija_load_recipes:
+    pattern:  /ajax/load_recipes
+    defaults: { _controller: NFQAkademijaRecipesBundle:AjaxLoad:load_recipes }
+
+nfq_akademija_load_products:
+    pattern:  /ajax/load_products
+    defaults: { _controller: NFQAkademijaRecipesBundle:AjaxLoad:load_products}
+
+nfq_akademija_loading_screen:
+    pattern:  /ajax/loading_screen
+    defaults: { _controller: NFQAkademijaRecipesBundle:AjaxLoad:loading_screen}
+
+nfq_akademija_load_recipe_in_sidebar:
+    pattern:  /ajax/load_recipe_in_sidebar
+    defaults: { _controller: NFQAkademijaRecipesBundle:AjaxLoad:load_recipe_in_sidebar}
+
+nfq_akademija_coop_info:
+    pattern:  /ajax/coop_info
+    defaults: { _controller: NFQAkademijaRecipesBundle:AjaxSocial:coop_info}
+
+nfq_akademija_login:
+    pattern:  /ajax/login
+    defaults: { _controller: NFQAkademijaRecipesBundle:AjaxSocial:login}
+
+nfq_akademija_like:
+    pattern:  /ajax/like
+    defaults: { _controller: NFQAkademijaRecipesBundle:AjaxSocial:like}
+
+nfq_akademija_share:
+    pattern:  /ajax/share
+    defaults: { _controller: NFQAkademijaRecipesBundle:AjaxSocial:share}
+
+nfq_akademija_comment:
+    pattern:  /ajax/comment
+    defaults: { _controller: NFQAkademijaRecipesBundle:AjaxSocial:comment}
+
+
+
+
+
+
 
 
 

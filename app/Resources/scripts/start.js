@@ -98,12 +98,6 @@ function load_profile_recipes(reset, type, callback){
                 }else{
                     if(reset == "true"){
                         $("#profile_recipes").html('');
-
-                        if(type == "created"){
-                            var appendable_data = "<div class='recipe_box' style=\"background-color:white;background-size:70% 70%;background-image: url('/images/new_recipe.png');width:" + recipe_size + "px;height:" + recipe_size +  "px;\" onclick='go_to_new_recipe()'><div class='recipe_box_info'>Sukurti naują receptą</div></div>";
-                            $("#profile_recipes").append(appendable_data);
-                        }
-
                         setTimeout(function(){scroll_content.scrollTo(0, 0)},0);
                     }
 
@@ -650,10 +644,6 @@ function show_loading_screen(url){
     //$("#loading_screen_title").css('left','50%');
     //$("#loading_screen_info").css('left','0px');
     //$("#loading_screen_info").css('width','auto');
-}
-
-function go_to_new_recipe(){
-    show_loading_screen("/new");
 }
 
 function filter_go_back(type){

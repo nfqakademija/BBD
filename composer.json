@@ -20,8 +20,8 @@
         "sensio/generator-bundle": "~2.3",
         "incenteev/composer-parameter-handler": "~2.0",
         "hwi/oauth-bundle": "0.4.*@dev",
-
-        "friendsofsymfony/user-bundle": "~2.0@dev"
+        "friendsofsymfony/user-bundle": "~2.0@dev",
+        "facebook/php-sdk-v4" : "4.0.*"
 
     },
     "scripts": {

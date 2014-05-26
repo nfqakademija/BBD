@@ -71,7 +71,7 @@
 <div id='filters_zone' style="top:285px;bottom:10px;">
     <div class="scroller" id="scroller_filters">
         {% for shoppinglist_item in shoppinglist_items %}
-            <div class='filter_element untouchable' id='shoppinglist_item_{{ shoppinglist_item.id }}' onclick='shoppinglist_item_selected(this.id)'><div class='filter_element_image' style="background-image:url('{{ shoppinglist_item.imageUrl }}');"></div><div class='filter_element_text'>{{ shoppinglist_item.title }}</div><div class='filter_element_delete' id='delete_{{ shoppinglist_item.id }}' onclick="remove_from_shoppinglist('{{ shoppinglist_item.id }}')"></div></div>
+            <div class='filter_element untouchable' id='shoppinglist_item_{{ shoppinglist_item.id }}' onclick='shoppinglist_item_selected(this.id)'><div class='filter_element_image' style="background-image:url('{{ shoppinglist_item.imageUrl }}');"></div><div class='filter_element_text'>{{ shoppinglist_item.title }}</div><div class='filter_element_delete' id='delete_{{ shoppinglist_item.id }}' onclick="remove_from_shoppinglist('{{ shoppinglist_item.id }}','from_shoppinglist')"></div></div>
         {% endfor %}
     </div>
 </div>

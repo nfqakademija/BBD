@@ -42,6 +42,10 @@ nfq_akademija_add_to_shoppinglist:
     pattern:  /ajax/add_to_shoppinglist
     defaults: { _controller: NFQAkademijaRecipesBundle:AjaxShoppinglist:add_to_shoppinglist}
 
+nfq_akademija_add_to_shoppinglist_from_recipe:
+    pattern:  /ajax/add_to_shoppinglist_from_recipe
+    defaults: { _controller: NFQAkademijaRecipesBundle:AjaxShoppinglist:add_to_shoppinglist_from_recipe}
+
 nfq_akademija_remove_from_shoppinglist:
     pattern:  /ajax/remove_from_shoppinglist
     defaults: { _controller: NFQAkademijaRecipesBundle:AjaxShoppinglist:remove_from_shoppinglist}

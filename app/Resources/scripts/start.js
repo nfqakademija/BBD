@@ -237,21 +237,28 @@ function load_products(reset, callback){
     });
 }
 
+var loading_array = [];
 function loading(id, display, size) {
     size = size || "";
+    var index = loading_array.indexOf(id);
 
-    if(display == "show"){
+    if(display == "show" && index == -1){
         $("#" + id).append("<div class='loader'></div>");
         $("#" + id + " .loader").fadeIn(transition_time * 2);
+        loading_array.push(id);
     }else if (display == "hide") {
         $("#" + id + " .loader").fadeOut(transition_time * 2, function(){
             $("#" + id + " .loader").remove();
         });
+
+        if (index > -1) {
+            loading_array.splice(index, 1);
+        }
     }
     if(size == ""){
-        $(".loader").css('background-size','100px 71px');
+        $("#" + id + " .loader").css('background-size','100px 71px');
     }else{
-        $(".loader").css('background-size', size);
+        $("#" + id + " .loader").css('background-size', size);
     }
 }
 
@@ -392,7 +399,15 @@ function show_filters(array_of_filters, index){
 
 function filters_show(type, category, callback){
     callback = callback || function(){};
-    full_sidebar();
+
+    if (type == 'selected' || type == 'selected_personal'){
+    }else if(type == 'categories'){
+        loading('add','show','26px 18px');
+    }else if(type == 'inside_category'){
+        loading(category + " .filter_element_image",'show','26px 18px');
+    }else if(type == 'ingredients'){
+        loading(category +" .filter_element_image",'show','26px 18px');
+    }
 
     var formData = new FormData();
     formData.append('type', type);
@@ -414,8 +429,10 @@ function filters_show(type, category, callback){
                 }else if(type == 'categories'){
                     filter_level = 1;
                     show_config_zone(1);
+                    loading('go_back_one','hide','26px 18px');
                 }else if(type == 'inside_category'){
                     filter_level = 2;
+                    loading('go_back_one','hide','26px 18px');
                 }else if(type == 'ingredients'){
                     filter_level = 3;
                 }
@@ -655,8 +672,10 @@ function filter_go_back(type){
     full_sidebar();
     if(type == "one"){
         filter_level--;
+        loading('go_back_one','show','26px 18px');
     }else{
         filter_level = 0;
+        loading('go_back_all','show','26px 18px');
     }
 
     switch(filter_level) {
@@ -686,7 +705,7 @@ function show_config_zone(state){
         });
 
     }else{
-        var config_zone = "<div class='filter_element_go_back untouchable'><div class='go_back untouchable' onclick=\"filter_go_back('all')\"><<</div><div class='go_back untouchable' onclick=\"filter_go_back('one')\"><</div></div>";
+        var config_zone = "<div class='filter_element_go_back untouchable'><div class='go_back untouchable' id='go_back_all' onclick=\"filter_go_back('all')\"><div class='filters_span'><<</div></div><div class='go_back untouchable' id='go_back_one' onclick=\"filter_go_back('one')\"><div class='filters_span'><</div></div></div>";
         $("#config_zone").fadeOut(transition_time, function(){
             $("#config_zone").html(config_zone);
             $("#config_zone").fadeIn(transition_time);
@@ -741,7 +760,6 @@ function filter_indicator_change(ID){
 }
 
 function manipulate_filter(ID){
-    full_sidebar();
     var new_indicator_status;
     var filter_data = ID.split('-');
     var filter_type = filter_data[0];
@@ -856,14 +874,14 @@ function search(type){
             data: formData,
             dataType: 'json',
             beforeSend: function () {
-                loading('search_container_inside','show');
+                loading('search_container_inside','show','26px 18px');
             },
             processData: false,
             contentType: false,
             success: function (data) {
                 if (data.status == "good") {
                     var search_data = data.search_data;
-                    loading('search_container_inside','hide');
+                    loading('search_container_inside','hide','26px 18px');
                     if(search_data.length != 0){
                         for(i = 0; i < search_data.length; i++){
                             $("#search_container_inside").append(search_data[i]);
@@ -1405,25 +1423,7 @@ function squeeze_comment_box(){
 
 function logout(){
     FB.logout(function(response) {
-        var formData = new FormData();
-        formData.append('logout', 'true');
-        $.ajax({
-            type: 'POST',
-            url: '/ajax/logout',
-            data: formData,
-            dataType: 'json',
-            beforeSend: function () {
-            },
-            processData: false,
-            contentType: false,
-            success: function (data) {
-                if (data.status == "good") {
-                    squeeze_comment_box();
-                    toast('Atsiliepimas įrašytas','good','write');
-                }
-            }
-        });
-        location.href = "/";
+        show_loading_screen("/");
     });
 }
 
@@ -1505,7 +1505,8 @@ function full_sidebar(){
     hide_recipe();
 }
 
-function add_to_shoppinglist(ID, type){
+function add_to_shoppinglist(ID, type, callback){
+    callback = callback || function(){};
     if(type == "from_search"){
         $("#search_input").val('');
         input_blur();
@@ -1513,6 +1514,8 @@ function add_to_shoppinglist(ID, type){
         loading('search_index', 'show', '26px 18px');
     }else if(type == "from_content"){
         loading('product_' + ID, 'show');
+    }else if(type == "from_sidebar"){
+        loading('Product-' + ID + " .ingredient_image",'show','26px 18px');
     }
 
     var formData = new FormData();
@@ -1530,27 +1533,44 @@ function add_to_shoppinglist(ID, type){
             if (data.status == "good") {
                 var shoppinglist_item = []
                 shoppinglist_item[0] = data.shoppinglist_item;
-                if(shoppinglist_item.length != 0){
-                    show_filters(shoppinglist_item, 0);
-                }
-
                 if(type == "from_search"){
                     loading('search_index', 'hide', '26px 18px');
+                    if(shoppinglist_item.length != 0){
+                        show_filters(shoppinglist_item, 0);
+                    }
+                    setTimeout(function(){scroll_content.refresh();}, transition_time);
                 }else if(type == "from_content"){
                     loading('product_' + ID, 'hide');
                     $('#product_' + ID).remove();
-                    setTimeout(function(){scroll_content.refresh();}, 0);
+                    if(shoppinglist_item.length != 0){
+                        show_filters(shoppinglist_item, 0);
+                    }
+                    setTimeout(function(){scroll_content.refresh();}, transition_time);
+                }else if(type == "from_sidebar"){
+                    loading('Product-' + ID + " .ingredient_image",'hide','26px 18px');
                 }
             }else{
-                toast('Pirkinys jau krepšyje','bad','shoppinglist')
+                //toast('Pirkinys jau krepšyje','bad','shoppinglist')
             }
+            callback();
+        },
+        error: function (xhr, ajaxOptions, thrownError) {
+            toast('Įvyko klaida. Perkraukite puslapį','bad','logo');
+            console.log(xhr.responseText);
         }
     });
 }
 
-function remove_from_shoppinglist(product_ID){
+function remove_from_shoppinglist(product_ID, type, callback){
+    callback = callback || function (){};
+
+    if(type == "from_shoppinglist"){
+        loading('shoppinglist_item_' + product_ID + ' .filter_element_image', 'show', '26px 18px');
+    }else if(type == "from_sidebar"){
+        loading('Product-' + product_ID + " .ingredient_image",'show','26px 18px');
+    }
+
     var formData = new FormData();
-    loading('shoppinglist_item_' + product_ID + ' .filter_element_image', 'show', '26px 18px');
     formData.append('product_ID', product_ID);
     $.ajax({
         type: 'POST',
@@ -1563,12 +1583,17 @@ function remove_from_shoppinglist(product_ID){
         contentType: false,
         success: function (data) {
             if (data.status == "good") {
-                loading('shoppinglist_item_' + product_ID + ' .filter_element_image', 'hide', '26px 18px');
-                $('#shoppinglist_item_' + product_ID).remove();
-                setTimeout(function(){
-                    scroll_filters.refresh();
-                }, 100);
+                if(type == "from_shoppinglist"){
+                    loading('shoppinglist_item_' + product_ID + ' .filter_element_image', 'hide', '26px 18px');
+                    $('#shoppinglist_item_' + product_ID).remove();
+                    setTimeout(function(){
+                        scroll_filters.refresh();
+                    }, 100);
+                }else if(type == "from_sidebar"){
+                    loading('Product-' + product_ID + " .ingredient_image",'hide','26px 18px');
+                }
             }
+            callback();
         }
     });
 }
@@ -1589,74 +1614,31 @@ function shoppinglist_item_selected(ID) {
     }
 }
 
-
-
-
-
-
-
-
-
-function ingredient_selected(ingredient_ID){
+function select_ingredient(ingredient_ID){
     if(check_if_user_is_loged()){
-        var classes = ($("#ingredient_indicator-" + ingredient_ID).attr('class')).split(" ");
-        var indicator = classes[1];
-        if(indicator == "ingredient_indicator_undefined"){
-            $("#ingredient_indicator-" + ingredient_ID).removeClass('ingredient_indicator_undefined').addClass('ingredient_indicator_shoppinglist');
-
-            var formData = new FormData();
-            formData.append('ingredient_ID', ingredient_ID);
-            $.ajax({
-                type: 'POST',
-                url: '/ajax/ingredient_add',
-                data: formData,
-                dataType: 'json',
-                beforeSend: function () {
-                },
-                processData: false,
-                contentType: false,
-                success: function (data) {
-                    if (data.status == "good") {
-
-                    }
-                }
+        if($("#ingredient_indicator_" + ingredient_ID).hasClass("ingredient_indicator_undefined")){
+            add_to_shoppinglist(ingredient_ID, 'from_sidebar',function(){
+                $("#ingredient_indicator_" + ingredient_ID).removeClass('ingredient_indicator_undefined').addClass('ingredient_indicator_shoppinglist');
             });
-
-        }else if(indicator == "ingredient_indicator_shoppinglist"){
-            $("#ingredient_indicator-" + ingredient_ID).removeClass('ingredient_indicator_shoppinglist').addClass('ingredient_indicator_have');
-
-            var formData = new FormData();
-            formData.append('ingredient_delete', ingredient_ID);
-            $.ajax({
-                type: 'POST',
-                url: '/ajax/ingredient_delete',
-                data: formData,
-                dataType: 'json',
-                beforeSend: function () {
-                },
-                processData: false,
-                contentType: false,
-                success: function (data) {
-                    if (data.status == "good") {
-
-                    }
-                }
+        }else if($("#ingredient_indicator_" + ingredient_ID).hasClass("ingredient_indicator_shoppinglist")){
+            remove_from_shoppinglist(ingredient_ID, 'from_sidebar',function(){
+                $("#ingredient_indicator_" + ingredient_ID).removeClass('ingredient_indicator_shoppinglist').addClass('ingredient_indicator_have');
             });
-        }else if(indicator == "ingredient_indicator_have"){
-            $("#ingredient_indicator-" + ingredient_ID).removeClass('ingredient_indicator_have').addClass('ingredient_indicator_undefined');
+        }else if($("#ingredient_indicator_" + ingredient_ID).hasClass("ingredient_indicator_have")){
+            $("#ingredient_indicator_" + ingredient_ID).removeClass('ingredient_indicator_have').addClass('ingredient_indicator_undefined');
         }
     }else{
         show_top_layer('account');
     }
 }
 
-function add_to_shopping_list(recipe_ID){
+function add_to_shoppinglist_from_recipe(recipe_ID){
     if(check_if_user_is_loged()){
         var formData = new FormData();
         formData.append('recipe_ID', recipe_ID);
         $.ajax({
             type: 'POST',
-            url: '/ajax/ingredient_add_all',
+            url: '/ajax/add_to_shoppinglist_from_recipe',
             data: formData,
             dataType: 'json',
             beforeSend: function () {

@@ -426,10 +426,11 @@ class AjaxLoadController extends Controller
             $ingredients = "";
             foreach($ingredients_data as $ingredient){
                 $product = $ingredient->getProduct();
-                $indicator = "";
+                $indicator = "undefined";
                 $single_ingredient = $this->render('NFQAkademijaRecipesBundle:AjaxViews:Ingredient.html.twig',
                     array(
-                        'id' => "Product-".$product->getId(),
+                        'id' => $product->getId(),
+                        'type' => "Product",
                         'title' => $product->getName(),
                         'imageUrl' => $product->getPhoto(),
                         'quantity' => $ingredient->getQuantity(),

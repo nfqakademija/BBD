@@ -13,7 +13,7 @@
 <div id='sidebar_right_ingredients'>
     <div id='sidebar_right_ingredients_text'>Ingredientai</div>
     <div class='sidebar_right_ingredients_button' id='sidebar_right_ingredients_coop' onclick="show_top_layer('coop','{{ id }}')"></div>
-    <div class='sidebar_right_ingredients_button' id='sidebar_right_ingredients_shoppinglist' onclick="add_to_shopping_list('{{ id }}')"></div>
+    <div class='sidebar_right_ingredients_button' id='sidebar_right_ingredients_shoppinglist' onclick="add_to_shoppinglist_from_recipe('{{ id }}')"></div>
 </div>
 <div id='divider' class='ingredients_divider'></div>
 <div id='sidebar_right_ingredients_zone'>{{ ingredients | raw}}</div>

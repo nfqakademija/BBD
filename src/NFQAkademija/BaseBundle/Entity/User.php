@@ -4,7 +4,6 @@ namespace NFQAkademija\BaseBundle\Entity;
 
 use FOS\UserBundle\Model\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * User
@@ -28,13 +27,6 @@ class User extends BaseUser
 
     /** @ORM\Column(name="facebook_access_token", type="string", length=255, nullable=true) */
     protected $facebook_access_token;
-
-    /** @ORM\Column(name="google_id", type="string", length=255, nullable=true) */
-    protected $google_id;
-
-    /** @ORM\Column(name="google_access_token", type="string", length=255, nullable=true) */
-    protected $google_access_token;
-
     /**
      * @var string
      *
@@ -56,7 +48,7 @@ class User extends BaseUser
 
     protected $shoppingList;
     /**
-     * @ORM\OneToMany(targetEntity="\NFQAkademija\BaseBundle\Entity\Step", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="\NFQAkademija\BaseBundle\Entity\Recipe", mappedBy="user")
      */
     protected $recipe;
     /**
@@ -67,14 +59,21 @@ class User extends BaseUser
      * @ORM\OneToMany(targetEntity="\NFQAkademija\BaseBundle\Entity\ProducedRecipe", mappedBy="user")
      */
     protected $producedRecipes;
-
     /**
      * Constructor
      */
     public function __construct()
     {
         $this->shoppingList = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->salt = base_convert(sha1(uniqid(mt_rand(), true)), 16, 36);
+        $this->enabled = false;
+        $this->locked = false;
+        $this->expired = false;
+        $this->roles = array();
+        $this->credentialsExpired = false;
     }
+
+
 
     /**
      * Get id
@@ -84,6 +83,52 @@ class User extends BaseUser
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set facebook_id
+     *
+     * @param string $facebookId
+     * @return User
+     */
+    public function setFacebookId($facebookId)
+    {
+        $this->facebook_id = $facebookId;
+
+        return $this;
+    }
+
+    /**
+     * Get facebook_id
+     *
+     * @return string 
+     */
+    public function getFacebookId()
+    {
+        return $this->facebook_id;
+    }
+
+    /**
+     * Set facebook_access_token
+     *
+     * @param string $facebookAccessToken
+     * @return User
+     */
+    public function setFacebookAccessToken($facebookAccessToken)
+    {
+        $this->facebook_access_token = $facebookAccessToken;
+
+        return $this;
+    }
+
+    /**
+     * Get facebook_access_token
+     *
+     * @return string 
+     */
+    public function getFacebookAccessToken()
+    {
+        return $this->facebook_access_token;
     }
 
     /**
@@ -138,7 +183,7 @@ class User extends BaseUser
      * @param \NFQAkademija\BaseBundle\Entity\ShoppingList $shoppingList
      * @return User
      */
-    public function addShoppingList(\NFQAkademija\BaseBundle\Entity\ShoppingList $shoppingList)
+    public function addShoppingList(ShoppingList $shoppingList)
     {
         $this->shoppingList[] = $shoppingList;
 
@@ -150,15 +195,16 @@ class User extends BaseUser
      *
      * @param \NFQAkademija\BaseBundle\Entity\ShoppingList $shoppingList
      */
-    public function removeShoppingList(\NFQAkademija\BaseBundle\Entity\ShoppingList $shoppingList)
+    public function removeShoppingList(ShoppingList $shoppingList)
     {
-        $this->shoppingList->removeElement($shoppingList);
+        /** @var $shoppingList ShoppingList */
+        $this->removeShoppingList($shoppingList);
     }
 
     /**
      * Get shoppingList
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getShoppingList()
     {
@@ -166,112 +212,12 @@ class User extends BaseUser
     }
 
     /**
-     * Add shoppingList
-     *
-     * @param \NFQAkademija\BaseBundle\Entity\ShoppingList $shoppingList
-     * @return User
-     */
-
-
-    /**
-     * Set facebook_id
-     *
-     * @param string $facebookId
-     * @return User
-     */
-    public function setFacebookId($facebookId)
-    {
-        $this->facebook_id = $facebookId;
-
-        return $this;
-    }
-
-    /**
-     * Get facebook_id
-     *
-     * @return string 
-     */
-    public function getFacebookId()
-    {
-        return $this->facebook_id;
-    }
-
-    /**
-     * Set facebook_access_token
-     *
-     * @param string $facebookAccessToken
-     * @return User
-     */
-    public function setFacebookAccessToken($facebookAccessToken)
-    {
-        $this->facebook_access_token = $facebookAccessToken;
-
-        return $this;
-    }
-
-    /**
-     * Get facebook_access_token
-     *
-     * @return string 
-     */
-    public function getFacebookAccessToken()
-    {
-        return $this->facebook_access_token;
-    }
-
-    /**
-     * Set google_id
-     *
-     * @param string $googleId
-     * @return User
-     */
-    public function setGoogleId($googleId)
-    {
-        $this->google_id = $googleId;
-
-        return $this;
-    }
-
-    /**
-     * Get google_id
-     *
-     * @return string 
-     */
-    public function getGoogleId()
-    {
-        return $this->google_id;
-    }
-
-    /**
-     * Set google_access_token
-     *
-     * @param string $googleAccessToken
-     * @return User
-     */
-    public function setGoogleAccessToken($googleAccessToken)
-    {
-        $this->google_access_token = $googleAccessToken;
-
-        return $this;
-    }
-
-    /**
-     * Get google_access_token
-     *
-     * @return string 
-     */
-    public function getGoogleAccessToken()
-    {
-        return $this->google_access_token;
-    }
-
-    /**
      * Add recipe
      *
-     * @param \NFQAkademija\BaseBundle\Entity\Step $recipe
+     * @param \NFQAkademija\BaseBundle\Entity\Recipe $recipe
      * @return User
      */
-    public function addRecipe(\NFQAkademija\BaseBundle\Entity\Step $recipe)
+    public function addRecipe(Recipe $recipe)
     {
         $this->recipe[] = $recipe;
 
@@ -283,9 +229,11 @@ class User extends BaseUser
      *
      * @param \NFQAkademija\BaseBundle\Entity\Step $recipe
      */
-    public function removeRecipe(\NFQAkademija\BaseBundle\Entity\Step $recipe)
+    public function removeRecipe(Recipe $recipe)
     {
-        $this->recipe->removeElement($recipe);
+
+        /** @var $recipe Recipe */
+        $this->removeRecipe($recipe);
     }
 
     /**
@@ -304,7 +252,7 @@ class User extends BaseUser
      * @param \NFQAkademija\BaseBundle\Entity\Comment $comment
      * @return User
      */
-    public function addComment(\NFQAkademija\BaseBundle\Entity\Comment $comment)
+    public function addComment(Comment $comment)
     {
         $this->comment[] = $comment;
 
@@ -316,9 +264,10 @@ class User extends BaseUser
      *
      * @param \NFQAkademija\BaseBundle\Entity\Comment $comment
      */
-    public function removeComment(\NFQAkademija\BaseBundle\Entity\Comment $comment)
+    public function removeComment(Comment $comment)
     {
-        $this->comment->removeElement($comment);
+        /** @var $comment Comment */
+        $this->removeComment($comment);
     }
 
     /**
@@ -337,7 +286,7 @@ class User extends BaseUser
      * @param \NFQAkademija\BaseBundle\Entity\ProducedRecipe $producedRecipes
      * @return User
      */
-    public function addProducedRecipe(\NFQAkademija\BaseBundle\Entity\ProducedRecipe $producedRecipes)
+    public function addProducedRecipe(ProducedRecipe $producedRecipes)
     {
         $this->producedRecipes[] = $producedRecipes;
 
@@ -349,9 +298,10 @@ class User extends BaseUser
      *
      * @param \NFQAkademija\BaseBundle\Entity\ProducedRecipe $producedRecipes
      */
-    public function removeProducedRecipe(\NFQAkademija\BaseBundle\Entity\ProducedRecipe $producedRecipes)
+    public function removeProducedRecipe(ProducedRecipe $producedRecipes)
     {
-        $this->producedRecipes->removeElement($producedRecipes);
+        /** @var $producedRecipes ProducedRecipe */
+        $this->removeProducedRecipe($producedRecipes);
     }
 
     /**

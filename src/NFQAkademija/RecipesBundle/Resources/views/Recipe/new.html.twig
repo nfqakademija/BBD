@@ -6,20 +6,25 @@
 {% block specific_scripts %}
     <script type="text/javascript">
         var productsContainer = [];
-        $("#addProductToRecipe").on("click", function(e) {
-            var item = $("#recipeProduct").val();
-            var quantity = $("#productQuantity").val();
-            var itemName = $("#recipeProduct").find(":selected").text();
-            productsContainer.push({"item": item, "quantity": quantity});
-            $("#recipeProductsContainer").val(JSON.stringify(productsContainer));
-            console.log(JSON.stringify(productsContainer), productsContainer, itemName, item, quantity);
-            $("#productList").append(quantity + " " + itemName + '<br>');
-            $("#productQuantity").val("0");
-        })
+        var stepsContainer = [];
+
 
 
 
         function loader(){
+
+            $("#addProductToRecipe").on("click", function(e) {
+                e.preventDefault;
+                var item = $("#recipeProduct").val();
+                var quantity = $("#productQuantity").val();
+                var itemName = $("#recipeProduct").find(":selected").text();
+                productsContainer.push({"item": item, "quantity": quantity});
+                $("#recipeProductsContainer").val(JSON.stringify(productsContainer));
+                console.log(JSON.stringify(productsContainer), productsContainer, itemName, item, quantity);
+                $("#productList").append(quantity + " " + itemName + '<br>');
+                $("#productQuantity").val("0");
+            })
+
             sidebar_manipulation();
             $( window ).resize(function() {
                 sidebar_manipulation();
@@ -32,6 +37,14 @@
                 shrinkScrollbars: 'scale',
                 fadeScrollbars: true
             });
+            $("#addStep").on("click", function(e) {
+                e.preventDefault;
+                var step = $("#step").val();
+                stepsContainer.push({"step": step});
+                $("#stepsContainer").val(JSON.stringify(stepsContainer));
+                $("#steps").append(step+'<br>');
+                $("#step").val("");
+            })
 
             scroll_content.on('scrollStart', function(){ clickable = false; });
             scroll_content.on('scrollEnd', function(){ clickable = true; });
@@ -74,6 +87,15 @@
                 <input id="recipeProductsContainer" type="hidden" name="products" value="[]">
                 {{ form_row(form.properties) }}
                 {{ form_row(form.description) }}
+                <div>
+                    <label>Zingsniai</label>
+                    <div id="steps"></div>
+                </div>
+                <div>
+                    <textarea style="margin: 5px" name="step" value="0" id="step"></textarea>
+                    <button id="addStep">+</button>
+                </div>
+                <input id="stepsContainer" type="hidden" name="steps" value="[]">
                 {{ form_row(form.country) }}
                 {{ form_row(form.cookingTime) }}
                 {{ form_row(form.celebration) }}

@@ -1,6 +1,7 @@
 <?php
 namespace NFQAkademija\RecipesBundle\Controller;
 
+use NFQAkademija\BaseBundle\Entity\Step;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use NFQAkademija\BaseBundle\Entity\Recipe;
@@ -28,7 +29,7 @@ class RecipeController extends Controller
                 'label' => 'Gaminimo aprašymas',
                 'trim' => true))
             ->add('photo', 'text', array(
-                'required' => false,
+                'required' => true,
                 'label' => 'Paveiksliuko adresas',
                 'trim' => true))
             ->add('country', 'entity', array(
@@ -44,7 +45,7 @@ class RecipeController extends Controller
             ->add('type', 'entity', array(
                 'mapped' => true,
                 'class' => 'NFQAkademijaBaseBundle:Type',
-                'required' => false,
+                'required' => true,
                 'label' => 'Tipas'))
             ->add('celebration', 'entity', array(
                 'mapped' => true,
@@ -54,7 +55,7 @@ class RecipeController extends Controller
             ->add('cookingTime', 'entity', array(
                 'mapped' => true,
                 'class' => 'NFQAkademijaBaseBundle:CookingTime',
-                'required' => false,
+                'required' => true,
                 'label' => 'Gaminimo laikas'))
             ->add('save', 'submit', array(
                 'label' => "Išsaugoti"))
@@ -67,7 +68,7 @@ class RecipeController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $products = $em->getRepository('NFQAkademijaBaseBundle:Product')->findAll();
-
+        $steps = $em->getRepository('NFQAkademijaBaseBundle:Step')->findAll();
         $recipe = new Recipe();
         $form = $this->getMainForm($recipe);
         $form->handleRequest($request);
@@ -76,9 +77,18 @@ class RecipeController extends Controller
             $newData = $form->getData();
             $products = $request->request->get('products');
             $productsData = json_decode($products, true);
-
+            $steps = $request->request->get('steps');
+            $stepData = json_decode($steps, true);
             $em->persist($newData);
             $em->flush();
+
+            foreach($stepData as $steps){
+                $step = new Step();
+                $step ->setRecipe($recipe);
+                $step->setDescription($steps['step']);
+                $em->persist($step);
+                $em->flush();
+            }
 
             foreach($productsData as $product) {
                 $recipeProduct = new RecipeProduct();
@@ -96,7 +106,8 @@ class RecipeController extends Controller
         return $this->render('NFQAkademijaRecipesBundle:Recipe:new.html.twig', array(
             'form' => $form->createView(),
             'entities' => $entities,
-            'products' => $products
+            'products' => $products,
+            'steps' => $steps
         ));
     }
 }

@@ -10,10 +10,13 @@ class CookController extends Controller
     public function indexAction($id)
     {
         $em = $this->getDoctrine()->getManager();
-
-        //get user id
         $user_ID = 4;
         $user = $em->getRepository('NFQAkademijaBaseBundle:User')->find($user_ID);
+        $recipe = $em->getRepository('NFQAkademijaBaseBundle:Recipe')->find($id);
+        $steps_data = $em->getRepository("NFQAkademijaBaseBundle:Step")->findBy(array('recipe' => $id));
+        $ingredients_data = $em->getRepository("NFQAkademijaBaseBundle:RecipeProduct")->findBy(array('recipe' => $id));
+        $comments_data = $em->getRepository("NFQAkademijaBaseBundle:Comment")->findBy(array('recipe' => $id));
+        $similar_recipes_data = $em->getRepository("NFQAkademijaBaseBundle:Recipe")->findBy(array('type' => $recipe->getType()));
 
         $cook_status = $em->getRepository("NFQAkademijaBaseBundle:ProducedRecipe")->find(array("user" => $user_ID, "recipe" => $id));
         if(!$cook_status){
@@ -27,64 +30,27 @@ class CookController extends Controller
             $em->flush();
         }
 
-
         //info apie recipe
         //title, steps_amount, like_status, id, like_amount, author, cooking_time, country, main_cooking_method,
         //type, properties, celebration, ingredients(imageUrl, title, amount, unit), imageUrl,
         //about, comments(imageUrl, text), steps(id, info), similar_recipes(id, imageUrl, title)
-
-
-        $em = $this->getDoctrine()->getManager();
-        $recipe = $em->getRepository('NFQAkademijaBaseBundle:Recipe')->find($id);
-
         $title = $recipe->getName();
         $about = $recipe->getDescription();
         $imageUrl = $recipe->getPhoto();
 
         $cooking_time = $recipe->getCookingTime();
-        if($cooking_time){
-            $cooking_time = $cooking_time->getName();
-        }else{
-            $cooking_time = "";
-        }
-
+        $cooking_time ? $cooking_time = $cooking_time->getName() : $cooking_time = "";
         $author = $recipe->getUser();
-        if($author){
-            $author = $author->getName();
-        }else{
-            $author = "Foodex";
-        }
-
+        $author ? $author = $author->getName() : $author = "Foodex";
         $celebration = $recipe->getCelebration();
-        if($celebration){
-            $celebration = $celebration->getName();
-        }else{
-            $celebration = "";
-        }
-
+        $celebration ? $celebration = $celebration->getName() : $celebration = "";
         $country = $recipe->getCountry();
-        if($country){
-            $country = $country->getName();
-        }else{
-            $country = "";
-        }
-
+        $country ? $country = $country->getName() : $country = "";
         $main_cooking_method = $recipe->getMainCookingMethod();
-        if($main_cooking_method){
-            $main_cooking_method = $main_cooking_method->getName();
-        }else{
-            $main_cooking_method = "";
-        }
-
+        $main_cooking_method ? $main_cooking_method = $main_cooking_method->getName() : $main_cooking_method = "";
         $type = $recipe->getType();
-        if($type){
-            $type = $type->getName();
-        }else{
-            $type = "";
-        }
+        $type ? $type = $type->getName() : $type = "";
 
-
-        $steps_data = $em->getRepository("NFQAkademijaBaseBundle:Step")->findBy(array('recipe' => $id));
         $steps = [];
         foreach($steps_data as $step){
             $steps [] = ["id" => $step->getId(), "info" => $step->getDescription()];
@@ -114,8 +80,6 @@ class CookController extends Controller
         }
         $properties = substr($properties, 0, strlen($properties) - 2);
 
-
-        $ingredients_data = $em->getRepository("NFQAkademijaBaseBundle:RecipeProduct")->findBy(array('recipe' => $id));
         $ingredients = [];
         foreach($ingredients_data as $ingredient){
             $ingredients [] = [
@@ -127,7 +91,6 @@ class CookController extends Controller
             ];
         }
 
-        $comments_data = $em->getRepository("NFQAkademijaBaseBundle:Comment")->findBy(array('recipe' => $id));
         $comments = [];
         foreach($comments_data as $comment){
             //$user->getPhoto()
@@ -138,8 +101,6 @@ class CookController extends Controller
             ];
         }
 
-
-        $similar_recipes_data = $em->getRepository("NFQAkademijaBaseBundle:Recipe")->findBy(array('type' => $recipe->getType()));
         $similar_recipes = [];
         foreach($similar_recipes_data as $similar_recipe){
             $similar_recipes [] = [
@@ -148,7 +109,6 @@ class CookController extends Controller
                 "title" => $similar_recipe->getName(),
             ];
         }
-
 
         return $this->render('NFQAkademijaRecipesBundle:Cook:index.html.twig',
             array(

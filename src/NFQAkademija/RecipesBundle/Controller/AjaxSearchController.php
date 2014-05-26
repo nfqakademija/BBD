@@ -22,10 +22,6 @@ class AjaxSearchController extends Controller
 {
     public function searchAction(Request $request)
     {
-        //from search value get filters and recipes. do not show which are already selected in current filters session
-        //$good_data[] = ["id" => $id, "imageUrl" => $imageUrl, "title" => $title, "info" => $info]
-        //search in: Celebration, CookingTime, Country, MainCookingMethod, Product, Property, Recipe, Type,
-
         $request_data = $request->request;
         $value = $request_data->get('search');
         $good_data = [];
@@ -65,6 +61,7 @@ class AjaxSearchController extends Controller
             $selected_filters = $session->get('filters');
         }
 
+        $search_data = [];
         foreach($good_data as $data){
             $found = false;
             foreach($selected_filters as $selected_filter){
@@ -97,7 +94,6 @@ class AjaxSearchController extends Controller
                 $search_data[] = $filter_data->getContent();
             }
         }
-
 
         $response = array(
             'status' => 'good',

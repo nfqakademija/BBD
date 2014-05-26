@@ -133,7 +133,7 @@ class CookController extends Controller
             //$user->getPhoto()
             $comments [] = [
                 $user = $comment->getUser(),
-                "imageUrl" => '/images/profile.png',
+                "imageUrl" => 'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash3/t1.0-1/c0.64.621.621/s160x160/995138_552905818091967_731332747_n.jpg',
                 "text" => $comment->getText(),
             ];
         }

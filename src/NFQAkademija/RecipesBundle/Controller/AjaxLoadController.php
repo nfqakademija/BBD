@@ -267,7 +267,7 @@ class AjaxLoadController extends Controller
         $em = $this->getDoctrine()->getManager();
         $user_ID = 4;
         $data = $em->getRepository("NFQAkademijaBaseBundle:Shoppinglist")->findBy(array("user" => $user_ID));
-        $already_in_shoppinglist_ids = [];
+        $already_in_shoppinglist_ids = [0];
         foreach ($data as $dat){
             $product = $dat->getProduct();
             $id = $product->getId();
@@ -278,7 +278,7 @@ class AjaxLoadController extends Controller
         $query = $product_repository->createQueryBuilder('f');
         $query = $query->select('f.id, f.name AS title, f.photo AS imageUrl')
             ->orderBy('f.name', 'ASC')
-            ->Where('f.id NOT IN (:already_in_shoppinglist_ids)')
+            ->where('f.id NOT IN (:already_in_shoppinglist_ids)')
             ->setParameter('already_in_shoppinglist_ids', $already_in_shoppinglist_ids)
             ->setFirstResult($offset)
             ->setMaxResults($limit)

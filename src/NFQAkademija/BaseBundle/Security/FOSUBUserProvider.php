@@ -4,6 +4,7 @@ namespace NFQAkademija\BaseBundle\Security;
 use HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface;
 use HWI\Bundle\OAuthBundle\Security\Core\User\FOSUBUserProvider as BaseClass;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 class FOSUBUserProvider extends BaseClass
 {
@@ -35,6 +36,7 @@ class FOSUBUserProvider extends BaseClass
         $user->$setter_token($response->getAccessToken());
 
         $this->userManager->updateUser($user);
+
     }
 
     /**

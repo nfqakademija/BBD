@@ -2,7 +2,9 @@
 
 namespace NFQAkademija\RecipesBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-
+use FOS\UserBundle\FOSUserEvents;
+use FOS\UserBundle\Event\GetResponseUserEvent;
+use FOS\UserBundle\Model\UserInterface;
 
 /*
 require_once("C:/XAMPP/WEBSITE/BBD/vendor/facebook/php-sdk-v4/src/Facebook/FacebookJavaScriptLoginHelper.php");
@@ -62,9 +64,7 @@ class HomeController extends Controller
         }
         */
 
-        return $this->render('NFQAkademijaRecipesBundle:Home:index.html.twig', array(
-            //'bla' => $bla,
-        ));
+        return $this->render('NFQAkademijaRecipesBundle:Home:index.html.twig', array());
     }
 }
 

@@ -34,24 +34,6 @@ class AjaxSocialController extends Controller
         return $jsonResponse;
     }
 
-    public function loginAction(Request $request)
-    {
-        $request_data = $request->request;
-
-        //create session that user is loged in
-        //change profile navigation bar
-
-
-
-        $response = array(
-            'status' => 'good',
-        );
-
-        $jsonResponse = new Response(json_encode($response));
-        $jsonResponse->headers->set('Content-Type', 'application/json; Charset=UTF-8');
-        return $jsonResponse;
-    }
-
     public function likeAction(Request $request)
     {
         $request_data = $request->request;
@@ -113,7 +95,7 @@ class AjaxSocialController extends Controller
         $user = $em->getRepository("NFQAkademijaBaseBundle:User")->find($user_ID);
         $recipe = $em->getRepository("NFQAkademijaBaseBundle:Recipe")->find($recipe_ID);
         //$image_url = $user->getPhoto();
-        $image_url = "/images/profile.png";
+        $image_url = "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash3/t1.0-1/c0.64.621.621/s160x160/995138_552905818091967_731332747_n.jpg";
 
 
         $date = new \DateTime("now");

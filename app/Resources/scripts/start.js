@@ -35,6 +35,7 @@ var current_filters_scroll;
 var clock;
 var chronometer_time = 0;
 var step_going = false;
+var isProfilePage = false;
 
 document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
 
@@ -713,8 +714,13 @@ function show_config_zone(state){
     }
 }
 
+
 function filter_send_indicator_changes(filter_type, filter_id, indicator_status){
-    loading('content_wrapper', 'show');
+    if(!isProfilePage){
+        hide_recipe();
+        loading('content_wrapper', 'show');
+    }
+
     var formData = new FormData();
     formData.append('type', filter_type);
     formData.append('id', filter_id);
@@ -730,9 +736,11 @@ function filter_send_indicator_changes(filter_type, filter_id, indicator_status)
         contentType: false,
         success: function (data) {
             if (data.status == "good") {
-                load_recipes('true', function(){
-                    loading('content_wrapper', 'hide');
-                });
+                if(!isProfilePage){
+                    load_recipes('true', function(){
+                        loading('content_wrapper', 'hide');
+                    });
+                }
             }
         },
         error: function (xhr, ajaxOptions, thrownError) {
@@ -828,8 +836,6 @@ function filter_delete(ID){
 }
 
 function filter_selected(ID){
-    full_sidebar();
-
     var symbols_amount = $("#" + ID + " .filter_element_text").html();
     var symbols_amount = symbols_amount.length;
 

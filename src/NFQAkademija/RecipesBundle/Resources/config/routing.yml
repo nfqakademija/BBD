@@ -74,10 +74,6 @@ nfq_akademija_coop_info:
     pattern:  /ajax/coop_info
     defaults: { _controller: NFQAkademijaRecipesBundle:AjaxSocial:coop_info}
 
-nfq_akademija_login:
-    pattern:  /ajax/login
-    defaults: { _controller: NFQAkademijaRecipesBundle:AjaxSocial:login}
-
 nfq_akademija_like:
     pattern:  /ajax/like
     defaults: { _controller: NFQAkademijaRecipesBundle:AjaxSocial:like}

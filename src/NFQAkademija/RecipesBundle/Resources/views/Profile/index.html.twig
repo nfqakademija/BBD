@@ -32,6 +32,7 @@
 {% block specific_scripts %}
     <script type="text/javascript">
         function loader(){
+            isProfilePage = true;
             sidebar_manipulation();
             recipe_size = calculate_recipe_size();
             $( window ).resize(function() {

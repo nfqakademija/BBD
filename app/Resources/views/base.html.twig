@@ -89,9 +89,21 @@
                         <div class="nav_zone_element_image" style="margin-right:5px;background-size:90% 90%; background-image:url('/images/logo.png')"></div>
                         <div id="nav_zone_element_logo_text"></div>
                     </div>
+                    {% set user_loged = true %}
+                    {% if user_loged == true %}
+                        {% set username = 'Svajūnas' %}
+                        {% set profile_class = 'active_profile' %}
+                        {% set profile_imageUrl = 'https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash3/t1.0-1/c0.64.621.621/s160x160/995138_552905818091967_731332747_n.jpg' %}
+                    {% else %}
+                        {% set username = 'Profilis' %}
+                        {% set profile_class = '' %}
+                        {% set profile_imageUrl = '/images/profile.png' %}
+                    {% endif %}
+
+
                     <div class="nav_zone_element untouchable" id="profile" onclick="content_navigation('profile')">
-                        <div class="nav_zone_element_image" style="background-image:url('/images/profile.png')"></div>
-                        <div class="nav_zone_element_text">Profilis</div>
+                        <div class="nav_zone_element_image {{ profile_class }}" style="background-image:url('{{ profile_imageUrl }}')"></div>
+                        <div class="nav_zone_element_text">{{ username }}</div>
                     </div>
                     <div class="nav_zone_element untouchable" id="shoppinglist" onclick="content_navigation('shoppinglist')">
                         <div class="nav_zone_element_image" style="background-image:url('/images/shoppinglist.png')"></div>

@@ -3,23 +3,18 @@
 namespace NFQAkademija\RecipesBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Facebook\FacebookJavaScriptLoginHelper;
-use Facebook\FacebookSession;
 
 class ProfileController extends Controller
 {
     public function indexAction()
     {
-
-
-
         $em = $this->getDoctrine()->getManager();
         $user_ID = 4;
         $user = $em->getRepository("NFQAkademijaBaseBundle:User")->find($user_ID);
 
-        $profile_name = $user->getName();
-        $profile_imageUrl = "/images/profile.png";//$user->getPhoto();
-        $profile_coverUrl = "/images/food (16).jpg";//$user->getCoverPhoto();
+        $profile_name = "Svajūnas Maksvytis";//$user->getName();
+        $profile_imageUrl = "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-ash3/t1.0-1/c0.64.621.621/s160x160/995138_552905818091967_731332747_n.jpg";//$user->getPhoto();
+        $profile_coverUrl = "/images/food (4).jpg";//$user->getCoverPhoto();
 
         $likes = $em->getRepository("NFQAkademijaBaseBundle:Like")->findBy(array("user" => $user_ID));
         if($likes){
@@ -30,7 +25,7 @@ class ProfileController extends Controller
 
         $cooks = $em->getRepository("NFQAkademijaBaseBundle:ProducedRecipe")->findBy(array("user" => $user_ID));
         if($cooks){
-            $cooks = count($likes);
+            $cooks = count($cooks);
         }else{
             $cooks = 0;
         }

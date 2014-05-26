@@ -23,16 +23,15 @@ class AjaxLoadController extends Controller
     public function load_profile_recipesAction(Request $request)
     {
         $request_data = $request->request;
+        $em = $this->getDoctrine()->getManager();
         $type = $request_data->get('type');
         $reset = $request_data->get('reset');
         $session = $request->getSession();
         $end = false;
-        $em = $this->getDoctrine()->getManager();
-        //get user ID
         $user_ID = 4;
-
         $limit = 20;
         $offset = 0;
+
         if($session->has('load_recipes_offset')){
             $offset = $session->get('load_recipes_offset');
         }else{
@@ -40,7 +39,6 @@ class AjaxLoadController extends Controller
         }
 
         if($reset == "true"){
-            //reset limit to 0 - LIMIT 10, 0;
             $offset = 0;
             $session->set('load_recipes_offset', $offset);
         }
@@ -68,7 +66,6 @@ class AjaxLoadController extends Controller
                 break;
         }
 
-        $recipes = [];
         $recipe_repository = $this->getDoctrine()->getRepository('NFQAkademijaBaseBundle:Recipe');
         $query = $recipe_repository->createQueryBuilder('f');
         $query = $query->select('f.id, f.name, f.photo')
@@ -109,9 +106,10 @@ class AjaxLoadController extends Controller
         $session = $request->getSession();
         $reset = $request_data->get('reset');
         $end = false;
-
         $limit = 20;
         $offset = 0;
+        $recipe_repository = $this->getDoctrine()->getRepository('NFQAkademijaBaseBundle:Recipe');
+
         if($session->has('load_recipes_offset')){
             $offset = $session->get('load_recipes_offset');
         }else{
@@ -119,13 +117,9 @@ class AjaxLoadController extends Controller
         }
 
         if($reset == "true"){
-            //reset limit to 0 - LIMIT 10, 0;
             $offset = 0;
             $session->set('load_recipes_offset', $offset);
         }
-
-        $recipes = [];
-        $recipe_repository = $this->getDoctrine()->getRepository('NFQAkademijaBaseBundle:Recipe');
 
         //QUERYING AND FILTERING
         $filters = [];
@@ -220,7 +214,6 @@ class AjaxLoadController extends Controller
 
 
         $recipes = $query->getResult();
-
         $recipes_loaded = count($recipes);
         //jei rado receptu
         if($recipes_loaded != 0 ){

@@ -97,11 +97,9 @@ class Recipe
     {
 
     }
-
     public function __toString(){
         return $this->getName();
     }
-
     /**
      * Get id
      *
@@ -111,7 +109,6 @@ class Recipe
     {
         return $this->id;
     }
-
     /**
      * Set name
      *
@@ -124,7 +121,6 @@ class Recipe
 
         return $this;
     }
-
     /**
      * Get name
      *
@@ -134,7 +130,6 @@ class Recipe
     {
         return $this->name;
     }
-
     /**
      * Set description
      *
@@ -180,7 +175,6 @@ class Recipe
     {
         return $this->photo;
     }
-
     /**
      * Add properties
      *
@@ -193,7 +187,6 @@ class Recipe
 
         return $this;
     }
-
     /**
      * Remove properties
      *
@@ -204,7 +197,6 @@ class Recipe
         /** @var $properties Property */
         $this->removeProperty($properties);
     }
-
     /**
      * Get properties
      *
@@ -214,7 +206,6 @@ class Recipe
     {
         return $this->properties;
     }
-
     /**
      * Set country
      *
@@ -227,7 +218,6 @@ class Recipe
 
         return $this;
     }
-
     /**
      * Get country
      *
@@ -237,7 +227,6 @@ class Recipe
     {
         return $this->country;
     }
-
     /**
      * Set celebration
      *
@@ -250,7 +239,6 @@ class Recipe
 
         return $this;
     }
-
     /**
      * Get celebration
      *
@@ -260,7 +248,6 @@ class Recipe
     {
         return $this->celebration;
     }
-
     /**
      * Set cookingTime
      *
@@ -273,7 +260,6 @@ class Recipe
 
         return $this;
     }
-
     /**
      * Get cookingTime
      *
@@ -283,7 +269,6 @@ class Recipe
     {
         return $this->cookingTime;
     }
-
     /**
      * Set mainCookingMethod
      *
@@ -296,7 +281,6 @@ class Recipe
 
         return $this;
     }
-
     /**
      * Get mainCookingMethod
      *
@@ -306,30 +290,6 @@ class Recipe
     {
         return $this->mainCookingMethod;
     }
-
-    /**
-     * Set types
-     *
-     * @param \NFQAkademija\BaseBundle\Entity\Type $types
-     * @return Recipe
-     */
-    public function setTypes(\NFQAkademija\BaseBundle\Entity\Type $types = null)
-    {
-        $this->types = $types;
-
-        return $this;
-    }
-
-    /**
-     * Get types
-     *
-     * @return \NFQAkademija\BaseBundle\Entity\Type
-     */
-    public function getTypes()
-    {
-        return $this->types;
-    }
-
     /**
      * Set user
      *
@@ -342,7 +302,6 @@ class Recipe
 
         return $this;
     }
-
     /**
      * Get user
      *
@@ -352,7 +311,6 @@ class Recipe
     {
         return $this->user;
     }
-
     /**
      * Add steps
      *

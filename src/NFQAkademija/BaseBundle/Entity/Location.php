@@ -20,7 +20,6 @@ class Location
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
-
     /**
      * @var string
      *
@@ -63,7 +62,6 @@ class Location
      * @ORM\Column(name="about", type="string", length=255)
      */
     private $about;
-
     /**
      * Get id
      *
@@ -73,7 +71,6 @@ class Location
     {
         return $this->id;
     }
-
     /**
      * Set title
      *
@@ -86,7 +83,6 @@ class Location
 
         return $this;
     }
-
     /**
      * Get title
      *
@@ -96,7 +92,6 @@ class Location
     {
         return $this->title;
     }
-
     /**
      * Set type
      *
@@ -109,7 +104,6 @@ class Location
 
         return $this;
     }
-
     /**
      * Get type
      *
@@ -119,8 +113,6 @@ class Location
     {
         return $this->type;
     }
-
-
     /**
      * Set icon
      *
@@ -133,7 +125,6 @@ class Location
 
         return $this;
     }
-
     /**
      * Get icon
      *
@@ -143,7 +134,6 @@ class Location
     {
         return $this->icon;
     }
-
     /**
      * Set about
      *
@@ -156,7 +146,6 @@ class Location
 
         return $this;
     }
-
     /**
      * Get about
      *
@@ -166,8 +155,6 @@ class Location
     {
         return $this->about;
     }
-
-
     /**
      * Set latitude
      *
@@ -180,7 +167,6 @@ class Location
 
         return $this;
     }
-
     /**
      * Get latitude
      *
@@ -190,7 +176,6 @@ class Location
     {
         return $this->latitude;
     }
-
     /**
      * Set longitude
      *
@@ -203,7 +188,6 @@ class Location
 
         return $this;
     }
-
     /**
      * Get longitude
      *
@@ -213,7 +197,6 @@ class Location
     {
         return $this->longitude;
     }
-
     /**
      * Set brand
      *
@@ -226,7 +209,6 @@ class Location
 
         return $this;
     }
-
     /**
      * Get brand
      *

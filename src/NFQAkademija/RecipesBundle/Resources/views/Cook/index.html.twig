@@ -233,8 +233,10 @@
             </div>
             <div class="step_go step_down" onclick="next_step()"></div>
         </div>
+        {% set step_ID = 1 %}
         {% for step in steps %}
-            <div class="step" id="step_{{ step.id }}">
+            <div class="step" id="step_{{ step_ID }}">
+                {% set step_ID = step_ID + 1 %}
                 <div class="step_go step_up" onclick="previous_step()"></div>
                 <div class="step_id">Žingsnis</div>
                 <div class="step_timer untouchable" id="step_{{ step.id }}_timer" onclick="cook_timer(this.id)">00:00:00</div>

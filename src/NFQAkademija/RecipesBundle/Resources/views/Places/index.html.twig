@@ -143,22 +143,21 @@
                         street = results[0].address_components[1].long_name + " " + results[0].address_components[0].short_name;
                     }
                 }
-            });
-
-            google.maps.event.addListener(marker, 'click', function() {
-                var distance = google.maps.geometry.spherical.computeDistanceBetween (my_location, marker.position);
-                distance = distance_converter(distance.toFixed(0));
-                var placeContent =
-                        "<image class='google_map_tooltip_image' src='" + imageUrl + "' />" +
-                        "<div class='google_map_tooltip_title'>" + place_title + "</div>" +
-                        "<div style='clear:both;'></div>" +
-                        "<div class='google_map_tooltip_street'>" + street + "</div>" +
-                        "<div style='clear:both;'></div>" +
-                        "<div id='walk_button' class='google_map_tooltip_button' onclick=\"show_route('" + marker.position + "','walk')\">Eiti</div>" +
-                        "<div id='drive_button' class='google_map_tooltip_button' onclick=\"show_route('" + marker.position + "','drive')\">Važiuoti</div>" +
-                        "<div class='google_map_tooltip_text'>Atstumas " + distance + "</div>";
-                info_window.setContent(placeContent);
-                info_window.open(map, this);
+                google.maps.event.addListener(marker, 'click', function() {
+                    var distance = google.maps.geometry.spherical.computeDistanceBetween (my_location, marker.position);
+                    distance = distance_converter(distance.toFixed(0));
+                    var placeContent =
+                            "<image class='google_map_tooltip_image' src='" + imageUrl + "' />" +
+                            "<div class='google_map_tooltip_title'>" + place_title + "</div>" +
+                            "<div style='clear:both;'></div>" +
+                            "<div class='google_map_tooltip_street'>" + street + "</div>" +
+                            "<div style='clear:both;'></div>" +
+                            "<div id='walk_button' class='google_map_tooltip_button' onclick=\"show_route('" + marker.position + "','walk')\">Eiti</div>" +
+                            "<div id='drive_button' class='google_map_tooltip_button' onclick=\"show_route('" + marker.position + "','drive')\">Važiuoti</div>" +
+                            "<div class='google_map_tooltip_text'>Atstumas " + distance + "</div>";
+                    info_window.setContent(placeContent);
+                    info_window.open(map, this);
+                });
             });
         }
 
@@ -271,7 +270,6 @@
 
         function order_places(places){
             for(i = 0; i < places.length; i++){
-
                 var place = places[i];
                 var place_location = new google.maps.LatLng(place["latitude"], place["longitude"]);
                 var distance = google.maps.geometry.spherical.computeDistanceBetween (my_location, place_location);
